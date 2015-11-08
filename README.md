@@ -17,4 +17,4 @@ https://bio.tools
 You will find the documentation from the "Help" menu and further informatiom about the project from the "About" menu.
 
 # Source code
-The registry code software is licensed under the GNU General Public License (GPLv3) and is currently being migrated to GitHub (please watch this space - your patience is appreciated).
+The registry code software is licensed under the GNU General Public License (GPLv3) and is currently being migrated to GitHub: please watch this space - your patience is appreciated.
