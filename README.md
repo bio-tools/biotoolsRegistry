@@ -18,3 +18,19 @@ You will find the documentation from the "Help" menu and further informatiom abo
 
 # Source code
 The registry code software is licensed under the GNU General Public License (GPLv3) and is currently being migrated to GitHub: please watch this space - your patience is appreciated.
+
+# Governance
+biotoolsregistry development is covered by the emerging [governance model](https://docs.google.com/document/d/11bHg_-HAUFKbWg1O2XWmrmJZOcNMDzcFyrqGVm4FWk0/edit#) of the bio.tools project.  
+
+# People
+Please see the [governance model](https://docs.google.com/document/d/11bHg_-HAUFKbWg1O2XWmrmJZOcNMDzcFyrqGVm4FWk0/edit#heading=h.jekbgucedks5) for a list of people involved with the project.
+
+# Publication
+If you use biotoolsregistry, please reference:
+
+Ison, J. et al. (2015). [Tools and data services registry: a community effort to document bioinformatics resources.](http://nar.oxfordjournals.org/content/early/2015/11/03/nar.gkv1116.long) _Nucleic Acids Research_.
+
+doi: [10.1093/nar/gkv1116](http://dx.doi.org/10.1093/nar/gkv1116) PMID: [26538599 ](http://www.ncbi.nlm.nih.gov/pubmed/26538599)
+
+This article is freely available (Open Access).
+
