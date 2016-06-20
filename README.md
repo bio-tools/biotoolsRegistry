@@ -17,7 +17,7 @@ https://bio.tools
 You will find the documentation from the "Help" menu and further informatiom about the project from the "About" menu.
 
 # Source code
-The registry code software is licensed under the GNU General Public License (GPLv3).  For enquiries please contact the [registry mailing list](mailto:registry@elixir-dk.org).
+We are in the middle of a major code rewrite and will look to opening the code for the new registry interfaces once this is completed. For enquiries please contact the [registry mailing list](mailto:registry@elixir-dk.org).
 
 # Governance
 biotoolsregistry development is covered by the emerging [governance model](https://docs.google.com/document/d/11bHg_-HAUFKbWg1O2XWmrmJZOcNMDzcFyrqGVm4FWk0/edit#) of the bio.tools project.  
