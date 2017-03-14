@@ -1,5 +1,5 @@
 # What is biotoolsregistry?
-**biotoolsregistry** (bio.tools) is the Web application of the [ELIXIR Tools & Data Services Registry](https://dev.bio.tools).  It allows the curation and discovery of bioinformatics resources including databases, tools, services and so on, available under a variety of interfaces. 
+**biotoolsregistry** (bio.tools) is the Web application of the [ELIXIR Tools & Data Services Registry](https://bio.tools).  It allows the curation and discovery of bioinformatics resources including databases, tools, services and so on, available under a variety of interfaces. 
 
 bio.tools provides a query interface, registration interface and API. The **query interface** allows a user to search the corpus of resource descriptions, display what fields of information are shown and filter and sort the results by various attributes.  The **registration interface** allows the manual creation and editing of resource descriptions.  The HTTP-based **API** allows query as well as automated creation and update of accessions.
 
