@@ -1,0 +1,18 @@
+<div class="ui-grid-cell-contents " bindonce ng-controller="ToolGridCellController" ng-init="init(col.colDef.name, grid.renderContainers.body.visibleRowCache.indexOf(row))">
+	<div ng-if="RowHeight() > DefaultRowHeight()">
+		<div class="ui-grid-read-more-button" ng-style="CellStyle()"><a ui-sref="tool({id: row.entity.id, version: row.entity.versionId})">Read More ›</a></div>
+	</div>
+	<div ng-if="COL_FIELD.length == 0" id="{{::RowIdentifier()}}">-</div>
+	<div ng-if="COL_FIELD.length != 0" id="{{::RowIdentifier()}}">
+		<ul style="list-style-type:circle">
+			<li ng-repeat="credit in COL_FIELD">	
+				<p class="list-group-item-text" ng-show="credit.email">
+					<a href="mailto:{{ credit.email }}" tooltips tooltip-side="top" tooltip-content="{{ credit.email }}">{{ credit.name }}</a> 
+					<small>{{ credit.typeRole }}</small> 
+					<i class="fa fa-info-circle hidden-xs hidden-sm" ng-show="credit.comment" tooltips tooltip-side="top" tooltip-content="{{ credit.comment }}"></i>
+				</p>	
+				<p class="list-group-item-text" ng-show="!credit.email">{{ credit.name }}</p>
+			</li>
+		</ul>
+	</div>
+</div>

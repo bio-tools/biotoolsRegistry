@@ -1,0 +1,91 @@
+<br>
+<form name="form.creditsForm" class="form-horizontal" novalidate>
+	<div class="form-group">
+		<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
+			<!-- Credits -->
+			<div class="panel panel-default" ng-repeat="link in software.credit track by $index" ng-class="{'no-margin-bottom': $last};">
+				<ng-form name="creditDetailForm">
+					<div class="panel-body" style="position: relative;">
+						<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('credit', software, $index)"></i>
+						<div>
+							<!-- Grid ID -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.credit[$index].gridid}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>GRID ID</span></label>
+								<div class="col-sm-9">
+									<input ng-model="software.credit[$index].gridid" type="text" class="form-control" placeholder="GRID Identifier" name="gridId" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in creditDetailForm.gridId.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!-- ORCID ID -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.credit[$index].orcidid}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>ORCID ID</span></label>
+								<div class="col-sm-9">
+									<input ng-model="software.credit[$index].orcidid" type="text" class="form-control" placeholder="ORCID Identifier" name="orcidId" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in creditDetailForm.orcidId.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!-- Name -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.credit[$index].name}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>Name<span style="color:#ff0000;position: absolute; right: 5px;"><b>*</b></span></span></label>
+								<div class="col-sm-9">
+									<input ng-model="software.credit[$index].name" type="text" class="form-control" placeholder="Name" name="name" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in creditDetailForm.name.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!-- Email -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.credit[$index].email}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>Email<span style="color:#ff0000;position: absolute; right: 5px;"></span></span></label>
+								<div class="col-sm-9">
+									<input ng-model="software.credit[$index].email" type="text" class="form-control" placeholder="Email" name="email" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in creditDetailForm.email.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!-- URL -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.credit[$index].url}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>URL<span style="color:#ff0000;position: absolute; right: 5px;"></span></span></label>
+								<div class="col-sm-9">
+									<input ng-model="software.credit[$index].url" type="text" class="form-control" placeholder="URL of contact" name="url" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in creditDetailForm.url.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!-- Entity type -->
+							<div class="form-group">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>Entity type</span></label>
+								<div class="col-sm-9">
+									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in entityTypeOptions" ng-model="software.credit[$index].typeEntity" name="entityType" validate-edit-resource-field>
+									</select>
+									<label class="help-block" ng-repeat="error in creditDetailForm.entityType.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!-- Role type -->
+							<div class="form-group">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>Role</span></label>
+								<div class="col-sm-9">
+									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in roleTypeOptions" ng-model="software.credit[$index].typeRole" name="roleType" validate-edit-resource-field>
+									</select>
+									<label class="help-block" ng-repeat="error in creditDetailForm.roleType.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!--  Comment	 -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.credit[$index].comment}">
+								<label class="col-sm-3 control-label"><span tooltips tooltip-side="right">Comment</span></label>
+								<div class="col-sm-9">
+									<textarea ng-model="software.credit[$index].comment" name="comment" class="form-control" rows="3" placeholder="Comment about the credit" validate-edit-resource-field index={{$index}}></textarea>
+									<label class="help-block" ng-repeat="error in form.credit[$index].comment.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+						</div>
+						<!-- {{form.creditsForm.errorMessages}} -->
+					</div>
+					<div ng-class="{'has-error': true};">
+						<label class="help-block" style="margin-left: 20px;" ng-repeat="error in creditDetailForm.errorMessages" bo-text="error"></label>
+					</div>
+				</ng-form>
+			</div>
+			<!-- Give credit where it's due -->
+			<div class="form-group" style="padding-top:7px;">
+				<a href="" ng-show="!meta.function.visibility" ng-click="addButtonClick('credit', software, true, true)">Add a credit</a>
+			</div>
+		</div>
+	</div>
+</form>

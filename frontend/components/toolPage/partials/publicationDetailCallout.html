@@ -1,0 +1,20 @@
+<div ng-show="publication.metadata" ng-init="metadata=publication.metadata">
+	<div class="bs-callout-sm bs-callout-primary" style="border-left-color: #9DA8AA">
+		<span ng-show="metadata.title" class="tool-page-callout-header" style="color: black;">{{::metadata.title}}<br></span>
+		<span ng-show="metadata.authors.count != 0" ng-repeat="author in metadata.authors" class="tool-page-callout-header" style="color: gray;">{{::author['name']}} </span><br>
+		<span ng-show="metadata.journal" class="tool-page-callout-header" style="color: gray;">Published in {{::metadata.journal}}</span><span ng-show="metadata.date" class="tool-page-callout-header" style="color: gray;">, {{::metadata.date| date:'yyyy'}} </span><br>
+		<!-- <span ng-show="metadata.citationCount" class="tool-page-callout-header pull-right" style="color: gray;">Citation count: {{::metadata.citationCount}}<br></span> -->
+		<span ng-show="publication.pmcid"><a href="http://www.ncbi.nlm.nih.gov/pmc/{{::publication.pmcid}}">PMC › </a>
+		<span ng-show="publication.pmid || publication.doi" style="color: #CCCCCC;"> | </span></span>
+		<span ng-show="publication.pmid"><a href="http://www.ncbi.nlm.nih.gov/pubmed/{{::publication.pmid}}">PUBMED › </a></span>
+		<span ng-show="(publication.pmid || publication.pmcid) && publication.doi" style="color: #CCCCCC;"> | </span></span>
+		<span ng-show="publication.doi"><a href="https://dx.doi.org/{{::publication.doi}}">DOI › </a></span>
+		<div>
+			<object ng-show="publication.doi" height="50" data="https://api.elsevier.com/content/abstract/citation-count?doi={{::publication.doi.replace('doi:','')}}&httpAccept=text/html&apiKey=ddd4165bfdfe4dc9d3fb4b289aa321fe"></object> 
+			<object ng-show="publication.pmid && !publication.doi" height="50" data="https://api.elsevier.com/content/abstract/citation-count?pubmed_id={{::publication.pmid}}&httpAccept=text/html&apiKey=ddd4165bfdfe4dc9d3fb4b289aa321fe"></object> 
+			<object ng-show="publication.pmcid && !publication.doi" height="50" data="https://api.elsevier.com/content/abstract/citation-count?pubmed_id={{::publication.pmcid}}&httpAccept=text/html&apiKey=ddd4165bfdfe4dc9d3fb4b289aa321fe"></object> 
+		</div>
+		<span ng-show="metadata.abstract" class="tool-page-callout-text" style="margin-top: 14px;">{{::metadata.abstract}}</span>
+	</div>
+</div>
+

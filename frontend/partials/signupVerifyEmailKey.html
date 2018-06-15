@@ -1,0 +1,12 @@
+<div class="container">
+	<div class="col-md-offset-2 col-md-8" style="text-align:center;">
+		<div class="page-header" >
+			<h1>Activating your account.</h1>
+		</div>
+		<br>
+		<h4 ng-if="!error_message">This should take a second...</h4>
+		<h4 ng-if="error_message">{{error_message}}</h4>
+		<i ng-if="!error_message" class="fa fa-spinner fa-5x fa-spin icon-cog" style="margin:40px;display:inline-block;"></i>
+		<i ng-if="error_message" class="fa fa-times fa-5x" style="margin:40px;display:inline-block;"></i>
+	</div>
+</div>

@@ -1,0 +1,15 @@
+<div class="modal-body col-xs-12" style="max-height:80vh;">
+	<img ng-src="api{{vm.workflow.image}}" alt="" style="max-height: 90%; max-width: 90%; object-fit: contain;" usemap="#image-map" id="image">
+	<map name="image-map">
+		<area ng-if="!annotation.url" ng-repeat="annotation in vm.workflow.annotations" target ="_blank" ng-mouseleave="vm.endHover()" ng-mouseover="vm.hover(annotation)" alt="{{annotation.title}} {{annotation.description}} {{annotation.edam_term}}" title="{{annotation.title}} {{annotation.description}} {{annotation.edam_term}}" href="{{annotation.edam_uri}}" coords="{{vm.mapDimensions(annotation)}}" shape="rect">
+		<area ng-if="annotation.url" ng-repeat="annotation in vm.workflow.annotations" target ="_blank" ng-mouseleave="vm.endHover()" ng-mouseover="vm.hover(annotation)" alt="{{annotation.title}} {{annotation.description}} {{annotation.edam_term}}" title="{{annotation.title}} {{annotation.description}} {{annotation.edam_term}}" href="{{annotation.url}}" coords="{{vm.mapDimensions(annotation)}}" shape="rect">
+	</map>
+</div>
+<div style="margin: 20px;">
+	<div style="font-weight: bold;">{{ vm.currentTitle }}</div>
+	<div class="text-muted" style="font-weight: bold;"><small>{{ vm.currentEdam }}</small></div>
+	<div>{{ vm.currentDescription }}</div><br>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-default" ng-click="$close()">Close</button>
+</div>

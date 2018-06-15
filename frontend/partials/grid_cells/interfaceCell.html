@@ -1,0 +1,7 @@
+<div class="ui-grid-cell-contents" bindonce>
+	<ul style="list-style-type:circle" >
+		<li ng-repeat="row in row.entity.interface">
+			<span bo-html="row.interfaceType | highlight:grid.appScope.Highlighting.terms"></span>
+		</li>
+	</ul>
+</div>

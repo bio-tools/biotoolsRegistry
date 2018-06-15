@@ -1,0 +1,26 @@
+.domain-bar-container {
+	margin-bottom: 2em;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.domain-bar-title {
+	color: #4A4A4A;
+	font-family: 'Roboto' !important;
+	font-size: 28px;
+	font-weight: 100 !important;
+}
+
+.domain-bar-subtitle {
+	color: #7f7f7f;
+	font-family: 'Roboto' !important;
+	font-size: 20px;
+	font-weight: 100 !important;
+}
+
+.domain-bar-description {
+	color: #4A4A4A;
+	font-family: 'Roboto' !important;
+	font-size: 14px;
+	font-weight: 100 !important;
+}

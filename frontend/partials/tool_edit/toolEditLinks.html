@@ -1,0 +1,50 @@
+<br>
+<form name="form.linksForm" class="form-horizontal" novalidate>
+	<div class="form-group">
+		<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
+			<!-- link -->
+			<div class="panel panel-default" ng-repeat="link in software.link track by $index" ng-class="{'no-margin-bottom': $last};">
+				<ng-form name="linkDetailForm">
+					<div class="panel-body" style="position: relative;">
+						<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('link', software, $index)"></i>
+						<div>
+							<!-- URL -->
+							<div class="form-group" style="margin-top:8px;" ng-class="{'has-error': registrationErrorPayload.link[$index].url}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>URL</span></label>
+								<div class="col-sm-9">
+									<input ng-model="software.link[$index].url" type="text" class="form-control" placeholder="URL" name="url" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in linkDetailForm.url.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!--  Comment	 -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.link[$index].comment}">
+								<label class="col-sm-3 control-label"><span tooltips tooltip-side="right">Comment</span></label>
+								<div class="col-sm-9">
+									<textarea ng-model="software.link[$index].comment" name="comment" class="form-control" rows="3" placeholder="Comment about the link" validate-edit-resource-field index={{$index}}></textarea>
+									<label class="help-block" ng-repeat="error in form.link[$index].comment.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!-- Link type -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.link[$index].type}">
+							<label class="col-sm-3 control-label" style="position: relative;"><span>Link type</span></label>
+								<div class="col-sm-9">
+									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in linkTypeOptions" ng-model="software.link[$index].type" name="type" validate-edit-resource-field index={{$index}}>
+									</select>
+									<label class="help-block" ng-repeat="error in linkDetailForm.type.errorMessages" bo-text="error"></label>
+								</div>
+								<label class="help-block" ng-repeat="error in linkDetailForm.link[$index].errorMessages" bo-text="error"></label>
+							</div>
+						</div>
+					</div>
+					<div ng-class="{'has-error': true};">
+						<label class="help-block" style="margin-left: 20px;" ng-repeat="error in linksForm.errorMessages" bo-text="error"></label>
+					</div>
+				</ng-form>
+			</div>
+			<!-- Add link -->
+			<div class="form-group" style="padding-top:7px;">
+				<a href="" ng-show="!meta.function.visibility" ng-click="addButtonClick('link', software, true, true)">Add link</a>
+			</div>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,57 @@
+<br>
+<form name="form.publicationsForm" class="form-horizontal" novalidate>
+	<div class="form-group">
+		<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
+			<!-- Publications -->
+			<div class="panel panel-default" ng-repeat="link in software.publication track by $index" ng-class="{'no-margin-bottom': $last};">
+				<ng-form name="publicationDetailForm">
+					<div class="panel-body" style="position: relative;">
+						<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('publication', software, $index)"></i>
+						<div>
+						<!-- PubMed Central ID -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].pmcid}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>PubMed Central ID</span></label>
+								<div class="col-sm-9">
+									<input ng-model="software.publication[$index].pmcid" type="text" class="form-control" placeholder="PubMed Central Identifier of the publication" name="pmcid" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in publicationDetailForm.pmcid.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!-- PubMed ID -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].pmid}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>PubMed ID</span></label>
+								<div class="col-sm-9">
+									<input ng-model="software.publication[$index].pmid" type="text" class="form-control" placeholder="PubMed Identifier of the publication" name="pmid" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in publicationDetailForm.pmid.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!-- DOI ID -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].doi}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>Digital Object ID</span></label>
+								<div class="col-sm-9">
+									<input ng-model="software.publication[$index].doi" type="text" class="form-control" placeholder="Digital Object Identifier of the publication" name="doi" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in publicationDetailForm.doi.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!-- Publication type -->
+							<div class="form-group">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>Publication type</span></label>
+								<div class="col-sm-9">
+									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in publicationTypeOptions" ng-model="software.publication[$index].type" name="type" validate-edit-resource-field>
+									</select>
+									<label class="help-block" ng-repeat="error in publicationDetailForm.type.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</ng-form>	
+			</div>
+			<div ng-class="{'has-error': true};">
+				<label class="help-block" style="margin-left: 20px;" ng-repeat="error in registrationErrorPayload.publication" bo-text="error"></label>
+			</div>
+			<!-- Add a publication -->
+			<div class="form-group" style="padding-top:7px;">
+				<a href="" ng-show="!meta.function.visibility" ng-click="addButtonClick('publication', software, true, true)">Add publication</a>
+			</div>
+		</div>
+	</div>
+</form>

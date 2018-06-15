@@ -1,0 +1,71 @@
+.search-bar-container
+{
+/*	margin-top: 6px;
+	height: 38px !important;
+	box-shadow: 0px 2px 4px 0px rgba(74,74,74,0.12);*/
+}
+
+.search-bar
+{
+	margin-top: 6px;
+	margin-right: 7px;
+	height: 38px !important;
+	border-radius: 8px !important;
+	box-shadow: 0px 2px 4px 0px rgba(74,74,74,0.12);
+	background-color: white;
+}
+
+.search-bar:focus 
+{
+	/*border-color: red;*/
+	/*box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);*/
+}
+
+.search-bar-right-info-text
+{
+	color: #4A4A4A;
+	font-family: 'Roboto' !important;
+	font-size: 14px;
+	font-weight: 100 !important;
+	margin-top: 0.65em;
+	margin-right: 1em;
+}
+
+.tags
+{
+	border-width: 0px !important;
+	border-radius: 8px !important;
+} 
+
+input
+{
+	font-family: 'Roboto' !important;
+	font-weight: 100 !important;
+	text-shadow: 0px 2px 5px rgba(150, 150, 150, 0.12);
+	padding-top: 4px !important;
+	padding-left: 4px !important;
+}
+
+.tag-item
+{
+	font-family: 'Roboto' !important;
+	font-weight: 300 !important;
+	text-shadow: 0px 2px 5px rgba(150, 150, 150, 0.12);
+}
+
+tags-input .tags .tag-item 
+{
+	color: black;
+	height: 32px;
+	border-radius: 6px;
+	border: 0px solid white;
+	background: #d8e9f3;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 4px;
+}
+
+tags-input .tags.focused
+{
+	box-shadow: none;
+}

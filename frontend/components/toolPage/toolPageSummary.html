@@ -1,0 +1,57 @@
+<!-- Name -->
+<h2>
+	{{ ::software.name }}
+	<span data-badge-type='donut' class='altmetric-embed pull-right' data-badge-popover='left' data-hide-no-mentions="true" data-doi='{{ altMetricsScorePublication().doi }}' data-pmid='{{ altMetricsScorePublication().pmid }}'></span>
+	<div data-id="{{ software.id.toLowerCase() }}" data-widget-type="widget" data-widget-subtypes="widget" data-widget-tooltip-position="left" data-widget-size="64" class="opeb pull-right" style="width: 64px; height: 64px; margin-right: 10px;"></div>
+	<span ng-show="software.version" class="tool-page-version-text">version {{ ::software.version }}</span>
+</h2>
+<!-- Topic list -->
+<div style="display: flex; flex-wrap: wrap;">
+	<span class="pill-tag-verified" uib-tooltip="This resource has been verified by a curator." ng-if="software.validated"><i class="fa fa-thumbs-up"></i> Verified</span>
+	<span ng-repeat="topic in software.topic">
+		<a ng-if="topic.term != 'N/A'" class="pill-tag-orange-background" href="{{ ::topic.uri }}" target="_blank">{{ ::topic.term }} ›</a>
+		<a ng-if="topic.term == 'N/A'" class="pill-tag-orange-background" href="{{ ::topic.uri }}" target="_blank">{{ ::software.name }} ›</a>
+	</span>
+</div>
+<hr class="pill-hr-divider">
+<div style="padding-bottom: 5px;">
+	<!-- Version tags -->
+	<span ng-if="software.maturity" class="pill-tag-primary-background">{{ ::software.maturity }}</span>
+	<span ng-if="software.license" class="pill-tag-primary-background">{{ ::software.license }}</span>
+	<span ng-if="software.cost" class="pill-tag-primary-background">{{ ::software.cost }}</span>
+	<span ng-if="software.accessibility.length > 0" ng-repeat="accessibility in software.accessibility" class="pill-tag-primary-background">
+		{{ ::accessibility }}
+	</span>
+</div>
+<div class="pill-spacing">
+	<span ng-if="software.collectionID.length > 0" ng-repeat="collection in software.collectionID" class="pill-tag-secondary-background">
+		{{ ::collection }}
+	</span>
+	<!-- Tool type list -->
+	<span ng-if="software.toolType.length > 0" ng-repeat="toolType in software.toolType" class="pill-tag-secondary-background">
+		{{ ::toolType }}
+	</span>
+	<!-- Language list -->
+	<span ng-if="software.language.length > 0" ng-repeat="language in software.language" class="pill-tag-secondary-background">
+		{{ ::language }}
+	</span>
+	<span style="color:#575757;" ng-if="software.operatingSystem.length > 0">
+		<span ng-repeat="operatingSystem in software.operatingSystem track by $index" style="margin-left:4px; padding-bottom: -2px;">
+			<i style="font-size:110%;" class="fa fa-3x fa-apple" ng-show="operatingSystem == 'Mac'" tooltips tooltip-side="top" tooltip-content="Platform: {{ operatingSystem }}"></i>
+			<i style="font-size:110%;" class="fa fa-3x fa-linux" ng-show="operatingSystem == 'Linux'" tooltips tooltip-side="top" tooltip-content="Platform: {{ operatingSystem }}"></i>
+			<i style="font-size:110%;" class="fa fa-3x fa-windows" ng-show="operatingSystem == 'Windows'" tooltips tooltip-side="top" tooltip-content="Platform: {{ operatingSystem }}"></i>
+		</span>
+	</span>
+</div>
+<hr class="pill-hr-divider">
+<div class="pill-spacing">
+	<!-- Description -->
+	<p ng-show="software.description" class="pill-text">{{ ::software.description }}</p>
+	<!-- Homepage -->
+	<p style="margin-top: -0.5em;" ng-show="software.homepage" class="pill-text">
+		<a href="{{ ::software.homepage }}" target="_blank">{{ ::software.homepage }}</a>
+		<span class="pill-tag-error-small" ng-if="software.homepage_status == 1"><i class="fa fa-chain-broken" aria-hidden="true"></i> Temporarily unavailable</span>
+		<span class="pill-tag-error-small" ng-if="software.homepage_status == 2"><i class="fa fa-chain-broken" aria-hidden="true"></i> Permanently unavailable</span>
+	</p>
+</div>
+<br>

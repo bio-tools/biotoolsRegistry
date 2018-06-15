@@ -1,0 +1,36 @@
+<div ui-view>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="page-header">
+					<h3>Workflows</h3>
+				</div>
+				<div class="clearfix"></div>
+				<div ng-if="loading" style="text-align:center;">
+					<i class="fa fa-spinner fa-5x fa-spin icon-cog" style="margin:40px;display:inline-block;"></i>
+				</div>
+				<div ng-show="loading == false && workflows.length == 0" class="panel-body">
+					<span>No registered workflows</span>
+				</div>
+				<div class="input-group col-xs-12" ng-show="loading == false && workflows.length != 0">
+					<input ng-model="search.searchString" type="text" class="form-control" placeholder="Search for workflows" ng-change="filterWorkflows()">
+					<span class="input-group-btn">
+						<button class="btn btn-default" ng-click="search.searchString = ''; filterWorkflows()">Clear ›</button>
+					</span>
+				</div>
+				<br>
+				<div class="col-xs-4" ng-repeat="workflow in filteredWorkflows">
+					<!-- Thumbnail -->
+					<div class="thumbnail" style="height:400px;">
+						<img ng-src="api{{workflow.image}}" alt="" style="height:250px; object-fit: contain;" ng-click="openModal(workflow)">
+						<div style="padding-top: 10px;">
+							<span>{{workflow.description}}</span>
+							<br>
+							<a href="{{workflow.sourceURL}}" class="pull-right">Source <i class="fa fa-external-link" aria-hidden="true"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,50 @@
+<div class="form-group content-page-element-spacing">
+	<!-- Domain name -->
+	<div>
+		<!-- Name -->
+		<span class="content-page-input-title-label">Name</span>
+		<div ng-if="subdomain.exists == false">
+			<input ng-model="subdomain.domain" name="identifier" type="text" ng-change="makeIdURLSafe(subdomain.domain)" class="form-control content-page-input-field" placeholder="Name of the domain to be created">
+			<div class="content-page-danger-text" ng-if="errors.domain">
+				<i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{errors.domain}}
+			</div>
+		</div>
+		<div ng-if="subdomain.exists == true">
+			<input ng-model="subdomain.domain" type="text" class="form-control content-page-input-field" disabled>
+		</div>
+		<!-- Warnings -->
+		<div class="content-page-info-text">
+			<i class="fa fa-question-circle" aria-hidden="true"></i> Subdomain's name is not editable after creation.
+		</div>
+	</div>
+	<!-- Domain title -->
+	<div class="content-page-element-spacing-top">
+		<!-- Title -->
+		<span class="content-page-input-title-label">Title</span>
+		<input ng-model="subdomain.title" name="title" type="text" class="form-control content-page-input-field" placeholder="Title">
+		<div class="content-page-danger-text" ng-if="errors.domain.title">
+			<i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{errors.domain.title}}
+		</div>
+	</div>
+	<!-- Domain sub-title -->
+	<div class="content-page-element-spacing-top">
+		<!-- Subtitle -->
+		<span class="content-page-input-title-label">Subtitle</span>
+		<input ng-model="subdomain.subtitle" name="subtitle" type="text" class="form-control content-page-input-field" placeholder="Subtitle">
+		<div class="content-page-danger-text" ng-if="errors.domain.subtitle">
+			<i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{errors.domain.subtitle}}
+		</div>
+	</div>
+	<!-- Domain description -->
+	<div class="content-page-element-spacing-top">
+		<!-- Description -->
+		<span class="content-page-input-title-label">Description</span>
+		<input ng-model="subdomain.description" name="description" type="text" class="form-control content-page-input-field" placeholder="Description">
+		<div class="content-page-danger-text" ng-if="errors.domain.description">
+			<i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{errors.domain.description}}
+		</div>
+	</div>
+</div>
+
+
+

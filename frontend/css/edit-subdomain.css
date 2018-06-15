@@ -1,0 +1,54 @@
+.edit-subdomain-toggle {
+
+}
+
+.edit-subdomain-toggle-button.active {
+/*	background-color: #cccccc;
+	box-shadow: none;
+	color: white;
+	border-color: #cccccc;
+	border-width: 0px;*/
+}
+
+.edit-subdomain-toggle-button.visited {
+	background-color: #F07603;
+	box-shadow: none;
+	color: white;
+	border-color: #cccccc;
+	border-width: 0px;
+}
+
+.edit-subdomain-toggle-button-first {
+	border-width: 0px;
+	border-left-width: 1px;
+	border-top-width: 1px; 
+	border-bottom-width: 1px; 
+}
+
+.edit-subdomain-toggle-button-last {
+	border-width: 0px;
+	border-top-width: 1px; 
+	border-bottom-width: 1px;
+	border-right-width: 1px;
+}
+
+.edit-subdomain-toggle-button-middle {
+	border-left-width: 0px;
+	border-width: 0px;
+	border-top-width: 1px; 
+	border-bottom-width: 1px; 
+}
+
+.edit-subdomain .pagination>li>a,
+.edit-subdomain .pagination>li>span {
+	border: 1px solid #cccccc;
+	color: black;
+}
+.edit-subdomain .pagination>li.active>a {
+	background: #F07603;
+	color: #fff;
+}
+
+.edit-subdomain .pagination {
+	margin: 0px !important;
+}

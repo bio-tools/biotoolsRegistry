@@ -1,0 +1,16 @@
+<div ui-view>
+	<div class="container-fluid" ng-if="state.current.name == 'tool.affiliation'">
+		<div class="row">
+			<div class="col-sm-10 col-md-10 col-lg-10">
+				<h1>Entries with affiliation: <code>{{ stateParams.affiliation }}</code></h1>
+				<hr>
+				<div elx-search-bar-module></div>
+				<div elx-column-module></div>
+				<div elx-tool-module="tool_service.get_by_affiliation(stateParams.affiliation)"></div>
+			</div>
+			<div class="col-sm-2 col-md-2 col-lg-2">
+				<div elx-filter-module></div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,369 @@
+{
+	"name": "ResourceName",
+	"homepage": "http://resourcename.org",
+	"version": "Version 1",
+	"collection": 
+	[
+		"Name of some collection", "Name of some collection"
+	],
+	"uses":
+	[
+		{
+			"usesName": "Name of some resource",
+			"usesHomepage": "http://someURL.org",
+			"usesVersion": "Version number of some resource"
+		}, 
+		{
+			"usesName": "Name of some resource",
+			"usesHomepage": "http://someURL.org",
+			"usesVersion": "Version number of some resource"
+		}
+	],
+	"resourceType": 
+	{
+		"uri": "http://someURL.org",
+		"term": "Tool (deposition)"
+	},
+	"interface": 
+	[
+		{
+			"interfaceType": 
+			{
+				"uri": "http://someURL.org",
+				"term": "REST API"
+			},
+			"interfaceDocs": "http://someurl.org",
+			"interfaceSpecURL": "http://someurl.org",
+			"interfaceSpecFormat": "WADL"
+		}, 
+		{
+			"interfaceType": 
+			{
+				"uri": "http://someURL.org",
+				"term": "SPARQL"
+			},
+			"interfaceDocs": "http://someurl.org",
+			"interfaceSpecURL": "http://someurl.org",
+			"interfaceSpecFormat": "WSDL2"
+		}
+	],
+	"description": "Description of resource goes here.",
+	"topic": 
+	[
+		{
+			"uri": "http://edamontology.org/topic_0003",
+			"term": "EDAM Topic"
+		}, 
+		{
+			"uri": "http://edamontology.org/topic_0003",
+			"term": "EDAM Topic"
+		}
+	],
+	"tag": 
+	[
+		{
+			"uri": "http://someURL.org",
+			"term": "A free-text tag"
+		}, 
+		{
+			"uri": "http://someURL.org",
+			"term": "A free-text tag"
+		}
+	],
+	"function": 
+	[
+		{
+			"functionName": 
+			[
+				{
+					"uri": "http://edamontology.org/operation_0004",
+					"term": "EDAM Function"
+				}, 
+				{
+					"uri": "http://edamontology.org/operation_0004",
+					"term": "EDAM Function"
+				}
+			],
+			"functionDescription": "Description of the function.",
+			"functionHandle": "--someOption",
+			"input": 
+			[
+				{
+					"dataType": 
+					{
+						"uri": "http://edamontology.org/data_0006",
+						"term": "EDAM data"
+					},
+					"dataFormat": 
+					[
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}, 
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}
+					],
+					"dataHandle": "--someOption"
+				}, 
+				{
+					"dataType": 
+					{
+						"uri": "http://edamontology.org/data_0006",
+						"term": "EDAM data"
+					},
+					"dataFormat": 
+					[
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}, 
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}
+					],
+					"dataHandle": "--someOption"
+				}
+			],
+			"output": 
+			[
+				{
+					"dataType": 
+					{
+						"uri": "http://edamontology.org/data_0006",
+						"term": "EDAM data"
+					},
+					"dataFormat": 
+					[
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}, 
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}
+					],
+					"dataHandle": "--someOption"
+				}, 
+				{
+					"dataType": 
+					{
+						"uri": "http://edamontology.org/data_0006",
+						"term": "EDAM data"
+					},
+					"dataFormat": 
+					[
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}, 
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}
+					],
+					"dataHandle": "--someOption"
+				}
+			]
+		}, 
+		{
+			"functionName": 
+			[
+				{
+					"uri": "http://edamontology.org/operation_0004",
+					"term": "EDAM Function"
+				}, 
+				{
+					"uri": "http://edamontology.org/operation_0004",
+					"term": "EDAM Function"
+				}
+			],
+			"functionDescription": "Description of the function.",
+			"functionHandle": "--someOption",
+			"input": 
+			[
+				{
+					"dataType": 
+					{
+						"uri": "http://edamontology.org/data_0006",
+						"term": "EDAM data"
+					},
+					"dataFormat": 
+					[
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}, 
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}
+					],
+					"dataHandle": "--someOption"
+				}, 
+				{
+					"dataType": 
+					{
+						"uri": "http://edamontology.org/data_0006",
+						"term": "EDAM data"
+					},
+					"dataFormat": 
+					[
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}, 
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}
+					],
+					"dataHandle": "--someOption"
+				}
+			],
+			"output": 
+			[
+				{
+					"dataType": 
+					{
+						"uri": "http://edamontology.org/data_0006",
+						"term": "EDAM data"
+					},
+					"dataFormat": 
+					[
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}, 
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}
+					],
+					"dataHandle": "--someOption"
+				}, 
+				{
+					"dataType": 
+					{
+						"uri": "http://edamontology.org/data_0006",
+						"term": "EDAM data"
+					},
+					"dataFormat": 
+					[
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}, 
+						{
+							"uri": "http://edamontology.org/format_1915",
+							"term": "EDAM format"
+						}
+					],
+					"dataHandle": "--someOption"
+				}
+			]
+		}
+	],
+	"contact": 
+	[
+		{
+			"contactEmail": "FredBloggs@gmail.com",
+			"contactURL": "http://someURL.org",
+			"contactName": "Fred Bloggs",
+			"contactTel": "String",
+			"contactRole": 
+			[
+				"Scientific", "General"
+			]
+		}, 
+		{
+			"contactEmail": "FredBloggs@gmail.com",
+			"contactURL": "http://someURL.org",
+			"contactName": "Fred Bloggs",
+			"contactTel": "String",
+			"contactRole": 
+			[
+				"Developer", "Developer"
+			]
+		}
+	],
+	"sourceRegistry": "http://sourceregistry.com/toolname",
+	"maturity": 
+	{
+		"uri": "http://someURL.org",
+		"term": "Retiring"
+	},
+	"platform": 
+	[
+		{
+			"uri": "http://someURL.org",
+			"term": "Unix"
+		}, 
+		{
+			"uri": "http://someURL.org",
+			"term": "Unix"
+		}
+	],
+	"language": 
+	[
+		{
+			"uri": "http://someURL.org",
+			"term": "Java"
+		}, 
+		{
+			"uri": "http://someURL.org",
+			"term": "Java"
+		}
+	],
+	"license": 
+	{
+		"uri": "http://someURL.org",
+		"term": "GNU General Public License v3"
+	},
+	"cost": 
+	{
+		"uri": "http://someURL.org",
+		"term": "Free with restrictions"
+	},
+	"docs": 
+	{
+		"docsHome": "http://toolname.org/docs",
+		"docsTermsOfUse": "http://toolname.org/docs/terms",
+		"docsDownload": "http://toolname.org/downloads",
+		"docsCitationInstructions": "http://toolname.org/docs/citing"
+	},
+	"publications": 
+	{
+		"publicationsPrimaryID": "10.1006/jmbi.1995.0238",
+		"publicationsOtherID": 
+		[
+			"10.1006/jmbi.1995.0238", "10.1006/jmbi.1995.0238"
+		]
+	},
+	"credits": 
+	{
+		"creditsDeveloper": 
+		[
+			"Joe Bloggs", "Joe Bloggs"
+		],
+		"creditsContributor": 
+		[
+			"Judi Bloggs", "Judi Bloggs"
+		],
+		"creditsInstitution": 
+		[
+			"Institute name", "Institute name"
+		],
+		"creditsInfrastructure": 
+		[
+			"Infrastructure name", "Infrastructure name"
+		],
+		"creditsFunding": 
+		[
+			"Grant number: 12345", "Grant number: 12345"
+		]
+	}
+}

@@ -1,0 +1,10 @@
+<!-- Divider line -->
+<div class="tool-page-diver-label">
+	<span>Links</span>
+</div>
+<!-- Documentation cards -->
+<div class="row tool-page-row">
+	<div ng-repeat="link in software.link">
+		<div tool-page-link-callout url="{{ link.url }}" name="{{ link.type }}" comment="{{ link.comment }}" color="#524656"></div>
+	</div>
+</div>

@@ -1,0 +1,169 @@
+<br>
+<form name="form.labelForm" class="form-horizontal" novalidate>
+	<div class="form-group">
+		<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 no-side-padding">
+			<!-- 	Tool Type	 -->
+			<div class="form-group no-margin-bottom">
+				<label class="control-label col-sm-3" style="position: relative;">
+					<span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.toolType.description}}">Tool type <span style="color:#ff0000;"><b>*</b></span></span>
+				</label>
+				<div class="col-sm-9">
+					<div class="form-group" ng-repeat="toolType in software.toolType track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.toolType[$index][0]};">
+						<ng-form name="resourceTypeForm">
+							<div class="input-group">
+								<select class="form-control select-btn-group" ng-options="item.value as item.text for item in toolTypeOptions" ng-model="software.toolType[$index]" name="toolType" validate-edit-resource-field index={{$index}}>
+								</select>
+								<span class="input-group-btn">
+									<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('toolType', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+								</span>
+							</div>
+							<label class="help-block" ng-repeat="error in resourceTypeForm.toolType.errorMessages" bo-text="error"></label>
+						</ng-form>
+					</div>
+					<label class="help-block" ng-if="isString(error)" ng-repeat="error in registrationErrorPayload.toolType" bo-text="error"></label>
+					<div class="form-group" style="padding-top:7px;">
+						<a href="" ng-click="addButtonClick('toolType', software, true, false);">Add Tool type</a>
+					</div>
+				</div>
+			</div>
+			<!-- Topic -->
+			<div class="form-group no-margin-bottom">
+				<label class="control-label col-sm-3">
+					<span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.topic.description}}">Topic 
+						<span style="color:#ff0000;"><b>*</b>
+						</span>
+					</span>
+				</label>
+				<div class="col-sm-9">
+					<div class="form-group" ng-repeat="topic in software.topic track by $index" ng-init="topicIndex = $index" ng-class="{'no-margin-bottom': $last};">
+						<div class="input-group">
+							<input type="text" ng-model="software.topic[$index].term" class="form-control input-ontology" placeholder="Topic" disabled="disabled" name="topic" validate-edit-resource-field index={{$index}}></input>
+							<span class="input-group-btn">
+								<button class="btn" type="button" ng-click="software.topic[$index].term = 'Topic'; meta.topic[topicIndex].selected = undefined; meta.topic[topicIndex].visibility = true;" tooltips tooltip-side="right" tooltip-content="If you can't find the topics you are looking for, please specify them in the 'Description' field in the previous tab ('Summary') instead." ng-class="{'btn-primary': software.topic[$index].term == 'Topic', 'btn-default': software.topic[$index].term != 'Topic'}">I don't know</button>
+								<button class="btn btn-default highlight-icon input-ontology-btn" type="button" ng-click="removeButtonClick('topic', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+							</span>
+						</div>
+						<div class="panel panel-default panel-ontology">
+							<div class="panel-body" style="padding:0px;">
+								<div uib-collapse="meta.topic[topicIndex].visibility">
+									<div class="form-group" style="margin:5px;">
+										<input type="text" ng-model="meta.topic[topicIndex].predicate" class="form-control input-sm"  placeholder="Filter"></input>
+									</div>
+									<div treecontrol class="tree-light"
+									tree-model="EDAM_topic"
+									options="treeOptions"
+									order-by="text"
+									on-selection="ontologyOnSelect(software.topic, topicIndex, node);"
+									selected-node="meta.topic[topicIndex].selected"
+									filter-expression="meta.topic[topicIndex].predicate">{{node.text}}
+								</div>
+							</div>
+							<button type="button" class="btn btn-default btn-xs btn-block btn-ontology" ng-class="{'btn-ontology-closed': meta.topic[topicIndex].visibility}" ng-click="meta.topic[topicIndex].visibility = !meta.topic[topicIndex].visibility"><i class="fa" ng-class="{'fa-chevron-up':!meta.topic[topicIndex].visibility, 'fa-chevron-down':meta.topic[topicIndex].visibility}"></i></button>
+						</div>
+					</div>
+					<label class="help-block" ng-repeat="error in form.topicForm.topic.errorMessages" bo-text="error"></label>
+					<div ng-class="{'has-error': true};">
+						<label class="help-block" ng-repeat="error in registrationErrorPayload.topic[$index]" bo-text="error"></label>
+					</div>
+				</div>
+				<div class="form-group" style="padding-top:7px;">
+					<a href="" ng-click="addButtonClick('topic', software, true, true)">Add topic</a>
+				</div>
+			</div>
+			<!-- Operating system -->
+			<div class="form-group no-margin-bottom">
+				<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.operatingSystem.description}}">Operating system</span></label>
+				<div class="col-sm-9">
+					<div class="form-group" ng-repeat="operatingSystem in software.operatingSystem track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.operatingSystem[$index][0]};">
+						<ng-form name="platformForm">
+							<div class="input-group">
+								<select class="form-control select-btn-group" ng-options="item.value as item.text for item in platformOptions" ng-model="software.operatingSystem[$index]" name="operatingSystem" validate-edit-resource-field index={{$index}}>
+								</select>
+								<span class="input-group-btn">
+									<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('operatingSystem', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+								</span>
+							</div>
+							<label class="help-block" ng-repeat="error in platformForm.operatingSystem.errorMessages" bo-text="error"></label>
+						</ng-form>
+					</div>
+					<div class="form-group" style="padding-top:7px;">
+						<a href="" ng-click="addButtonClick('operatingSystem', software, true, false);">Add operating system</a>
+					</div>
+				</div>
+			</div>
+			<!-- Language -->
+			<div class="form-group no-margin-bottom">
+				<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.language.description}}">Language</span></label>
+				<div class="col-sm-9">
+					<div class="form-group" ng-repeat="language in software.language track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.language[$index][0]};">
+						<ng-form name="languageForm">
+							<div class="input-group">
+								<select class="form-control select-btn-group" name="language" ng-options="item.value as item.text for item in languageOptions" ng-model="software.language[$index]" validate-edit-resource-field index={{$index}}>
+								</select>
+								<span class="input-group-btn">
+									<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('language', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+								</span>
+							</div>
+							<label class="help-block" ng-repeat="error in languageForm.language.errorMessages" bo-text="error"></label>
+						</ng-form>
+					</div>
+					<div class="form-group" style="padding-top:7px;">
+						<a href="" ng-click="addButtonClick('language', software, true, false);">Add language</a>
+					</div>
+				</div>
+			</div>
+			<!-- Maturity -->
+			<div class="form-group" ng-class="{'has-error': form.labelForm.maturity.errorMessages[0]};">
+				<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.maturity.description}}">Maturity</span></label>
+				<div class="col-sm-9">
+					<select class="form-control select-btn-group" ng-options="item.value as item.text for item in maturityOptions" name="maturity" ng-model="software.maturity" validate-edit-resource-field>
+					</select>
+					<label class="help-block" ng-repeat="error in form.labelForm.maturity.errorMessages" bo-text="error"></label>
+				</div>
+			</div>
+			<!-- License  -->
+			<div class="form-group" ng-class="{'has-error': form.labelForm.license.errorMessages[0]};">
+				<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.license.description}}">License</span></label>
+				<div class="col-sm-9">
+					<select class="form-control select-btn-group" ng-options="item.value as item.text for item in licenseOptions" ng-model="software.license" name="license" validate-edit-resource-field>
+					</select>
+					<label class="help-block" ng-repeat="error in form.labelForm.license.errorMessages" bo-text="error"></label>
+				</div>
+			</div>
+			<!-- Cost -->
+			<div class="form-group" ng-class="{'has-error': form.labelForm.cost.errorMessages[0]};">
+				<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.cost.description}}">Cost</span></label>
+				<div class="col-sm-9">
+					<select class="form-control select-btn-group" ng-options="item.value as item.text for item in costOptions" ng-model="software.cost" name="cost" validate-edit-resource-field>
+					</select>
+					<label class="help-block" ng-repeat="error in form.labelForm.cost.errorMessages" bo-text="error"></label>
+				</div>
+			</div>
+			<!-- 	Accessability	 -->
+			<div class="form-group no-margin-bottom">
+				<label class="control-label col-sm-3" style="position: relative;">
+					<span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.accessibility.description}}">Accessibility</span>
+				</label>
+				<div class="col-sm-9">
+					<div class="form-group" ng-repeat="accessibility in software.accessibility track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.accessibility[$index][0]};">
+						<ng-form name="resourceTypeForm">
+							<div class="input-group">
+								<select class="form-control select-btn-group" ng-options="item.value as item.text for item in accessibilityOptions" ng-model="software.accessibility[$index]" name="accessibility" validate-edit-resource-field index={{$index}}>
+								</select>
+								<span class="input-group-btn">
+									<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('accessibility', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+								</span>
+							</div>
+							<label class="help-block" ng-repeat="error in resourceTypeForm.accessibility.errorMessages" bo-text="error"></label>
+						</ng-form>
+					</div>
+					<label class="help-block" ng-if="isString(error)" ng-repeat="error in registrationErrorPayload.accessibility" bo-text="error"></label>
+					<div class="form-group" style="padding-top:7px;">
+						<a href="" ng-click="addButtonClick('accessibility', software, true, false);">Add accessibility</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</form>

@@ -1,0 +1,10 @@
+<span>
+	<span class="details-bar-text">Sort by</span>
+	<span ng-repeat="option in ToolSorter.list">
+		<button class="btn btn-default details-bar-button-background" ng-class="{active : ToolSorter.sortBy === option}" ng-click="ToolSorter.sortBy = option; sortingChangedByDropdown();">{{ option.text }}</button>
+	</span>
+	<button type="button" class="btn btn-default details-bar-button-no-background" ng-click="ToolSorter.order = !ToolSorter.order; sortingChangedByDropdown()">
+		<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" ng-show="!ToolSorter.order" ></span>
+		<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" ng-show="ToolSorter.order"></span>
+	</button>
+</span>

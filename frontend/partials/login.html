@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="/css/login.css">
+<div class="container">
+	<div class="col-md-offset-4 col-md-4">
+		<div class="page-header">
+			<h1>Please log in</h1>
+		</div>
+		<form role="form" novalidate name="login_form">
+			<div class="form-group has-feedback" ng-class="{'has-error': loginErrors || login_form.username.$dirty && login_form.username.$invalid, 'has-success': !loginErrors && login_form.username.$dirty && login_form.username.$valid}">
+				<label>Username / Email</label>
+				<input type="text" name="username" class="form-control" placeholder="Username / Email" ng-model="credentials.username" required>
+				<span ng-show="login_form.username.$valid && !loginErrors" class="glyphicon glyphicon-ok form-control-feedback"></span>
+				<span ng-show="login_form.username.$dirty && (login_form.username.$invalid || loginErrors)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+				<span class="help-block" ng-show="login_form.username.$error.email && login_form.username.$dirty">Email address is invalid.</span>
+				<span class="help-block" ng-show="login_form.username.$error.required && login_form.username.$dirty">Username is required.</span>
+			</div>
+			<div class="form-group has-feedback" ng-class="{'has-error': loginErrors || login_form.password.$dirty && login_form.password.$invalid, 'has-success': !loginErrors && login_form.password.$dirty && login_form.password.$valid}">
+				<label>Password</label>
+				<input type="password" name="password" class="form-control" placeholder="Password" ng-model="credentials.password" required>
+				<span ng-show="login_form.password.$valid && !loginErrors" class="glyphicon glyphicon-ok form-control-feedback"></span>
+				<span ng-show="login_form.password.$dirty && (login_form.password.$invalid || loginErrors)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+				<span class="help-block" ng-show="login_form.password.$error.required && login_form.password.$dirty">Password is required.</span>
+			</div>
+			<button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="loginButtonClick()">Log in</button>
+			<div class="form-group has-error">
+				<span class="help-block" ng-repeat="error in loginErrors">{{ error }}</span>	
+			</div>
+			<div class="form-group">
+				<span class="help-block">Forgot the password? <a ui-sref="reset-password">Reset it</a>.</span>	
+				<span class="help-block">Don't have an account? <a ui-sref="signup">Create one</a>.</span>	
+			</div>
+		</form>
+	</div>
+</div>

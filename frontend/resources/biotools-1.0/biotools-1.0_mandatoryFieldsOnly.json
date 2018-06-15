@@ -1,0 +1,36 @@
+{
+  "name": "ResourceName",
+  "homepage": "http://resourcename.org",
+  "resourceType": [
+    {
+      "term": "Tool (query and retrieval)"
+    }
+  ],
+  "interface": [
+    {
+      "interfaceType": {
+        "term": "SQL"
+      }
+    }
+  ],
+  "description": "Description of resource goes here.",
+  "topic": [
+    {
+      "term": "EDAM Topic"
+    }
+  ],
+  "function": [
+    {
+      "functionName": [
+        {
+          "term": "EDAM Function"
+        }
+      ]
+    }
+  ],
+  "contact": [
+    {
+      "contactEmail": "FredBloggs@gmail.com"
+    }
+  ]
+}

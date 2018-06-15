@@ -1,0 +1,17 @@
+<div class="container-fluid">
+	<div class="row">
+		<!-- <div search-bar ng-cloak></div> -->
+	</div>
+	<div ng-if="!ToolList.loading && ToolList.count == 0" class="col-md-12 info-dialog-background info-dialog info-dialog-text">
+		No results matching the search criteria
+	</div>
+	<div ng-if="!ToolList.loading && ToolList.count != 0">
+		<div class="row">
+			<div ng-if="DisplayModeSelector.mode.attrName == 'grid'"><div tool-list-table></div></div>
+			<div ng-if="DisplayModeSelector.mode.attrName == 'cards'"><div tool-list></div></div>
+		</div>
+	</div>
+	<div style="text-align:center" ng-if="ToolList.loading">
+		<div spinner style="margin:40px;"></div>
+	</div>
+</div>

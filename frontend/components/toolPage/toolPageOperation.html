@@ -1,0 +1,67 @@
+<!-- Divider line -->
+<!-- <div class="tool-page-diver-label">
+   <span>Function</span>
+</div> -->
+<!-- DESKTOP -->
+<div class="row hidden-xs tool-page-row" ng-repeat="function in software.function">
+	<br>
+	<div class="row flex-vertical">
+		<div class="col-sm-4 col-md-4 col-lg-4">
+			<div class="row flex-vertical" ng-repeat="input in function.input" style="margin:0px;">
+				<div class="col-sm-10 col-md-10 text-center">
+					<h5 class="function-image-element" style="padding-top:5px; padding-bottom:5px; margin:0px;">
+						<a href="" ng-click="inputNameClicked(input)" class="tool-page-grey-text">{{ input.data.term }} ›</a>
+						<span ng-show="input.format.length > 0" style="font-weight: lighter;">
+							<br>(<span ng-repeat="format in input.format">
+							<a href="" ng-click="inputFormatNameClicked(format)" class="tool-page-grey-text">{{ format.term }} ›</a>
+							<span ng-show="!$last">, </span></span>)
+						</span>
+					</h5>
+					<div style="margin-bottom:5px;" ng-show="!$last"></div>
+				</div>
+				<div class="col-sm-2 col-md-2 text-center">
+					<div class="row">
+						<i class="fa fa-1x fa-long-arrow-right function-arrow-element"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4 col-md-4 col-lg-4 text-center function-image-element" style="align-self:stretch;display:flex;justify-content: center;flex-direction: column;text-align: center;">
+			<ul class="list-unstyled" style="margin-bottom:0px;">
+				<span ng-if="function.operation.length == null" class="tool-page-grey-text">{{ ::software.name }}</span>
+				<li ng-repeat="functionName in function.operation">
+					<h5 style="color: #575757; font-size: 100%;">
+						<a ng-if="functionName.term != 'N/A' && functionName.term != ''" href="" ng-click="functionNameClicked(functionName)" class="tool-page-grey-text">{{ ::functionName.term }} ›</a>
+						<a ng-if="functionName.term == 'N/A' || functionName.term == ''" href="" ng-click="toolNameClicked(functionName)" class="tool-page-grey-text">{{ ::software.name }} ›</a>
+						<i ng-show="function.comment" class="fa fa-question-circle" aria-hidden="true" style="font-size: 100%; margin-left: 0.5em;" tooltips tooltip-content="{{ ::function.comment }}"></i>
+					</h5>
+				</li>
+			</ul>
+		</div>
+		<div class="col-sm-4 col-md-4 col-lg-4 text-center">
+			<div class="row flex-vertical" ng-repeat="output in function.output" style="margin:0px;">
+				<div class="col-sm-2 col-md-2">
+					<div class="row">
+						<i class="fa fa-1x fa-long-arrow-right function-arrow-element"></i>
+					</div>
+				</div>
+				<div class="col-sm-10 col-md-10">
+					<h5 class="function-image-element" style="padding-top:5px;padding-bottom:5px;margin:0px;">
+						<a href="" ng-click="outputNameClicked(output)" class="tool-page-grey-text">{{ output.data.term }} ›</a>
+						<span ng-show="output.format.length > 0" style="font-weight: lighter;">
+							<br>(
+							<span ng-repeat="format in output.format">
+								<a href="" ng-click="outputFormatNameClicked(format)" class="tool-page-grey-text">{{ format.term }} ›</a>
+								<span ng-show="!$last">, </span>
+							</span>)
+						</span> 
+					</h5>
+					<div style="margin-bottom:5px;" ng-show="!$last"></div>
+				</div>
+			</div>
+		</div>
+		<p ng-if="function.comment" style="margin-left: 4px;"></p>
+	</div>
+</div>
+<br>
+<br>

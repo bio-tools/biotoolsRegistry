@@ -1,0 +1,331 @@
+     {
+        "name": "ResourceName",
+        "homepage": "http://resourcename.org",
+        "mirror": [
+          "http://someURL.org",
+          "http://someURL.org"
+        ],
+        "version": "Version 1",
+        "canonicalID": "token",
+        "collection": [
+          "Name of some collection",
+          "Name of some collection"
+        ],
+        "accessibility": "Public",
+        "uses": [
+          {
+            "usesName": "Name of some resource",
+            "usesHomepage": "http://someURL.org",
+            "usesVersion": "Version number of some resource"
+          },
+          {
+            "usesName": "Name of some resource",
+            "usesHomepage": "http://someURL.org",
+            "usesVersion": "Version number of some resource"
+          }
+        ],
+        "resourceType": [
+          "Tool",
+          "Tool"
+        ],
+        "interface": [
+          {
+            "interfaceType": "Command line",
+            "interfaceDocs": "http://someurl.org",
+            "interfaceSpecURL": "http://someurl.org",
+            "interfaceSpecFormat": "Swagger"
+          },
+          {
+            "interfaceType": "Command line",
+            "interfaceDocs": "http://someurl.org",
+            "interfaceSpecURL": "http://someurl.org",
+            "interfaceSpecFormat": "WSDL2"
+          }
+        ],
+        "description": "Description of resource goes here.",
+        "topic": [
+          {
+            "uri": "http://edamontology.org/topic_0003",
+            "term": "EDAM Topic"
+          },
+          {
+            "uri": "http://edamontology.org/topic_0003",
+            "term": "EDAM Topic"
+          }
+        ],
+        "tag": [
+          {
+            "uri": "http",
+            "term": "A free-text tag"
+          },
+          {
+            "uri": "http",
+            "term": "A free-text tag"
+          }
+        ],
+        "function": [
+          {
+            "functionName": [
+              {
+                "uri": "http://edamontology.org/operation_0004",
+                "term": "EDAM Function"
+              },
+              {
+                "uri": "http://edamontology.org/operation_0004",
+                "term": "EDAM Function"
+              }
+            ],
+            "functionDescription": "Concise description of the function.",
+            "functionHandle": "--someOption",
+            "input": [
+              {
+                "dataType": {
+                  "uri": "http://edamontology.org/data_0006",
+                  "term": "EDAM data"
+                },
+                "dataFormat": [
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  },
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  }
+                ],
+                "dataHandle": "--someOption",
+                "dataDescription": "Concise description of the data."
+              },
+              {
+                "dataType": {
+                  "uri": "http://edamontology.org/data_0006",
+                  "term": "EDAM data"
+                },
+                "dataFormat": [
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  },
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  }
+                ],
+                "dataHandle": "--someOption",
+                "dataDescription": "Concise description of the data."
+              }
+            ],
+            "output": [
+              {
+                "dataType": {
+                  "uri": "http://edamontology.org/data_0006",
+                  "term": "EDAM data"
+                },
+                "dataFormat": [
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  },
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  }
+                ],
+                "dataHandle": "--someOption",
+                "dataDescription": "Concise description of the data."
+              },
+              {
+                "dataType": {
+                  "uri": "http://edamontology.org/data_0006",
+                  "term": "EDAM data"
+                },
+                "dataFormat": [
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  },
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  }
+                ],
+                "dataHandle": "--someOption",
+                "dataDescription": "Concise description of the data."
+              }
+            ]
+          },
+          {
+            "functionName": [
+              {
+                "uri": "http://edamontology.org/operation_0004",
+                "term": "EDAM Function"
+              },
+              {
+                "uri": "http://edamontology.org/operation_0004",
+                "term": "EDAM Function"
+              }
+            ],
+            "functionDescription": "Concise description of the function.",
+            "functionHandle": "--someOption",
+            "input": [
+              {
+                "dataType": {
+                  "uri": "http://edamontology.org/data_0006",
+                  "term": "EDAM data"
+                },
+                "dataFormat": [
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  },
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  }
+                ],
+                "dataHandle": "--someOption",
+                "dataDescription": "Concise description of the data."
+              },
+              {
+                "dataType": {
+                  "uri": "http://edamontology.org/data_0006",
+                  "term": "EDAM data"
+                },
+                "dataFormat": [
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  },
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  }
+                ],
+                "dataHandle": "--someOption",
+                "dataDescription": "Concise description of the data."
+              }
+            ],
+            "output": [
+              {
+                "dataType": {
+                  "uri": "http://edamontology.org/data_0006",
+                  "term": "EDAM data"
+                },
+                "dataFormat": [
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  },
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  }
+                ],
+                "dataHandle": "--someOption",
+                "dataDescription": "Concise description of the data."
+              },
+              {
+                "dataType": {
+                  "uri": "http://edamontology.org/data_0006",
+                  "term": "EDAM data"
+                },
+                "dataFormat": [
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  },
+                  {
+                    "uri": "http://edamontology.org/format_1915",
+                    "term": "EDAM format"
+                  }
+                ],
+                "dataHandle": "--someOption",
+                "dataDescription": "Concise description of the data."
+              }
+            ]
+          }
+        ],
+        "contact": [
+          {
+            "contactEmail": "FredBloggs@gmail.com",
+            "contactURL": "http://someURL.org",
+            "contactName": "Fred Bloggs",
+            "contactTel": "String",
+            "contactRole": [
+              "Scientific",
+              "Developer"
+            ]
+          },
+          {
+            "contactEmail": "FredBloggs@gmail.com",
+            "contactURL": "http://someURL.org",
+            "contactName": "Fred Bloggs",
+            "contactTel": "String",
+            "contactRole": [
+              "Helpdesk",
+              "Scientific"
+            ]
+          }
+        ],
+        "sourceRegistry": "http://sourceregistry.com/toolname",
+        "elixirInfo": {
+          "elixirStatus": "ELIXIR Named Service",
+          "elixirNode": "Denmark"
+        },
+        "maturity": "Young",
+        "platform": [
+          "Linux",
+          "Linux"
+        ],
+        "language": [
+          "Java",
+          "Java"
+        ],
+        "license": "GNU General Public License v3",
+        "cost": "Free",
+        "docs": {
+          "docsHome": "http://toolname.org/docs",
+          "docsTermsOfUse": "http://toolname.org/docs/terms",
+          "docsDownload": "http://toolname.org/downloads",
+          "docsCitationInstructions": "http://toolname.org/docs/citing"
+        },
+        "publications": {
+          "publicationsPrimaryID": "10.1006/jmbi.1995.0238",
+          "publicationsOtherID": [
+            "10.1006/jmbi.1995.0238",
+            "10.1006/jmbi.1995.0238"
+          ]
+        },
+        "credits": {
+          "creditsDeveloper": [
+            "Joe Bloggs",
+            "Joe Bloggs",
+            "Joe Bloggs",
+            "Joe Bloggs"
+          ],
+          "creditsContributor": [
+            "Judi Bloggs",
+            "Judi Bloggs",
+            "Judi Bloggs",
+            "Judi Bloggs"
+          ],
+          "creditsInstitution": [
+            "Institute name",
+            "Institute name",
+            "Institute name",
+            "Institute name"
+          ],
+          "creditsInfrastructure": [
+            "Infrastructure name",
+            "Infrastructure name",
+            "Infrastructure name",
+            "Infrastructure name"
+          ],
+          "creditsFunding": [
+            "Grant number: 12345",
+            "Grant number: 12345",
+            "Grant number: 12345",
+            "Grant number: 12345"
+          ]
+        }
+      }

@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2012 rel. 2 sp1 (x64) (http://www.altova.com) by Julie Mace (EMBL Outstation the EBI) -->
+<xs:schema xmlns="http://biotoolsregistry.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:altova="http://www.altova.com/xml-schema-extensions" targetNamespace="http://biotoolsregistry.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="OntologyTerm">
+		<xs:annotation>
+			<xs:documentation>Ontology concept term + URI, , or any tag</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="uri" type="URL">
+					<xs:annotation>
+						<xs:documentation>The URI of an ontology term</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="EDAMFormat">
+		<xs:annotation>
+			<xs:documentation>Term and URI of an EDAM format concept, or any tag</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:token">
+				<xs:attribute name="uri">
+					<xs:annotation>
+						<xs:documentation>The URI of an EDAM format term</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:anyURI">
+							<xs:pattern value="http://edamontology.net/format_[0-9]{4}"/>
+							<xs:pattern value="http://edamontology.org/format_[0-9]{4}"/>
+							<xs:enumeration value="http://edamontology.org/format_1915"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="EDAMOperation">
+		<xs:annotation>
+			<xs:documentation>Term and URI of an EDAM operation concept, or any tag</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:token">
+				<xs:attribute name="uri">
+					<xs:annotation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="http://edamontology.org/operation_0004"/>
+							</altova:exampleValues>
+						</xs:appinfo>
+						<xs:documentation>The URI of an EDAM Operation term</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:anyURI">
+							<xs:pattern value="http://edamontology.net/operation_[0-9]{4}"/>
+							<xs:pattern value="http://edamontology.org/operation_[0-9]{4}"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="EDAMData">
+		<xs:annotation>
+			<xs:documentation>Term and URI of an EDAM data concept, or any tag</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:token">
+				<xs:attribute name="uri">
+					<xs:annotation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="http://edamontology.org/data_0006"/>
+							</altova:exampleValues>
+						</xs:appinfo>
+						<xs:documentation>The URI of an EDAM Data term</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:anyURI">
+							<xs:pattern value="http://edamontology.net/data_[0-9]{4}"/>
+							<xs:pattern value="http://edamontology.org/data_[0-9]{4}"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="EDAMTopic">
+		<xs:annotation>
+			<xs:documentation>Term and URI of an EDAM topic concept, or any tag</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:token">
+				<xs:attribute name="uri">
+					<xs:annotation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="http://edamontology.org/topic_0003"/>
+							</altova:exampleValues>
+						</xs:appinfo>
+						<xs:documentation>The URI of an EDAM term</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:anyURI">
+							<xs:pattern value="http://edamontology.org/topic_[0-9]{4}"/>
+							<xs:pattern value="http://edamontology.net/topic_[0-9]{4}"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:element name="resources">
+		<xs:annotation>
+			<xs:documentation>Description of one or more bioinformatics resources in the resource description format</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="resource" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Description of a software entity, e.g. a tool, data service, package etc.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="Interface">
+		<xs:annotation>
+			<xs:documentation>Details of an iinterface to a resource</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element name="interfaceType">
+				<xs:annotation>
+					<xs:documentation>Resource interface type: "Command-line", "Desktop GUI", "SOAP WS", "REST API", "Web UI", "URL", "API", "SQL" or "SPARQL" </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:restriction base="OntologyTerm">
+							<xs:enumeration value="Command line"/>
+							<xs:enumeration value="Desktop GUI"/>
+							<xs:enumeration value="SOAP WS"/>
+							<xs:enumeration value="REST API"/>
+							<xs:enumeration value="Web UI"/>
+							<xs:enumeration value="URL"/>
+							<xs:enumeration value="API"/>
+							<xs:enumeration value="SQL"/>
+							<xs:enumeration value="SPARQL"/>
+						</xs:restriction>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="interfaceDocs" type="URL" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Interface documentation (URL)</xs:documentation>
+					<xs:appinfo>
+						<altova:exampleValues>
+							<altova:example value="http://someurl.org"/>
+						</altova:exampleValues>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="interfaceSpecURL" type="URL" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Link to machine-readable description of the interface (URL)</xs:documentation>
+					<xs:appinfo>
+						<altova:exampleValues>
+							<altova:example value="http://someurl.org"/>
+						</altova:exampleValues>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="interfaceSpecFormat" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Machine-readable interface description format: "WSDL", "WSDL2", "WADL" or "Swagger"</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="Name">
+						<xs:enumeration value="Swagger"/>
+						<xs:enumeration value="WADL"/>
+						<xs:enumeration value="WSDL"/>
+						<xs:enumeration value="WSDL2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:all>
+	</xs:complexType>
+	<xs:element name="resource">
+		<xs:annotation>
+			<xs:documentation>Attributes of bioinformatics resource</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name" type="Name">
+					<xs:annotation>
+						<xs:documentation>Canonical resource name</xs:documentation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="ResourceName"/>
+							</altova:exampleValues>
+						</xs:appinfo>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="homepage" type="URL">
+					<xs:annotation>
+						<xs:documentation>Resource homepage (URL)</xs:documentation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="http://resourcename.org"/>
+							</altova:exampleValues>
+						</xs:appinfo>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="version" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Resource version e.g. version number</xs:documentation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="Version 1"/>
+							</altova:exampleValues>
+						</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:whiteSpace value="collapse"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="collection" type="xs:token" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Name of a collection which the resource was developed for or is maintained as part of, e.g. a suite, package, workbench, framework, library, registry, project, Web portal or any other list</xs:documentation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="Name of some collection"/>
+							</altova:exampleValues>
+						</xs:appinfo>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="uses" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Details about other resources this resource uses, e.g. provides an interface to, or as a data source</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="usesName">
+								<xs:annotation>
+									<xs:documentation>Name of a resource that this resource uses</xs:documentation>
+									<xs:appinfo>
+										<altova:exampleValues>
+											<altova:example value="Name of some resource"/>
+										</altova:exampleValues>
+									</xs:appinfo>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:token">
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="usesHomepage" type="URL" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Homepage of a resource that this resource uses</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="usesVersion" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Version number of a resource that this resources uses</xs:documentation>
+									<xs:appinfo>
+										<altova:exampleValues>
+											<altova:example value="Version number of some resource"/>
+										</altova:exampleValues>
+									</xs:appinfo>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:token">
+										<xs:whiteSpace value="collapse"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="resourceType">
+					<xs:annotation>
+						<xs:documentation>Basic resource type: "Database",  "Framework", "Library", "Suite", "Widget", "virtual machine", "Tool (query and retrieval)", "Tool (analysis)", "Tool (deposition)", "Tool (visualiser)", "Tool (utility)" or "Other"</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:restriction base="OntologyTerm">
+								<xs:enumeration value="Database"/>
+								<xs:enumeration value="Framework"/>
+								<xs:enumeration value="Library"/>
+								<xs:enumeration value="Other"/>
+								<xs:enumeration value="Suite"/>
+								<xs:enumeration value="Widget"/>
+								<xs:enumeration value="Virtual machine"/>
+								<xs:enumeration value="Tool (query and retrieval)"/>
+								<xs:enumeration value="Tool (analysis)"/>
+								<xs:enumeration value="Tool (deposition)"/>
+								<xs:enumeration value="Tool (visualiser)"/>
+								<xs:enumeration value="Tool (utility)"/>
+							</xs:restriction>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="interface" type="Interface" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Details about an interface to the resource</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="description">
+					<xs:annotation>
+						<xs:documentation>Short textual description of the resource</xs:documentation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="Description of resource goes here."/>
+							</altova:exampleValues>
+						</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="Text"/>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="topic" type="EDAMTopic" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>General domain the resource serves or other general category for it</xs:documentation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="EDAM Topic"/>
+							</altova:exampleValues>
+						</xs:appinfo>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="tag" type="OntologyTerm" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Miscellaneous semantic annotations not covered by EDAM, e.g. data-generating technology, organism taxon, biological environment, disease etc. </xs:documentation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="A free-text tag"/>
+							</altova:exampleValues>
+						</xs:appinfo>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="function" type="Operation" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Function(s) that the resource performs</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="contact" type="contactDetails" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Contact details for primary points of contact, e.g. helpdesk or an individual</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="sourceRegistry" type="URL" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Link to the registry (or other collection) from which the resource was imported (URL)</xs:documentation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="http://sourceregistry.com/toolname"/>
+							</altova:exampleValues>
+						</xs:appinfo>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="maturity" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Resource maturity: "Nascent", "Young", "Established", "Retiring" or "Extinct"</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:restriction base="OntologyTerm">
+								<xs:enumeration value="Nascent"/>
+								<xs:enumeration value="Young"/>
+								<xs:enumeration value="Established"/>
+								<xs:enumeration value="Retiring"/>
+								<xs:enumeration value="Extinct"/>
+							</xs:restriction>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="platform" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Platforms supported by a downloadable software package: "Mac", "Linux", "Windows" or "Unix"</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:restriction base="OntologyTerm">
+								<xs:enumeration value="Mac"/>
+								<xs:enumeration value="Linux"/>
+								<xs:enumeration value="Windows"/>
+								<xs:enumeration value="Unix"/>
+							</xs:restriction>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="language" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Languages (for APIs etc.) or technologies (for Web applications, applets etc.)</xs:documentation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="Java"/>
+							</altova:exampleValues>
+						</xs:appinfo>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:restriction base="OntologyTerm">
+								<xs:enumeration value="ActionScript"/>
+								<xs:enumeration value="Ada"/>
+								<xs:enumeration value="AppleScript"/>
+								<xs:enumeration value="Assembly"/>
+								<xs:enumeration value="C"/>
+								<xs:enumeration value="C Shapr"/>
+								<xs:enumeration value="C++"/>
+								<xs:enumeration value="COBOL"/>
+								<xs:enumeration value="ColdFusion"/>
+								<xs:enumeration value="D"/>
+								<xs:enumeration value="Delphi"/>
+								<xs:enumeration value="Dylan"/>
+								<xs:enumeration value="Eiffel"/>
+								<xs:enumeration value="Forth"/>
+								<xs:enumeration value="Fortran"/>
+								<xs:enumeration value="Groovy"/>
+								<xs:enumeration value="Haskell"/>
+								<xs:enumeration value="Java"/>
+								<xs:enumeration value="Javascript"/>
+								<xs:enumeration value="LabVIEW"/>
+								<xs:enumeration value="Lisp"/>
+								<xs:enumeration value="Lua"/>
+								<xs:enumeration value="Maple"/>
+								<xs:enumeration value="Methematica"/>
+								<xs:enumeration value="MATLAB language"/>
+								<xs:enumeration value="MLXTRAN"/>
+								<xs:enumeration value="NMTRAN"/>
+								<xs:enumeration value="Pascal"/>
+								<xs:enumeration value="Perl"/>
+								<xs:enumeration value="PHP"/>
+								<xs:enumeration value="Prolog"/>
+								<xs:enumeration value="Python"/>
+								<xs:enumeration value="R language"/>
+								<xs:enumeration value="Racket"/>
+								<xs:enumeration value="REXX"/>
+								<xs:enumeration value="Ruby"/>
+								<xs:enumeration value="SAS"/>
+								<xs:enumeration value="Scala"/>
+								<xs:enumeration value="Scheme"/>
+								<xs:enumeration value="Shell"/>
+								<xs:enumeration value="Smalltalk"/>
+								<xs:enumeration value="SQL"/>
+								<xs:enumeration value="Turing"/>
+								<xs:enumeration value="Verilog"/>
+								<xs:enumeration value="VHDL"/>
+								<xs:enumeration value="Visual Basic"/>
+							</xs:restriction>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="license" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Software or data usage license</xs:documentation>
+						<xs:appinfo>
+							<altova:exampleValues>
+								<altova:example value="GNU General Public License v3"/>
+							</altova:exampleValues>
+						</xs:appinfo>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:restriction base="OntologyTerm">
+								<xs:enumeration value="Apache License 2.0"/>
+								<xs:enumeration value="MIT License"/>
+								<xs:enumeration value="GNU General Public License v3"/>
+								<xs:enumeration value="GNU Lesser General Public License v2.1"/>
+								<xs:enumeration value="GNU General Public License v2"/>
+								<xs:enumeration value="GNU Affero General Public License v3"/>
+								<xs:enumeration value="BSD 3-Clause License (Revised)"/>
+								<xs:enumeration value="BSD 2-Clause License"/>
+								<xs:enumeration value="Creative Commons Attribution NonCommerical NoDerivs"/>
+								<xs:enumeration value="Microsoft Public License"/>
+								<xs:enumeration value="Mozilla Public License 2.0"/>
+								<xs:enumeration value="Creative Commons Attribution NoDerivs"/>
+								<xs:enumeration value="Eclipse Public License 1.0"/>
+								<xs:enumeration value="Microsoft Reciprocal License"/>
+								<xs:enumeration value="PHP License 3.0"/>
+								<xs:enumeration value="Creative Commons Attribution 3.0 Unported"/>
+								<xs:enumeration value="Creative Commons Attribution Share Alike"/>
+								<xs:enumeration value="Creative Commons Attribution NonCommercial"/>
+								<xs:enumeration value="Creative Commons Attribution NonCommercial ShareAlike"/>
+								<xs:enumeration value="Apple Public Source License 2.0"/>
+								<xs:enumeration value="ISC License"/>
+								<xs:enumeration value="IBM Public License"/>
+								<xs:enumeration value="GNU Free Documentation License v1.3"/>
+								<xs:enumeration value="Common Public Attribution License Version 1.0"/>
+								<xs:enumeration value="European Union Public License 1.1"/>
+								<xs:enumeration value="ODC Open Database License"/>
+								<xs:enumeration value="Simple Public License 2.0"/>
+								<xs:enumeration value="Creative Commons Attribution-NonCommercial 2.0 Generic"/>
+								<xs:enumeration value="Creative Commons CC0 1.0 Universal"/>
+								<xs:enumeration value="Microsoft Shared Source Community License"/>
+								<xs:enumeration value="Mozilla Public License 1.1"/>
+								<xs:enumeration value="Educational Community License Version 2.0"/>
+								<xs:enumeration value="Creative Commons Attribution 4.0 International"/>
+								<xs:enumeration value="Open Software Licence 3.0"/>
+								<xs:enumeration value="Common Public License 1.0"/>
+								<xs:enumeration value="CeCILL v2"/>
+								<xs:enumeration value="Adaptive Public License 1.0"/>
+								<xs:enumeration value="Non-Profit Open Software License 3.0"/>
+								<xs:enumeration value="Reciprocal Public License 1.5"/>
+								<xs:enumeration value="Open Public License v1.0"/>
+								<xs:enumeration value="ODC Public Domain Dedication and License 1.0"/>
+							</xs:restriction>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="cost" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Cost of purchase: "Free", "Free with restrictions" or "Commercial"</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:restriction base="OntologyTerm">
+								<xs:enumeration value="Free"/>
+								<xs:enumeration value="Free with restrictions"/>
+								<xs:enumeration value="Commercial"/>
+							</xs:restriction>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="docs" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Links to documentation on resource website</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:all minOccurs="0">
+							<xs:element name="docsHome" type="URL" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Resource documentation main page (URL)</xs:documentation>
+									<xs:appinfo>
+										<altova:exampleValues>
+											<altova:example value="http://toolname.org/docs"/>
+										</altova:exampleValues>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="docsTermsOfUse" type="URL" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Link to license text or terms of use (URL)</xs:documentation>
+									<xs:appinfo>
+										<altova:exampleValues>
+											<altova:example value="http://toolname.org/docs/terms"/>
+										</altova:exampleValues>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="docsDownload" type="URL" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Software or data downloads page (URL)</xs:documentation>
+									<xs:appinfo>
+										<altova:exampleValues>
+											<altova:example value="http://toolname.org/downloads"/>
+										</altova:exampleValues>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="docsCitationInstructions" type="URL" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Citation instructions (URL)</xs:documentation>
+									<xs:appinfo>
+										<altova:exampleValues>
+											<altova:example value="http://toolname.org/docs/citing"/>
+										</altova:exampleValues>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="publications" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Publications relevant to the resource</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="publicationsPrimaryID" type="CitationID" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>PMCID, PMID or DOI of the primary publication</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="publicationsOtherID" type="CitationID" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>PMCID, PMID or DOI of other relevant publications</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="credits" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Entities that should be credited for the resource</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="creditsDeveloper" type="Name" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Name of person that developed the resource</xs:documentation>
+									<xs:appinfo>
+										<altova:exampleValues>
+											<altova:example value="Joe Bloggs"/>
+										</altova:exampleValues>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="creditsContributor" type="Name" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Name of person contributing to the resource</xs:documentation>
+									<xs:appinfo>
+										<altova:exampleValues>
+											<altova:example value="Judi Bloggs"/>
+										</altova:exampleValues>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="creditsInstitution" type="Name" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Name of the institution that developed or provide the resource</xs:documentation>
+									<xs:appinfo>
+										<altova:exampleValues>
+											<altova:example value="Institute name"/>
+										</altova:exampleValues>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="creditsInfrastructure" type="Name" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Research infrastructure in which the resource was developed or provided</xs:documentation>
+									<xs:appinfo>
+										<altova:exampleValues>
+											<altova:example value="Infrastructure name"/>
+										</altova:exampleValues>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="creditsFunding" type="Name" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Details of grant funding supporting the resource</xs:documentation>
+									<xs:appinfo>
+										<altova:exampleValues>
+											<altova:example value="Grant number: 12345"/>
+										</altova:exampleValues>
+									</xs:appinfo>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="Operation">
+		<xs:annotation>
+			<xs:documentation>Attributes of software operations</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="functionName" type="EDAMOperation" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Name(s) of the resource function(s)</xs:documentation>
+					<xs:appinfo>
+						<altova:exampleValues>
+							<altova:example value="EDAM Function"/>
+						</altova:exampleValues>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="functionDescription" type="Text" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Concise textual description of the function(s)</xs:documentation>
+					<xs:appinfo>
+						<altova:exampleValues>
+							<altova:example value="Description of the function."/>
+						</altova:exampleValues>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="functionHandle" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>One of WSDL operation name (SOAP services), URL scheme (REST services) or option/flag (command-line)</xs:documentation>
+					<xs:appinfo>
+						<altova:exampleValues>
+							<altova:example value="--someOption"/>
+						</altova:exampleValues>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:whiteSpace value="collapse"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="input" type="Data" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="output" type="Data" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Data">
+		<xs:annotation>
+			<xs:documentation>Attributes of software parameters</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="dataType" type="EDAMData">
+				<xs:annotation>
+					<xs:documentation>Type of data</xs:documentation>
+					<xs:appinfo>
+						<altova:exampleValues>
+							<altova:example value="EDAM data"/>
+						</altova:exampleValues>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataFormat" type="EDAMFormat" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Allowed format(s) of the data</xs:documentation>
+					<xs:appinfo>
+						<altova:exampleValues>
+							<altova:example value="EDAM format"/>
+						</altova:exampleValues>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataHandle" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Parameter identifier, e.g. command-line flag, parameter name etc.</xs:documentation>
+					<xs:appinfo>
+						<altova:exampleValues>
+							<altova:example value="--someOption"/>
+						</altova:exampleValues>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="Name">
+		<xs:annotation>
+			<xs:documentation>Name of a thing</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EmailAddress">
+		<xs:annotation>
+			<xs:documentation>Email address</xs:documentation>
+			<xs:appinfo>
+				<altova:exampleValues>
+					<altova:example value="FredBloggs@gmail.com"/>
+				</altova:exampleValues>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:whiteSpace value="collapse"/>
+			<xs:pattern value="[A-Za-z0-9_]+([-+.'][A-Za-z0-9_]+)*@[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*"/>
+			<xs:pattern value="((\S*\s*)*&lt;(([a-zA-Z0-9!#$%&amp;'\*\+/=\?\^`\{\}\|~\._-])|(&quot;.+&quot;)|(\\.))+@([a-zA-Z0-9-])+(([a-zA-Z0-9-])*\.([a-zA-Z0-9-])+)+&gt;)|((([a-zA-Z0-9!#$%&amp;'\*\+/=\?\^`\{\}\|~\._-])|(&quot;.+&quot;)|(\\.))+@([a-zA-Z0-9-])+(([a-zA-Z0-9-])*\.([a-zA-Z0-9-])+)+)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="URL">
+		<xs:annotation>
+			<xs:documentation>URL</xs:documentation>
+			<xs:appinfo>
+				<altova:exampleValues>
+					<altova:example value="http://someURL.org"/>
+				</altova:exampleValues>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:anyURI">
+			<xs:pattern value="http.*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CitationID">
+		<xs:annotation>
+			<xs:documentation>Resource citation (PMCID, PMID or DOI)</xs:documentation>
+			<xs:appinfo>
+				<altova:exampleValues>
+					<altova:example value="10.1006/jmbi.1995.0238"/>
+				</altova:exampleValues>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:whiteSpace value="collapse"/>
+			<xs:pattern value="(PMC)[1-9][0-9]{0,8}"/>
+			<xs:pattern value="[1-9][0-9]{0,8}"/>
+			<xs:pattern value="(doi:)?[0-9]{2}\.[0-9]{4}/.*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="RegistryURL">
+		<xs:annotation>
+			<xs:documentation>URL in the registry namespace</xs:documentation>
+			<xs:appinfo>
+				<altova:exampleValues>
+					<altova:example value="http://biotoolsregistry.org/collectionName_ID"/>
+				</altova:exampleValues>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:anyURI">
+			<xs:pattern value="http://biotoolsregistry.org/.*"/>
+			<xs:pattern value="http://biotoolsregistry.net/.*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Text">
+		<xs:annotation>
+			<xs:documentation>Concise textual description </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1000"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="contactDetails">
+		<xs:annotation>
+			<xs:documentation>Details of contacts for a resource</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:sequence>
+				<xs:choice>
+					<xs:sequence>
+						<xs:element name="contactEmail" type="EmailAddress">
+							<xs:annotation>
+								<xs:documentation>Email address of contact</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element ref="contactURL" minOccurs="0"/>
+					</xs:sequence>
+					<xs:element ref="contactURL"/>
+				</xs:choice>
+			</xs:sequence>
+			<xs:element name="contactName" type="Name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name of contact</xs:documentation>
+					<xs:appinfo>
+						<altova:exampleValues>
+							<altova:example value="Fred Bloggs"/>
+						</altova:exampleValues>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="contactTel" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Telephone number of contact </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="contactRole" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Role of contact</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="Name">
+						<xs:enumeration value="General"/>
+						<xs:enumeration value="Developer"/>
+						<xs:enumeration value="Technical"/>
+						<xs:enumeration value="Scientific"/>
+						<xs:enumeration value="Helpdesk"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="contactURL" type="URL">
+		<xs:annotation>
+			<xs:documentation>URL of contact</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

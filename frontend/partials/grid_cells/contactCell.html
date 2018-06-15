@@ -1,0 +1,17 @@
+<div class="ui-grid-cell-contents">
+	<ul style="list-style-type:circle">
+		<div ng-repeat="contact in COL_FIELD" class="grid" bindonce>
+			<li>
+				<contact>
+					<div ng-if="contact.email != null"><strong><span bo-html="contact.name | highlight:grid.appScope.Highlighting.terms"></span></strong>
+						<span ng-repeat="role in contact.role"><small><span bo-html="role | highlight:grid.appScope.Highlighting.terms"></span><span bo-show="!$last">, </span></small></span>
+					</div>
+					
+					<div ng-if="contact.email != null"><i class="fa fa-envelope-o" aria-hidden="true"></i> {{ :: contact.email.replace('@', ' at ') | highlight:grid.appScope.Highlighting.terms}}<br></div>
+					<div ng-if="contact.tel != null"><a href="tel:{{ contact.tel }}" target="_top"><span bo-html="contact.tel | highlight:grid.appScope.Highlighting.terms"></span></a><br></div>
+					<div ng-if="contact.url != null"><span bo-html="contact.url | highlight:grid.appScope.Highlighting.terms"></span><br></div>
+				</contact>
+			</li>
+		</div>
+	</ul>
+</div>

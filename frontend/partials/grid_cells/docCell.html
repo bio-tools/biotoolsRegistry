@@ -1,0 +1,11 @@
+<div class="ui-grid-cell-contents" bindonce>
+	<ul style="list-style-type:circle">
+		<div ng-repeat="(key, value) in row.entity.docs">
+			<li ng-if="value !== null">
+				<stylized_link>
+					<div insert-documentation-link key="key" value="value"></div>
+				</stylized_link>
+			</li>
+		</div>
+	</ul>
+</div>

@@ -1,0 +1,34 @@
+/* Active page */
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover
+{
+	background-color: #b2d2e1;
+	border-radius: 7px;
+	color: black;
+	font-family: 'Open Sans';
+	font-size: 14px;
+	font-weight: 100;
+}
+
+/* Disabled page */
+.pagination>.disabled>a, .pagination>.disabled>a:focus, .pagination>.disabled>a:hover, .pagination>.disabled>span, .pagination>.disabled>span:focus, .pagination>.disabled>span:hover
+{
+	background-color: transparent;
+	border: 0px solid white;
+	color: #bfbfbf;
+	font-family: 'Open Sans';
+	font-size: 14px;
+	font-weight: 100;
+	border-radius: 7px;
+}
+
+/* Active page */
+.pagination>li>a, .pagination>li>span
+{
+	color: #575757;
+	background-color: transparent;
+	border: 0px solid white;
+	font-family: 'Open Sans';
+	font-size: 14px;
+	font-weight: 100;
+	border-radius: 7px;
+}

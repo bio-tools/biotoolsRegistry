@@ -1,0 +1,41 @@
+ {
+	"name": "ResourceName",
+	"homepage": "http://resourcename.org",
+	"resourceType": "Tool",			
+   "interface": 
+   [
+	   {
+			"interfaceType": "Command line"
+        }
+    ],			
+	"description": "Description of resource goes here.",
+	"topic": 
+	[
+          {
+            "uri": "http://edamontology.org/topic_0003",
+            "term": "EDAM Topic"
+          }	
+	],
+     "function": 
+     [
+		 {
+            "functionName": 
+            [
+				{
+					"uri": "http://edamontology.org/operation_0004",
+					"term": "EDAM Function"
+				 }
+            ]			
+		}
+	],		
+ "contact": 
+	 [
+        {
+            "contactEmail": "FredBloggs@gmail.com"
+        }
+    ],				
+	"publications": 
+	{
+		"publicationsPrimaryID": "10.1006/jmbi.1995.0238"
+	}
+}

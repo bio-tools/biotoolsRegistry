@@ -1,0 +1,48 @@
+<div class="row" ng-cloak>
+	<div class="col-xs-12 col-sm-10 col-md-10 col-md-offset-1 col-sm-offset-1">
+		<h3 class="content-page-header">Subdomains</h3>
+		<hr class="content-page-divider">
+		<!-- Loading -->
+		<div ng-show="isLoadingSubdomains" style="margin-top: 50px;">
+			<div large-spinner></div>
+		</div>
+		<!-- Content of the page -->
+		<!-- Page loaded display subdomain editing options -->
+		<div class="content-page-section" ng-show="!isLoadingSubdomains">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<!-- My domains -->
+					<div class="panel panel-default">
+						<!-- Divider line -->
+						<div ng-show="subdomains.length == 0" class="panel-body">
+							<p>No registered subdomains</p>
+						</div>
+						<table class="table table-condensed table-hover table-striped" style="border-width: 0px;" ng-show="subdomains.length != 0">
+							<thead>
+								<tr>
+									<th style="padding-left: 15px;">Name</th>
+									<th style="width: 120px;">Resources</th>
+									<th style="width: 120px;"">Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="entry in subdomains track by $index">
+									<td style="padding-left: 15px;"><a ui-sref="subdomain({domain: entry.name})">{{ entry.name }} ›</a></td>
+									<td>{{ entry.resourcesCount }}</td>
+									<td >
+										<a ui-sref="edit-subdomain({id: entry.name})">
+											<button class="btn btn-xs btn-default content-page-control">Edit ›</button>
+										</a>
+										<button class="btn btn-xs btn-danger content-page-control" ng-click="deleteSubdomainAtIndex($index)">Delete ›</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<hr class="content-page-divider content-page-element-spacing-top">
+					<button class="btn btn-default btn-sm content-page-control pull-right" ui-sref="edit-subdomain">Add ›</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
