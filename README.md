@@ -18,7 +18,7 @@ https://dev.bio.tools (latest development version)
 Please read the [documentation](http://biotools.readthedocs.io/en/latest/).
 
 # Source code
-Access to the registry source code for the front and back-end, can be granted to trusted partners upon request: please email [Peter Løngreen](mailto:peterl@dtu.dk). ELIXIR is an open collaboration between equal partners and in this spirit, the bio.tools source code will be opened to a broader public, at the discretion of ELIXIR Denmark Head of Nodes, in due course.
+bio.tools is now open source!  Until Autumn 2018, we plan to work out (with partners) some guidelines on how the open development process shall work.  Please email [Piotr Chmura](mailto:piotr.chmura@cpr.ku.dk) and [Jon Ison](mailto:peterl@dtu.dk) if you want to get involved.
 
 
 # Governance
