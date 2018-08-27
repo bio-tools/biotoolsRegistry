@@ -55,6 +55,10 @@ class Resource(models.Model):
     availability = models.TextField(blank=True, null=True)
     downtime = models.TextField(blank=True, null=True)
 
+    # Information related to the conda channel and conda package
+    conda_channel = models.CharField(max_length=50, null=True)
+    conda_package = models.CharField(max_length=75, null=True)
+    
     def __unicode__(self):
         return unicode(self.name) or u''
 
