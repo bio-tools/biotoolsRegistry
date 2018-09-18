@@ -1,0 +1,41 @@
+
+	<!-- Divider line -->
+	<div class="tool-page-diver-label">
+		<span>ELIXIR credits and links</span>
+	</div>
+<div ng-if="software.elixirNode.length > 0 || software.elixirPlatform.length > 0">
+	<!-- Elixir Platform -->
+	<span class="tool-page-version-text">ELIXIR platform</span>
+	<div style="display: flex; flex-wrap: wrap;">
+		<span ng-repeat="platform in software.elixirPlatform track by $index" style="margin-bottom: 7px;">
+			<a class="pill-tag-third-background" href="https://www.elixir-europe.org/platforms/{{platform}}" target="_blank">{{ ::platform }}</a>
+		</span>
+	</div>
+	<!-- Elixir Node -->
+	<span class="tool-page-version-text">ELIXIR node</span>
+	<div style="display: flex; flex-wrap: wrap;">
+		<span ng-repeat="node in software.elixirNode track by $index" style="margin-bottom: 7px;">
+			<a class="pill-tag-third-background" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/{{node.replace(' ','-')}}" target="_blank">{{ ::node }}</a>
+		</span>
+	</div>
+</div>
+	<span class="tool-page-version-text">TeSS Portal</span>
+	<div style="">
+		<span style="margin-bottom: 7px;">
+			<a class="" href="https://tess.elixir-europe.org/materials?q={{software.name}}" target="_blank">Training materials ›</a>
+		</span>
+		<span> | </span>
+		<span style="margin-bottom: 7px;">
+			<a class="" href="https://tess.elixir-europe.org/events?q={{software.name}}" target="_blank">Training events ›</a>
+		</span>
+	</div>
+</div>
+<div ng-if="software.collectionID.length > 0">
+	<div class="tool-page-diver-label">
+		<span tooltips tooltip-content="Tool has been assigned to the following collections">Tool collection(s)</span>
+	</div>
+	<span> <a ng-if="software.collectionID.length > 0" ng-repeat="collection in software.collectionID" class="pill-tag-secondary-background" href="" ng-click = collectionNameClicked(collection)>
+		{{ ::collection }}
+	</a></span>
+</div>
+

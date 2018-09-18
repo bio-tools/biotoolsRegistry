@@ -20,7 +20,8 @@
 .tool-page-version-text {
 	color: #7f7f7f;
 	font-weight: lighter;
-	font-size: 0.5em;
+	font-size: 0.65em;
+	margin-left: 5px;
 }
 
 /*.tool-tag-divider {

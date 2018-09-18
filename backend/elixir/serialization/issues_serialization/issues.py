@@ -2,6 +2,7 @@ from rest_framework import serializers
 from elixir.models import *
 from elixir.validators import *
 
+
 class IssueTypeSerializer(serializers.ModelSerializer):
 
 	class Meta:
@@ -37,7 +38,7 @@ class IssueSerializer(serializers.ModelSerializer):
 			'issue_state',
 			'field_name',
 			'field_value',
-			'resource_textId',
+			'resource_biotoolsID',
 			'resolution_date',
 			'resolution_actor',
 			'additionDate',

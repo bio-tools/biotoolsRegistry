@@ -12,3 +12,4 @@ class WorkflowAnnotation(models.Model):
     edam_uri = models.TextField(blank=True, null=True)
     url = models.TextField(blank=True, null=True)
     workflow = models.ForeignKey(Workflow, null=True, blank=True, related_name='annotations', on_delete=models.CASCADE)
+

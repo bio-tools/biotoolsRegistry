@@ -42,6 +42,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 ELASTIC_SEARCH_INDEX = 'elixir'
+ELASTIC_SEARCH_INDEX_V2 = 'elixir_v2'
 # Application definition
 
 INSTALLED_APPS = (
@@ -158,12 +159,15 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
-        'rest_framework_xml.parsers.XMLParser',
+        #'rest_frameworkework_xml.parsers.XMLParser',
         'rest_framework_yaml.parsers.YAMLParser',
-        # 'elixir.parsers.XMLSchemaParser'
+         'elixir.parsers.XMLSchemaParser'
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -171,7 +175,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework_xml.renderers.XMLRenderer',
         'rest_framework_yaml.renderers.YAMLRenderer',
-        # 'elixir.renderers.XMLSchemaRenderer',
+        #'elixir.renderers.XMLSchemaRenderer',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,

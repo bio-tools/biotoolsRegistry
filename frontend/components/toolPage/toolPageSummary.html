@@ -1,45 +1,55 @@
 <!-- Name -->
 <h2>
 	{{ ::software.name }}
+	<span><a class="pill-tag-verified" tooltips tooltip-content="This tool ID has been verified by a curator." ng-if="software.validated" href="https://biotools.readthedocs.io/en/latest/what_is_biotools.html#bio-tools-tool-identifiers" target="_blank"><i class="fa fa-thumbs-up"></i> ID Verified</a></span>
 	<span data-badge-type='donut' class='altmetric-embed pull-right' data-badge-popover='left' data-hide-no-mentions="true" data-doi='{{ altMetricsScorePublication().doi }}' data-pmid='{{ altMetricsScorePublication().pmid }}'></span>
-	<div data-id="{{ software.id.toLowerCase() }}" data-widget-type="widget" data-widget-subtypes="widget" data-widget-tooltip-position="left" data-widget-size="64" class="opeb pull-right" style="width: 64px; height: 64px; margin-right: 10px;"></div>
-	<span ng-show="software.version" class="tool-page-version-text">version {{ ::software.version }}</span>
+	<div data-id="{{ software.biotoolsID | lowercase }}" data-widget-type="widget" data-widget-subtypes="widget" data-widget-tooltip-position="left" data-widget-size="64" class="opeb pull-right" style="width: 64px; height: 64px; margin-right: 10px;"></div>
 </h2>
+<!-- Version list -->
+<div ng-if="software.version.length > 0" >
+	<span class="tool-page-version-text">Available versions</span>
+	<div style="display: flex; flex-wrap: wrap;">
+		<span ng-repeat="version in software.version" style="margin-bottom: 7px;">
+			<span class="pill-tag-third-background" href="" target="_blank">{{ ::version }}</span>
+		</span>
+	</div>
+</div>
 <!-- Topic list -->
 <div style="display: flex; flex-wrap: wrap;">
-	<span class="pill-tag-verified" uib-tooltip="This resource has been verified by a curator." ng-if="software.validated"><i class="fa fa-thumbs-up"></i> Verified</span>
 	<span ng-repeat="topic in software.topic">
-		<a ng-if="topic.term != 'N/A'" class="pill-tag-orange-background" href="{{ ::topic.uri }}" target="_blank">{{ ::topic.term }} ›</a>
+		<a ng-if="topic.term != 'N/A'" class="pill-tag-orange-background" href="" ng-click="topicNameClicked(topic)" target="_blank">{{ ::topic.term }} ›</a>
 		<a ng-if="topic.term == 'N/A'" class="pill-tag-orange-background" href="{{ ::topic.uri }}" target="_blank">{{ ::software.name }} ›</a>
 	</span>
 </div>
 <hr class="pill-hr-divider">
 <div style="padding-bottom: 5px;">
 	<!-- Version tags -->
-	<span ng-if="software.maturity" class="pill-tag-primary-background">{{ ::software.maturity }}</span>
-	<span ng-if="software.license" class="pill-tag-primary-background">{{ ::software.license }}</span>
-	<span ng-if="software.cost" class="pill-tag-primary-background">{{ ::software.cost }}</span>
-	<span ng-if="software.accessibility.length > 0" ng-repeat="accessibility in software.accessibility" class="pill-tag-primary-background">
+	<span ng-if="software.maturity" class="pill-tag-primary-background" tooltips tooltip-content="Development stage of the tool">
+	{{ ::software.maturity }}</span>
+	<span ng-if="software.license" class="pill-tag-primary-background" tooltips tooltip-content="Software or data license">
+		<a ng-show="shouldLicenseBeALink(software.license)" href="https://spdx.org/licenses/{{ ::software.license }}" target="_blank">{{ software.license }}</a>
+		<div ng-show="!shouldLicenseBeALink(software.license)">{{ software.license }}</div>
+	</span>
+	<span ng-if="software.cost" class="pill-tag-primary-background" tooltips tooltip-content="Cost of acquiring the software">
+	{{ ::software.cost }}</span>
+	<span ng-if="software.accessibility.length > 0" ng-repeat="accessibility in software.accessibility" class="pill-tag-primary-background" tooltips tooltip-content="Accessibility of tool for use">
 		{{ ::accessibility }}
 	</span>
 </div>
 <div class="pill-spacing">
-	<span ng-if="software.collectionID.length > 0" ng-repeat="collection in software.collectionID" class="pill-tag-secondary-background">
-		{{ ::collection }}
-	</span>
 	<!-- Tool type list -->
-	<span ng-if="software.toolType.length > 0" ng-repeat="toolType in software.toolType" class="pill-tag-secondary-background">
+	<span ng-if="software.toolType.length > 0" ng-repeat="toolType in software.toolType" class="pill-tag-secondary-background" tooltips tooltip-content="Type of tool">
 		{{ ::toolType }}
 	</span>
 	<!-- Language list -->
-	<span ng-if="software.language.length > 0" ng-repeat="language in software.language" class="pill-tag-secondary-background">
+	<span ng-if="software.language.length > 0" ng-repeat="language in software.language" class="pill-tag-secondary-background" tooltips tooltip-content="Programming language">
 		{{ ::language }}
 	</span>
 	<span style="color:#575757;" ng-if="software.operatingSystem.length > 0">
 		<span ng-repeat="operatingSystem in software.operatingSystem track by $index" style="margin-left:4px; padding-bottom: -2px;">
-			<i style="font-size:110%;" class="fa fa-3x fa-apple" ng-show="operatingSystem == 'Mac'" tooltips tooltip-side="top" tooltip-content="Platform: {{ operatingSystem }}"></i>
-			<i style="font-size:110%;" class="fa fa-3x fa-linux" ng-show="operatingSystem == 'Linux'" tooltips tooltip-side="top" tooltip-content="Platform: {{ operatingSystem }}"></i>
-			<i style="font-size:110%;" class="fa fa-3x fa-windows" ng-show="operatingSystem == 'Windows'" tooltips tooltip-side="top" tooltip-content="Platform: {{ operatingSystem }}"></i>
+			<i style="font-size:110%;" class="fa fa-3x fa-apple" ng-show="operatingSystem == 'Mac'" tooltips tooltip-side="top" tooltip-content="Operating system: {{ operatingSystem }}"></i>
+			<i style="font-size:110%;" class="fa fa-3x fa-linux" ng-show="operatingSystem == 'Linux'" tooltips tooltip-side="top" tooltip-content="Operating system: {{ operatingSystem }}"></i>
+			<i style="font-size:110%;" class="fa fa-3x fa-windows" ng-show="operatingSystem == 'Windows'" tooltips tooltip-side="top" tooltip-content="Operating system: {{ operatingSystem }}"></i>
 		</span>
 	</span>
 </div>

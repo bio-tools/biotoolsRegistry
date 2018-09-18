@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from elixir.permissions import IsOwnerOrReadOnly, HasEditPermissionToEditResourceOrReadOnly, CanConcludeResourceRequest, IsStaffOrReadOnly
 from elixir.models import *
 from elixir.serializers import *
+from elixir import stats
 
 class Stats(APIView):
 	"""

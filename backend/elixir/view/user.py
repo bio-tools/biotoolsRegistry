@@ -4,7 +4,6 @@ from elixir.permissions import IsOwnerOrReadOnly, HasEditPermissionToEditResourc
 from elixir.models import *
 from elixir.serializers import *
 
-
 class UserList(APIView):
 	"""
 	List usernames in the registry.

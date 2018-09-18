@@ -28,7 +28,6 @@
 								<thead>
 									<tr>
 										<th>Resource</th>
-										<th>Version</th>
 										<th>Request type</th>
 										<th>Requested by</th>
 										<th style="width: 120px;">Action</th>
@@ -37,7 +36,6 @@
 								<tbody>
 									<tr ng-repeat="entry in received" ng-class="{'bg-success': entry.completed && entry.accepted, 'bg-danger': entry.completed && !entry.accepted}">
 										<td><a ui-sref="tool({id: entry.resourceId})">{{ entry.resourceId }}</a></td>
-										<td>{{ entry.resourceVersion }}</td>
 										<td>{{ typeDescription(entry.type) }}</td>
 										<td>{{ entry.username }}</td>
 										<td>

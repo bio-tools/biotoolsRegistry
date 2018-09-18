@@ -26,7 +26,7 @@ class TestResource(BaseTestObject):
 
 		expected_resource = emptyOutputTool()
 
-		expected_resource['id'] = 'Resource_Name'
+		expected_resource['biotoolsID'] = 'Resource_Name'
 		expected_resource['accessibility'] = ['Open access']
 
 		received_resource = json.loads(response.content)

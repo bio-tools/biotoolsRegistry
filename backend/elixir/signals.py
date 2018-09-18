@@ -13,7 +13,8 @@ post_save.connect(set_publicationMetadata, sender=Publication)
 
 # since we can't use the built-in time (since we need to copy it to new resource instances when updating resources), we have to update additionDate manually
 def set_additionDate(sender, instance, **kwargs):
-    if instance.additionDate is None:
-        instance.additionDate = datetime.datetime.now()
+	if instance.additionDate is None:
+		instance.additionDate = datetime.datetime.now()
+
 
 pre_save.connect(set_additionDate, sender=Resource)

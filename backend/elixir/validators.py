@@ -18,6 +18,7 @@ class CustomUniqueTogetherValidator(UniqueTogetherValidator):
 
 
 def IsStringTypeValidator(value):
+	#TODO make this validate a token, no newline, leading or trailing spaces, tabs, duplicated spaces
 	# print "in string validator", unicode(type(value)), unicode(value)
 	if not (isinstance(value, unicode) or isinstance(value, str)):
 		message = 'Wrong type found, expected unicode/string, got '
@@ -69,9 +70,9 @@ def IsURLFTPValidator(value):
 		raise serializers.ValidationError(message)
 	return value
 
-
+#TODO: refactor the content to fit this
 def IsPMCIDValidator(value):
-	matchPMCID = re.compile('^(PMC)?[1-9][0-9]{0,8}$', re.IGNORECASE)
+	matchPMCID = re.compile('^PMC[1-9][0-9]{0,8}$', re.IGNORECASE)
 	matchNone = re.compile('^None$', re.IGNORECASE)
 
 	if not matchPMCID.search(value) and not matchNone.search(value):
@@ -79,7 +80,7 @@ def IsPMCIDValidator(value):
 		raise serializers.ValidationError(message)
 
 def IsPMIDValidator(value):
-	matchPMID = re.compile('^(PMID:)?[1-9][0-9]{0,8}$', re.IGNORECASE)
+	matchPMID = re.compile('^[1-9][0-9]{0,8}$', re.IGNORECASE)
 	matchNone = re.compile('^None$', re.IGNORECASE)
 
 	if not matchPMID.search(value) and not matchNone.search(value):
@@ -87,7 +88,12 @@ def IsPMIDValidator(value):
 		raise serializers.ValidationError(message)
 
 def IsDOIValidator(value):
-	matchDOI = re.compile('^(doi:)?[0-9]{2}\.[0-9]{4,5}/.*$', re.IGNORECASE)
+	# 
+	#matchDOI = re.compile('^[0-9]{2}\.[0-9]{4,5}/.*$', re.IGNORECASE)
+
+	# doi regexp (a bit modified) from 
+	# https://www.crossref.org/blog/dois-and-matching-regular-expressions/ 
+	matchDOI = re.compile('^10\.[0-9]{4,9}\/[-\._;\(\)\/:a-zA-Z0-9]+$', re.IGNORECASE)
 	matchNone = re.compile('^None$', re.IGNORECASE)
 
 	if not matchDOI.search(value) and not matchNone.search(value):
@@ -112,9 +118,28 @@ def IsDOIValidator(value):
 
 def IsEmailValidator(value):
 	IsStringTypeValidator(value)
-	p = re.compile('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', re.IGNORECASE|re.UNICODE)
+	p = re.compile('^[A-Za-z0-9_]+([-+.\'][A-Za-z0-9_]+)*@[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*$', re.IGNORECASE|re.UNICODE)
 	if not p.search(value):
 		message = 'This is not a valid email address: ' + unicode(value) + '.'
+		raise serializers.ValidationError(message)
+
+
+def IsVersionValidator(value):
+	IsStringTypeValidator(value)
+	# this looks wrong
+	#p = re.compile('^(?!\p{Zs})[\p{Zs}A-Za-z0-9+\.,\-_:;()]*(?<!\p{Zs})$', re.IGNORECASE|re.UNICODE)
+	
+	#this is ok, only allow spaces
+	p = re.compile('^[ A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
+	if not p.search(value):
+		message = 'This is not a valid version: ' + unicode(value) + '.'
+		raise serializers.ValidationError(message)
+
+def IsCollectionIDValidator(value):
+	IsStringTypeValidator(value)
+	p = re.compile('^(?!\p{Zs})[\p{Zs}A-Za-z0-9+\.,\-_:;()]*(?<!\p{Zs})$', re.IGNORECASE|re.UNICODE)
+	if not p.search(value):
+		message = 'This is not a valid collection ID: ' + unicode(value) + '.'
 		raise serializers.ValidationError(message)
 
 

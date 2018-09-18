@@ -18,6 +18,7 @@ from elixir.model.resource_model.toolType import *
 from elixir.model.resource_model.language import *
 from elixir.model.resource_model.uses import *
 from elixir.model.resource_model.link import *
+from elixir.model.resource_model.version import *
 from elixir.model.resource_model.download import *
 from elixir.model.resource_model.documentation import *
 from elixir.model.resource_model.collection import *

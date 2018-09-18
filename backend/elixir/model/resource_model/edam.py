@@ -12,15 +12,22 @@ class Ontology(models.Model):
     def __unicode__(self):
         return unicode(self.name) or u''
 
+
+# need to make this 0..many instead od 1..many
 class Function(models.Model):
-    comment = models.TextField(blank=True, null=True)
+    # comment should be called note
+    # I think cmd should be removed , doublecheck
+    note = models.TextField(blank=True, null=True)
+    cmd = models.TextField(blank=True, null=True, max_length=100)
     resource = models.ForeignKey(Resource, null=True, blank=True, related_name='function', on_delete=models.CASCADE)
 
     # metadata
-    additionDate= models.DateTimeField(auto_now_add=True)
+    additionDate = models.DateTimeField(auto_now_add=True)
+
 
     def __unicode__(self):
-        return unicode(self.comment) or u''
+        return unicode(self.note) or u''
+
 
 class Operation(models.Model):
     uri = models.TextField(blank=True, null=True)
@@ -43,6 +50,7 @@ class Data(models.Model):
     def __unicode__(self):
         return unicode(self.term) or u''
 
+
 class Input(models.Model):
     # reverse relationship, because many inputs
     function = models.ForeignKey(Function, null=True, blank=True, related_name='input', on_delete=models.CASCADE)
@@ -54,6 +62,7 @@ class Input(models.Model):
 
     def __unicode__(self):
         return unicode(self.data.term) or u''
+
 
 class Output(models.Model):
     # reverse relationship, because many outputs
@@ -67,6 +76,7 @@ class Output(models.Model):
     def __unicode__(self):
         return unicode(self.data.term) or u''
 
+
 class Format(models.Model):
     uri = models.TextField(blank=True, null=True)
     term = models.TextField(blank=True, null=True)
@@ -78,3 +88,4 @@ class Format(models.Model):
 
     def __unicode__(self):
         return unicode(self.term) or u''
+        

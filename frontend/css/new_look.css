@@ -85,8 +85,8 @@
 
 .pill-tag-third-background
 {
-	color: #000000;
-	background-color: #f1eff3;
+	color: white;
+	background-color: #F6A623;
 }
 
 .pill-tag-orange-background
@@ -98,6 +98,10 @@
 .pill-tag-verified {
 	background-color: #BA1E4A;
 	color: white;
+}
+
+.pill-tag-verified:hover {
+    color: lightblue;
 }
 
 .pill-tag-error-small {

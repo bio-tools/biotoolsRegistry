@@ -27,13 +27,13 @@
 			</div>
 		</div>
 		<div class="col-sm-4 col-md-4 col-lg-4 text-center function-image-element" style="align-self:stretch;display:flex;justify-content: center;flex-direction: column;text-align: center;">
+			<span><i ng-show="function.note" class="fa fa-question-circle" aria-hidden="true" style="font-size: 100%; margin-left: 0.5em;" tooltips tooltip-content="{{ ::function.note }}"></i></span>
 			<ul class="list-unstyled" style="margin-bottom:0px;">
 				<span ng-if="function.operation.length == null" class="tool-page-grey-text">{{ ::software.name }}</span>
 				<li ng-repeat="functionName in function.operation">
 					<h5 style="color: #575757; font-size: 100%;">
 						<a ng-if="functionName.term != 'N/A' && functionName.term != ''" href="" ng-click="functionNameClicked(functionName)" class="tool-page-grey-text">{{ ::functionName.term }} ›</a>
 						<a ng-if="functionName.term == 'N/A' || functionName.term == ''" href="" ng-click="toolNameClicked(functionName)" class="tool-page-grey-text">{{ ::software.name }} ›</a>
-						<i ng-show="function.comment" class="fa fa-question-circle" aria-hidden="true" style="font-size: 100%; margin-left: 0.5em;" tooltips tooltip-content="{{ ::function.comment }}"></i>
 					</h5>
 				</li>
 			</ul>

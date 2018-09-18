@@ -79,7 +79,7 @@ def construct_es_query(query_dict):
 		trimmed = re.sub(r"[^\w_-]", ' ', trimmed)
 		# remaining search terms
 		rest = re.findall(r"[\w'-_\\/]+", trimmed)
-
+		
 
 		# construct query for terms in quotes
 		for term in exact:
@@ -94,16 +94,16 @@ def construct_es_query(query_dict):
 					{ "match_phrase": { "function.input.format.term":  {"query": term, "boost": 0.5 } }},
 					{ "match_phrase": { "function.output.data.term":  {"query": term, "boost": 0.5 } }},
 					{ "match_phrase": { "function.output.format.term":  {"query": term, "boost": 0.5 } }},
-					{ "match_phrase": { "function.comment":  {"query": term, "boost": 0.5 } }},
-					{ "match_phrase": { "contact.name":  {"query": term, "boost": 0.5 } }},
+					{ "match_phrase": { "function.note":  {"query": term, "boost": 0.5 } }},
+					#{ "match_phrase": { "contact.name":  {"query": term, "boost": 0.5 } }},
 					{ "match_phrase": { "credit.name":  {"query": term, "boost": 0.5 } }},
-					{ "match_phrase": { "credit.comment":  {"query": term, "boost": 0.05 } }},
-					{ "match_phrase": { "documentation.comment":  {"query": term, "boost": 0.05 } }},
+					{ "match_phrase": { "credit.note":  {"query": term, "boost": 0.05 } }},
+					{ "match_phrase": { "documentation.note":  {"query": term, "boost": 0.05 } }},
 					{ "match_phrase": { "language": {"query": term, "boost": 0.5 }}},
 					{ "match_phrase": { "license": {"query": term, "boost": 0.5 }}},
 					{ "match_phrase": { "operatingSystem": {"query": term, "boost": 0.5 }}},
 					{ "match_phrase": { "toolType": {"query": term, "boost": 0.5 }}},
-					{ "match_phrase": { "version": {"query": term, "boost": 1.0 }}}
+					{ "match_phrase": { "version.version": {"query": term, "boost": 1.0 }}}
 				],
 				"tie_breaker": 0.6
 			}}
@@ -113,7 +113,8 @@ def construct_es_query(query_dict):
 		for term in rest:
 			dis_max = {"dis_max": {
 				"queries": [
-					{ "match": { "id": {"query": term, "boost": 40.0 }}},
+					# this should be "biotoolsID" instead of "id"
+					{ "match": { "biotoolsID": {"query": term, "boost": 40.0 }}},
 					{ "match": { "name": {"query": term, "boost": 20.0 }}},
 					{ "prefix": { "name":  {"value": term, "boost": 15.0 } }},
 					{ "wildcard" : { "name" : { "value" : "*"+term+"*", "boost" : 10.0 } }},
@@ -129,16 +130,16 @@ def construct_es_query(query_dict):
 					{ "match": { "function.input.format.term":  {"query": term, "boost": 0.5 } }},
 					{ "match": { "function.output.data.term":  {"query": term, "boost": 0.5 } }},
 					{ "match": { "function.output.format.term":  {"query": term, "boost": 0.5 } }},
-					{ "match": { "function.comment":  {"query": term, "boost": 0.05 } }},
-					{ "match": { "contact.name":  {"query": term, "boost": 0.5 } }},
+					{ "match": { "function.note":  {"query": term, "boost": 0.05 } }},
+					#{ "match": { "contact.name":  {"query": term, "boost": 0.5 } }},
 					{ "match": { "credit.name":  {"query": term, "boost": 0.5 } }},
-					{ "match": { "credit.comment":  {"query": term, "boost": 0.05 } }},
-					{ "match": { "documentation.comment":  {"query": term, "boost": 0.05 } }},
+					{ "match": { "credit.note":  {"query": term, "boost": 0.05 } }},
+					{ "match": { "documentation.note":  {"query": term, "boost": 0.05 } }},
 					{ "match": { "language": {"query": term, "boost": 0.5 }}},
 					{ "match": { "license": {"query": term, "boost": 0.5 }}},
 					{ "match": { "operatingSystem": {"query": term, "boost": 0.5 }}},
 					{ "match": { "toolType": {"query": term, "boost": 0.5 }}},
-					{ "match": { "version": {"query": term, "boost": 1.0 }}}
+					{ "match": { "version.version": {"query": term, "boost": 1.0 }}}
 				],
 				"tie_breaker": 0.6
 			}}
@@ -167,7 +168,7 @@ def construct_es_query(query_dict):
 				for field in search_struct[attribute]['search_field']:
 					inner_should['bool']['should'].append(
 						{
-							'match': {
+							'match_phrase': {
 								field: term
 							}
 						}
@@ -182,14 +183,30 @@ def construct_es_query(query_dict):
 					}
 				}
 				for field in search_struct[attribute]['search_field']:
-					inner_should['bool']['should'].append(
+					inner_should['bool']['should'].extend([
+						#{
+						#	'fuzzy': {
+						#		field: {
+						#			'value': inexact
+						#		}
+						#	}
+						#}
 						{
-							'fuzzy': {
-								field: {
-									'value': inexact
+							"match": {
+ 								field:{
+									"query": inexact,
+										"fuzziness": 2
+									}
+								}
+							},
+							{
+							"prefix": {
+ 								field:{
+									"value": inexact
+									}
 								}
 							}
-						}
-					)
+
+					])
 				query_struct['query']['bool']['must'].append(inner_should)
 	return query_struct

@@ -10,7 +10,6 @@ from rest_framework.utils.urls import replace_query_param
 from allauth.account.adapter import get_adapter
 from django.db.models.signals import pre_save, post_save
 from django.conf import settings
-from rest_framework.fields import ChoiceField
 from elixir.request_handling import ResourceRequestHandler
 from random import randint
 
@@ -30,10 +29,11 @@ from elixir.serialization.resource_serialization.contact import *
 from elixir.serialization.resource_serialization.resource import *
 from elixir.serialization.resource_serialization.user import *
 from elixir.serialization.resource_serialization.resourceRequest import *
+from elixir.serialization.resource_serialization.version import *
 from elixir.serialization.workflow_serialization.workflow import *
+from elixir.serialization.resource_serialization.v2.resource import *
 from elixir.serialization.user_serialization.user import *
 from elixir.serialization.issues_serialization.issues import *
-
 
 
 # # just get the versions and latest
@@ -73,8 +73,6 @@ class UserSerializer(serializers.ModelSerializer):
 	# 	subdomains = Domain.objects.filter(owner=user)
 	# 	serializer = SubdomainNameSerializer(instance=subdomains, many=True)
 	# 	return serializer.data
-			
-
-
+		
 
 
