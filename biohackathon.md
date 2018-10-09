@@ -22,12 +22,12 @@ The proposal is for (ideally many) representatives of the bio.tools and related 
 ## bio.tools testing 
 The purpose is to test, evaluate and optimise the development deployment of bio.tools (https://dev.bio.tools/), changes in which are scheduled to be moved into production (https://bio.tools/) during Dec 3-7.
 
-**Task 1** bio.tools release testing
+### Task 1: bio.tools release testing
 Currently 28 issues labelled ["done - staged for release"](https://github.com/bio-tools/biotoolsregistry/issues?q=is%3Aissue+is%3Aopen+label%3A%22done+-+staged+for+release%22) are implemented in https://dev.bio.tools.  Before these can be moved into production, we need independent verification that these features and fixes have been satisfactorily implemented.  The task is to work through the ["done - staged for release"](https://github.com/bio-tools/biotoolsregistry/issues?q=is%3Aissue+is%3Aopen+label%3A%22done+-+staged+for+release%22) issues, read the thread, test things are working as advertised, and add a comment to the thread (either reporting things look are OK, or describing outstanding problems).  Once an issue is verified in this way, bio.tools-dev will attach the ["fix verified"](https://github.com/bio-tools/biotoolsRegistry/labels/fix%20verified) label (having first fixed any issues raised).
 
-**Task 2** bio.tools development priorities
+### Task 2: bio.tools development priorities
 We label issues to reflect their status and priority:
-* ["critical priority"](https://github.com/bio-tools/biotoolsRegistry/labels/critical%20priority] : our top-priorities, including most of the reported (bugs)[https://github.com/bio-tools/biotoolsRegistry/labels/bug)
+* ["critical priority"](https://github.com/bio-tools/biotoolsRegistry/labels/critical%20priority) : our top-priorities, including most of the reported (bugs)[https://github.com/bio-tools/biotoolsRegistry/labels/bug)
 * ["in progress"](https://github.com/bio-tools/biotoolsRegistry/labels/in%20progress) : things we're working on currently
 
 
