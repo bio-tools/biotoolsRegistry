@@ -10,12 +10,12 @@ class IssueView(APIView):
 	"""
 	permission_classes = (IsStaffOrReadOnly, )
 
-	def get(self, request, textId, issueId=None):
-		if not (textId):
+	def get(self, request, biotoolsID, issueId=None):
+		if not (biotoolsID):
 			return Response({'data': None, 'text': 'Missing id.'}, status=status.HTTP_400_BAD_REQUEST)
 
 		issue_qs = Issue.objects.filter(
-			resource_textId__iexact=textId
+			resource_biotoolsID__iexact=biotoolsID
 		)
 		if issueId:
 			issue_qs = issue_qs.filter(
@@ -30,8 +30,8 @@ class IssueView(APIView):
 			status=status.HTTP_200_OK
 		)
 
-	def post(self, request, textId, issueId=None):
-		if not (textId):
+	def post(self, request, biotoolsID, issueId=None):
+		if not (biotoolsID):
 			return Response({'data': None, 'text': 'Missing id.'}, status=status.HTTP_400_BAD_REQUEST)
 
 		if issueId:
@@ -76,7 +76,7 @@ class IssueView(APIView):
 		i = Issue(
 			issue_type=i_type,
 			issue_state=i_state,
-			resource_textId=textId,
+			resource_biotoolsID=biotoolsID,
 			comment=comment,
 			creation_actor=str(request.user),
 			field_name=field_name,

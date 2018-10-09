@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from elixir.models import *
 from elixir.validators import *
+from elixir.request_handling import ResourceRequestHandler
+
 
 class ResourceRequestSerializer(serializers.ModelSerializer):
 	username = serializers.CharField(allow_blank=False, max_length=25, min_length=1, source="user.username")
-	resourceId = serializers.CharField(allow_blank=False, min_length=1, source="resource.textId")
+	resourceId = serializers.CharField(allow_blank=False, min_length=1, source="resource.biotoolsID")
 
 	class Meta:
 		model = ResourceRequest
@@ -12,8 +14,8 @@ class ResourceRequestSerializer(serializers.ModelSerializer):
 
 	def create(self, validated_data):
 		request = ResourceRequest.objects.create()
-		request.user = User.objects.get(username = validated_data.get('user')['username'])
-		request.resource = Resource.objects.filter(visibility=1).get(textId__iexact=validated_data.get('resource')['textId'])
+		request.user = User.objects.get(username=validated_data.get('user')['username'])
+		request.resource = Resource.objects.filter(visibility=1).get(biotoolsID__iexact=validated_data.get('resource')['biotoolsID'])
 		request.type = validated_data.get('type')
 		request.requestId = validated_data.get('requestId')
 		request.save()
@@ -25,7 +27,7 @@ class ResourceRequestSerializer(serializers.ModelSerializer):
 		return attrs
 
 	def validate(self, attrs):
-		if Resource.objects.filter(visibility=1).filter(textId__iexact=attrs['resource']['textId']).count() == 0:
+		if Resource.objects.filter(visibility=1).filter(biotoolsID__iexact=attrs['resource']['biotoolsID']).count() == 0:
 			raise serializers.ValidationError("Requested resource does not exist for specified 'resourceId'")
 		return attrs
 
@@ -41,7 +43,7 @@ class ResourceRequestConcludeSerializer(serializers.ModelSerializer):
 		instance.completed = True
 		instance.accepted = validated_data.get('accepted', instance.accepted)
 		instance.completedBy = self.context['user']
-		if instance.accepted == True:
+		if instance.accepted is True:
 			request_handler = ResourceRequestHandler()
 			request_handler.proccessRequest(instance)
 		instance.save()

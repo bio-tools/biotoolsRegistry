@@ -12,8 +12,12 @@ angular.module('elixir_front')
 		$state.go('404');
 	}
 	
+	$scope.topicNameClicked = function(topic) {
+		$state.go('search', {'topic': topic.term});
+	}
+
 	$scope.functionNameClicked = function(functionName) {
-		$state.go('search', {'function': functionName.term});
+		$state.go('search', {'operation': functionName.term});
 	}
 
 	$scope.inputNameClicked = function(inputName) {
@@ -34,6 +38,15 @@ angular.module('elixir_front')
 
 	$scope.toolsNameClicked = function(functionName) {
 		$state.go('search', {'name': $scope.software.name});
+	}
+
+	$scope.collectionNameClicked = function(collectionName) {
+		$state.go('search', {'collectionID': '"'+ collectionName + '"'});
+	}
+
+	$scope.creditNameClicked = function(creditName) {
+		var url = $state.href('search', {'credit': '"'+ creditName + '"'});
+		window.open(url,'_blank');
 	}
 
 	$scope.publicationDetailsExist = function() {
@@ -91,6 +104,10 @@ angular.module('elixir_front')
 		$state.go('tool', {id: $scope.software.id, version: versionId});
 	}
 
+	$scope.shouldLicenseBeALink = function(license) {
+		return !_.includes(['Proprietary', 'Other', 'Unlicensed'], license);
+	}
+
 	$scope.setMetadataForSoftware = function(software) {
 		ngMeta.setTitle(software.name, ' · bio.tools');
 		ngMeta.setTag('description', software.description);
@@ -144,8 +161,8 @@ angular.module('elixir_front')
 			return '<div class="bs-callout-sm bs-callout-primary" style="border-left-color: ' + attr.color + ';">' +
 			'<div class="tool-page-callout-header" style="color: black;">' + 
 			'<a href="' + attr.url + '" tooltips tooltip-side="top" tooltip-content="' + attr.url + '">' + attr.name + ' › </a>' +
-			'<i ng-show="' +  attr.comment + '" class="fa fa-question-circle" aria-hidden="true" style="font-size: 100%; margin-left: 0.5em; color: ' + attr.color + ';" tooltips tooltip-side="top" tooltip-content="' + attr.comment + '"></i>' +
-			'</div>' +
+			'<i ng-show="' +  attr.toshow  + '" class="fa fa-question-circle" aria-hidden="true" style="font-size: 100%; margin-left: 0.5em; color: ' + attr.color + ';" tooltips tooltip-side="top" tooltip-content="' + attr.comment + '"></i>' +
+			'</div>' + 
 			'</div>';
 		},
 		replace: true
@@ -196,13 +213,14 @@ angular.module('elixir_front')
 		transclude: true,
 		template: function(elem, attr){
 			var callout = '<div class="bs-callout-sm bs-callout-primary" style="border-left-color: ' + attr.color + ';">';
-			callout += '<div ng-show="' + attr.name + '" class="tool-page-callout-header" style="color: black;">{{' + attr.name + '}}';
+			callout += '<div ng-show="' + attr.name + '" class="tool-page-callout-header" style="color: black;"><a href="" ng-click="creditNameClicked(credit.name)">{{' + attr.name + '}}</a>';
+			callout += '<i ng-show="' +  attr.toshow  + '" class="fa fa-question-circle" aria-hidden="true" style="font-size: 100%; margin-left: 0.5em; color: ' + attr.color + ';" tooltips tooltip-side="top" tooltip-content="' + attr.comment + '"></i>';
 			callout += '<span ng-show="' + attr.typeentity + ' && ' + attr.typeentity + ' != \'Person\'">';
 			callout += '<span ng-show="' + attr.typeentity + '" style="color: #CCCCCC;"> | </span>'; 
 			callout += '<span ng-show="' + attr.typeentity + '">{{' + attr.typeentity + '}}</span>';
 			callout += '</div>';
 			callout += '<div class="tool-page-callout-text">';
-			callout += '<span ng-show="' + attr.typerole + '">{{' + attr.typerole + '}}';
+			callout += '<span ng-show="' + attr.typerole.count + ' != 0" ng-repeat="role in ' + attr.typerole + '">{{role}}{{$last ? "" : ", "}}';
 			callout += '<span ng-show="' + attr.email + ' || ' + attr.url + ' || ' + attr.orcidid + ' || ' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';
 			callout += '<span ng-show="' + attr.email + '"><i class="fa fa-envelope-o" aria-hidden="true"></i> {{' + attr.email +'.replace(\'@\', \' at \') }}';
 			callout += '<span ng-show="' + attr.url + ' || ' + attr.orcidid + ' || ' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';

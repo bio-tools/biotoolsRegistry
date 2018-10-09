@@ -4,6 +4,7 @@ from elixir.model.resource_model.editPermission import *
 from django.contrib.auth.models import User
 
 class Resource(models.Model):
+    
     YES_NO_CHOICES = (
         (0, 'NO'),
         (1, 'YES'),
@@ -20,13 +21,28 @@ class Resource(models.Model):
         (2, 'DEAD')
     )
 
-    textId = models.CharField(max_length=50)
+
+    # CharField doesn't $have a min_length
+    #biotoolsID = models.CharField(min_length=1)
+    #biotoolsCURIE = models.CharField(min_length=1)
+
+    # so instead use blank=False, null=False
+    # a lot of textId in views.py and urls.py, perhaps we should keep textId, in the JSON representation it's "id" anyway
+    #   unless a simple replace of textId with biotoolsID can be done
+    biotoolsID = models.CharField(blank=False, null=False, max_length=100)
+    biotoolsCURIE = models.CharField(blank=False, null=False, max_length=109) #because of biotools: prefix
+
     name = models.TextField()
-    version = models.TextField(blank=True, null=True)
-    versionId = models.CharField(max_length=50, null=True, default='none')
+    # Version is it's own model now
+    #version = models.TextField(blank=True, null=True)
+    
+    # Keep versionId for now, will probably remove later, there is no real data one can use from it anyway...
+    # but don't serialize
+    versionId = models.CharField(max_length=100, null=True, default='none')
 
     homepage = models.TextField()
     description = models.TextField()
+    short_description = models.TextField(blank=True, null=True)
 
     canonicalID = models.TextField(blank=True, null=True)
 
@@ -57,6 +73,42 @@ class Resource(models.Model):
 
     def __unicode__(self):
         return unicode(self.name) or u''
+
+
+class OtherID(models.Model):
+    value = models.CharField(blank=False, null=False, max_length=1000, unique=False)
+    # TODO: make sure type is inferred from value, but still appears in the iterface
+    type = models.TextField(blank=True, null=True)
+    version = models.TextField(blank=True, null=True)
+    resource = models.ForeignKey(Resource, null=True, blank=True, related_name='otherID', on_delete=models.CASCADE)
+    additionDate = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __unicode__(self):
+        return unicode(self.value) or u''
+
+
+class ElixirPlatform(models.Model):
+    elixirPlatform = models.TextField(blank=False, null=True)
+    resource = models.ForeignKey(Resource, null=True, blank=True, related_name='elixirPlatform', on_delete=models.CASCADE)
+
+    # metadata
+    additionDate = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return unicode(self.name) or u''
+
+
+class ElixirNode(models.Model):
+    elixirNode = models.TextField(blank=False, null=True)
+    resource = models.ForeignKey(Resource, null=True, blank=True, related_name='elixirNode', on_delete=models.CASCADE)
+
+    # metadata
+    additionDate = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return unicode(self.name) or u''
+
+
 
 # table to keep user requests
 class ResourceRequest(models.Model):

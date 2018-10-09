@@ -217,7 +217,7 @@ class StatsInfo():
 		return {'toolTypeAnnotationCount':  ToolType.objects.filter(resource__visibility=1, additionDate__lt=upperDateLimit).count()}
 
 	def uniqueIDAnnotationCount(self, upperDateLimit=datetime.today()):
-		return {'uniqueIDAnnotationCount': Resource.objects.filter(visibility=1, additionDate__lt=upperDateLimit).exclude(textId="").count()}
+		return {'uniqueIDAnnotationCount': Resource.objects.filter(visibility=1, additionDate__lt=upperDateLimit).exclude(biotoolsID="").count()}
 
 	def topicAnnotationCount(self, upperDateLimit=datetime.today()):
 		return {'topicAnnotationCount': Topic.objects.filter(resource__visibility=1, additionDate__lt=upperDateLimit).count()}

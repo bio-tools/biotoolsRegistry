@@ -5,6 +5,6 @@
 <!-- Documentation cards -->
 <div class="row tool-page-row">
 	<div ng-repeat="download in software.download">
-		<div tool-page-link-callout url="{{ download.url }}" name="{{ download.type }}" comment="{{ download.comment }}" color="#CF4647"></div>
+		<div tool-page-link-callout url="{{ download.url }}" name="{{ download.type }}" comment="{{ download.note }}" color="#CF4647" toshow = "{{(download.note != null && download.note.length > 0).toString()}}"></div>
 	</div>
 </div>

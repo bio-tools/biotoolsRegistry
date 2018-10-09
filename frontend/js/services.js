@@ -149,20 +149,17 @@ angular.module('elixir_front.services', [])
 	var columnDescriptionForKey = function(key, hidden) {
 		var widthCharMultiplier = 12;
 		var columnDescription = {};
-		if (key == 'Contact') {
-			columnDescription = {field: 'contact', displayName: 'Contact', cellTemplate: '/partials/grid_cells/contactCell.html', width: '250', resizable: true};
-		}
-		else if (key == 'Name') {
+		if (key == 'Name') {
 			columnDescription = {field: 'name', displayName: 'Name', cellTemplate: '/partials/grid_cells/nameCell.html', width: '150', resizable: true};
 		}
 		else if (key == 'Operating System') {
-			columnDescription = {field: 'operatingSystem', displayName: 'Operating System', cellTemplate: '/partials/grid_cells/platformCell.html', width: '100', resizable: true};
+			columnDescription = {field: 'operatingSystem', displayName: 'Operating system', cellTemplate: '/partials/grid_cells/platformCell.html', width: '100', resizable: true};
 		}
 		else if (key == 'Description') {
 			columnDescription = {field: 'description', displayName: 'Description', width: '*', resizable: true, cellTemplate: '/partials/grid_cells/defaultCell.html'};
 		}
-		else if (key == 'Function') {
-			columnDescription = {field: 'function', displayName: 'Function', width: '220', resizable: true, cellTemplate: '/partials/grid_cells/functionCell.html'};
+		else if (key == 'Operation') {
+			columnDescription = {field: 'function', displayName: 'Operation', width: '220', resizable: true, cellTemplate: '/partials/grid_cells/functionCell.html'};
 		}
 		else if (key == 'Input') {
 			columnDescription = {field: 'function', displayName: 'Input', width: '240', resizable: true, cellTemplate: '/partials/grid_cells/inputCell.html'};
@@ -177,7 +174,7 @@ angular.module('elixir_front.services', [])
 			columnDescription = {field: 'homepage', displayName: 'Homepage', resizable: true, width: '100', cellTemplate: '/partials/grid_cells/urlCell.html'};
 		}
 		else if (key == 'Tool Type') {
-			columnDescription = {field: 'toolType', displayName: 'Type', width: '150', resizable: true, cellTemplate: '/partials/grid_cells/listCell.html'};
+			columnDescription = {field: 'toolType', displayName: 'Tool type', width: '150', resizable: true, cellTemplate: '/partials/grid_cells/listCell.html'};
 		}
 		else if (key == 'Publications') {
 			columnDescription = {field: 'publication', displayName: 'Publications', width: '250', resizable: true, cellTemplate: '/partials/grid_cells/publicationsCell.html'};
@@ -185,17 +182,8 @@ angular.module('elixir_front.services', [])
 		else if (key == 'Collection') {
 			columnDescription = {field: 'collectionID', displayName: 'Collection', width: '150', resizable: true, cellTemplate: '/partials/grid_cells/listCell.html'};
 		}
-		else if (key == 'Mirror') {
-			columnDescription = {field: 'mirror', displayName: 'Mirror', width: '75', resizable: true, cellTemplate: '/partials/grid_cells/urlCell.html'};
-		}
-		else if (key == 'Uses') {
-			columnDescription = {field: 'uses', displayName: 'Uses', width: '220', resizable: true,  cellTemplate: '/partials/grid_cells/usesCell.html'};
-		}
-		else if (key == 'Source registry') {
-			columnDescription = {field: 'sourceRegistry', displayName: 'Source registry', width: '140', resizable: true, cellTemplate: '/partials/grid_cells/urlCell.html'};
-		}
-		else if (key == 'Cannonical ID') {
-			columnDescription = {field: 'canonicalID', displayName: 'Cannonical ID', width: '120', resizable: true, cellTemplate: '/partials/grid_cells/defaultCell.html'};
+		else if (key == 'bio.tools ID') {
+			columnDescription = {field: 'biotoolsID', displayName: 'bio.tools ID', width: '120', resizable: true, cellTemplate: '/partials/grid_cells/defaultCell.html'};
 		}
 		else if (key == 'Documentation') {
 			columnDescription = {field: 'documentation', displayName: 'Documentation', width: '160', resizable: true, cellTemplate: '/partials/grid_cells/linkListCell.html'};
@@ -218,6 +206,9 @@ angular.module('elixir_front.services', [])
 		else if (key == 'Cost') {
 			columnDescription = {field: key.toLowerCase(), displayName: key, width: '90', resizable: true, cellTemplate: '/partials/grid_cells/defaultCell.html'};
 		}
+		else if (key == 'Version') {
+			columnDescription = {field: key.toLowerCase(), displayName: key, width: '90', resizable: true, cellTemplate: '/partials/grid_cells/listCell.html'};
+		}
 		else {
 			columnDescription = {field: key.toLowerCase(), displayName: key, width: key.length * widthCharMultiplier, resizable: true, cellTemplate: '/partials/grid_cells/defaultCell.html'};
 		}
@@ -232,29 +223,26 @@ angular.module('elixir_front.services', [])
 			return [
 			columnDescriptionForKey('Name', visibleColumns.indexOf('Name') != -1),
 			columnDescriptionForKey('Description', visibleColumns.indexOf('Description') != -1),
-			columnDescriptionForKey('Function', visibleColumns.indexOf('Function') != -1),
+			columnDescriptionForKey('Homepage', visibleColumns.indexOf('Homepage') != -1),
+			columnDescriptionForKey('Version', visibleColumns.indexOf('Homepage') != -1),
+			columnDescriptionForKey('bio.tools ID', visibleColumns.indexOf('bio.tools ID') != -1),
+			columnDescriptionForKey('Tool Type', visibleColumns.indexOf('Tool Type') != -1),
+			columnDescriptionForKey('Topic', visibleColumns.indexOf('Topic') != -1),
+			columnDescriptionForKey('Publications', visibleColumns.indexOf('Publications') != -1),
+			columnDescriptionForKey('Credits', visibleColumns.indexOf('Credits') != -1),
+			columnDescriptionForKey('Operation', visibleColumns.indexOf('Operation') != -1),
 			columnDescriptionForKey('Input', visibleColumns.indexOf('Input') != -1),
 			columnDescriptionForKey('Output', visibleColumns.indexOf('Output') != -1),
-			columnDescriptionForKey('Topic', visibleColumns.indexOf('Topic') != -1),
-			columnDescriptionForKey('Tool Type', visibleColumns.indexOf('Tool Type') != -1),
-			columnDescriptionForKey('Accessibility', visibleColumns.indexOf('Accessibility') != -1),
-			columnDescriptionForKey('Publications', visibleColumns.indexOf('Publications') != -1),
-			columnDescriptionForKey('Collection', visibleColumns.indexOf('Collection') != -1),
-			columnDescriptionForKey('Mirror', visibleColumns.indexOf('Mirror') != -1),
-			columnDescriptionForKey('Link', visibleColumns.indexOf('Link') != -1),
-			columnDescriptionForKey('Download', visibleColumns.indexOf('Download') != -1),
-			columnDescriptionForKey('Uses', visibleColumns.indexOf('Uses') != -1),
-			columnDescriptionForKey('Source registry', visibleColumns.indexOf('Source registry') != -1),
-			columnDescriptionForKey('Homepage', visibleColumns.indexOf('Homepage') != -1),
-			columnDescriptionForKey('Cannonical ID', visibleColumns.indexOf('Cannonical ID') != -1),
-			columnDescriptionForKey('Cost', visibleColumns.indexOf('Cost') != -1),
 			columnDescriptionForKey('Documentation', visibleColumns.indexOf('Documentation') != -1),
-			columnDescriptionForKey('Maturity', visibleColumns.indexOf('Maturity') != -1),
 			columnDescriptionForKey('Operating System', visibleColumns.indexOf('Operating System') != -1),
 			columnDescriptionForKey('Language', visibleColumns.indexOf('Language') != -1),
 			columnDescriptionForKey('License', visibleColumns.indexOf('License') != -1),
-			columnDescriptionForKey('Credits', visibleColumns.indexOf('Credits') != -1),
-			columnDescriptionForKey('Contact', visibleColumns.indexOf('Contact') != -1)
+			columnDescriptionForKey('Link', visibleColumns.indexOf('Link') != -1),
+			columnDescriptionForKey('Accessibility', visibleColumns.indexOf('Accessibility') != -1),
+			columnDescriptionForKey('Download', visibleColumns.indexOf('Download') != -1),
+			columnDescriptionForKey('Collection', visibleColumns.indexOf('Collection') != -1),
+			columnDescriptionForKey('Cost', visibleColumns.indexOf('Cost') != -1),
+			columnDescriptionForKey('Maturity', visibleColumns.indexOf('Maturity') != -1)
 			];
 		}
 	}
@@ -364,27 +352,27 @@ angular.module('elixir_front.services', [])
 			label: "Everything"
 		},
 		name: {
-			description: "Resource name",
+			description: "Sofware name.",
 			label: "Name"
 		},
 		toolType: {
-			description: "Type of tool. A tool may have more than one type reflecting its different facets.",
+			description: "A type of application software: a tool can have more than one type.",
 			label: "Tool type"
 		},
 		version: {
-			description: "Current resource version",
+			description: "Software version information. Use 'Add version' to enter individual version numbers (if practical).",
 			label: "Current version"
 		},
 		description: {
-			description: "Free text description of the resource",
+			description: "Software description, e.g. a few sentences adapted from the software publication abstract or homepage.",
 			label: "Description"
 		},
-		function: {
-			description: "Scientific function of the resource",
+		operation: {
+			description: "A basic operation performed by this software function.",
 			label: "Function"
 		},
-		functionDescription: {
-			description: "Free text description of the function",
+		functionNote: {
+			description: "Concise comment about this function, if not apparent from the description and EDAM annotations.",
 			label: "Function description"
 		},
 		functionName: {
@@ -392,15 +380,23 @@ angular.module('elixir_front.services', [])
 			label: "Function Name"
 		},
 		input: {
-			description: "Input specification",
+			description: "Details of input data for this function.",
 			label: "Input"
 		},
-		dataType: {
-			description: "Type of data (EDAM term)",
+		inputDataType: {
+			description: "Type of input data.",
 			label: "Data type"
 		},
-		dataFormat: {
-			description: "Allowed format(s) of the data (EDAM terms)",
+		inputDataFormat: {
+			description: "Allowed format(s) of the input data.",
+			label: "Data format"
+		},
+		outputDataType: {
+			description: "Type of output data.",
+			label: "Data type"
+		},
+		outputDataFormat: {
+			description: "Allowed format(s) of the output data.",
 			label: "Data format"
 		},
 		dataDescription: {
@@ -408,15 +404,15 @@ angular.module('elixir_front.services', [])
 			label: "Data description"
 		},
 		output: {
-			description: "Output specification",
+			description: "Details of output data for this function.",
 			label: "Output"
 		},
 		topic: {
-			description: "General scientific domain of the resource (EDAM term)",
+			description: "A scientific domain that the tool serves, or another general category.",
 			label: "Topic"
 		},
 		homepage: {
-			description: "Resource homepage (URL)",
+			description: "Homepage of the software, or some URL that best serves this purpose.",
 			label: "Homepage URL"
 		},
 		contact: {
@@ -492,7 +488,7 @@ angular.module('elixir_front.services', [])
 			label: "Mirror"
 		},
 		collectionID: {
-			description: "Names of collections of which the resource is a part, e.g. a suite, library etc.",
+			description: "A tag which assigns the software to a collection in bio.tools.",
 			label: "Collection"
 		},
 		sourceRegistry: {
@@ -504,7 +500,7 @@ angular.module('elixir_front.services', [])
 			label: "Canonical ID"
 		},
 		cost: {
-			description: "Cost incurred by the resource",
+			description: "Monetary cost of acquiring the software.",
 			label: "Cost"
 		},
 		elixirInfo: {
@@ -520,7 +516,7 @@ angular.module('elixir_front.services', [])
 			label: "ELIXIR node"
 		},
 		maturity: {
-			description: "Resource stage of development",
+			description: "Development stage of the software product.",
 			label: "Maturity"
 		},
 		platform: {
@@ -528,11 +524,11 @@ angular.module('elixir_front.services', [])
 			label: "Platform"
 		},
 		language: {
-			description: "Languages (for APIs etc.) or technologies (for Web applications, applets etc.)",
+			description: "Name of a programming language, e.g. used for the software source code.",
 			label: "Language"
 		},
 		license: {
-			description: "Software or data usage license",
+			description: "Software or data usage license. Use \"Unlicensed\", \"Proprietary\" (for commercial licenses) or \"Other\" in special cases. ",
 			label: "License"
 		},
 		credit: {
@@ -576,13 +572,125 @@ angular.module('elixir_front.services', [])
 			label: "Version"
 		},
 		operatingSystem: {
-			description: "Operating system supported by a downloadable software package.",
+			description: "The operating system supported by a downloadable software.",
 			label: "Operating system"
 		},
 		accessibility: {
-			description: "Whether the software is freely available for use.",
+			description: "How freely available the software is for use.",
 			label: "Accessibility"
-		}
+		},
+		cmd: {
+			description: "Relevant command, command-line fragment or option for executing this function or running the tool in this mode.",
+			label: "Command"
+		},
+		linkURL: {
+			description: "A link of some relevance to the software (URL).",
+			label: "linkURL"
+		},
+		linkType: {
+			description: "The type of data, information or system that is obtained when the link is resolved.",
+			label: "linkType"
+		},
+		linkNote: {
+			description: "Comment about the link.",
+			label: "linkNote"
+		},
+		downloadURL: {
+			description: "Link to download (or repository providing a download) for the software.",
+			label: "downloadURL"
+		},
+		downloadType: {
+			description: "Type of downloadable resource.",
+			label: "downloadType"
+		},
+		downloadNote: {
+			description: "Comment about the download.",
+			label: "downloadNote"
+		},
+		downloadVersion: {
+			description: "Version information (typically a version number) of the software applicable to this download.",
+			label: "linkNote"
+		},
+		documentationURL: {
+			description: "Link to documentation for the tool (URL).",
+			label: "documentationURL"
+		},
+		documentationType: {
+			description: "Type of documentation that is linked to.",
+			label: "documentationType"
+		},
+		documentationNote: {
+			description: "Comment about the documentation.",
+			label: "documentationNote"
+		},
+		publicationPMCID: {
+			description: "PubMed Central Identifier (PMCID) of a publication about the software.",
+			label: "publicationPMCID"
+		},
+		publicationPMID: {
+			description: "PubMed Identifier (PMID) of a publication about the software.",
+			label: "publicationPMID"
+		},
+		publicationDOI: {
+			description: "Digital Object Identifier (DOI) of a publication about the software.",
+			label: "publicationDOI"
+		},
+		publicationType: {
+			description: "Type of publication.",
+			label: "publicationType"
+		},
+		publicationVersion: {
+			description: "Version information (typically a version number) of the software applicable to this publication.",
+			label: "publicationVersion"
+		},
+		creditName: {
+			description: "Name of the entity that is credited.",
+			label: "creditName"
+		},
+		creditEmail: {
+			description: "Email address of the entity that is credited.",
+			label: "creditEmail"
+		},
+		creditURL: {
+			description: "URL for the entity that is credited, e.g. homepage of an institute.",
+			label: "creditURL"
+		},
+		creditOrcidID: {
+			description: "Unique identifier (ORCID iD) of a person that is credited.",
+			label: "creditOrcidID"
+		},
+		creditEntityType: {
+			description: "Type of entity that is credited.",
+			label: "creditEntityType"
+		},
+		creditEntityRole: {
+			description: "Role performed by entity that is credited.",
+			label: "creditEntityRole"
+		},
+		creditNote: {
+			description: "A comment about the credit.",
+			label: "creditNote"
+		},
+		elixirPlatfrom: {
+			description: "Name of one of countries participating in ELIXIR",
+			label: "elixirPlatform"
+		},
+		otherID: {
+			description: "A unique identifier of the software, typically assigned by an ID-assignment authority other than bio.tools, e.g. “RRID:SCR_015644”",
+			label: "otherID"
+		},
+		otherIDValue: {
+			description: "Value of tool identifier, e.g. “RRID:SCR_001156”",
+			label: "otherIDValue"
+		},
+		otherIDType: {
+			description: "Type of tool identifier, e.g. “rrid”",
+			label: "otherIDType"
+		},
+		otherIDVersion: {
+			description: "Version information (typically a version number) of the software applicable to this identifier, e.g. “1.4”",
+			label: "otherIDVersion"
+		},
 	};
 })
 .factory('CheckUserEditingRights', ['User', function(User) {

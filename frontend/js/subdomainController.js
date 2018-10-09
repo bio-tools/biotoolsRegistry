@@ -6,13 +6,15 @@ angular.module('elixir_front.controllers')
 	$scope.subdomains = [];
 
 	$scope.deleteSubdomainAtIndex = function(index) {
-		var deleteSubdomain = $scope.subdomains[index];
-		$scope.subdomains.splice(index, 1);
-		var deleteResponse = DomainDetailConnection.delete({'domain': deleteSubdomain.name}, function(data) {
-			// TODO: Handle repsonses
-		}, function(error) {
-			// TODO: Handle errors
-		});
+		if (confirm("Are you sure you want to remove this subdomain?")){
+			var deleteSubdomain = $scope.subdomains[index];
+			$scope.subdomains.splice(index, 1);
+			var deleteResponse = DomainDetailConnection.delete({'domain': deleteSubdomain.name}, function(data) {
+				// TODO: Handle repsonses
+			}, function(error) {
+				// TODO: Handle errors
+			});
+		}
 	}
 
 	vm.loadSubdomains = function() {
@@ -82,7 +84,8 @@ angular.module('elixir_front.controllers')
 	$scope.toolInSubdomain = function(toolID, versionID) {
 		for (var index in $scope.subdomain.resources) {
 			var currentTool = $scope.subdomain.resources[index];
-			if (currentTool['id'] == toolID && currentTool['versionId'] == versionID) {
+			//console.log(currentTool['biotoolsID']);
+			if (currentTool['biotoolsID'] == toolID){// && currentTool['versionId'] == versionID) {
 				return true;
 			}
 		}
@@ -91,7 +94,8 @@ angular.module('elixir_front.controllers')
 
 	$scope.addToSubdomain = function(index) {
 		var selectedTool = $scope.search.searchResults[index];
-		var selectedDict = { "id": selectedTool.id, "versionId": selectedTool.versionId };
+		//console.log($scope.search);
+		var selectedDict = { "biotoolsID": selectedTool.biotoolsID, "versionId": selectedTool.versionId };
 		$scope.subdomain.toolList.push(selectedTool);
 		$scope.subdomain.resources.push(selectedDict);
 		$scope.subdomain.totalPages = ($scope.subdomain.toolList.length / $scope.toolsPerPageCount) * 10;
@@ -100,9 +104,9 @@ angular.module('elixir_front.controllers')
 	$scope.addAllToSubdomain = function() {
 		for (var tool in $scope.search.searchResults) {
 			var selectedTool = $scope.search.searchResults[tool];
-			if (selectedTool.id && $scope.toolInSubdomain(selectedTool.id, selectedTool.versionId) == false) {	
+			if (selectedTool.biotoolsID && $scope.toolInSubdomain(selectedTool.biotoolsID, selectedTool.versionId) == false) {	
 				$scope.subdomain.toolList.push(selectedTool);
-				$scope.subdomain.resources.push({ "id": selectedTool.id, "versionId": selectedTool.versionId });
+				$scope.subdomain.resources.push({ "biotoolsID": selectedTool.biotoolsID, "versionId": selectedTool.versionId });
 			}
 		}
 		$scope.subdomain.totalPages = ($scope.subdomain.toolList.length / $scope.toolsPerPageCount) * 10;
@@ -137,7 +141,7 @@ angular.module('elixir_front.controllers')
 			$scope.subdomain.description = data.data['description'];
 			for (var index in data.data.resources) {
 				var tool = data.data.resources[index];
-				tool['id'] = tool['textId'];
+				tool['biotoolsID'] = tool['biotoolsID'];
 				$scope.subdomain.toolList.push(tool);
 				$scope.subdomain.resources.push(tool);
 			}

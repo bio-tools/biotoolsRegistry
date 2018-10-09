@@ -222,6 +222,14 @@
   right: 1px;
   top: 0;
 }
+.ui-grid-icon-menu:before {
+    content: '\c363';
+}
+
+.ui-grid-icon-ok:before {
+    content: '\c362';
+}
+
 .ui-grid-column-menu-button .ui-grid-icon-angle-down {
   vertical-align: sub;
 }

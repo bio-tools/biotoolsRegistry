@@ -3,7 +3,7 @@ from elixir.models import *
 from elixir.validators import *
 
 class OperatingSystemSerializer(serializers.ModelSerializer):
-	name = serializers.CharField(allow_blank=False, max_length=300, min_length=1, validators=[IsStringTypeValidator], required=False)
+	name = serializers.CharField(allow_blank=False, validators=[IsStringTypeValidator], required=False)
 
 	class Meta:
 		model = OperatingSystem
@@ -22,4 +22,4 @@ class OperatingSystemSerializer(serializers.ModelSerializer):
 		# check if length is not exceeded
 		enum = ENUMValidator([u'Mac', u'Linux', u'Windows'])
 		data = enum(data)
-		return {'name':data}
+		return {'name': data}

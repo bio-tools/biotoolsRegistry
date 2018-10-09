@@ -35,7 +35,7 @@ class IssueBaseClass(object):
 			# get the existing issues of this type
 			existing_issues = Issue.objects.filter(
 				issue_type=self.issue_type,
-				resource_textId=tool.textId,
+				resource_biotoolsID=tool.biotoolsID,
 				resource_versionId=tool.versionId
 			)
 			# now reopen the closed ones or close if there aren't any new ones
@@ -61,7 +61,7 @@ class IssueBaseClass(object):
 							issue_type=self.issue_type,
 							issue_state=self.fail_issue_state,
 							field_value=detected_issue,
-							resource_textId=tool.textId,
+							resource_biotoolsID=tool.biotoolsID,
 							resource_versionId=tool.versionId,
 							creation_actor=self.user
 						).save()

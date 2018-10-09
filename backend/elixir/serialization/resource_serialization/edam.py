@@ -2,6 +2,7 @@ from rest_framework import serializers
 from elixir.models import *
 from elixir.validators import *
 
+
 class TopicSerialiser(serializers.ModelSerializer):
 	uri = serializers.CharField(allow_blank=False, validators=[IsURLValidator], required=False)
 
@@ -16,6 +17,7 @@ class TopicSerialiser(serializers.ModelSerializer):
 		attrs['term'] = ontology.get_term()
 		return attrs
 
+
 class DataSerializer(serializers.ModelSerializer):
 	uri = serializers.CharField(allow_blank=False, validators=[IsURLValidator], required=False)
 
@@ -29,6 +31,7 @@ class DataSerializer(serializers.ModelSerializer):
 		attrs['uri'] = ontology.get_URI()
 		attrs['term'] = ontology.get_term()
 		return attrs
+
 
 class FormatSerializer(serializers.ModelSerializer):
 	uri = serializers.CharField(allow_blank=False, validators=[IsURLValidator], required=False)
@@ -47,29 +50,31 @@ class FormatSerializer(serializers.ModelSerializer):
 class InputSerializer(serializers.ModelSerializer):
 
 	# nested attributes
-	data			= DataSerializer(many=False, required=True)
-	format			= FormatSerializer(many=True, required=False, allow_empty=False)
+	data = DataSerializer(many=False, required=True)
+	format = FormatSerializer(many=True, required=False, allow_empty=False)
 
 	class Meta:
 		model = Input
 		fields = ('data', 'format')
 
+
 class OutputSerializer(serializers.ModelSerializer):
 
 	# nested attributes
-	data			= DataSerializer(many=False, required=True)
-	format			= FormatSerializer(many=True, required=False, allow_empty=False)
+	data = DataSerializer(many=False, required=True)
+	format = FormatSerializer(many=True, required=False, allow_empty=False)
 
 	class Meta:
 		model = Output
 		fields = ('data', 'format')
+
 
 class OperationSerializer(serializers.ModelSerializer):
 	uri = serializers.CharField(allow_blank=False, validators=[IsURLValidator], required=False)
 
 	class Meta:
 		model = Operation
-		fields = ('uri','term')
+		fields = ('uri', 'term')
 
 	def validate(self, attrs):
 		ontology = OntologyValidator('EDAM_operation')
@@ -78,18 +83,21 @@ class OperationSerializer(serializers.ModelSerializer):
 		attrs['term'] = ontology.get_term()
 		return attrs
 
+
 class FunctionSerializer(serializers.ModelSerializer):
-	comment = serializers.CharField(max_length=1000, min_length=1, validators=[IsStringTypeValidator], required=False)
+	note = serializers.CharField(max_length=1000, min_length=10, validators=[IsStringTypeValidator], required=False)
+	# check for length restrictions
+	cmd = serializers.CharField(max_length=100, min_length=1, validators=[IsStringTypeValidator], required=False)
 
 	# nested attributes
-	operation    = OperationSerializer(many=True, required=True, allow_empty=False)
-	input        = InputSerializer(many=True, required=False, allow_empty=False)
-	output       = OutputSerializer(many=True, required=False, allow_empty=False)
+	operation = OperationSerializer(many=True, required=True, allow_empty=False)
+	input = InputSerializer(many=True, required=False, allow_empty=False)
+	output = OutputSerializer(many=True, required=False, allow_empty=False)
 
 	class Meta:
 		model = Function
-		fields = ('comment', 'operation', 'input', 'output')
-
+		fields = ('note', 'cmd','operation', 'input', 'output')
+		
 class OntologySerializer(serializers.ModelSerializer):
 
 	class Meta:
@@ -98,4 +106,5 @@ class OntologySerializer(serializers.ModelSerializer):
 
 	def get_pk_field(self, model_field):
 		return None
+
 		

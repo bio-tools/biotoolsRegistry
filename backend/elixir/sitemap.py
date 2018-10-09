@@ -32,7 +32,7 @@ class GoogleSitemapRenderer(BaseRenderer):
         for el in Resource.objects.filter(visibility=1):
             url = ET.SubElement(root, 'url')
             loc = ET.SubElement(url, 'loc')
-            loc.text = escape(settings.URL_FRONT + el.textId)
+            loc.text = escape(settings.URL_FRONT + el.biotoolsID)
             lastmod = ET.SubElement(url, 'lastmod')
             lastmod.text = el.lastUpdate.isoformat()
 

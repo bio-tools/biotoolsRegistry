@@ -1,13 +1,16 @@
 from django.db import models
 from elixir.model.resource_model.resource import * 
 
+# TODO
 class Topic(models.Model):
-    uri = models.TextField(blank=True, null=True)
-    term = models.TextField(blank=True, null=True)
-    resource = models.ForeignKey(Resource, null=True, blank=True, related_name='topic', on_delete=models.CASCADE)
+	# topic should not be mandatory
 
-    # metadata
-    additionDate = models.DateTimeField(auto_now_add=True)
+	uri = models.TextField(blank=True, null=True)
+	term = models.TextField(blank=True, null=True)
+	resource = models.ForeignKey(Resource, null=True, blank=True, related_name='topic', on_delete=models.CASCADE)
 
-    def __unicode__(self):
-        return unicode(self.term) or u''
+	# metadata
+	additionDate = models.DateTimeField(auto_now_add=True)
+
+	def __unicode__(self):
+		return unicode(self.term) or u''

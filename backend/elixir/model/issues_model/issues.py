@@ -21,9 +21,10 @@ class Issue(models.Model):
     field_name = models.TextField(blank=True, null=True)
     field_value = models.TextField(blank=True, null=True)
 
-    resource_textId = models.TextField(blank=True, null=True)
+
+    resource_biotoolsID = models.TextField(blank=True, null=True)
     resource_versionId = models.TextField(blank=True, null=True)
-    
+
     resolution_date = models.DateTimeField(null=True, blank=True)
     resolution_actor = models.CharField(max_length=32, blank=True, null=True)
 
@@ -34,8 +35,8 @@ class Issue(models.Model):
     additionDate = models.DateTimeField(auto_now_add=True)
 
     @classmethod
-    def report(self, textId):
-        return self.objects.filter(resource_textId=textId)
+    def report(self, biotoolsID):
+        return self.objects.filter(resource_biotoolsID=biotoolsID)
 
     def __unicode__(self):
-        return self.resource_textId + ' \t-\t ' + unicode(self.issue_type.type) + '\t' + unicode(self.issue_type.attribute) + '\t' + unicode(self.issue_type.field_name) + '\t' + unicode(self.issue_type.field_value) + '\t' + unicode(self.issue_state.name)
+        return self.resource_biotoolsID + ' \t-\t ' + unicode(self.issue_type.type) + '\t' + unicode(self.issue_type.attribute) + '\t' + unicode(self.issue_type.field_name) + '\t' + unicode(self.issue_type.field_value) + '\t' + unicode(self.issue_state.name)

@@ -26,7 +26,7 @@ angular.module('elixir_front.controllers', [])
 		enableHorizontalScrollbar: true,
 		columnVirtualizationThreshold: ToolTableDataSource.columnsDescription([]).length,
 		data: ToolList.list,
-		columnDefs: ToolTableDataSource.columnsDescription($scope.savedStateExists() == true ? [] : ['Name', 'Description', 'Function', 'Input', 'Output', 'Topic']),
+		columnDefs: ToolTableDataSource.columnsDescription($scope.savedStateExists() == true ? [] : ['Name', 'Description', 'Homepage', 'Credits', 'Operation', 'Topic', 'Input', 'Output']),
 		rowHeight: 135,
 		enableGridMenu: true,
 		onRegisterApi: function(gridApi) {
@@ -80,7 +80,16 @@ angular.module('elixir_front.controllers', [])
 		return $scope.rowIndex % 2 != 0 ? "#f8f8f8" : "white";
 	}
 }])
-.controller('SearchResultController', ['$scope', 'ToolList', 'ToolTableDataSource', 'DisplayModeSelector', 'Domain', function($scope, ToolList, ToolTableDataSource, DisplayModeSelector, Domain){
+.controller('SearchResultController', ['$scope','$state', 'ToolList', 'ToolTableDataSource', 'DisplayModeSelector', 'Domain', function($scope, $state, ToolList, ToolTableDataSource, DisplayModeSelector, Domain){
+
+	$scope.topicNameClicked = function(topic) {
+		//$state.go('search', {'topic': topic.term}, {reload: true});
+		$state.transitionTo('search', {'topic': topic.term}, {
+    	reload: true,
+    	inherit: false,
+    	notify: true
+		});
+	}
 
 	$scope.Domain = Domain;
 	$scope.ToolTableDataSource = ToolTableDataSource;
@@ -134,8 +143,10 @@ angular.module('elixir_front.controllers', [])
 	$scope.canEditTool = false;
 	$scope.canEditToolPermissions = false;
 	$scope.User = User;
-
+	$scope.orderby = 'text';
+	
 	$scope.registeringInProgress = false;
+	
 
 	// for storing validation and saving progess
 	$scope.validationProgress = {}, $scope.savingProgress = {}, $scope.deletingProgress = {};
@@ -158,11 +169,12 @@ angular.module('elixir_front.controllers', [])
 	}
 
 	// handle sending the resource to either validation or saving endpoints
-	$scope.sendResource = function(service, progress, isRemoval) {
+	$scope.sendResource = function(service, progress, isRemoval, action) {
 		progress.success = false;
 		progress.error = false;
 		progress.inProgress = true;
 		$scope.registrationErrorPayload = null;
+
 		service($stateParams, $scope.software, function (response) {
 			// handle success
 			progress.inProgress = false;
@@ -171,6 +183,11 @@ angular.module('elixir_front.controllers', [])
 				alert('Resource removed succesfully.');
 				$state.go('search');
 			}
+
+			if (action == "create"){
+				$state.go('tool.edit', {id: response.biotoolsID});
+			}
+
 		}, function(response) {
 			// handle error
 			progress.error = true;
@@ -305,6 +322,7 @@ angular.module('elixir_front.controllers', [])
 		nodeChildren: "children",
 		dirSelectable: true
 	}
+
 
 	// set term and uri when picked from EDAM widget
 	$scope.ontologyOnSelect = function (_object, _index, _node) {
@@ -654,7 +672,8 @@ angular.module('elixir_front.controllers', [])
 		{value: "xpp", text: "xpp"},
 		{value: "zlib-acknowledgement", text: "zlib-acknowledgement"},
 		{value: "Proprietary", text: "Proprietary"},
-		{value: "Other", text: "Other"}
+		{value: "Other", text: "Other"},
+		{value: "Unlicensed", text: "Unlicensed"}
 	]
 
 	$scope.costOptions = [
@@ -668,11 +687,14 @@ angular.module('elixir_front.controllers', [])
 		{value: "Ada", text: "Ada"},
 		{value: "AppleScript", text: "AppleScript"},
 		{value: "Assembly language", text: "Assembly language"},
+		{value: "AWK", text: "AWK"},
+		{value: "Bash", text: "Bash"},
 		{value: "C", text: "C"},
 		{value: "C#", text: "C#"},
 		{value: "C++", text: "C++"},
 		{value: "COBOL", text: "COBOL"},
 		{value: "ColdFusion", text: "ColdFusion"},
+		{value: "CWL", text: "CWL"},
 		{value: "D", text: "D"},
 		{value: "Delphi", text: "Delphi"},
 		{value: "Dylan", text: "Dylan"},
@@ -681,20 +703,24 @@ angular.module('elixir_front.controllers', [])
 		{value: "Fortran", text: "Fortran"},
 		{value: "Groovy", text: "Groovy"},
 		{value: "Haskell", text: "Haskell"},
+		{value: "Icarus", text: "Icarus"},
 		{value: "Java", text: "Java"},
-		{value: "Javascript", text: "Javascript"},
+		{value: "JavaScript", text: "JavaScript"},
+		{value: "JSP", text: "JSP"},
 		{value: "LabVIEW", text: "LabVIEW"},
 		{value: "Lisp", text: "Lisp"},
 		{value: "Lua", text: "Lua"},
 		{value: "Maple", text: "Maple"},
 		{value: "Mathematica", text: "Mathematica"},
-		{value: "MATLAB language", text: "MATLAB language"},
+		{value: "MATLAB", text: "MATLAB"},
 		{value: "MLXTRAN", text: "MLXTRAN"},
 		{value: "NMTRAN", text: "NMTRAN"},
+		{value: "OCaml", text: "OCaml"},
 		{value: "Pascal", text: "Pascal"},
 		{value: "Perl", text: "Perl"},
 		{value: "PHP", text: "PHP"},
 		{value: "Prolog", text: "Prolog"},
+		{value: "PyMOL", text: "PyMOL"},
 		{value: "Python", text: "Python"},
 		{value: "R", text: "R"},
 		{value: "Racket", text: "Racket"},
@@ -709,7 +735,9 @@ angular.module('elixir_front.controllers', [])
 		{value: "Turing", text: "Turing"},
 		{value: "Verilog", text: "Verilog"},
 		{value: "VHDL", text: "VHDL"},
-		{value: "Visual Basic", text: "Visual Basic"}
+		{value: "Visual Basic", text: "Visual Basic"},
+		{value: "XAML", text: "XAML"},
+		{value: "Other", text: "Other"}
 	];
 
 	$scope.platformOptions = [
@@ -756,7 +784,9 @@ angular.module('elixir_front.controllers', [])
 		{value: "Mirror", text: "Mirror"},
 		{value: "Registry", text: "Registry"},
 		{value: "Repository", text: "Repository"},
-		{value: "Social media", text: "Social media"}
+		{value: "Social media", text: "Social media"},
+		{value: "Scientific benchmark", text: "Scientific benchmark"},
+		{value: "Technical monitoring", text: "Technical monitoring"}
 	];
 
 	$scope.downloadTypeOptions = [
@@ -783,16 +813,22 @@ angular.module('elixir_front.controllers', [])
 	$scope.documentationTypeOptions = [
 		{value: "API documentation", text: "API documentation"},
 		{value: "Citation instructions", text: "Citation instructions"},
+		{value: "Contributions policy", text: "Contributions policy"},
 		{value: "General", text: "General"},
+		{value: "Governance", text: "Governance"},
+		{value: "Installation instructions", text: "Installation instructions"},
 		{value: "Manual", text: "Manual"},
 		{value: "Terms of use", text: "Terms of use"},
 		{value: "Training material", text: "Training material"},
+		{value: "Tutorial", text: "Tutorial"},
 		{value: "Other", text: "Other"}
 	];
 
 	$scope.publicationTypeOptions = [
 		{value: "Primary", text: "Primary"},
-		{value: "Benchmark", text: "Benchmark"},
+		{value: "Comparison", text: "Comparison"},
+		{value: "Method", text: "Method"},
+		{value: "Usage", text: "Usage"},
 		{value: "Review", text: "Review"},
 		{value: "Other", text: "Other"}
 	];
@@ -807,12 +843,52 @@ angular.module('elixir_front.controllers', [])
 	];
 
 	$scope.roleTypeOptions = [
+		{value: "Primary contact", text: "Primary contact"},
+		{value: "Contributor", text: "Contributor"},
 		{value: "Developer", text: "Developer"},
+		{value: "Documentor", text: "Documentor"},
 		{value: "Maintainer", text: "Maintainer"},
 		{value: "Provider", text: "Provider"},
-		{value: "Documentor", text: "Documentor"},
-		{value: "Contributor", text: "Contributor"},
 		{value: "Support", text: "Support"}
+	];
+
+	$scope.elixirPlatformOptions = [
+		{value: "Data", text: "Data"},
+		{value: "Tools", text: "Tools"},
+		{value: "Compute", text: "Compute"},
+		{value: "Interoperability", text: "Interoperability"},
+		{value: "Training", text: "Training"}
+	];
+
+	$scope.elixirNodeOptions = [
+		{value: "Belgium", text: "Belgium"},
+		{value: "Czech Republic", text: "Czech Republic"},
+		{value: "Denmark", text: "Denmark"},
+		{value: "EMBL", text: "EMBL"},
+		{value: "Estonia", text: "Estonia"},
+		{value: "Finland", text: "Finland"},
+		{value: "France", text: "France"},
+		{value: "Germany", text: "Germany"},
+		{value: "Greece", text: "Greece"},
+		{value: "Hungary", text: "Hungary"},
+		{value: "Ireland", text: "Ireland"},
+		{value: "Israel", text: "Israel"},
+		{value: "Italy", text: "Italy"},
+		{value: "Luxembourg", text: "Luxembourg"},
+		{value: "Netherlands", text: "Netherlands"},
+		{value: "Norway", text: "Norway"},
+		{value: "Portugal", text: "Portugal"},
+		{value: "Slovenia", text: "Slovenia"},
+		{value: "Spain", text: "Spain"},
+		{value: "Sweden", text: "Sweden"},
+		{value: "Switzerland", text: "Switzerland"},
+		{value: "UK", text: "UK"}
+	];
+
+	$scope.otherIdTypeOptions = [
+		{value: "doi", text: "doi"},
+		{value: "rrid", text: "rrid"},
+		{value: "cpe", text: "cpe"}
 	];
 }])
 .controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator) {
@@ -827,14 +903,14 @@ angular.module('elixir_front.controllers', [])
 
 	$scope.validateButtonClick = function() {
 		$timeout(function() {
-			$scope.sendResource(ToolUpdateValidator.update, $scope.validationProgress);
+			$scope.sendResource(ToolUpdateValidator.update, $scope.validationProgress, false, 'update-validate');
 		},100);
 	}
 
 	$scope.registerButtonClick = function() {
 		$timeout(function() {
 			if (confirm("Are you sure you want to update the resource? ")) {
-				$scope.sendResource(Tool.update, $scope.savingProgress);
+				$scope.sendResource(Tool.update, $scope.savingProgress, false, 'update');
 			}
 		},100);
 	}
@@ -843,7 +919,7 @@ angular.module('elixir_front.controllers', [])
 		$timeout(function() {
 			if (confirm("Are you sure you want to remove the resource? ")) {
 				if (confirm("This will remove the resource and cannot be undone. Are you sure you want to continue? ")) {
-					$scope.sendResource(Tool.remove, $scope.deletingProgress, true);
+					$scope.sendResource(Tool.remove, $scope.deletingProgress, true, 'delete');
 				}
 			}
 		},100);
@@ -858,7 +934,7 @@ angular.module('elixir_front.controllers', [])
 .controller('ToolCreateController', ['$scope', '$controller', '$timeout', 'ToolListConnection', 'ToolCreateValidator', 'User', '$stateParams', function($scope, $controller, $timeout, ToolListConnection, ToolCreateValidator, User, $stateParams){
 	// inherit common controller
 	$controller('ToolEditController', {$scope: $scope});
-
+	$scope.orderby = 'text';
 	// sets which controller is in use, so the HTML can adapt
 	$scope.controller = 'create';
 
@@ -872,14 +948,14 @@ angular.module('elixir_front.controllers', [])
 
 	$scope.validateButtonClick = function() {
 		$timeout(function() {
-			$scope.sendResource(ToolCreateValidator.save, $scope.validationProgress);
+			$scope.sendResource(ToolCreateValidator.save, $scope.validationProgress, false, 'create-validate');
 		},100);
 	}
 
 	$scope.registerButtonClick = function() {
 		if (confirm("Are you sure you want to save the resource? ")) {
 			$timeout(function() {
-				$scope.sendResource(ToolListConnection.save, $scope.savingProgress);
+				$scope.sendResource(ToolListConnection.save, $scope.savingProgress, false, 'create');
 			},100);
 		}
 	}
@@ -922,20 +998,10 @@ angular.module('elixir_front.controllers', [])
 		$timeout(function() {
 			$scope.software = {
 				"owner": $scope.User.getUsername(),
-				"contact": [
-				{}
-				],
-				"function": [
-				{
-					"operation": [""]
-				}
-				],
-				"topic": [
-				{}
-				],
-				"toolType": [
-				""
-				],
+				"name":"",
+				"description":"",
+				"homepage":""
+				,
 			};
 		},100);
 	}

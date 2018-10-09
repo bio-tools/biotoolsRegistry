@@ -3,7 +3,7 @@ from elixir.models import *
 from elixir.validators import *
 
 class ToolTypeSerializer(serializers.ModelSerializer):
-	name = serializers.CharField(allow_blank=False, max_length=300, min_length=1, validators=[IsStringTypeValidator], required=False)
+	name = serializers.CharField(allow_blank=False, validators=[IsStringTypeValidator], required=False)
 
 	class Meta:
 		model = ToolType
@@ -22,4 +22,4 @@ class ToolTypeSerializer(serializers.ModelSerializer):
 		# checking if within enum
 		enum = ENUMValidator([u'Command-line tool', u'Web application', u'Desktop application', u'Script', u'Suite', u'Workbench', u'Database portal', u'Ontology', u'Workflow', u'Plug-in', u'Library', u'Web API', u'Web service', u'SPARQL endpoint'])
 		data = enum(data)
-		return {'name':data}
+		return {'name': data}

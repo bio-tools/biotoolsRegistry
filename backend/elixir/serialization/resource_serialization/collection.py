@@ -4,7 +4,7 @@ from elixir.validators import *
 
 
 class CollectionIDSerializer(serializers.ModelSerializer):
-	name = serializers.CharField(allow_blank=False, max_length=300, min_length=1, validators=[IsStringTypeValidator], required=False)
+	name = serializers.CharField(allow_blank=False, max_length=50, min_length=1, validators=[IsStringTypeValidator], required=False)
 
 	class Meta:
 		model = CollectionID
@@ -18,9 +18,10 @@ class CollectionIDSerializer(serializers.ModelSerializer):
 		# checking if blank
 		IsNotBlankValidator(data)
 		# check if length is not exceeded
-		length = LengthValidator(300)
+		length = LengthValidator(50)
 		length(data)
-		return {'name':data}
+		IsCollectionIDValidator(data)
+		return {'name': data}
 
 	def get_pk_field(self, model_field):
 		return None

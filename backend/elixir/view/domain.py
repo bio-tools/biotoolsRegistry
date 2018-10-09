@@ -123,6 +123,7 @@ class DomainResourceView(APIView):
 			return Response({"details": "This domain not allowed."}, status=status.HTTP_400_BAD_REQUEST)
 
 		payload = request.data
+
 		if not payload:
 			return Response({"details": "Expected payload."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -145,16 +146,18 @@ class DomainResourceView(APIView):
 		if not isinstance(payload_resources, list):
 			return Response({"details": "Invalid payload format."}, status=status.HTTP_400_BAD_REQUEST)
 
+
 		for el in payload_resources:
 			if not isinstance(el, dict):
 				return Response({"details": "Invalid payload format."}, status=status.HTTP_400_BAD_REQUEST)
-			textId = el.get('id', None)
-			if not textId:
+			biotoolsID = el.get('biotoolsID', None)
+			if not biotoolsID:
 				return Response({"details": "Missing id for one of the resources."}, status=status.HTTP_400_BAD_REQUEST)
 			try:
-				r = Resource.objects.get(textId__iexact=textId, visibility=1)
+				r = Resource.objects.get(biotoolsID__iexact=biotoolsID, visibility=1)
 			except Resource.DoesNotExist:
-				return Response({"details": "Could not locate resource with id " + str(textId) + " ."}, status=status.HTTP_400_BAD_REQUEST)
+				return Response({"details": "Could not locate resource with id " + str(biotoolsID) + " ."}, status=status.HTTP_400_BAD_REQUEST)
+
 
 		d = None
 		try:
@@ -171,19 +174,19 @@ class DomainResourceView(APIView):
 
 
 			d.domainresource_set.all().delete()
-
 			result = es.search(index='domains', body={'size': 10,'query': {'bool': {'must': [{'match': {'domain': {'query': domain}}}]}}})
 			count = result['hits']['total']
+			
 			if count > 0:
 				for el in payload_resources:
 					r = None
-					textId = el.get('id', None)
+					biotoolsID = el.get('biotoolsID', None)
 					try:
-						r = Resource.objects.get(textId__iexact=el['id'], visibility=1)
-						DomainResource(textId=r.textId, name=r.name, domain=d).save()
+						r = Resource.objects.get(biotoolsID__iexact=el['biotoolsID'], visibility=1)
+						DomainResource(biotoolsID=r.biotoolsID, name=r.name, domain=d).save()
 					except Resource.DoesNotExist:
-						return Response({"details": "Could not find resource with id " + el['id'] + "."}, status=status.HTTP_400_BAD_REQUEST)
-				es.index(index='domains', doc_type='subdomains', body={'domain': d.name, 'title': d.title, 'sub_title': d.sub_title, 'description': d.description, 'resources': map(lambda x: {'name': x.name, 'textId': x.textId}, d.domainresource_set.all())}, id=result['hits']['hits'][0]['_id'])
+						return Response({"details": "Could not find resource with id " + el['biotoolsID'] + "."}, status=status.HTTP_400_BAD_REQUEST)
+				es.index(index='domains', doc_type='subdomains', body={'domain': d.name, 'title': d.title, 'sub_title': d.sub_title, 'description': d.description, 'resources': map(lambda x: {'name': x.name, 'biotoolsID': x.biotoolsID}, d.domainresource_set.all())}, id=result['hits']['hits'][0]['_id'])
 		except Domain.DoesNotExist:
 			raise Http404
 

@@ -10,6 +10,10 @@ def parallel_function(x):
 	resource = ResourceSerializer(Resource.objects.get(id=x[0]), many=False).data
 	return JSONRenderer().render(resource)
 
+def parallel_function_v2(x):
+	resource = LegacyResourceSerializer(Resource.objects.get(id=x[0]), many=False).data
+	return JSONRenderer().render(resource)
+
 class Command(BaseCommand):
 	help = 'Regenerate the Elasticsearch index'
 
@@ -33,7 +37,7 @@ class Command(BaseCommand):
 					},
 					"resources": {
 						"properties": {
-							"textId": {
+							"biotoolsID": {
 								"type": "string",
 								"fields": {
 									"raw": {
@@ -58,6 +62,7 @@ class Command(BaseCommand):
 		}
 	
 		es.indices.create('elixir', ignore=400)
+		es.indices.create('elixir_v2', ignore=400)
 		time.sleep(3)
 
 		# ADD SETTINGS
@@ -75,8 +80,11 @@ class Command(BaseCommand):
 			}
 		}
 		es.indices.close (index='elixir')
+		es.indices.close (index='elixir_v2')
 		es.indices.put_settings (index='elixir', body=settings)
+		es.indices.put_settings (index='elixir_v2', body=settings)
 		es.indices.open (index='elixir')
+		es.indices.open (index='elixir_v2')
 
 		# ADD MAPPING
 		mapping = {
@@ -128,7 +136,12 @@ class Command(BaseCommand):
 					},
 					"function": {
 						"properties": {
-							"comment": {
+							"note": {
+								"type": "text",
+								"analyzer": "english",
+								"fielddata": True
+							},
+							"cmd": {
 								"type": "text",
 								"analyzer": "english",
 								"fielddata": True
@@ -221,18 +234,19 @@ class Command(BaseCommand):
 							}
 						}
 					},
-					"contact" : {
-						"properties" : {
-							"name" : {
-								"type" : "text",
-								"analyzer": "english",
-								"fielddata": True
-							}
-						}
-					},
+					# "contact" : {
+					# 	"properties" : {
+					# 		"name" : {
+					# 			"type" : "text",
+					# 			"analyzer": "english",
+					# 			"fielddata": True
+					# 		}
+					# 	}
+					# },
+					# Maybe add other fields here like credit orcidid, credit elixirPlatform , elixirNode
 					"credit" : {
 						"properties" : {
-							"comment" : {
+							"note" : {
 								"type" : "text",
 								"analyzer": "english",
 								"fielddata": True
@@ -253,12 +267,17 @@ class Command(BaseCommand):
 					},
 					"documentation" : {
 						"properties" : {
-							"comment" : {
+							"note" : {
 								"type" : "text",
 								"analyzer": "english",
 								"fielddata": True
 							}
 						}
+					},
+					"biotoolsID" : {
+						"type" : "text",
+						"analyzer": "not_analyzed_case_insensitive",
+						"fielddata": True
 					},
 					"id" : {
 						"type" : "text",
@@ -280,6 +299,25 @@ class Command(BaseCommand):
 						"analyzer": "not_analyzed_case_insensitive",
 						"fielddata": True
 					},
+					# "otherID" : {
+					# 	"properties" : {
+					# 		"value" : {
+					# 			"type" : "text",
+					# 			"analyzer": "not_analyzed_case_insensitive",
+					# 			"fielddata": True
+					# 		},
+					# 		"type" : {
+					# 			"type" : "text",
+					# 			"analyzer": "not_analyzed_case_insensitive",
+					# 			"fielddata": True
+					# 		},
+					# 		"version" : {
+					# 			"type" : "text",
+					# 			"analyzer": "not_analyzed_case_insensitive",
+					# 			"fielddata": True
+					# 		}
+					# 	}
+					# },
 					"toolType" : {
 						"type" : "text",
 						"analyzer": "not_analyzed_case_insensitive",
@@ -287,9 +325,18 @@ class Command(BaseCommand):
 					},
 					"version" : {
 						"type" : "text",
-						"fielddata": True,
-						"analyzer": "not_analyzed_case_insensitive"
+						"analyzer": "not_analyzed_case_insensitive",
+						"fielddata": True
 					},
+					# "version" : {
+					# 	"properties" : {
+					# 		"version" : {
+					# 			"type" : "text",
+					# 			"analyzer": "english",
+					# 			"fielddata": True
+					# 		}
+					# 	}
+					# },
 					"versionId" : {
 						"type" : "text",
 						"fielddata": True,
@@ -314,24 +361,39 @@ class Command(BaseCommand):
 			}
 		}
 		es.indices.put_mapping(index='elixir', doc_type='tool', body=mapping)
+		es.indices.put_mapping(index='elixir_v2', doc_type='tool', body=mapping)
 
 		es.indices.create('domains')
 		es.indices.put_mapping(index='domains', doc_type='subdomains', body=mapping_subdomains)
 
 		rl_id = Resource.objects.filter(visibility=1).values_list('id')
 		pool = Pool(processes=cpu_count())
-		
+
+		# schema 2.0
+		res_v2 = pool.map_async(parallel_function_v2, rl_id)
+		results_v2 = res_v2.get(timeout=10000)
+		for el in results_v2:
+			es.index(index='elixir_v2', doc_type='tool', body=el)
+
+		# schema 3.0
 		res = pool.map_async(parallel_function, rl_id)
 		results = res.get(timeout=10000)
 		for el in results:
 			es.index(index='elixir', doc_type='tool', body=el)
+
 
 		# for resourceItem in resourceList:
 		# 	resource = ResourceSerializer(resourceItem, many=False).data
 		# 	self.stdout.write('%s\t:\t%s' % (resource['id'], resource['name']))
 		# 	es.index(index='elixir', doc_type='tool', body=resource)
 
-
+		# this is not really correct because the there are multiple versions to a resource
+		# should probably be the same for domain resource , or just remove version and versionId
 		for domain in Domain.objects.all():
-			es.index(index='domains', doc_type='subdomains', body={'domain':domain.name, 'title': domain.title, 'sub_title': domain.sub_title, 'description': domain.description, 'resources': map(lambda x: {'textId': x.textId, 'versionId': x.versionId, 'name': x.name, 'version': x.version}, domain.domainresource_set.all())})
+			es.index(index='domains', doc_type='subdomains', body={'domain':domain.name, 'title': domain.title, 'sub_title': domain.sub_title, 'description': domain.description, 'resources': map(lambda x: {'biotoolsID': x.biotoolsID, 'versionId': x.versionId, 'name': x.name, 'version': x.version}, domain.domainresource_set.all())})
 			self.stdout.write('%s'%(domain.name))
+
+
+		# for domain in Domain.objects.all():
+		# 	es.index(index='domains', doc_type='subdomains', body={'domain':domain.name, 'title': domain.title, 'sub_title': domain.sub_title, 'description': domain.description, 'resources': map(lambda x: {'biotoolsID': x.biotoolsID, 'versionId': x.versionId, 'name': x.name}, domain.domainresource_set.all())})
+		# 	self.stdout.write('%s'%(domain.name))

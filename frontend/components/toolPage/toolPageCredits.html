@@ -13,7 +13,8 @@
 		gridId="credit.gridId"
 		typeEntity="credit.typeEntity"
 		typeRole="credit.typeRole"
-		comment="credit.comment"
-		color="#87244C"></div>
+		comment="{{credit.note}}"
+		color="#87244C"
+		toshow = "{{(credit.note != null && credit.note.length > 0).toString()}}"></div>
 	</div>
 </div>

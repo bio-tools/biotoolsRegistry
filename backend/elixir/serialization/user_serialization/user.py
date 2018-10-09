@@ -2,6 +2,8 @@ from rest_framework import serializers
 from elixir.models import *
 from rest_auth.serializers import PasswordResetSerializer#, UserDetailsSerializer
 from rest_auth.registration.serializers import RegisterSerializer
+from allauth.account.adapter import get_adapter
+import re
 
 # custom serializer just for enabling HTML emails
 class CustomPasswordResetSerializer(PasswordResetSerializer):
@@ -9,6 +11,7 @@ class CustomPasswordResetSerializer(PasswordResetSerializer):
 		return {
 			'html_email_template_name': 'registration/password_reset_email.html'
 		}
+
 
 # custom user validation
 class UserRegisterSerializer(RegisterSerializer):
@@ -20,6 +23,7 @@ class UserRegisterSerializer(RegisterSerializer):
 		# clean username using function built into allauth
 		attrs = get_adapter().clean_username(attrs)
 		return attrs
+
 
 # username list
 class UserNameSerializer(serializers.ModelSerializer):

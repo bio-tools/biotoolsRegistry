@@ -1,14 +1,14 @@
 <!-- Divider line -->
 <div ng-controller="LoginMangerController as loginCtrl" class="pull-right default-controls-container">
-	<a ng-if="CheckUserEditingRights.canEdit(software)" ui-sref="tool.edit({id:software.id, version:software.versionId})">
+	<a ng-if="CheckUserEditingRights.canEdit(software)" ui-sref="tool.edit({id:software.biotoolsID})">
 		<button class="btn btn-default default-controls-button">Update this record ›</button>
 	</a>
 	<a ng-if="!CheckUserEditingRights.canEdit(software)">
-		<button ng-if="User.isLoggedIn()" class="btn btn-default default-controls-button" ng-click="requestEditing(software.id)">Request editing rights ›</button>
+		<button ng-if="User.isLoggedIn()" class="btn btn-default default-controls-button" ng-click="requestEditing(software.biotoolsID)">Request editing rights ›</button>
 		<button ng-if="!User.isLoggedIn()" class="btn btn-default default-controls-button" ng-click="loginCtrl.openLoginModal()">Request editing rights ›</button>
 	</a>
 	<a ng-if="!CheckUserEditingRights.isOwner(software)">
-		<button ng-if="User.isLoggedIn()" class="btn btn-default default-controls-button" ng-click="requestOwnership(software.id)">Request ownership ›</button>
+		<button ng-if="User.isLoggedIn()" class="btn btn-default default-controls-button" ng-click="requestOwnership(software.biotoolsID)">Request ownership ›</button>
 		<button ng-if="!User.isLoggedIn()" class="btn btn-default default-controls-button" ng-click="loginCtrl.openLoginModal()">Request ownership ›</button>
 	</a>
 	<div style="margin-top: 20px;">

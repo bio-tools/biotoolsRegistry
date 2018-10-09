@@ -3,6 +3,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from elixir.permissions import IsOwnerOrReadOnly, HasEditPermissionToEditResourceOrReadOnly, CanConcludeResourceRequest, IsStaffOrReadOnly
 from elixir.models import *
 from elixir.serializers import *
+import elixir.search as search
+from elixir.view.resource import es
 
 class FunctionList(APIView):
 	"""
@@ -15,7 +17,6 @@ class FunctionList(APIView):
 		functions = Function.objects.filter(resource__visibility=1)
 		serializer = FunctionSerializer(functions, many=True)
 		return Response(serializer.data)
-
 
 class UsedTermsList(APIView):
 	"""

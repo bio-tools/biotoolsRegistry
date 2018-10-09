@@ -102,7 +102,7 @@
 								</div>
 							</uib-tab>
 							<uib-tab>
-								<tab-heading>Function <span style="color:#ff0000;"><b>*</b></span></tab-heading>
+								<tab-heading>Function</tab-heading>
 								<br>
 								<div class="form-group">
 									<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
@@ -326,6 +326,7 @@
 													<button class="btn btn-default highlight-icon input-ontology-btn" type="button" ng-click="remove('topic', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
 													</span>
 												</div>
+												
 												<div class="panel panel-default panel-ontology">
 													<div class="panel-body" style="padding:0px;">
 														<div uib-collapse="meta.topic[topicIndex].visibility">
@@ -335,7 +336,7 @@
 															<div treecontrol class="tree-light"
 																tree-model="EDAM_topic"
 																options="treeOptions"
-																order-by="text"
+																order-by="orderby"
 																on-selection="ontologyOnSelect(software.topic, topicIndex, node)"
 																selected-node="meta.topic[topicIndex].selected"
 																filter-expression="meta.topic[topicIndex].predicate">{{node.text}}</div>

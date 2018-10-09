@@ -16,8 +16,8 @@ class ToolList(APIView):
 		filter_query = {}
 		if query.get('name'):
 			filter_query["name__icontains"] = query.get('name')
-		elif query.get('id'):
-			filter_query["textId__icontains"] = query.get('id')
+		elif query.get('biotoolsID'):
+			filter_query["biotoolsID__icontains"] = query.get('biotoolsID')
 		elif query.get('collectionId'):
 			filter_query["collectionID__name__icontains"] = query.get('collectionId')
 		elif query.get('credit'):

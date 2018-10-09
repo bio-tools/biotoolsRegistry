@@ -4,14 +4,14 @@ from rest_framework import serializers
 
 # table to keep permissions for a specified resource
 class EditPermission(models.Model):
-    type = models.TextField(default="private")
-    def __unicode__(self):
+	type = models.TextField(default="private")
 
-        return u''
+	def __unicode__(self):
+		return u''
 
 class EditPermissionAuthor(models.Model):
-    user = models.OneToOneField(User)
-    editPermissions = models.ManyToManyField(EditPermission, related_name="authors")
+	user = models.OneToOneField(User)
+	editPermissions = models.ManyToManyField(EditPermission, related_name="authors")
 
 
 class EditPermissionAuthorSerializer(serializers.ModelSerializer):

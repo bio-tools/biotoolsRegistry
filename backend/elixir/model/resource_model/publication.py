@@ -8,9 +8,11 @@ class PublicationMetadata(models.Model):
     abstract = models.TextField(blank=True, null=True)
     date = models.DateTimeField(blank=True, null=True)
     citationCount = models.IntegerField(default=0)
-    
+
     def __unicode__(self):
         return unicode(self.title) or u''
+
+
 
 class Publication(models.Model):
     pmcid = models.TextField(blank=True, null=True)
@@ -26,6 +28,7 @@ class Publication(models.Model):
 
     def __unicode__(self):
         return unicode(self.pmcid) or u''
+
 
 class PublicationAuthor(models.Model):
     name = models.TextField(blank=True, null=True)

@@ -96,7 +96,7 @@ var elixir_front = angular.module('elixir_front', [
 		resolve: {}
 	})
 	.state('search', {
-		url: "/?page&q&id&name&topic&function&operation&input&inputDataFormat&inputDataType&output&outputDataFormat&outputDataType&homepage&description&version&accessibility&toolType&collectionID&contact&elixirInfo&maturity&operatingSystem&language&cost&license&documentation&link&download&publication&credit&owner&sort&ord&domain",
+		url: "/?page&q&biotoolsID&name&topic&function&operation&input&inputDataFormat&inputDataType&output&outputDataFormat&outputDataType&homepage&description&version&accessibility&toolType&collectionID&contact&elixirInfo&maturity&operatingSystem&language&cost&license&documentation&link&download&publication&credit&owner&sort&ord&domain",
 		templateUrl: "partials/search_results.html",
 		data: {
 			meta: {

@@ -35,7 +35,7 @@ class EditPermissions(APIView):
 			raise ParseError("This request requires the following pa rameters: 'id' (a resource id), permission (a type of a permission to be assigned).")
 
 	def getResource(self, id):
-		obj = Resource.objects.filter(visibility=1).get(textId__iexact=id)
+		obj = Resource.objects.filter(visibility=1).get(biotoolsID__iexact=id)
 		self.check_object_permissions(self.request, obj)
 		return obj
 
@@ -63,4 +63,4 @@ class EditPermissions(APIView):
 		parameters = self.extractGETQueryParameters(request.GET)
 		resource = self.getResource(parameters["id"])
 		editpermission = resource.editPermission
-		return Response({'id': resource.textId, 'type': editpermission.type})
+		return Response({'id': resource.biotoolsId, 'type': editpermission.type})

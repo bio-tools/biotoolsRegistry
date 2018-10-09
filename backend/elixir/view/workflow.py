@@ -11,7 +11,7 @@ class WorkflowDetailView(APIView):
 	permission_classes = (IsAuthenticatedOrReadOnly,)
 
 	def get(self, request, id, format=None):
-		workflow = Workflow.objects.get(textId=id)
+		workflow = Workflow.objects.get(biotoolsID=id)
 		serializer = WorkflowSerializer(workflow)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
