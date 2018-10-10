@@ -21,7 +21,7 @@ EDAM and bio.tools developers will attend the whole hackathon (Mon 12 - Fri 16) 
 ## Focus of each day
 Each hackathon day has a focus, which we'll try to stick to, but will adapt depending upon who turns up.
 
-* **Tue Nov 13** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#biotools-development) (testing, ...)
+* **Tue Nov 13** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#biotools-development) (kick-start the community development)
 * **Wed Nov 14** [EDAM](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#edam-development) (...)
 * **Thu Nov 15** [subject tbd](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#subject-tbd) (we'll decide the focus in the previous days!)
 * **Fri Nov 16** [publications](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#publications) (discussion & planning of publications)
@@ -30,7 +30,7 @@ Each hackathon day has a focus, which we'll try to stick to, but will adapt depe
 ## bio.tools
 *Expected audience*: anyone with an interest in improving bio.tools
 
-*Expected outcome*: improved awareness of & community input on bio.tools near-term plans
+*Expected outcome*: verification of next release, kick-start the community development process
 
 The purpose is to test, evaluate and optimise the development deployment of bio.tools (https://dev.bio.tools/), changes in which are scheduled to be moved into production (https://bio.tools/) during Dec 3-7.  The bio.tools core-dev will be on hand to discuss things in person.
 
@@ -63,12 +63,15 @@ We want to be sure our priorities reflect those of the community at large, and e
 ### Task 3: bio.tools API testing & optimisation
 The latest development deployment of the bio.tools API (https://dev.bio.tools/api/tool) is, we hope, a big improvement on the current version.  It supports a comprehensive [set of parameters](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) that enable precise query over tool function and other metadata.  But before we can move these changes into production, the API needs to be thoroughly tested.  There is also an opportunity to optimise the search behaviour, in light of results of real queries, to ensure it works as anticipated.
 
-The task is to systematically test the API, particulaly the behaviour of the search parameters as documented in the [API Reference]() and [API Usage Guide]().  Please provide feedback on the behaviour / possible improvement of the API via GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new).  Issues or suggestions on the docs can be reported [here](https://github.com/bio-tools/biotoolsdocs/issues).  The bio.tools core-dev will be on-hand and (hopefully, depending on certain developments being completed in time) will be able to tweak the elastic search parameters during the workshop, allowing for immediate iterative improvements. 
+The task is to
+* systematically test the API, particulaly the behaviour of the search parameters as documented in the [API Reference](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) and [API Usage Guide](https://biotools.readthedocs.io/en/latest/api_usage_guide_dev.html).
+* provide feedback on the API search behaviour / possible improvement via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new)
+* suggest fixes or improvements to the API docs [here](https://github.com/bio-tools/biotoolsdocs/issues).
+
+Hopefully (depending on certain developments being completed in time), we'll be able to tweak the elastic search parameters during the workshop, allowing for immediate iterative improvements. 
 
 
-
-
-### Task 5: Open development process
+### Task 4: Open development process
 Now that bio.tools is [open source](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE), there is an opportunity for hackers everywhere to contribute to the project.  But first we must define how the community development process will work in practice.  We have emerging [contributor guidelines]() but we want to revise these in light of feedback from potential contributors.
 
 The task is to review the emerging [contributor guidelines]() and provide feedback on these via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new).
@@ -103,6 +106,10 @@ The task is to develop tooling that checks compliance of EDAM to the guidelines 
 It is over 5 years since an [article](https://doi.org/10.1093/bioinformatics/btt113) describing EDAM was published in Bioinformatics.  Since then, there have been 18 new releases (currently EDAM 1.21), with many additions and improvements.  Soon, we hope to release EDAM 2.0 implementing a set of features representing a step forward in value and quality over 1.* releases.
 
 The task (working as a group, or alone) is to enumerate; what are the desirable properties of EDAM 2.0?  We will enumerate these properties in this [issue](https://github.com/edamontology/edamontology/issues/376), creating other issues as needed for finer-grained information.
+
+
+### Task 4: EDAM applications (discussion & hacking)
+EDAM is used (or being considered) in a variety of contexts.  There is an opportunity for developers on projects that are using (or considering) EDAM to discuss their requirements and work with the EDAM developers.
 
 
 
