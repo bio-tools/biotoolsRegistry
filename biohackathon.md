@@ -22,12 +22,12 @@ EDAM and bio.tools developers will attend the whole hackathon (Mon 12 - Fri 16) 
 Each hackathon day has a focus, which we'll try to stick to, but will adapt depending upon who turns up.
 
 * **Tue Nov 13** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#biotools-development) (kick-start the community development)
-* **Wed Nov 14** [EDAM](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#edam-development) (...)
-* **Thu Nov 15** [subject tbd](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#subject-tbd) (we'll decide the focus in the previous days!)
+* **Wed Nov 14** [EDAM](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#edam-development) (formats curation, EDAM applications and planning EDAM 2.0)
+* **Thu Nov 15** [subject tbd](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#subject-tbd) (we'll decide the focus during the hackathon)
 * **Fri Nov 16** [publications](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#publications) (discussion & planning of publications)
 
 
-## bio.tools
+## Day 2 (Nov 13): bio.tools
 *Expected audience*: anyone with an interest in improving bio.tools
 
 *Expected outcome*: verification of next release, kick-start the community development process
@@ -78,10 +78,10 @@ The task is to review the emerging [contributor guidelines]() and provide feedba
 
 
 
-## EDAM
+## Day 3 (Nov 14): EDAM
 *Expected audience*: anyone with an interest in improving EDAM, people knowledgeable of bioinformatics data formats
 
-*Expected outcome*: improved EDAM Formats subontology, scoping the desired state of EDAM 2.0
+*Expected outcome*: improved EDAM Formats subontology, scoping the desired state of EDAM 2.0, developing EDAM applications
 
 ### Task 1 Curation of bioinformatics data formats
 The [EDAM Format subontology](http://edamontology.org/format_1915) has potential in systems such as [Galaxy](https://f1000research.com/posters/6-1032) and for [workflow composition](https://doi.org/10.1093/bioinformatics/bty646).  EDAM is close to providing a comprehensive catalogue of the prevalent bioinformatics data formats.  To accomplish this, a significant number of [work](https://github.com/edamontology/edamontology/issues/370) must be completed, including [guidelines](https://edamontologydocs.readthedocs.io/en/latest/editors_guide.html#id12) for EDAM Format curation, which have been under [discussion](https://github.com/edamontology/edamontologyDocs/issues/10).
@@ -117,31 +117,20 @@ EDAM is used (or being considered) in a variety of contexts.  There is an opport
 * cleaning up the connection between EDAM Formats and Data subontologies ([issue](https://github.com/edamontology/edamontology/issues/283), see also [issue](https://github.com/edamontology/edamontology/issues/287))
 * 
 
-## Subject tbd
-The topic of the fourth day will be decided upon during the hackathon, depending upon interest, but might include:
+## Day 4 (Nov 15): Subject tbd
+The topic of the fourth day will be decided upon during the hackathon, depending upon interest and progress on previous days:
 
 1. things outstanding from previous days
 2. something else, *e.g.*
+   * evaluation of [EDAM Browser](https://ifb-elixirfr.github.io/edam-browser/) (see [GitHub](https://github.com/IFB-ElixirFr/edam-browser)) ontology browser; issues, features and next steps
+   * evaluation of bio.tools content from an end-user perspective: annotation consistency, EDAM coverage, content views *etc*
+   * integration of bio.tools and biocontainers.pro
+   * integration of bio.tools and Galaxy
 
 
+## Day 5 (Nov 16): Publications
 
-1. Evaluation of [EDAM Browser](https://ifb-elixirfr.github.io/edam-browser/) (see [GitHub](https://github.com/IFB-ElixirFr/edam-browser)) ontology browser; issues, features and next steps
-2. bio.tools content from an end-user perspective: annotation consistency, EDAM coverage, content views *etc*
-
-
-
-
-
-
-## Publications
-
-There are many developments concerning or involving bio.tools or EDAM which are at various stages of development and - with a little more effort - can be finished off and written up for publication.  These include (but are not limited to):
-
-* blah
-* blah
-* blah
-
-The final day will be reserved to discussing next steps, particulary, what is required from the EDAM or bio.tools side, and identify concrete actions to finish off these works and write them up for publication. 
+There are many developments concerning or involving EDAM or bio.tools which - with a little more effort - can be finished off and written up for publication.  The final day will be reserved to discussing next steps, particulary, what is required from the EDAM or bio.tools side, and identify concrete actions to finish off these works and write them up for publication. 
 
 
 
