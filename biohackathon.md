@@ -4,7 +4,7 @@
 
 ## Community
 
-ELIXIR Tools Platform, bio.tools, EDAM
+[ELIXIR Tools Platform](https://www.elixir-europe.org/platforms/tools), [bio.tools](https://github.com/bio-tools/biotoolsregistry/), [EDAM](https://github.com/edamontology/edamontology/)
 
 ## Leads
 * Jon Ison
@@ -18,7 +18,7 @@ ELIXIR Tools Platform, bio.tools, EDAM
 EDAM and bio.tools developers will attend the whole hackathon (Mon 12 - Fri 16) and run dicussion and hacking sessions, with each day focused on a specific theme (see below).  We hope to work with any people and projects who are intersted in using or developing EDAM and bio.tools.
 
 ## Focus of each day
-Each hackathon day has a focus, which we'll try to stick to, and a range of tasks catering for different interests and expertise.  We will adapt depending upon who turns up, so feel free to drop in to any session at any time:
+Each hackathon day has a focus, which we'll try to stick to, and a range of tasks catering for different interests and expertise.  We do not expect to complete all the tasks, and will adapt depending upon who turns up, so feel free to drop in to any session at any time:
 
 * **Tue Nov 13** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#biotools-development) (kick-start the community development)
 * **Wed Nov 14** [EDAM](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#edam-development) (data formats catalogue, planning EDAM 2.0 and applications)
@@ -29,7 +29,7 @@ Each hackathon day has a focus, which we'll try to stick to, and a range of task
 ## Day 2 (Nov 13): bio.tools
 *Expected audience*: anyone with an interest in improving bio.tools
 
-*Expected outcome*: verification of next release, kick-start the community development process
+*Expected outcome*: kick-start the community development process, verification of next release, better search performance
 
 The purpose is to test, evaluate and optimise the development deployment of bio.tools (https://dev.bio.tools/), changes in which are scheduled to be moved into production (https://bio.tools/) during Dec 3-7.  The bio.tools core-dev will be on hand to discuss things in person.
 
@@ -37,14 +37,14 @@ The purpose is to test, evaluate and optimise the development deployment of bio.
 Currently 28 issues labelled ["done - staged for release"](https://github.com/bio-tools/biotoolsregistry/issues?q=is%3Aissue+is%3Aopen+label%3A%22done+-+staged+for+release%22) are implemented in https://dev.bio.tools.  Before these can be moved into production, we need independent verification that these features and fixes are satisfactorily implemented.
 
 The task is:
-* pick any ["done - staged for release"](https://github.com/bio-tools/biotoolsregistry/issues?q=is%3Aissue+is%3Aopen+label%3A%22done+-+staged+for+release%22) issue which lacks the "fix verified" label
+* pick any ["done - staged for release"](https://github.com/bio-tools/biotoolsregistry/issues?q=is%3Aissue+is%3Aopen+label%3A%22done+-+staged+for+release%22) issue which lacks the ["fix verified"](https://github.com/bio-tools/biotoolsRegistry/labels/fix%20verified) label
 * read the thread and test things are working as advertised
-* add a comment to the thread; either reporting things are OK, or describing an outstanding problem
-* repeat, until all "done - staged for release" issues are verified
+* add a comment to the thread; either reporting things are OK, or describing an outstanding problem: bio.tools core-dev will monitor the tracker, fixing issues that crop up, and attaching the ```fix verified``` label to confirmed fixes
+* repeat, until all ```done - staged for release``` issues are verified
 
-In addition, please have a play with https://dev.bio.tools, critique the interfaces, API and content, and report any bugs or suggestions via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new).
+Alternatively, experiment with https://dev.bio.tools, critique the interfaces, API and content, and report any bugs or suggestions via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new).
 
-bio.tools core-dev will monitor the tracker, attach the ["fix verified"](https://github.com/bio-tools/biotoolsRegistry/labels/fix%20verified) label and fix issues that crop up.
+
 
 ### Task 2: Development priorities
 We label issues to reflect their status and priority:
@@ -57,23 +57,23 @@ We label issues to reflect their status and priority:
 We want to be sure our priorities reflect those of the community at large, and engage developers who are willing to help out.  The task is:
 * review our priorities (issues in any of the categories above) - providing feedback in the appropriate GitHub thread
 * feel free to [request new features](https://github.com/bio-tools/biotoolsRegistry/issues/new), but please first [search our issues](https://github.com/bio-tools/biotoolsRegistry/issues) as it might already be listed
-* *developers only* - are you interested to help out, especially on ["critical priority"](https://github.com/bio-tools/biotoolsRegistry/labels/critical%20priority) issues, or anything else?  If so, please disucss this with the bio.tools developers
+* *developers only* - if you interested to help out - especially on ["critical priority"](https://github.com/bio-tools/biotoolsRegistry/labels/critical%20priority) issues (or anything else!), then please disucss this with the bio.tools core-dev
 
 ### Task 3: bio.tools API testing & optimisation
 The latest development deployment of the bio.tools API (https://dev.bio.tools/api/tool) is, we hope, a big improvement on the current version.  It supports a comprehensive [set of parameters](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) that enable precise query over tool function and other metadata.  But before we can move these changes into production, the API needs to be thoroughly tested.  There is also an opportunity to optimise the search behaviour, in light of results of real queries, to ensure it works as anticipated.
 
 The task is to
 * systematically test the API, particulaly the behaviour of the search parameters as documented in the [API Reference](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) and [API Usage Guide](https://biotools.readthedocs.io/en/latest/api_usage_guide_dev.html).
-* provide feedback on the API search behaviour / possible improvement via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new)
-* suggest fixes or improvements to the API docs [here](https://github.com/bio-tools/biotoolsdocs/issues).
+* provide feedback on the API search behaviour / possible improvement via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new).  You can suggest fixes or improvements to the API docs [here](https://github.com/bio-tools/biotoolsdocs/issues).
+* *developers with elasticsearch experience only* - please speak to bio.tools core-dev (there are some issues we need help with!)
 
-Hopefully (depending on certain developments being completed in time), we'll be able to tweak the elastic search parameters during the workshop, allowing for immediate iterative improvements. 
+We hope (developments pending!) to have an easy way to tweak the elasticsearch parameters during the workshop, allowing for immediate iterative improvements.
 
 
 ### Task 4: Open development process
 Now that bio.tools is [open source](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE), there is an opportunity for hackers everywhere to contribute to the project.  But first we must define how the community development process will work in practice.  We have emerging [contributor guidelines]() but we want to revise these in light of feedback from potential contributors.
 
-The task is to review the emerging [contributor guidelines]() and provide feedback on these via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new).
+The task is to review the emerging [contributor guidelines](), provide feedback on these via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new), or provide feedback in person to bio.tools core-dev.
 
 
 
@@ -83,13 +83,18 @@ The task is to review the emerging [contributor guidelines]() and provide feedba
 *Expected outcome*: improved EDAM Formats subontology, scoping the desired state of EDAM 2.0, developing EDAM applications
 
 ### Task 1 Curation of bioinformatics data formats
-The [EDAM Format subontology](http://edamontology.org/format_1915) has potential in systems such as [Galaxy](https://f1000research.com/posters/6-1032) and for [workflow composition](https://doi.org/10.1093/bioinformatics/bty646).  EDAM is close to providing a comprehensive catalogue of the prevalent bioinformatics data formats.  To accomplish this, a significant number of [work](https://github.com/edamontology/edamontology/issues/370) must be completed, including [guidelines](https://edamontologydocs.readthedocs.io/en/latest/editors_guide.html#id12) for EDAM Format curation, which have been under [discussion](https://github.com/edamontology/edamontologyDocs/issues/10).
+The [EDAM Format subontology](http://edamontology.org/format_1915) has potential in systems such as [Galaxy](https://f1000research.com/posters/6-1032) and for applications such as [workflow composition](https://doi.org/10.1093/bioinformatics/bty646).  EDAM is close to providing a comprehensive catalogue of the prevalent bioinformatics data formats.  To achieve this, a significant amount of [work](https://github.com/edamontology/edamontology/issues/370) remains:
 
 The task is to work on any aspects of the data format curation listed [here](https://github.com/edamontology/edamontology/issues/370) including:
 
-* addition of miscellaneous new data formats, or changes to existing ones ([issue](https://github.com/edamontology/edamontology/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A%22concept%2Fterm+request%22+format))
+* addition of miscellaneous new data formats, or changes to existing ones (see [issues](https://github.com/edamontology/edamontology/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A%22concept%2Fterm+request%22+format))
 * addition of formats ensuring coverage for Galaxy applications ([issue](https://github.com/edamontology/edamontology/issues/85))
 * addition of formats to ensure coverage of ([FAIRSharing](https://fairsharing.org/))
+
+We expect the tasks to be accomplished manually, programmatically, or by a combination of the two.  Please see:
+* [guidelines](https://edamontologydocs.readthedocs.io/en/latest/editors_guide.html#id12) for EDAM Format curation
+* [EDAM Format request template](https://github.com/edamontology/edamontology/issues/new/choose) (see the [docs](https://github.com/edamontology/edamontology/blob/master/.github/ISSUE_TEMPLATE/new-format.md))
+
 
 ### Task 2 Verification of EDAM Formats subontology
 We have guidelines for the development of the EDAM formats subontology:
