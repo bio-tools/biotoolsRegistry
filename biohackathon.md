@@ -4,27 +4,26 @@
 
 ## Community
 
-ELIXIR Tools Platform
+ELIXIR Tools Platform, bio.tools, EDAM
 
 ## Leads
----
-Jon Ison
-Hans-Ioan Ienasescu
-Matúš Kalaš 
-Hervé Ménager 
-Veit Schwämmle 
+* Jon Ison
+* Hans-Ioan Ienasescu
+* Matúš Kalaš 
+* Hervé Ménager 
+* Veit Schwämmle 
 
 
 ## Background information
-EDAM and bio.tools developers will attend the whole hackathon (Mon 12 - Fri 16) and will host a running "drop-in" session, with each day focused on a specific theme (see below).  We hope to work with any people and projects who are intersted in using or developing EDAM and bio.tools.
+EDAM and bio.tools developers will attend the whole hackathon (Mon 12 - Fri 16) and run dicussion and hacking sessions, with each day focused on a specific theme (see below).  We hope to work with any people and projects who are intersted in using or developing EDAM and bio.tools.
 
 ## Focus of each day
-Each hackathon day has a focus, which we'll try to stick to, but will adapt depending upon who turns up.
+Each hackathon day has a focus, which we'll try to stick to, and a range of tasks catering for different interests and expertise.  We will adapt depending upon who turns up, so feel free to drop in to any session at any time:
 
 * **Tue Nov 13** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#biotools-development) (kick-start the community development)
-* **Wed Nov 14** [EDAM](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#edam-development) (formats curation, EDAM applications and planning EDAM 2.0)
+* **Wed Nov 14** [EDAM](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#edam-development) (data formats catalogue, planning EDAM 2.0 and applications)
 * **Thu Nov 15** [subject tbd](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#subject-tbd) (we'll decide the focus during the hackathon)
-* **Fri Nov 16** [publications](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#publications) (discussion & planning of publications)
+* **Fri Nov 16** [Planning](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#planning) (planning including next steps and publications)
 
 
 ## Day 2 (Nov 13): bio.tools
@@ -122,15 +121,18 @@ The topic of the fourth day will be decided upon during the hackathon, depending
 
 1. things outstanding from previous days
 2. something else, *e.g.*
+   * workflows in bio.tools: modelling, visualisation and curation
    * evaluation of [EDAM Browser](https://ifb-elixirfr.github.io/edam-browser/) (see [GitHub](https://github.com/IFB-ElixirFr/edam-browser)) ontology browser; issues, features and next steps
    * evaluation of bio.tools content from an end-user perspective: annotation consistency, EDAM coverage, content views *etc*
    * integration of bio.tools and biocontainers.pro
    * integration of bio.tools and Galaxy
 
+If you are particularly interested in a topic, mail Jon Ison [mailto:jison@bioinformatics@dtu.dk]
 
-## Day 5 (Nov 16): Publications
 
-There are many developments concerning or involving EDAM or bio.tools which - with a little more effort - can be finished off and written up for publication.  The final day will be reserved to discussing next steps, particulary, what is required from the EDAM or bio.tools side, and identify concrete actions to finish off these works and write them up for publication. 
+## Day 5 (Nov 16): Planning
+
+The final day will be reserved to discussing and planning next steps around collaboration of bio.tools and other projects and publications.
 
 
 
