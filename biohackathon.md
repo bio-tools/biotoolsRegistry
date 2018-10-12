@@ -29,9 +29,9 @@ Each hackathon day has a focus, which we'll try to stick to, with a range of tas
 
 
 ## Day 2 (Nov 13): bio.tools testing
-*Expected audience*: anyone with an interest in improving bio.tools
+**Expected audience:** *anyone with an interest in improving bio.tools*
 
-*Expected outcome*: verify the next release, improve the search performance
+**Expected outcome:** *verify the next release, improve the search performance*
 
 The purpose is to test, evaluate and optimise the development deployment of bio.tools (https://dev.bio.tools/), changes in which are scheduled to be moved into production (https://bio.tools/) during Dec 3-7.  The bio.tools core-dev will be on hand to discuss things in person.
 
@@ -59,9 +59,9 @@ We hope (developments pending!) to have an easy way to tweak the elasticsearch p
 
 
 ## Day 3 (Nov 14): bio.tools outreach
-*Expected audience*: anyone with an interest in improving bio.tools
+**Expected audience:** *anyone with an interest in improving bio.tools*
 
-*Expected outcome*: kick-start the community development process
+**Expected outcome:** *kick-start the community development process*
 
 The purpose is introduce our current development priorities and to introduce and improve the proposed community development process for bio.tools. The bio.tools core-dev will be on hand to discuss things in person.
 
@@ -87,9 +87,9 @@ The task is to review the emerging [contributor guidelines](), provide feedback 
 
 
 ## Day 4 (Nov 15): EDAM development
-*Expected audience*: anyone with an interest in improving EDAM, people knowledgeable of bioinformatics data formats
+**Expected audience:** *anyone with an interest in improving EDAM, people knowledgeable of bioinformatics data formats*
 
-*Expected outcome*: improved EDAM Formats subontology, scoping the desired state of EDAM 2.0, developing EDAM applications
+**Expected outcome:** *improved EDAM Formats subontology, scoping the desired state of EDAM 2.0, developing EDAM applications*
 
 ### Task 1 Curation of bioinformatics data formats
 The [EDAM Format subontology](http://edamontology.org/format_1915) has potential in systems such as [Galaxy](https://f1000research.com/posters/6-1032) and for applications such as [workflow composition](https://doi.org/10.1093/bioinformatics/bty646).  EDAM is close to providing a comprehensive catalogue of the prevalent bioinformatics data formats.  To achieve this, a significant amount of [work](https://github.com/edamontology/edamontology/issues/370) remains:
