@@ -146,7 +146,7 @@ We can work on other topics, depending upon interest and progress as we proceed:
 * integration of bio.tools and biocontainers.pro
 * integration of bio.tools and Galaxy
 
-If you're particularly interested in a topic, mail Jon Ison [mailto:jison@bioinformatics@dtu.dk]
+If you're particularly interested in a topic, mail [Jon Ison](mailto:jison@bioinformatics@dtu.dk)
 
 
 
