@@ -158,11 +158,13 @@ If you're particularly interested in a topic, mail [Jon Ison](mailto:jison@bioin
 ---
 ## Links & references
 - https://bio.tools/
-- https://ifb-elixirfr.github.io/edam-browser/#topic_0091
-- https://biit.cs.ut.ee/edammap/
+- https://bio-tools.github.io/Tool-Information-Standard/
+- https://www.ebi.ac.uk/ols/ontologies/edam
+- https://bioportal.bioontology.org/ontologies/EDAM
+- https://ifb-elixirfr.github.io/edam-browser/
 
 ## GitHub repos
-- http://github.com/bio-tools/biotoolsregistry
+- https://github.com/bio-tools/biotoolsregistry
 - https://github.com/bio-tools/biotoolsschema
 - https://github.com/edamontology/edamontology/
 - https://github.com/bio-tools/Tool-Information-Standard
