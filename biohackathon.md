@@ -27,6 +27,12 @@ Each hackathon day has a focus, which we'll try to stick to, with a range of tas
 * **Wed Nov 15** [EDAM development](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-4-nov-15-edam-development) (data formats catalogue, planning EDAM 2.0 and applications)
 * **Fri Nov 16** [Planning](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-5-nov-16-planning--coordination) (wrapping up, next steps, collaborations)
 
+
+---
+## Day 1 (Nov 12): Warm-up
+*EDAM and bio.tools core-dev will be around to discuss sessions for days 2-5*
+
+
 ---
 ## Day 2 (Nov 13): bio.tools testing
 **Expected audience:** *anyone with an interest in improving bio.tools*
