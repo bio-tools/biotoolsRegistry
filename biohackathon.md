@@ -115,8 +115,8 @@ We have guidelines for the development of the EDAM formats subontology:
 * [developer guidelines](https://edamontologydocs.readthedocs.io/en/latest/developers_guide.html#adding-concepts) about the technical process
 
 To develop EDAM Format subontology into a rigorous catalogue, we must ensure the guidelines are followed.  The task is:
-* review the [editor guidelines](https://edamontologydocs.readthedocs.io/en/latest/editors_guide.html#id12) and [developer guidelines](https://edamontologydocs.readthedocs.io/en/latest/developers_guide.html#adding-concepts), providing feedback via [GitHub](https://github.com/edamontology/edamontologyDocs/issues/new) or discussing this with EDAM core-dev
-* propose clean-ups of the connection between EDAM Format and Data subontologies (see [issue](https://github.com/edamontology/edamontology/issues/283)) : please make suggestions via [GitHub](https://github.com/edamontology/edamontology/issues/new).  See also [issue](https://github.com/edamontology/edamontology/issues/287)).
+* review the [editor guidelines](https://edamontologydocs.readthedocs.io/en/latest/editors_guide.html#id12) and [developer guidelines](https://edamontologydocs.readthedocs.io/en/latest/developers_guide.html#adding-concepts), and provide feedback on these via [GitHub](https://github.com/edamontology/edamontologyDocs/issues/new) or discuss this in person with EDAM core-dev
+* propose clean-ups of the connection between EDAM Format and Data subontologies (see [issue](https://github.com/edamontology/edamontology/issues/283)) : please make suggestions via [GitHub](https://github.com/edamontology/edamontology/issues/new) - see also [issue](https://github.com/edamontology/edamontology/issues/287)
 * (*developers only*) develop a utility that checks compliance of EDAM to the guidelines above, and generate a human-readable report that can be acted on.  In case you want to work with EDAM in JSON / JSON-LD format, see [edam2json](https://github.com/edamontology/edam2json)
   
 
@@ -143,7 +143,7 @@ The final day will be reserved to finishing off, and discussing and planning nex
 
 ---
 ## More ...
-We can work on other topics, depending upon interest and progress as we proceed:
+We can work on other topics, depending upon interest and progress as we proceed, *e.g.*:
 
 * workflows in bio.tools: modelling, visualisation and curation
 * evaluation of [EDAM Browser](https://ifb-elixirfr.github.io/edam-browser/) (see [GitHub](https://github.com/IFB-ElixirFr/edam-browser)) ontology browser; issues, features and next steps
@@ -170,4 +170,7 @@ If you're particularly interested in a topic, mail [Jon Ison](mailto:jison@bioin
 - https://github.com/bio-tools/Tool-Information-Standard
 - https://github.com/IFB-ElixirFr/edam-browser
 
-
+## Docs
+- https://biotools.readthedocs.io/en/latest/
+- https://biotoolsschema.readthedocs.io/en/latest/
+- https://edamontologydocs.readthedocs.io/en/latest/
