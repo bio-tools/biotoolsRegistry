@@ -2,6 +2,8 @@
 
 ### Representative: Jon Ison
 
+*DETAILS BELOW ARE PROVISIONAL AND MADE CHANGE IN THE RUN-UP TO THE EVENT*
+
 ## Community
 
 [ELIXIR Tools Platform](https://www.elixir-europe.org/platforms/tools), [bio.tools](https://github.com/bio-tools/biotoolsregistry/), [EDAM](https://github.com/edamontology/edamontology/)
@@ -18,18 +20,18 @@
 EDAM and bio.tools developers will attend the whole hackathon (Mon 12 - Fri 16) and run dicussion and hacking sessions, with each day focused on a specific theme (see below).  We hope to work with any people and projects who are interested in using or developing EDAM and bio.tools.
 
 ## Focus of each day
-Each hackathon day has a focus, which we'll try to stick to, and a range of tasks catering for different interests and expertise.  We do not expect to complete all the tasks, and will adapt depending upon who turns up, so feel free to drop in to any session at any time:
+Each hackathon day has a focus, which we'll try to stick to, with a range of tasks catering for different interests and expertise.  We do not expect to complete all the tasks, and will adapt depending upon who turns up, so feel free to drop in to any session at any time:
 
-* **Tue Nov 13** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#biotools-development) (kick-start the community development)
-* **Wed Nov 14** [EDAM](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#edam-development) (data formats catalogue, planning EDAM 2.0 and applications)
-* **Thu Nov 15** [subject tbd](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#subject-tbd) (we'll decide the focus during the hackathon)
+* **Tue Nov 13** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#biotools-testing) (testing & search optimisation)
+* **Tue Nov 14** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#biotools-development) (kick-start the community development)
+* **Wed Nov 15** [EDAM](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#edam-development) (data formats catalogue, planning EDAM 2.0 and applications)
 * **Fri Nov 16** [Planning](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#planning) (wrapping up, next steps, collaborations)
 
 
-## Day 2 (Nov 13): bio.tools
+## Day 2 (Nov 13): bio.tools testing
 *Expected audience*: anyone with an interest in improving bio.tools
 
-*Expected outcome*: kick-start the community development process, verification of next release, better search performance
+*Expected outcome*: kick-start the community development process, verify the next release, better search performance
 
 The purpose is to test, evaluate and optimise the development deployment of bio.tools (https://dev.bio.tools/), changes in which are scheduled to be moved into production (https://bio.tools/) during Dec 3-7.  The bio.tools core-dev will be on hand to discuss things in person.
 
@@ -39,27 +41,13 @@ Currently 28 issues labelled ["done - staged for release"](https://github.com/bi
 The task is:
 * pick any ["done - staged for release"](https://github.com/bio-tools/biotoolsregistry/issues?q=is%3Aissue+is%3Aopen+label%3A%22done+-+staged+for+release%22) issue which lacks the ["fix verified"](https://github.com/bio-tools/biotoolsRegistry/labels/fix%20verified) label
 * read the thread and test things are working as advertised
-* add a comment to the thread; either reporting things are OK, or describing an outstanding problem: bio.tools core-dev will monitor the tracker, fixing issues that crop up, and attaching the ```fix verified``` label to confirmed fixes
+* add a comment to the thread; either reporting things are OK, or describing an outstanding problem: bio.tools core-dev will monitor the tracker, fix issues that crop up, and attach the ```fix verified``` label to confirmed fixes
 * repeat, until all ```done - staged for release``` issues are verified
 
-Alternatively, experiment with https://dev.bio.tools, critique the interfaces, API and content, and report any bugs or suggestions via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new).
+Alternatively:
+* experiment with https://dev.bio.tools - critique the interfaces, API and content - and report any bugs or suggestions via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new)
 
-
-
-### Task 2: Development priorities
-We label issues to reflect their status and priority:
-* ["critical priority"](https://github.com/bio-tools/biotoolsRegistry/labels/critical%20priority) : our top priorities, including most of the reported [bugs](https://github.com/bio-tools/biotoolsRegistry/labels/bug)
-* ["high priority"](https://github.com/bio-tools/biotoolsRegistry/issues?q=is%3Aissue+is%3Aopen+label%3A%22high+priority%22) : things which bio.tools core-dev consider high priorities; we get to these once ["critical priority"](https://github.com/bio-tools/biotoolsRegistry/labels/critical%20priority) issues are addressed
-* ["in progress"](https://github.com/bio-tools/biotoolsRegistry/labels/in%20progress) : things we're working on currently
-* ["Dec 18 release"](https://github.com/bio-tools/biotoolsRegistry/milestone/2) : things we're aiming to put into the next production deployment
-* ["wontfixsoon"](https://github.com/bio-tools/biotoolsRegistry/labels/wontfixsoon) : things which, for one reason or another (usually lack of developer capacity), we don't anticipate doing soon (that's doesn't imply they're unimportant or bad ideas!)
-
-We want to be sure our priorities reflect those of the community at large, and engage developers who are willing to help out.  The task is:
-* review our priorities (issues in any of the categories above) - providing feedback in the appropriate GitHub thread
-* feel free to [request new features](https://github.com/bio-tools/biotoolsRegistry/issues/new), but please first [search our issues](https://github.com/bio-tools/biotoolsRegistry/issues) as it might already be listed
-* *developers only* - if you interested to help out - especially on ["critical priority"](https://github.com/bio-tools/biotoolsRegistry/labels/critical%20priority) issues (or anything else!), then please disucss this with the bio.tools core-dev
-
-### Task 3: bio.tools API testing & optimisation
+### Task 2: bio.tools API testing & optimisation
 The latest development deployment of the bio.tools API (https://dev.bio.tools/api/tool) is, we hope, a big improvement on the current version.  It supports a comprehensive [set of parameters](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) that enable precise query over tool function and other metadata.  But before we can move these changes into production, the API needs to be thoroughly tested.  There is also an opportunity to optimise the search behaviour, in light of results of real queries, to ensure it works as anticipated.
 
 The task is:
@@ -70,14 +58,33 @@ The task is:
 We hope (developments pending!) to have an easy way to tweak the elasticsearch parameters during the workshop, allowing for immediate iterative improvements.
 
 
-### Task 4: Open development process
+## Day 3 (Nov 14): bio.tools development
+*Expected audience*: anyone with an interest in improving bio.tools
+
+*Expected outcome*: kick-start the community development process
+
+### Task 1: Development priorities
+We label issues to reflect their status and priority:
+* ["critical priority"](https://github.com/bio-tools/biotoolsRegistry/labels/critical%20priority) : our top priorities, including most of the reported [bugs](https://github.com/bio-tools/biotoolsRegistry/labels/bug)
+* ["high priority"](https://github.com/bio-tools/biotoolsRegistry/issues?q=is%3Aissue+is%3Aopen+label%3A%22high+priority%22) : things which bio.tools core-dev consider high priorities; we get to these once ["critical priority"](https://github.com/bio-tools/biotoolsRegistry/labels/critical%20priority) issues are addressed
+* ["in progress"](https://github.com/bio-tools/biotoolsRegistry/labels/in%20progress) : things we're working on currently
+* ["Dec 18 release"](https://github.com/bio-tools/biotoolsRegistry/milestone/2) : things we're aiming to put into the next production deployment
+* ["wontfixsoon"](https://github.com/bio-tools/biotoolsRegistry/labels/wontfixsoon) : things which, for one reason or another (usually lack of developer capacity), we don't anticipate doing soon (that's doesn't imply they're unimportant or bad ideas!)
+
+We want to be sure our priorities reflect those of the community at large, and engage developers who are willing to help out.  The task is:
+* review our priorities (issues in any of the categories above) - providing feedback in the appropriate GitHub thread
+* feel free to [request new features](https://github.com/bio-tools/biotoolsRegistry/issues/new), but please first [search our issues](https://github.com/bio-tools/biotoolsRegistry/issues) as it might already be listed
+* *developers only* - if you're interested to help out - especially on ["critical priority"](https://github.com/bio-tools/biotoolsRegistry/labels/critical%20priority) issues (or anything else!), then please disucss this with the bio.tools core-dev
+
+
+### Task 2: Open development process
 Now that bio.tools is [open source](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE), there is an opportunity for hackers everywhere to contribute to the project.  But first we must define how the community development process will work in practice.  We have emerging [contributor guidelines]() but we want to revise these in light of feedback from potential contributors.
 
 The task is to review the emerging [contributor guidelines](), provide feedback on these via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new), or provide feedback in person to bio.tools core-dev.
 
 
 
-## Day 3 (Nov 14): EDAM
+## Day 4 (Nov 15): EDAM development
 *Expected audience*: anyone with an interest in improving EDAM, people knowledgeable of bioinformatics data formats
 
 *Expected outcome*: improved EDAM Formats subontology, scoping the desired state of EDAM 2.0, developing EDAM applications
@@ -125,23 +132,20 @@ Within 3 - 6 months, we hope to release EDAM 2.0 implementing a set of features 
 ### Task 4: EDAM applications (discussion & hacking)
 EDAM is used (or being considered) in a variety of contexts.  There is an opportunity for developers on projects that are using (or considering) EDAM to discuss their requirements and work with the EDAM developers.
 
-## Day 4 (Nov 15): Subject tbd
-The topic of the fourth day will be decided upon during the hackathon, depending upon interest and progress on previous days:
-
-1. things outstanding from previous days
-2. something else, *e.g.*
-   * workflows in bio.tools: modelling, visualisation and curation
-   * evaluation of [EDAM Browser](https://ifb-elixirfr.github.io/edam-browser/) (see [GitHub](https://github.com/IFB-ElixirFr/edam-browser)) ontology browser; issues, features and next steps
-   * evaluation of bio.tools content from an end-user perspective: annotation consistency, EDAM coverage, content views *etc*
-   * integration of bio.tools and biocontainers.pro
-   * integration of bio.tools and Galaxy
-
-If you are particularly interested in a topic, mail Jon Ison [mailto:jison@bioinformatics@dtu.dk]
-
-
 ## Day 5 (Nov 16): Planning & coordination
 
 The final day will be reserved to finishing off, and discussing and planning next steps around collaborations of EDAM and bio.tools with other projects.
+
+## More ...
+We can work on other topics, depending upon interest and progress as we proceed:
+
+* workflows in bio.tools: modelling, visualisation and curation
+* evaluation of [EDAM Browser](https://ifb-elixirfr.github.io/edam-browser/) (see [GitHub](https://github.com/IFB-ElixirFr/edam-browser)) ontology browser; issues, features and next steps
+* evaluation of bio.tools content from an end-user perspective: annotation consistency, EDAM coverage, content views *etc*
+* integration of bio.tools and biocontainers.pro
+* integration of bio.tools and Galaxy
+
+If you're particularly interested in a topic, mail Jon Ison [mailto:jison@bioinformatics@dtu.dk]
 
 
 
