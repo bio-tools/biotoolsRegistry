@@ -108,29 +108,27 @@ We have guidelines for the development of the EDAM formats subontology:
 * [editor guidelines](https://edamontologydocs.readthedocs.io/en/latest/editors_guide.html#id12) when modifying EDAM; adding or changing concepts, concept metadata, crosslinking, etc.
 * [developer guidelines](https://edamontologydocs.readthedocs.io/en/latest/developers_guide.html#adding-concepts) about the technical process
 
-To develop EDAM Format subontology into a rigorous catalogue, we must ensure the guidelines are followed.
-
-The task is:
+To develop EDAM Format subontology into a rigorous catalogue, we must ensure the guidelines are followed.  The task is:
 * review the [editor guidelines](https://edamontologydocs.readthedocs.io/en/latest/editors_guide.html#id12) and [developer guidelines](https://edamontologydocs.readthedocs.io/en/latest/developers_guide.html#adding-concepts), providing feedback via [GitHub](https://github.com/edamontology/edamontologyDocs/issues/new) or discussing this with EDAM core-dev
-* propose clean-ups of the connection between EDAM Format and Data subontologies (see [issue](https://github.com/edamontology/edamontology/issues/283) and [issue](https://github.com/edamontology/edamontology/issues/287)): please make suggestions via [GitHub](https://github.com/edamontology/edamontology/issues/new)
-* (developers only) develop a utility that checks compliance of EDAM to the guidelines above, and generate a human-readable report that can be acted on.  In case you want to work with EDAM in JSON / JSON-LD format, see [edam2json](https://github.com/edamontology/edam2json)
+* propose clean-ups of the connection between EDAM Format and Data subontologies (see [issue](https://github.com/edamontology/edamontology/issues/283)) : please make suggestions via [GitHub](https://github.com/edamontology/edamontology/issues/new).  See also [issue](https://github.com/edamontology/edamontology/issues/287)).
+* (*developers only*) develop a utility that checks compliance of EDAM to the guidelines above, and generate a human-readable report that can be acted on.  In case you want to work with EDAM in JSON / JSON-LD format, see [edam2json](https://github.com/edamontology/edam2json)
   
 
 ### Task 3 Towards EDAM 2.0 (discussion & planning)
-It is over 5 years since an [article](https://doi.org/10.1093/bioinformatics/btt113) describing EDAM was published in Bioinformatics.  Since then, there have been 18 new releases (currently EDAM 1.21), with many additions and improvements, and greatly improved documentation:
+It's over 5 years since an [article](https://doi.org/10.1093/bioinformatics/btt113) describing EDAM was published in Bioinformatics.  Since then, there have been 18 new releases (currently EDAM 1.21), with many additions and improvements, and greatly improved documentation:
 * rules for [concepts](https://edamontologydocs.readthedocs.io/en/latest/technical_details.html#concepts),
-* rules for [hierarchy depth](https://edamontologydocs.readthedocs.io/en/latest/technical_details.html#hierarchy-depth),
+* rules for [hierarchy depth](https://edamontologydocs.readthedocs.io/en/latest/technical_details.html#hierarchy-depth)
 * [guidelines for editors](https://edamontologydocs.readthedocs.io/en/latest/editors_guide.html)
 * [guidelines for developers](https://edamontologydocs.readthedocs.io/en/latest/developers_guide.html)
 
 Within 3 - 6 months, we hope to release EDAM 2.0 implementing a set of features representing a step forward in value and quality over the 1.* releases.  The task (working as a group, or alone) is:
 * think; what are the desirable properties of EDAM 2.0?  Is it simply to adhere to the rules and guidelines above, or something more?
 * enumerate desirable properties in this [issue](https://github.com/edamontology/edamontology/issues/376); we'll try to prioritise these during the hackathon
-* create sub-issues as needed, for finer-grained information.
+* create sub-issues as needed, for finer-grained information
 
 
 ### Task 4: EDAM applications (discussion & hacking)
-EDAM is used (or being considered) in a variety of contexts.  There is an opportunity for developers on projects that are using (or considering) EDAM to discuss their requirements and work with the EDAM developers.
+EDAM is used (or being considered) in a variety of contexts.  There is an opportunity for developers on projects that are using (or considering) EDAM to discuss their requirements and work with the EDAM developers.  Or you might have an idea that we haven't heard of already; let's discuss.
 
 ## Day 5 (Nov 16): Planning & coordination
 
