@@ -86,9 +86,9 @@ We want to be sure our priorities reflect those of the community at large, and e
 
 
 ### Task 2: Open development process
-Now that bio.tools is [open source](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE), there is an opportunity for hackers everywhere to contribute to the project.  But first we must define how the community development process will work in practice.  We have emerging [contributor guidelines]() but we want to revise these in light of feedback from potential contributors.
+Now that bio.tools is [open source](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE), there is an opportunity for hackers everywhere to contribute to the project.  But first we must define how the community development process will work in practice.  We have emerging [contributor guidelines](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md) but we want to revise these in light of feedback from potential contributors.
 
-The task is to review the emerging [contributor guidelines](), provide feedback on these via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new), or provide feedback in person to bio.tools core-dev.
+The task is to review the emerging [contributor guidelines](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md), provide feedback on these via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new), or provide feedback in person to bio.tools core-dev.
 
 
 ---
