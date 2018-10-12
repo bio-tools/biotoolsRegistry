@@ -27,7 +27,7 @@ Each hackathon day has a focus, which we'll try to stick to, with a range of tas
 * **Wed Nov 15** [EDAM development](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-4-nov-15-edam-development) (data formats catalogue, planning EDAM 2.0 and applications)
 * **Fri Nov 16** [Planning](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-5-nov-16-planning--coordination) (wrapping up, next steps, collaborations)
 
-
+---
 ## Day 2 (Nov 13): bio.tools testing
 **Expected audience:** *anyone with an interest in improving bio.tools*
 
@@ -57,7 +57,7 @@ The task is:
 
 We hope (developments pending!) to have an easy way to tweak the elasticsearch parameters during the workshop, allowing for immediate iterative improvements.
 
-
+---
 ## Day 3 (Nov 14): bio.tools outreach
 **Expected audience:** *anyone with an interest in developing bio.tools*
 
@@ -85,7 +85,7 @@ Now that bio.tools is [open source](https://github.com/bio-tools/biotoolsRegistr
 The task is to review the emerging [contributor guidelines](), provide feedback on these via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new), or provide feedback in person to bio.tools core-dev.
 
 
-
+---
 ## Day 4 (Nov 15): EDAM development
 **Expected audience:** *anyone with an interest in improving EDAM, people knowledgeable of bioinformatics data formats*
 
@@ -130,6 +130,7 @@ Within 3 - 6 months, we hope to release EDAM 2.0 implementing a set of features 
 ### Task 4: EDAM applications (discussion & hacking)
 EDAM is used (or being considered) in a variety of contexts.  There is an opportunity for developers on projects that are using (or considering) EDAM to discuss their requirements and work with the EDAM developers.  Or you might have an idea that we haven't heard of already; let's discuss.
 
+---
 ## Day 5 (Nov 16): Planning & coordination
 
 The final day will be reserved to finishing off, and discussing and planning next steps around collaborations of EDAM and bio.tools with other projects.
