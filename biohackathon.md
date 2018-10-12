@@ -2,7 +2,7 @@
 
 ### Representative: Jon Ison
 
-*DETAILS BELOW ARE PROVISIONAL AND MADE CHANGE IN THE RUN-UP TO THE EVENT*
+*DETAILS BELOW ARE PROVISIONAL AND MAY CHANGE IN THE RUN-UP TO THE EVENT*
 
 ## Community
 
@@ -22,16 +22,16 @@ EDAM and bio.tools developers will attend the whole hackathon (Mon 12 - Fri 16) 
 ## Focus of each day
 Each hackathon day has a focus, which we'll try to stick to, with a range of tasks catering for different interests and expertise.  We do not expect to complete all the tasks, and will adapt depending upon who turns up, so feel free to drop in to any session at any time:
 
-* **Tue Nov 13** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-2-nov-13-biotools-testing) (testing & search optimisation)
-* **Tue Nov 14** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-3-nov-14-biotools-development) (kick-start the community development)
-* **Wed Nov 15** [EDAM](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-4-nov-15-edam-development) (data formats catalogue, planning EDAM 2.0 and applications)
+* **Tue Nov 13** [bio.tools evaluation](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-2-nov-13-biotools-testing) (testing & search optimisation)
+* **Tue Nov 14** [bio.tools outreach](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-3-nov-14-biotools-development) (kick-start the community development)
+* **Wed Nov 15** [EDAM development](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-4-nov-15-edam-development) (data formats catalogue, planning EDAM 2.0 and applications)
 * **Fri Nov 16** [Planning](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-5-nov-16-planning--coordination) (wrapping up, next steps, collaborations)
 
 
 ## Day 2 (Nov 13): bio.tools testing
 *Expected audience*: anyone with an interest in improving bio.tools
 
-*Expected outcome*: kick-start the community development process, verify the next release, better search performance
+*Expected outcome*: verify the next release, improve the search performance
 
 The purpose is to test, evaluate and optimise the development deployment of bio.tools (https://dev.bio.tools/), changes in which are scheduled to be moved into production (https://bio.tools/) during Dec 3-7.  The bio.tools core-dev will be on hand to discuss things in person.
 
@@ -58,10 +58,12 @@ The task is:
 We hope (developments pending!) to have an easy way to tweak the elasticsearch parameters during the workshop, allowing for immediate iterative improvements.
 
 
-## Day 3 (Nov 14): bio.tools development
+## Day 3 (Nov 14): bio.tools outreach
 *Expected audience*: anyone with an interest in improving bio.tools
 
 *Expected outcome*: kick-start the community development process
+
+The purpose is introduce our current development priorities and to introduce and improve the proposed community development process for bio.tools. The bio.tools core-dev will be on hand to discuss things in person.
 
 ### Task 1: Development priorities
 We label issues to reflect their status and priority:
