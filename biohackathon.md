@@ -48,18 +48,18 @@ Alternatively:
 * experiment with https://dev.bio.tools - critique the interfaces, API and content - and report any bugs or suggestions via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new)
 
 ### Task 2: bio.tools API testing & optimisation
-The latest development deployment of the bio.tools API (https://dev.bio.tools/api/tool) is, we hope, a big improvement on the current version.  It supports a comprehensive [set of parameters](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) that enable precise query over tool function and other metadata.  But before we can move these changes into production, the API needs to be thoroughly tested.  There is also an opportunity to optimise the search behaviour, in light of results of real queries, to ensure it works as anticipated.
+The latest development deployment of the bio.tools API (https://dev.bio.tools/api/tool) is, we hope, a big improvement on the current version.  It supports a comprehensive [set of parameters](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) that enable precise query over tool function and other metadata.  But before we can move these changes into production, the API needs to be thoroughly tested.  We also want to optimise the search behaviour, in light of results of real user experiments, to ensure it works as anticipated.
 
 The task is:
 * systematically test the API, particulaly the behaviour of the search parameters as documented in the [API Reference](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) and [API Usage Guide](https://biotools.readthedocs.io/en/latest/api_usage_guide_dev.html).
 * provide feedback on the API search behaviour / possible improvement via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new).  You can suggest fixes or improvements to the API docs [here](https://github.com/bio-tools/biotoolsdocs/issues).
-* *developers with elasticsearch experience only* - please speak to bio.tools core-dev (there are some issues we need help with!)
+* *elasticsearch experts only* - please speak to bio.tools core-dev (there are issues we need help with!)
 
 We hope (developments pending!) to have an easy way to tweak the elasticsearch parameters during the workshop, allowing for immediate iterative improvements.
 
 
 ## Day 3 (Nov 14): bio.tools outreach
-**Expected audience:** *anyone with an interest in improving bio.tools*
+**Expected audience:** *anyone with an interest in developing bio.tools*
 
 **Expected outcome:** *kick-start the community development process*
 
@@ -92,9 +92,7 @@ The task is to review the emerging [contributor guidelines](), provide feedback 
 **Expected outcome:** *improved EDAM Formats subontology, scoping the desired state of EDAM 2.0, developing EDAM applications*
 
 ### Task 1 Curation of bioinformatics data formats
-The [EDAM Format subontology](http://edamontology.org/format_1915) has potential in systems such as [Galaxy](https://f1000research.com/posters/6-1032) and for applications such as [workflow composition](https://doi.org/10.1093/bioinformatics/bty646).  EDAM is close to providing a comprehensive catalogue of the prevalent bioinformatics data formats.  To achieve this, a significant amount of [work](https://github.com/edamontology/edamontology/issues/370) remains:
-
-The task is to work on any aspects of the data format curation listed [here](https://github.com/edamontology/edamontology/issues/370) including:
+The [EDAM Format subontology](http://edamontology.org/format_1915) has potential in systems such as [Galaxy](https://f1000research.com/posters/6-1032) and for applications such as [workflow composition](https://doi.org/10.1093/bioinformatics/bty646).  EDAM is close to providing a comprehensive catalogue of the prevalent bioinformatics data formats, but a significant amount of work remains.  The task is to work on any aspects of the data format curation listed [here](https://github.com/edamontology/edamontology/issues/370) including:
 
 * addition of miscellaneous new data formats, or changes to existing ones (see [issues](https://github.com/edamontology/edamontology/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A%22concept%2Fterm+request%22+format))
 * addition of formats ensuring coverage for Galaxy applications ([issue](https://github.com/edamontology/edamontology/issues/85))
