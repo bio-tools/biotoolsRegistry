@@ -62,7 +62,7 @@ We want to be sure our priorities reflect those of the community at large, and e
 ### Task 3: bio.tools API testing & optimisation
 The latest development deployment of the bio.tools API (https://dev.bio.tools/api/tool) is, we hope, a big improvement on the current version.  It supports a comprehensive [set of parameters](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) that enable precise query over tool function and other metadata.  But before we can move these changes into production, the API needs to be thoroughly tested.  There is also an opportunity to optimise the search behaviour, in light of results of real queries, to ensure it works as anticipated.
 
-The task is to
+The task is:
 * systematically test the API, particulaly the behaviour of the search parameters as documented in the [API Reference](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) and [API Usage Guide](https://biotools.readthedocs.io/en/latest/api_usage_guide_dev.html).
 * provide feedback on the API search behaviour / possible improvement via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new).  You can suggest fixes or improvements to the API docs [here](https://github.com/bio-tools/biotoolsdocs/issues).
 * *developers with elasticsearch experience only* - please speak to bio.tools core-dev (there are some issues we need help with!)
@@ -89,7 +89,7 @@ The task is to work on any aspects of the data format curation listed [here](htt
 
 * addition of miscellaneous new data formats, or changes to existing ones (see [issues](https://github.com/edamontology/edamontology/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A%22concept%2Fterm+request%22+format))
 * addition of formats ensuring coverage for Galaxy applications ([issue](https://github.com/edamontology/edamontology/issues/85))
-* addition of formats to ensure coverage of ([FAIRSharing](https://fairsharing.org/))
+* addition of formats to ensure coverage of [FAIRSharing](https://fairsharing.org/)
 
 We expect the tasks to be accomplished manually, programmatically, or by a combination of the two.  Please see:
 * [guidelines](https://edamontologydocs.readthedocs.io/en/latest/editors_guide.html#id12) for EDAM Format curation
@@ -103,23 +103,27 @@ We have guidelines for the development of the EDAM formats subontology:
 
 To develop EDAM Format subontology into a rigorous catalogue, we must ensure the guidelines are followed.
 
-The task is to develop tooling that checks compliance of EDAM to the guidelines above, and generate a human-readable report that can be acted on.
+The task is:
+* review the [editor guidelines](https://edamontologydocs.readthedocs.io/en/latest/editors_guide.html#id12) and [developer guidelines](https://edamontologydocs.readthedocs.io/en/latest/developers_guide.html#adding-concepts), providing feedback via [GitHub](https://github.com/edamontology/edamontologyDocs/issues/new) or discussing this with EDAM core-dev
+* propose clean-ups of the connection between EDAM Format and Data subontologies (see [issue](https://github.com/edamontology/edamontology/issues/283) and [issue](https://github.com/edamontology/edamontology/issues/287)): please make suggestions via [GitHub](https://github.com/edamontology/edamontology/issues/new)
+* (developers only) develop a utility that checks compliance of EDAM to the guidelines above, and generate a human-readable report that can be acted on.  In case you want to work with EDAM in JSON / JSON-LD format, see [edam2json](https://github.com/edamontology/edam2json)
   
 
 ### Task 3 Towards EDAM 2.0 (discussion & planning)
-It is over 5 years since an [article](https://doi.org/10.1093/bioinformatics/btt113) describing EDAM was published in Bioinformatics.  Since then, there have been 18 new releases (currently EDAM 1.21), with many additions and improvements.  Soon, we hope to release EDAM 2.0 implementing a set of features representing a step forward in value and quality over 1.* releases.
+It is over 5 years since an [article](https://doi.org/10.1093/bioinformatics/btt113) describing EDAM was published in Bioinformatics.  Since then, there have been 18 new releases (currently EDAM 1.21), with many additions and improvements, and greatly improved documentation:
+* rules for [concepts](https://edamontologydocs.readthedocs.io/en/latest/technical_details.html#concepts),
+* rules for [hierarchy depth](https://edamontologydocs.readthedocs.io/en/latest/technical_details.html#hierarchy-depth),
+* [guidelines for editors](https://edamontologydocs.readthedocs.io/en/latest/editors_guide.html)
+* [guidelines for developers](https://edamontologydocs.readthedocs.io/en/latest/developers_guide.html)
 
-The task (working as a group, or alone) is to enumerate; what are the desirable properties of EDAM 2.0?  We will enumerate these properties in this [issue](https://github.com/edamontology/edamontology/issues/376), creating other issues as needed for finer-grained information.
+Within 3 - 6 months, we hope to release EDAM 2.0 implementing a set of features representing a step forward in value and quality over the 1.* releases.  The task (working as a group, or alone) is:
+* think; what are the desirable properties of EDAM 2.0?  Is it simply to adhere to the rules and guidelines above, or something more?
+* enumerate desirable properties in this [issue](https://github.com/edamontology/edamontology/issues/376); we'll try to prioritise these during the hackathon
+* create sub-issues as needed, for finer-grained information.
 
 
 ### Task 4: EDAM applications (discussion & hacking)
 EDAM is used (or being considered) in a variety of contexts.  There is an opportunity for developers on projects that are using (or considering) EDAM to discuss their requirements and work with the EDAM developers.
-
-
-
-
-* cleaning up the connection between EDAM Formats and Data subontologies ([issue](https://github.com/edamontology/edamontology/issues/283), see also [issue](https://github.com/edamontology/edamontology/issues/287))
-* 
 
 ## Day 4 (Nov 15): Subject tbd
 The topic of the fourth day will be decided upon during the hackathon, depending upon interest and progress on previous days:
@@ -135,9 +139,9 @@ The topic of the fourth day will be decided upon during the hackathon, depending
 If you are particularly interested in a topic, mail Jon Ison [mailto:jison@bioinformatics@dtu.dk]
 
 
-## Day 5 (Nov 16): Planning
+## Day 5 (Nov 16): Planning & coordination
 
-The final day will be reserved to discussing and planning next steps around collaboration of bio.tools and other projects and publications.
+The final day will be reserved to finishing off, and discussing and planning next steps around collaborations of EDAM and bio.tools with other projects.
 
 
 
