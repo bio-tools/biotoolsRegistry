@@ -22,10 +22,10 @@ EDAM and bio.tools developers will attend the whole hackathon (Mon 12 - Fri 16) 
 ## Focus of each day
 Each hackathon day has a focus, which we'll try to stick to, with a range of tasks catering for different interests and expertise.  We do not expect to complete all the tasks, and will adapt depending upon who turns up, so feel free to drop in to any session at any time:
 
-* **Tue Nov 13** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#biotools-testing) (testing & search optimisation)
-* **Tue Nov 14** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#biotools-development) (kick-start the community development)
-* **Wed Nov 15** [EDAM](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#edam-development) (data formats catalogue, planning EDAM 2.0 and applications)
-* **Fri Nov 16** [Planning](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#planning) (wrapping up, next steps, collaborations)
+* **Tue Nov 13** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-2-nov-13-biotools-testing) (testing & search optimisation)
+* **Tue Nov 14** [bio.tools](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-3-nov-14-biotools-development) (kick-start the community development)
+* **Wed Nov 15** [EDAM](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-4-nov-15-edam-development) (data formats catalogue, planning EDAM 2.0 and applications)
+* **Fri Nov 16** [Planning](https://github.com/bio-tools/biotoolsRegistry/blob/master/biohackathon.md#day-5-nov-16-planning--coordination) (wrapping up, next steps, collaborations)
 
 
 ## Day 2 (Nov 13): bio.tools testing
@@ -136,12 +136,13 @@ EDAM is used (or being considered) in a variety of contexts.  There is an opport
 
 The final day will be reserved to finishing off, and discussing and planning next steps around collaborations of EDAM and bio.tools with other projects.
 
+---
 ## More ...
 We can work on other topics, depending upon interest and progress as we proceed:
 
 * workflows in bio.tools: modelling, visualisation and curation
 * evaluation of [EDAM Browser](https://ifb-elixirfr.github.io/edam-browser/) (see [GitHub](https://github.com/IFB-ElixirFr/edam-browser)) ontology browser; issues, features and next steps
-* evaluation of bio.tools content from an end-user perspective: annotation consistency, EDAM coverage, content views *etc*
+* bio.tools content from an end-user perspective: annotation consistency, EDAM coverage, content views *etc*
 * integration of bio.tools and biocontainers.pro
 * integration of bio.tools and Galaxy
 
@@ -150,18 +151,16 @@ If you're particularly interested in a topic, mail Jon Ison [mailto:jison@bioinf
 
 
 ---
-## Related works and references
+## Links & references
 - https://bio.tools/
 - https://ifb-elixirfr.github.io/edam-browser/#topic_0091
 - https://biit.cs.ut.ee/edammap/
 
-## GitHub or any other public repositories of your FOSS products (if any)
-
+## GitHub repos
+- http://github.com/bio-tools/biotoolsregistry
 - https://github.com/bio-tools/biotoolsschema
 - https://github.com/edamontology/edamontology/
 - https://github.com/bio-tools/Tool-Information-Standard
-- https://github.com/edamontology/edammap
 - https://github.com/IFB-ElixirFr/edam-browser
 
-## Hackers
----
+
