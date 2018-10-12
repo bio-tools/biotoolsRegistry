@@ -61,7 +61,7 @@ The task is:
 * provide feedback on the API search behaviour / possible improvement via [GitHub](https://github.com/bio-tools/biotoolsRegistry/issues/new).  You can suggest fixes or improvements to the API docs [here](https://github.com/bio-tools/biotoolsdocs/issues).
 * *elasticsearch experts only* - please speak to bio.tools core-dev (there are issues we need help with!)
 
-We hope (developments pending!) to have an easy way to tweak the elasticsearch parameters during the workshop, allowing for immediate iterative improvements.
+We hope (developments pending) to have an easy way to tweak the elasticsearch parameters during the workshop, allowing for immediate iterative improvements.
 
 ---
 ## Day 3 (Nov 14): bio.tools outreach
