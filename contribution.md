@@ -87,11 +87,6 @@ Issues are [labelled](https://github.com/bio-tools/biotoolsregistry/labels), the
 - ["fix verified"](https://github.com/bio-tools/biotoolsRegistry/labels/fix%20verified) : fix verified An issue labelled "done - staged for release" has been independently verified as working OK.
 
 
-
-
-"Dec 18 release" : things we're aiming to put into the next production deployment
-"wontfixsoon" : things which, for one reason or another (usually lack of developer capacity), we don't anticipate doing soon (that's doesn't imply they're unimportant or bad ideas!)
-
 # Release process
 
 # Community development guidelines 
