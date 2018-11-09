@@ -2,28 +2,28 @@
 
 
 # Code repo / branch structure
-The repo structure follows [branching standards & conventions](https://gist.github.com/digitaljhelms/4287848).  There are two main (permanent) branches ("dev" and "stable"), with other supporting (temporary) branches ("features", "bugfixes" and "hotfixes") with a specific purpose.  Strict rules mandate which branches may be originating branches and which branches must be merge targets.
+The repo structure follows [branching standards & conventions](https://gist.github.com/digitaljhelms/4287848).  There are two main (permanent) branches ("dev" and "stable"), with other supporting (temporary) branches ("features-<id>", "bugfixes-<id>" and "hotfixes-<id>") each with a specific purpose.  Strict rules mandate which branches may be originating branches and which branches must be merge targets.
 
 
-Instance     | Branch       | Comment
------------  | ------       | -------
-"stable"     | stable       | Accepts merges from "dev" and "hotfixes"
-"dev"        | master       | Accepts merges from "features", "bugfixes" and "hotfixes"
+Instance     | Branch         | Comment
+-----------  | ------         | -------
+"stable"     | stable         | Accepts merges from "dev" and "hotfixes"
+"dev"        | master         | Accepts merges from "features", "bugfixes" and "hotfixes"
 "features"   | feature-\<id\> | Always branch off HEAD of "dev"
-"bugfixes"   | bugfix-<id>  | Always branch off HEAD of "dev"
-"hotfixes"   | hotfix-<id>  | Always branch off "stable"
+"bugfixes"   | bugfix-\<id\>  | Always branch off HEAD of "dev"
+"hotfixes"   | hotfix-\<id\>  | Always branch off "stable"
 
 
 - **"dev" branch** (`origin/master`) (code deployed on https://dev.bio.tools) 
   - the default / base branch of the repo, against which all pull requests and code commits are automatically made
   - holds changes for the next release
   - core-developers will branch / merge from it
-  - accepts pull requests (see Community Development Guidelines below)
+  - accepts pull requests (see [Community Development Guidelines](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-development-guidelines))
 
 - **"stable"** branch (`origin/stable`) (code deployed on https://bio.tools) 
   - latest code deployed to (and allowing bug fixing of) production system
   - not normally interacted with (other than hot fixes)
-  - periodically updated from "dev" branch (see Release Process below)
+  - periodically updated from "dev" branch (see [Release Process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
 - **"feature"** and **"bug"** branches
   - **"feature"** branches are created for significant new features / enhancements (*i.e.* whose development may take longer than a single deployment) 
   - **"bug"** branches are created to address - in the next deployment - bugs found on the live site (a bug branch typically lasts one deployment cycle only)
@@ -46,6 +46,17 @@ Instance     | Branch       | Comment
 
     - `hotfix-<id>`
 
+# Issue tracking & labelling
+Every reported bug, suggested new feature or other change should be logged in https://github.com/bio-tools/biotoolsregistry/issues.  Issues are [labelled](https://github.com/bio-tools/biotoolsregistry/labels), the most important labels being:
+
+
+
+"critical priority" : our top priorities, including most of the reported bugs
+"high priority" : things which bio.tools core-dev consider high priorities; we get to these once "critical priority" issues are addressed
+"in progress" : things we're working on currently
+"Dec 18 release" : things we're aiming to put into the next production deployment
+"wontfixsoon" : things which, for one reason or another (usually lack of developer capacity), we don't anticipate doing soon (that's doesn't imply they're unimportant or bad ideas!)
+
 # Release process
 
 # Community development guidelines
@@ -64,4 +75,4 @@ This code of conduct outlines our expectations for the bio.tools developer commu
 - **Wise:** We are not infallible; we will make mistakes and change our viewpoints: admit and learn from mistakes and allow others to do the same.  
 
 ## Conflict resolution
-If you are unhappy in regard to the code of conduct not being honoured, you should raise your concerns immediately and try to resolve them, either directly with the person concerned, or failing that with the nominated community leader (currently [Jon Ison](mailto:jison@bioinformatics.dtu.dk)) who will try to resolve the issue discretely and fairly. 
+If you are unhappy in regard to the code of conduct not being honoured, you should raise your concerns immediately and try to resolve them, either directly with the person concerned, or failing that with the nominated *community leader* (currently [Jon Ison](mailto:jison@bioinformatics.dtu.dk)) who will try to resolve the issue discretely and fairly. 
