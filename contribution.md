@@ -47,10 +47,6 @@ Instance     | Branch         | Comment
     - `hotfix-<id>`
 
 # Roles & responsibilities
-- **Release manager** (currently [Hans Ienasescu](mailto:hans@bio.tools) and [Piotr Chmura](mailto:piotr.chmura@cpr.ku.dk))
-
-  - responsible for building the "stable" (https://bio.tools) and "dev" (https://dev.bio.tools) deployments
-  - can push changes to "stable" branch (merging from "dev" or "hotfixes")
   
 - **bio.tools core dev**
 
@@ -62,11 +58,19 @@ Instance     | Branch         | Comment
   - people with some capacity develop bio.tools (whether funded or not)
   - can make pull requests on "dev" and "stable" branches
 
-- **Community leader** (currently [Jon Ison](mailto:jison@bioinformatics.dtu.dk))
+- **Release manager** (currently [Hans Ienasescu](mailto:hans@bio.tools) and [Piotr Chmura](mailto:piotr.chmura@cpr.ku.dk))
 
-  - responsible for ensuring major proposed changes to stable deployment are adequatetly discussed amongst core-dev, ahead of implementation
-  - has the last say (if necessary in case of disagreements) of what is pushed to "stable" branch
-  - respsonible for overseeing (and promoting where necessary) the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct) 
+  - can push changes to "stable" branch (merging from "dev" or "hotfixes")
+  - is responsible for building the "stable" (https://bio.tools) and "dev" (https://dev.bio.tools) deployments, as per the [release process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
+
+- **Community leader** (currently [Jon Ison](mailto:jison@bioinformatics.dtu.dk)) responsibilities:
+
+  - ensure significant proposed changes are adequatetly discussed amongst core-dev (at least), seeking a consensus, ahead of implementation
+  - settle with core-dev what features and fixes will go into the next milestone (and when)
+  - settle disputes and decide (in case of disagreements) what is pushed to "stable" branch
+  - communicate planned and actual changes via all available channels 
+  - maintain the issue tracker, including creating, [labelling](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#issue-tracking--labelling) and closing issues as required
+  - oversee (and promote where necessary) the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct) 
 
 *All developers* must:
 
@@ -76,9 +80,12 @@ Instance     | Branch         | Comment
 
 # Issue tracking & labelling
 Issues are [labelled](https://github.com/bio-tools/biotoolsregistry/labels), the most important labels being:
-- ["critical priority"]() : our top priorities, including most of the reported bugs
-- ["high priority"]() : things which bio.tools core-dev consider high priorities; we get to these once "critical priority" issues are addressed
-- ["in progress"]() : things we're working on currently
+- ["critical priority"](https://github.com/bio-tools/biotoolsRegistry/labels/critical%20priority) : Our top priorities, including most of the reported bugs.
+- ["high priority"](https://github.com/bio-tools/biotoolsRegistry/labels/high%20priority) : We get to these once "critical priority" issues are done.
+- ["in progress"](https://github.com/bio-tools/biotoolsRegistry/labels/in%20progress) : Stuff we're actively working on.
+- ["done - staged for release"](https://github.com/bio-tools/biotoolsRegistry/labels/done%20-%20staged%20for%20release) : Issue is implemented in dev.bio.tools.
+- ["fix verified"](https://github.com/bio-tools/biotoolsRegistry/labels/fix%20verified) : fix verified An issue labelled "done - staged for release" has been independently verified as working OK.
+
 
 
 
