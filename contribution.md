@@ -15,7 +15,7 @@ Instance     | Branch         | Comment
 
 
 - **"dev" branch** (`origin/master`) (code deployed on https://dev.bio.tools) 
-  - the default / base branch of the repo, against which all pull requests and code commits are automatically made
+  - the default / base branch of the repo, against which all pull requests and code pushes are automatically made
   - holds changes for the next release
   - core-developers will branch / merge from it
   - accepts pull requests (see [Community Development Guidelines](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-development-guidelines))
@@ -29,7 +29,7 @@ Instance     | Branch         | Comment
   - **"bug"** branches are created to address - in the next deployment - bugs found on the live site (a bug branch typically lasts one deployment cycle only)
   - should always be publicly available (development should never exist in just one developer's local branch)
   - always branch from, and merge back into "dev" branch
-  - feature developer (or bug fixer) must watch the "dev" branch for commits, ensuring all changes to it are merged into the feature/bug fix before merging back to "dev" (ideally as one goes along, to make conflict resolution easier)
+  - feature developer (or bug fixer) must watch the "dev" branch for pushes, ensuring all changes to it are merged into the feature/bug fix before merging back to "dev" (ideally as one goes along, to make conflict resolution easier)
   - branch naming convention, where `<id>` is a GitHub issue number (all features and bugs should be tracked as GitHub issues):
 
     - `feature-<id>`
