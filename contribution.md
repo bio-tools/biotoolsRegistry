@@ -17,7 +17,7 @@ Instance     | Branch         | Comment
 - **"dev" branch** (`origin/master`) (code deployed on https://dev.bio.tools) 
   - the default / base branch of the repo, against which all pull requests and code pushes are automatically made
   - holds changes for the next release
-  - core-developers will branch / merge from it
+  - developers will branch from / merge to it
   - accepts pull requests (see [Community Development Guidelines](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-development-guidelines))
 
 - **"stable"** branch (`origin/stable`) (code deployed on https://bio.tools) 
@@ -46,20 +46,50 @@ Instance     | Branch         | Comment
 
     - `hotfix-<id>`
 
+# Roles & responsibilities
+- **Release manager** (currently [Hans Ienasescu](mailto:hans@bio.tools))
+
+  - responsible for building the "stable" (https://bio.tools) and "dev" (https://dev.bio.tools) deployments
+  - can push changes to "stable" branch 
+  
+- **bio.tools core dev**
+
+  - people with significant capacity (*e.g.* funded) to develop bio.tools 
+  - can push changes to "dev" branch
+
+- **bio.tools dev**
+
+  - people with some capacity develop bio.tools (whether funded or not)
+  - can make pull requests on "dev" and "stable" branches
+
+- **Community leader** (currently [Jon Ison](mailto:jison@bioinformatics.dtu.dk))
+
+  - responsible for ensuring major proposed changes to stable deployment are adequatetly discussed amongst core-dev, ahead of implementation
+  - has the last say (if necessary in case of disagreements) of what is pushed to "stable" branch
+  - respsonible for overseeing (and promoting where necessary) the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct) 
+
+*All developers* must:
+
+  - ensure proposed new features or other change are logged in https://github.com/bio-tools/biotoolsregistry/issues and discussed, before coding
+  - follow the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct)  
+
+
 # Issue tracking & labelling
-Every reported bug, suggested new feature or other change should be logged in https://github.com/bio-tools/biotoolsregistry/issues.  Issues are [labelled](https://github.com/bio-tools/biotoolsregistry/labels), the most important labels being:
+Issues are [labelled](https://github.com/bio-tools/biotoolsregistry/labels), the most important labels being:
+- ["critical priority"]() : our top priorities, including most of the reported bugs
+- ["high priority"]() : things which bio.tools core-dev consider high priorities; we get to these once "critical priority" issues are addressed
+- ["in progress"]() : things we're working on currently
 
 
 
-"critical priority" : our top priorities, including most of the reported bugs
-"high priority" : things which bio.tools core-dev consider high priorities; we get to these once "critical priority" issues are addressed
-"in progress" : things we're working on currently
 "Dec 18 release" : things we're aiming to put into the next production deployment
 "wontfixsoon" : things which, for one reason or another (usually lack of developer capacity), we don't anticipate doing soon (that's doesn't imply they're unimportant or bad ideas!)
 
 # Release process
 
-# Community development guidelines
+# Community development guidelines 
+
+
 
 
 # Community code of conduct
