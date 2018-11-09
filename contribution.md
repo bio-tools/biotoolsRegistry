@@ -74,7 +74,7 @@ Instance     | Branch         | Comment
 
 *All developers* must:
 
-  - ensure proposed new features or other change are logged in https://github.com/bio-tools/biotoolsregistry/issues and discussed, before coding
+  - ensure proposed new features or other change are logged in the [issue tracker](https://github.com/bio-tools/biotoolsregistry/issues) and discussed, before coding
   - follow the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct)  
 
 
