@@ -47,10 +47,10 @@ Instance     | Branch         | Comment
     - `hotfix-<id>`
 
 # Roles & responsibilities
-- **Release manager** (currently [Hans Ienasescu](mailto:hans@bio.tools))
+- **Release manager** (currently [Hans Ienasescu](mailto:hans@bio.tools) and [Piotr Chmura](mailto:piotr.chmura@cpr.ku.dk))
 
   - responsible for building the "stable" (https://bio.tools) and "dev" (https://dev.bio.tools) deployments
-  - can push changes to "stable" branch 
+  - can push changes to "stable" branch (merging from "dev" or "hotfixes")
   
 - **bio.tools core dev**
 
