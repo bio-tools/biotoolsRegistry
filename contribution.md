@@ -2,14 +2,14 @@
 
 
 # Code repo / branch structure
-The repo structure follows [https://gist.github.com/digitaljhelms/4287848](branching standards & conventions).  There are two main (permanent) branches ("dev" and "stable"), with other supporting (temporary) branches with a specific purpose.  Strict rules mandate which branches may be originating branch and which branches must be merge targets.
+The repo structure follows [branching standards & conventions](https://gist.github.com/digitaljhelms/4287848).  There are two main (permanent) branches ("dev" and "stable"), with other supporting (temporary) branches ("features", "bugfixes" and "hotfixes") with a specific purpose.  Strict rules mandate which branches may be originating branches and which branches must be merge targets.
 
 
 Instance     | Branch       | Comment
 -----------  | ------       | -------
 "stable"     | stable       | Accepts merges from "dev" and "hotfixes"
 "dev"        | master       | Accepts merges from "features", "bugfixes" and "hotfixes"
-"features"   | feature-<id> | Always branch off HEAD of "dev"
+"features"   | feature-\<id\> | Always branch off HEAD of "dev"
 "bugfixes"   | bugfix-<id>  | Always branch off HEAD of "dev"
 "hotfixes"   | hotfix-<id>  | Always branch off "stable"
 
