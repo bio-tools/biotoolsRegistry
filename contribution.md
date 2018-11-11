@@ -46,9 +46,10 @@ Instance     | Branch         | Comment
 
     - `hotfix-<id>`
 
-# Roles & responsibilities
-  
-- **bio.tools core dev**
+# Governance, roles & responsibilities
+The Danish ELIXIR node provides stable funding for bio.tools as part of the ELIXIR-DK Service Delivery Plan.  bio.tools strives to be a "do-ocracy", *i.e.* driven primarily on a day-to-day basis by the people most active in developing the software and content, whilst respecting the executive / decision-making power of ELIXIR-DK management.  We follow a simple governance model:
+
+- **bio.tools core-dev**
 
   - people with significant capacity (*e.g.* funded) to develop bio.tools 
   - can push changes to "dev" branch
@@ -58,18 +59,19 @@ Instance     | Branch         | Comment
   - people with some capacity develop bio.tools (whether funded or not)
   - can make pull requests on "dev" and "stable" branches
 
-- **Release manager** (currently [Hans Ienasescu](mailto:hans@bio.tools) and [Piotr Chmura](mailto:piotr.chmura@cpr.ku.dk))
+- **Release Manager** (currently [Hans Ienasescu](mailto:hans@bio.tools) and [Piotr Chmura](mailto:piotr.chmura@cpr.ku.dk))
 
   - can push changes to "stable" branch (merging from "dev" or "hotfixes")
-  - is responsible for building the "stable" (https://bio.tools) and "dev" (https://dev.bio.tools) deployments, as per the [release process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
+  - responsible for building the "stable" (https://bio.tools) and "dev" (https://dev.bio.tools) deployments, as per the [release process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
 
-- **Community leader** (currently [Jon Ison](mailto:jison@bioinformatics.dtu.dk)) responsibilities:
+- **Community Leader** (currently [Jon Ison](mailto:jison@bioinformatics.dtu.dk)) responsibilities:
 
-  - ensure significant proposed changes are adequatetly discussed amongst core-dev (at least), seeking a consensus, ahead of implementation
+  - ensure significant proposed changes are announced and discussed, seeking consensus amongst core-dev (at least) ahead of implementation
   - settle with core-dev what features and fixes will go into the next milestone (and when)
   - settle disputes and decide (in case of disagreements) what is pushed to "stable" branch
   - communicate planned and actual changes via all available channels 
-  - maintain the issue tracker, including creating, [labelling](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#issue-tracking--labelling) and closing issues as required
+  - maintain the issue tracker, creating, [labelling](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#issue-tracking--labelling) and closing issues as required
+    - manage the "core-dev" and "dev" groups (repo permissions, mailing lists, *etc.*)
   - oversee (and promote where necessary) the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct) 
 
 *All developers* must:
