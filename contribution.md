@@ -62,14 +62,18 @@ The Danish ELIXIR node provides stable funding for bio.tools as part of the ELIX
 - **Release Manager** (currently [Hans Ienasescu](mailto:hans@bio.tools) and [Piotr Chmura](mailto:piotr.chmura@cpr.ku.dk))
 
   - can push changes to "stable" branch (merging from "dev" or "hotfixes")
-  - responsible for building the "stable" (https://bio.tools) and "dev" (https://dev.bio.tools) deployments, as per the [release process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
+  - responsible for:
+
+    - building the "stable" (https://bio.tools) and "dev" (https://dev.bio.tools) deployments, as per the [release process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
+    - ensuring all changes to "dev" deployment are thoroughly (and independently) tested before being pushed to production
 
 - **Community Leader** (currently [Jon Ison](mailto:jison@bioinformatics.dtu.dk)) responsibilities:
 
-  - ensure significant proposed changes are announced and discussed, seeking consensus amongst core-dev (at least) ahead of implementation
+  - ensure significant proposed changes are discussed, seeking consensus amongst core-dev (at least) ahead of implementation
   - settle with core-dev what features and fixes will go into the next milestone (and when)
   - settle disputes and decide (in case of disagreements) what is pushed to "stable" branch
-  - communicate planned and actual changes via all available channels 
+  - announce changes to "dev" deployment, allowing adequate time for testing and evaluation
+  - announce planned and actual changes to "stable" deployment (esp. any potentially breaking changes to API) via all available channels
   - maintain the issue tracker, creating, [labelling](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#issue-tracking--labelling) and closing issues as required
     - manage the "core-dev" and "dev" groups (repo permissions, mailing lists, *etc.*)
   - oversee (and promote where necessary) the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct) 
@@ -90,9 +94,11 @@ Issues are [labelled](https://github.com/bio-tools/biotoolsregistry/labels), the
 
 
 # Release process
+*tbd*, see https://github.com/bio-tools/biotoolsRegistry/issues/369
+
 
 # Community development guidelines 
-
+*tbd*, see https://github.com/bio-tools/biotoolsRegistry/issues/369
 
 
 
