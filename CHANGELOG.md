@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(375)](https://github.com/bio-tools/biotoolsRegistry/issues/375) Replaced webpage at https://bio.tools/schema with redirect to [biotoolsSchema repo](http://github.com/bio-tools/biotoolsschema)
 
 ### Fixed
+- [(300)](https://github.com/bio-tools/biotoolsRegistry/issues/300), [(275)](https://github.com/bio-tools/biotoolsRegistry/issues/275) Prevented accidental creation of **duplicate entries**, with clean assignment of **biotools toolIDs**.
 - [(386)](https://github.com/bio-tools/biotoolsRegistry/issues/386) Fixed 160 **tool descriptions** that were invalid according to [biotoolsSchema 3.0.0](https://github.com/bio-tools/biotoolsSchema/tree/master/versions/biotools-3.0.0).
 - [(384)](https://github.com/bio-tools/biotoolsRegistry/issues/384) Fixed overly long **collection IDs** that were invalid according to [biotoolsSchema 3.0.0](https://github.com/bio-tools/biotoolsSchema/tree/master/versions/biotools-3.0.0).
 - [(343)](https://github.com/bio-tools/biotoolsRegistry/issues/343) Fixed bug in search for formats.
@@ -41,7 +42,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(321)](https://github.com/bio-tools/biotoolsRegistry/issues/321) Fixed bug in controlled vocabularies.
 - [(310)](https://github.com/bio-tools/biotoolsRegistry/issues/310) Fixed restriction on data retrieval via API (10,000 result limit no longer applies)
 - [(298)](https://github.com/bio-tools/biotoolsRegistry/issues/298) Fixed mix-up of "function" and "operation" in registration interface.
-- [(300)](https://github.com/bio-tools/biotoolsRegistry/issues/300), [(275)](https://github.com/bio-tools/biotoolsRegistry/issues/275) Prevented accidental creation of duplicate entries, with clean assignment of **biotools toolIDs**.
 - [(230)](https://github.com/bio-tools/biotoolsRegistry/issues/230) Fixed bugs in handling searches using terms containing **diacritics**.
 ### Security
 - [()]()
