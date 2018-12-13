@@ -8,18 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Dec 14th 2018
 ### Added
+- [(126)](https://github.com/bio-tools/biotoolsRegistry/issues/126) **Upgraded data model**: support for [biotoolsSchema 3.0.0](https://github.com/bio-tools/biotoolsSchema/tree/master/versions/biotools-3.0.0)) which is simpler and more expressive than the previous version.  It is fully supported (all schema fields) in *bio.tools*: the content, UI and API have been refactored.
+- [(327)](https://github.com/bio-tools/biotoolsRegistry/issues/327), [(120)](https://github.com/bio-tools/biotoolsRegistry/issues/120), [(63)](https://github.com/bio-tools/biotoolsRegistry/issues/63) **Interactive annnotations**: clicking on a label for EDAM annotations (topic, operation, data or format) and biotoolsSchema elements (currently just ``collectionID``) now perform a search within *bio.tools*
+- [(317)](https://github.com/bio-tools/biotoolsRegistry/issues/317), [(117)](https://github.com/bio-tools/biotoolsRegistry/issues/117), [(70)](https://github.com/bio-tools/biotoolsRegistry/issues/70), [(395)](https://github.com/bio-tools/biotoolsRegistry/issues/395) **Tool tips** on tool descriptor tags (maturity, cost *etc.*) now explain in plain english what these mean, and provide links to schema docs where necessary
 - [(392)](https://github.com/bio-tools/biotoolsRegistry/issues/392) [Dimensions badge](https://badge.dimensions.ai/) added to Tool Cards to render **citation information** and link out to **research insights**.
 - [(391)](https://github.com/bio-tools/biotoolsRegistry/issues/391) New ELIXIR-branded  **bio.tools** logo replacing vanilla ELIXIR logo.
 - [(374)](https://github.com/bio-tools/biotoolsRegistry/issues/374) Added **tool operations** to compact / mini-card view
-- [(327)](https://github.com/bio-tools/biotoolsRegistry/issues/327), [(120)](https://github.com/bio-tools/biotoolsRegistry/issues/120), [(63)](https://github.com/bio-tools/biotoolsRegistry/issues/63) **Interactive annnotations**: clicking on a label for EDAM annotations (topic, operation, data or format) and biotoolsSchema elements (currently just ``collectionID``) now perform a search within *bio.tools*
-- [(317)](https://github.com/bio-tools/biotoolsRegistry/issues/317), [(117)](https://github.com/bio-tools/biotoolsRegistry/issues/117), [(70)](https://github.com/bio-tools/biotoolsRegistry/issues/70), [(395)](https://github.com/bio-tools/biotoolsRegistry/issues/395) **Tool tips** on tool descriptor tags (maturity, cost *etc.*) now explain in plain english what these mean, and provide links to schema docs where necessary
 - [(308)](https://github.com/bio-tools/biotoolsRegistry/issues/308) Added button to confim **subdomain deletion**.
 - [(128)](https://github.com/bio-tools/biotoolsRegistry/issues/128) Comments on credits now rendered.
-- [(126)](https://github.com/bio-tools/biotoolsRegistry/issues/126) Added support for [biotoolsSchema 3.0.0](https://github.com/bio-tools/biotoolsSchema/tree/master/versions/biotools-3.0.0)) which is simpler and more expressive than the previous version.  It is fully supported (all schema fields) in *bio.tools*: the content, UI and API have been refactored.
 - [(80)](https://github.com/bio-tools/biotoolsRegistry/issues/80) Links to training events and materials from [TeSS](https://tess.elixir-uk.org) added (partial implementation).
 - [(58)](https://github.com/bio-tools/biotoolsRegistry/issues/58) Output format type can now be specified as flag on URL (for data download from API)
-- [(8)](https://github.com/bio-tools/biotoolsRegistry/issues/8) Data entry fields in registration interface now include **exmaple values**.
-- [()]() Added links to *bio.tools* [Curators Guide](https://biotools.readthedocs.io/en/latest/curators_guide.html) from registration interface.
+- [(8)](https://github.com/bio-tools/biotoolsRegistry/issues/8) Data entry fields in registration interface now include **example values**.
+- Added links to *bio.tools* [Curators Guide](https://biotools.readthedocs.io/en/latest/curators_guide.html) from registration interface.
 
 ### Changed
 - greatly enriched API parameters allow **precise queries** over tool function and other metadata.  See [API reference](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) and [API Usage Guide](https://biotools.readthedocs.io/en/latest/api_usage_guide_dev.html).
