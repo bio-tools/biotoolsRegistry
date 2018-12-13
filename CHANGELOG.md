@@ -17,19 +17,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Help for curators**:  added links to *bio.tools* [Curators Guide](https://biotools.readthedocs.io/en/latest/curators_guide.html) from registration interface.
 - [(374)](https://github.com/bio-tools/biotoolsRegistry/issues/374) Added **tool operations** to compact / mini-card view
 - [(391)](https://github.com/bio-tools/biotoolsRegistry/issues/391) New ELIXIR-branded  **bio.tools** logo replacing vanilla ELIXIR logo.
-- [(308)](https://github.com/bio-tools/biotoolsRegistry/issues/308) Added button to confim **subdomain deletion**.
-- [(128)](https://github.com/bio-tools/biotoolsRegistry/issues/128) **Comments on credits** now rendered.
-- [(58)](https://github.com/bio-tools/biotoolsRegistry/issues/58) Output format type can now be specified as flag on URL (for data download from API)
 - [(8)](https://github.com/bio-tools/biotoolsRegistry/issues/8) Data entry fields in registration interface now include **example values**.
+- [(128)](https://github.com/bio-tools/biotoolsRegistry/issues/128) **Comments on credits** now rendered.
+- [(58)](https://github.com/bio-tools/biotoolsRegistry/issues/58) **Output format type** can now be specified as flag on URL (for data download from API)
+- [(308)](https://github.com/bio-tools/biotoolsRegistry/issues/308) Added button to confim **subdomain deletion**.
+
 
 ### Changed
 - greatly enriched API parameters allow **precise queries** over tool function and other metadata.  See [API reference](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) and [API Usage Guide](https://biotools.readthedocs.io/en/latest/api_usage_guide_dev.html).
 - [(385)](https://github.com/bio-tools/biotoolsRegistry/issues/385) **Enhanced faceting** in the search box allowing specific search with autocompletion for operation, tool type, language, accessibility, cost and license.
+- [(302)](https://github.com/bio-tools/biotoolsRegistry/issues/302) **Lower barrier to registration** mandating only tool name, short desription and homepage (as per [biotoolsSchema 3.0.0](https://github.com/bio-tools/biotoolsSchema/tree/master/versions/biotools-3.0.0)), removing the need to handle suggestions for tool additions
 - [(383)](https://github.com/bio-tools/biotoolsRegistry/issues/383) Tool tips on **function diagram** explain to users the meaning of the annotations and behaviour when clicked.
 - [(374)](https://github.com/bio-tools/biotoolsRegistry/issues/374) Changed **colour of UI elements** to match the [EDAM colour scheme](https://github.com/edamontology/edamontology/issues/340)
-- [(312)](https://github.com/bio-tools/biotoolsRegistry/issues/312) Subdomain names now support '-' character allowing *e.g.* for names that reflect hiearchical structure, or just cleaner looking subdomains *e.g.* https://rare-diseases.bio.tools/.
+- [(312)](https://github.com/bio-tools/biotoolsRegistry/issues/312) **Subdomain names** now support '-' character allowing *e.g.* for names that reflect hiearchical structure, or just cleaner looking subdomains *e.g.* https://rare-diseases.bio.tools/.
 - [(303)](https://github.com/bio-tools/biotoolsRegistry/issues/303) Sorting of data formats for more **convenient term picking** during registration.
-- [(302)](https://github.com/bio-tools/biotoolsRegistry/issues/302) **Lower barrier to registration** mandating only tool name, short desription and homepage (as per [biotoolsSchema 3.0.0](https://github.com/bio-tools/biotoolsSchema/tree/master/versions/biotools-3.0.0)), removing the need to handle suggestions for tool additions
 - [(277)](https://github.com/bio-tools/biotoolsRegistry/issues/277) Validation / save state now made clear via button colouring and ticks in UI.
 - [(60)](https://github.com/bio-tools/biotoolsRegistry/issues/60) Much better rendering and use of **publication information**.
 	
