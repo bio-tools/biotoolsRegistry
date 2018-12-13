@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(80)](https://github.com/bio-tools/biotoolsRegistry/issues/80) Links to training events and materials from [TeSS](https://tess.elixir-uk.org) added (partial implementation).
 - [(58)](https://github.com/bio-tools/biotoolsRegistry/issues/58) Output format type can now be specified as flag on URL (for data download from API)
 - [(8)](https://github.com/bio-tools/biotoolsRegistry/issues/8) Data entry fields in registration interface now include **exmaple values**.
+- [()]() Added links to *bio.tools* [Curators Guide](https://biotools.readthedocs.io/en/latest/curators_guide.html) from registration interface.
 
 ### Changed
 - greatly enriched API parameters allow **precise queries** over tool function and other metadata.  See [API reference](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) and [API Usage Guide](https://biotools.readthedocs.io/en/latest/api_usage_guide_dev.html).
