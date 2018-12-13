@@ -23,7 +23,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(312)](https://github.com/bio-tools/biotoolsRegistry/issues/312) Subdomain names now support '-' character allowing *e.g.* for names that reflect hiearchical structure, or just cleaner looking subdomains *e.g.* https://rare-diseases.bio.tools/.
 - [(303)](https://github.com/bio-tools/biotoolsRegistry/issues/303) Sorting of data formats for more **convenient term picking** during registration.
 - [(302)](https://github.com/bio-tools/biotoolsRegistry/issues/302) **Lower barrier to registration** mandating only tool name, short desription and homepage (as per [biotoolsSchema 3.0.0](https://github.com/bio-tools/biotoolsSchema/tree/master/versions/biotools-3.0.0)), removing the need to handle suggestions for tool additions
-- [(300)](https://github.com/bio-tools/biotoolsRegistry/issues/300) Clean assignment of **biotools toolIDs**.
 - [(277)](https://github.com/bio-tools/biotoolsRegistry/issues/277) Validation / save state now made clear via button colouring and ticks in UI.
 	
 ### Deprecated
@@ -42,6 +41,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(321)](https://github.com/bio-tools/biotoolsRegistry/issues/321) Fixed bug in controlled vocabularies.
 - [(310)](https://github.com/bio-tools/biotoolsRegistry/issues/310) Fixed restriction on data retrieval via API (10,000 result limit no longer applies)
 - [(298)](https://github.com/bio-tools/biotoolsRegistry/issues/298) Fixed mix-up of "function" and "operation" in registration interface.
+- [(300)](https://github.com/bio-tools/biotoolsRegistry/issues/300), [(275)](https://github.com/bio-tools/biotoolsRegistry/issues/275) Prevented accidental creation of duplicate entries, with clean assignment of **biotools toolIDs**.
 
 ### Security
 - [()]()
