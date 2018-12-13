@@ -37,12 +37,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(343)](https://github.com/bio-tools/biotoolsRegistry/issues/343) Fixed bug in search for formats.
 - [(337)](https://github.com/bio-tools/biotoolsRegistry/issues/337) Fixed invalid DOIs and DOI validation.
 - [(371)](https://github.com/bio-tools/biotoolsRegistry/issues/371), [(367)](https://github.com/bio-tools/biotoolsRegistry/issues/367), [(295)](https://github.com/bio-tools/biotoolsRegistry/issues/295) Misc. **content clean-ups**.
-- [(322)](https://github.com/bio-tools/biotoolsRegistry/issues/322) Fixed bug in registration of publication information, with improved error reporting.
+- [(322)](https://github.com/bio-tools/biotoolsRegistry/issues/322), [(274)](https://github.com/bio-tools/biotoolsRegistry/issues/274) Fixed bug / inconsistencies in registration of publication information, with improved error reporting.
 - [(321)](https://github.com/bio-tools/biotoolsRegistry/issues/321) Fixed bug in controlled vocabularies.
 - [(310)](https://github.com/bio-tools/biotoolsRegistry/issues/310) Fixed restriction on data retrieval via API (10,000 result limit no longer applies)
 - [(298)](https://github.com/bio-tools/biotoolsRegistry/issues/298) Fixed mix-up of "function" and "operation" in registration interface.
 - [(300)](https://github.com/bio-tools/biotoolsRegistry/issues/300), [(275)](https://github.com/bio-tools/biotoolsRegistry/issues/275) Prevented accidental creation of duplicate entries, with clean assignment of **biotools toolIDs**.
-
+- [(230)](https://github.com/bio-tools/biotoolsRegistry/issues/230) Fixed bugs in handling searches using terms containing **diacritics**.
 ### Security
 - [()]()
 
