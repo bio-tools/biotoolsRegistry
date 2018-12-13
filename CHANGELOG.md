@@ -12,15 +12,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(391)](https://github.com/bio-tools/biotoolsRegistry/issues/391) New ELIXIR-branded  **bio.tools** logo replacing vanilla ELIXIR logo.
 - [(374)](https://github.com/bio-tools/biotoolsRegistry/issues/374) Added **tool operations** to compact / mini-card view
 - [(327)](https://github.com/bio-tools/biotoolsRegistry/issues/327) **Interactive annnotations**: clicking on a label for EDAM annotations (topic, operation, data or format) and biotoolsSchema elements (currently just ``collectionID``) now perform a search within *bio.tools*
-- [(317)](https://github.com/bio-tools/biotoolsRegistry/issues/317) Tool tips on tool descriptors (biotoolsSchema elements) now explain in plain terms what these mean.
-	
+- [(317)](https://github.com/bio-tools/biotoolsRegistry/issues/317) **Tool tips** on tool descriptor tags (maturity, cost *etc.*) now explain in plain english what these mean.
+- [(308)](https://github.com/bio-tools/biotoolsRegistry/issues/308) Added button to confim **subdomain deletion**.
 	
 ### Changed
 - greatly enriched API parameters allow **precise queries** over tool function and other metadata.  See [API reference](https://biotools.readthedocs.io/en/latest/api_reference_dev.html) and [API Usage Guide](https://biotools.readthedocs.io/en/latest/api_usage_guide_dev.html).
 - [(385)](https://github.com/bio-tools/biotoolsRegistry/issues/385) **Enhanced faceting** in the search box allowing specific search with autocompletion for operation, tool type, language, accessibility, cost and license.
-- [(383)](https://github.com/bio-tools/biotoolsRegistry/issues/383) **Tool tips** on function diagram explain to users the meaning of annotation and behaviour when clicked.
+- [(383)](https://github.com/bio-tools/biotoolsRegistry/issues/383) Tool tips on **function diagram** explain to users the meaning of the annotations and behaviour when clicked.
 - [(374)](https://github.com/bio-tools/biotoolsRegistry/issues/374) Changed **colour of UI elements** to match the [EDAM colour scheme](https://github.com/edamontology/edamontology/issues/340)
-
+- [(312)](https://github.com/bio-tools/biotoolsRegistry/issues/312) Subdomain names now support '-' character allowing *e.g.* for names that reflect hiearchical structure, or just cleaner looking subdomains *e.g.* https://rare-diseases.bio.tools/.
+- [(303)](https://github.com/bio-tools/biotoolsRegistry/issues/303) Sorting of data formats for more **convenient term picking** during registration.
+- [(302)](https://github.com/bio-tools/biotoolsRegistry/issues/302) **Lower barrier to registration** mandating only tool name, short desription and homepage (as per [biotoolsSchema 3.0.0](https://github.com/bio-tools/biotoolsSchema/tree/master/versions/biotools-3.0.0)), removing the need to handle suggestions for tool additions
+	
 ### Deprecated
 
 ### Removed
@@ -35,10 +38,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(371)](https://github.com/bio-tools/biotoolsRegistry/issues/371), [(367)](https://github.com/bio-tools/biotoolsRegistry/issues/367) Misc. **content clean-ups**
 - [(322)](https://github.com/bio-tools/biotoolsRegistry/issues/322) Fixed bug in registration of publication information, with improved error reporting.
 - [(321)](https://github.com/bio-tools/biotoolsRegistry/issues/321) Fixed bug in controlled vocabularies.
-
+- [(310)](https://github.com/bio-tools/biotoolsRegistry/issues/310) Fixed restriction on data retrieval via API (10,000 result limit no longer applies)
+	
 ### Security
 - [()]()
 
 
-
+registration interface revamp
 
