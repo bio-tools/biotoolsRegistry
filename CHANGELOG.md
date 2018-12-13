@@ -18,5 +18,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Removed
 
 ### Fixed
+- [(386)](https://github.com/bio-tools/biotoolsRegistry/issues/386) Fixed 160 tool descriptions that were invalid according to [biotoolsSchema 3.0.0](https://github.com/bio-tools/biotoolsSchema/tree/master/versions/biotools-3.0.0)
 
 ### Security
+
+
+
+
+
+
