@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(343)](https://github.com/bio-tools/biotoolsRegistry/issues/343) Fixed bug in search for formats.
 - [(337)](https://github.com/bio-tools/biotoolsRegistry/issues/337) Fixed invalid DOIs and DOI validation.	
 - [(371)](https://github.com/bio-tools/biotoolsRegistry/issues/371), [(367)](https://github.com/bio-tools/biotoolsRegistry/issues/367) Misc. **content clean-ups**
+- [(322)](https://github.com/bio-tools/biotoolsRegistry/issues/322) Fixed bug in registration of publication information, with improved error reporting.
 
 ### Security
 - [()]()
