@@ -11,7 +11,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(392)](https://github.com/bio-tools/biotoolsRegistry/issues/392) [Dimensions badge](https://badge.dimensions.ai/) added to Tool Cards to render **citation information** and link out to **research insights**.
 - [(391)](https://github.com/bio-tools/biotoolsRegistry/issues/391) New ELIXIR-branded  **bio.tools** logo replacing vanilla ELIXIR logo.
 - [(374)](https://github.com/bio-tools/biotoolsRegistry/issues/374) Added **tool operations** to compact / mini-card view
-- [(327)](https://github.com/bio-tools/biotoolsRegistry/issues/327) **Interactive annnotations**: clicking on a label (topic, operation, data or format) now perform a search within *bio.tools*
+- [(327)](https://github.com/bio-tools/biotoolsRegistry/issues/327) **Interactive annnotations**: clicking on a label for EDAM annotations (topic, operation, data or format) and biotoolsSchema elements (currently just ``collectionID``) now perform a search within *bio.tools*
+- [(317)](https://github.com/bio-tools/biotoolsRegistry/issues/317) Tool tips on tool descriptors (biotoolsSchema elements) now explain in plain terms what these mean.
 	
 	
 ### Changed
@@ -33,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(337)](https://github.com/bio-tools/biotoolsRegistry/issues/337) Fixed invalid DOIs and DOI validation.	
 - [(371)](https://github.com/bio-tools/biotoolsRegistry/issues/371), [(367)](https://github.com/bio-tools/biotoolsRegistry/issues/367) Misc. **content clean-ups**
 - [(322)](https://github.com/bio-tools/biotoolsRegistry/issues/322) Fixed bug in registration of publication information, with improved error reporting.
+- [(321)](https://github.com/bio-tools/biotoolsRegistry/issues/321) Fixed bug in controlled vocabularies.
 
 ### Security
 - [()]()
