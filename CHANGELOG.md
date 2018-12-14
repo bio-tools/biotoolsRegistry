@@ -46,7 +46,7 @@ Credits to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(230)](https://github.com/bio-tools/biotoolsRegistry/issues/230) Fixed bugs in handling searches using terms containing **diacritics**.
 - [(371)](https://github.com/bio-tools/biotoolsRegistry/issues/371), [(367)](https://github.com/bio-tools/biotoolsRegistry/issues/367), [(295)](https://github.com/bio-tools/biotoolsRegistry/issues/295) Misc. **content clean-ups**.
 - [(343)](https://github.com/bio-tools/biotoolsRegistry/issues/343) Fixed bug in search for formats.
-- [(337)](https://github.com/bio-tools/biotoolsRegistry/issues/337), [(229)](https://github.com/bio-tools/biotoolsRegistry/issues/229) Fixed invalid or inconsistent DOIs and DOI validation.
+- [(337)](https://github.com/bio-tools/biotoolsRegistry/issues/337), [(229)](https://github.com/bio-tools/biotoolsRegistry/issues/229), [(281)](https://github.com/bio-tools/biotoolsRegistry/issues/281) Fixed invalid or inconsistent DOIs and DOI validation.
 - [(322)](https://github.com/bio-tools/biotoolsRegistry/issues/322), [(274)](https://github.com/bio-tools/biotoolsRegistry/issues/274), [(14)](https://github.com/bio-tools/biotoolsRegistry/issues/14) Fixed bug / inconsistencies in registration of publication information, with improved error reporting.
 - [(321)](https://github.com/bio-tools/biotoolsRegistry/issues/321) Fixed bug in controlled vocabularies.
 - [(310)](https://github.com/bio-tools/biotoolsRegistry/issues/310) Fixed restriction on data retrieval via API (10,000 result limit no longer applies)
