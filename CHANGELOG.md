@@ -33,6 +33,7 @@ Credits to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(303)](https://github.com/bio-tools/biotoolsRegistry/issues/303) Sorting of data formats for more **convenient term picking** during registration.
 - [(374)](https://github.com/bio-tools/biotoolsRegistry/issues/374) Changed **colour of UI elements** to match the [EDAM colour scheme](https://github.com/edamontology/edamontology/issues/340)
 - [(277)](https://github.com/bio-tools/biotoolsRegistry/issues/277) Validation / save state now made clear via button colouring and ticks in UI.
+- [(389)](https://github.com/bio-tools/biotoolsRegistry/issues/389) **Homepage URL** more prominent in Tool Card
 	
 ### Removed
 - [(379)](https://github.com/bio-tools/biotoolsRegistry/issues/379) Removed (now uneccessary) rendering of "None" for version information.
