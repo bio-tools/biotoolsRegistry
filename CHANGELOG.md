@@ -42,6 +42,7 @@ Credits to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 - [(300)](https://github.com/bio-tools/biotoolsRegistry/issues/300), [(275)](https://github.com/bio-tools/biotoolsRegistry/issues/275) Prevented accidental creation of **duplicate entries**, with clean assignment of **biotools toolIDs**.
 - [(386)](https://github.com/bio-tools/biotoolsRegistry/issues/386) Fixed 160 **tool descriptions** that were invalid according to [biotoolsSchema 3.0.0](https://github.com/bio-tools/biotoolsSchema/tree/master/versions/biotools-3.0.0).
+- [(234)](https://github.com/bio-tools/biotoolsRegistry/issues/234) Fixed 173 **EDAM annotations** where a term was given with no corresponding URI.
 - [(384)](https://github.com/bio-tools/biotoolsRegistry/issues/384) Fixed overly long **collection IDs** that were invalid according to [biotoolsSchema 3.0.0](https://github.com/bio-tools/biotoolsSchema/tree/master/versions/biotools-3.0.0).
 - [(230)](https://github.com/bio-tools/biotoolsRegistry/issues/230) Fixed bugs in handling searches using terms containing **diacritics**.
 - [(371)](https://github.com/bio-tools/biotoolsRegistry/issues/371), [(367)](https://github.com/bio-tools/biotoolsRegistry/issues/367), [(295)](https://github.com/bio-tools/biotoolsRegistry/issues/295) Misc. **content clean-ups**.
