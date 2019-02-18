@@ -9,6 +9,7 @@ Credits to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - [(405)](https://github.com/bio-tools/biotoolsRegistry/issues/405) **Inclusion of ELIXIR Node & Platform annotations**: annotation as credits of [ELIXIR Node](https://www.elixir-europe.org/about-us/who-we-are/nodes) and [Platforms](https://www.elixir-europe.org/platforms) for tools and databases in the [ELIXIR Nodes Service Delivery Plans](https://www.elixir-europe.org/services).
 
+- [(207)](https://github.com/bio-tools/biotoolsRegistry/issues/207) **Labelling Tool Cards based on broken homepage URL**: using a reasonably sophisticated handling of error codes and other HTTP messsages, a Tool Card may be labelled as down (or this label removed if it becomes available again).  Tools may be labelled (manually) as permanently down where we know (*i.e.* have been told) the tool is now officially obsolete.
 
 
 
