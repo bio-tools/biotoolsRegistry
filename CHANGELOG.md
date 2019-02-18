@@ -19,17 +19,9 @@ Credits to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [(129)](https://github.com/bio-tools/biotoolsRegistry/issues/129), [(138)](https://github.com/bio-tools/biotoolsRegistry/issues/138), [(128](
 https://github.com/bio-tools/biotoolsSchema/issues/128)) **Extended valid link types**: Add "Galaxy service" and "Discussion forum" and "Other" as valid link types
 
-https://github.com/bio-tools/biotoolsSchema/issues/129
-https://github.com/bio-tools/biotoolsSchema/issues/138
-https://github.com/bio-tools/biotoolsSchema/issues/128
+- [(139)](https://github.com/bio-tools/biotoolsRegistry/issues/139), [(141)](https://github.com/bio-tools/biotoolsRegistry/issues/141)) **Extended valid download types**: Add "Dowwnloads page" and "Other" as valid downloads type
 
-Add "Dowwnloads page" and "Other" as valid downloads type
-https://github.com/bio-tools/biotoolsSchema/issues/139
-https://github.com/bio-tools/biotoolsSchema/issues/141
-
-Add "FAQ" and "Release notes" as valid documentation type
-https://github.com/bio-tools/biotoolsSchema/issues/132
-https://github.com/bio-tools/biotoolsSchema/issues/112
+- [(132)](https://github.com/bio-tools/biotoolsRegistry/issues/132), [(112)](https://github.com/bio-tools/biotoolsRegistry/issues/112)) **Extended valid documentation types**: Add "FAQ" and "Release notes" as valid documentation type
 
 
 ## Dec 14th 2018
