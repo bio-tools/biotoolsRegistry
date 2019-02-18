@@ -4,6 +4,12 @@ All notable changes to *bio.tools* will be documented here.
 Credits to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+### Added
+- [(406)](https://github.com/bio-tools/biotoolsRegistry/issues/406) **Labelling of official ELIXIR service assignations**: labelling in Tool Cards of official ELXIIR [Core data resource](https://www.elixir-europe.org/platforms/data/core-data-resources), [ELIXIR Deposition Database](https://www.elixir-europe.org/platforms/data/elixir-deposition-databases) and [Recommended Interoperability Resource](https://www.elixir-europe.org/platforms/interoperability/rirs)
+
+- [(405)](https://github.com/bio-tools/biotoolsRegistry/issues/405) **Inclusion of ELIXIR Node & Platform annotations**: annotation as credits of [ELIXIR Node](https://www.elixir-europe.org/about-us/who-we-are/nodes) and [Platforms](https://www.elixir-europe.org/platforms) for tools and databases in the [ELIXIR Nodes Service Delivery Plans](https://www.elixir-europe.org/services).
+
+
 
 
 ## Dec 14th 2018
