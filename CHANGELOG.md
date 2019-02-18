@@ -16,6 +16,20 @@ Credits to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - [(282)](https://github.com/bio-tools/biotoolsRegistry/issues/282) **Refactoring of names & IDs of tools imported automatically via Galaxy**: using Galaxy Pasteur instance as a trial, refactoring of names & IDs and de-duplications were necessary, to ensure "canonical" tool descriptions.
 
+- [(129)](https://github.com/bio-tools/biotoolsRegistry/issues/129), [(138)](https://github.com/bio-tools/biotoolsRegistry/issues/138), [(1280](
+https://github.com/bio-tools/biotoolsSchema/issues/128) **Extended valid link types**: Add "Galaxy service" and "Discussion forum" and "Other" as valid link types
+
+https://github.com/bio-tools/biotoolsSchema/issues/129
+https://github.com/bio-tools/biotoolsSchema/issues/138
+https://github.com/bio-tools/biotoolsSchema/issues/128
+
+Add "Dowwnloads page" and "Other" as valid downloads type
+https://github.com/bio-tools/biotoolsSchema/issues/139
+https://github.com/bio-tools/biotoolsSchema/issues/141
+
+Add "FAQ" and "Release notes" as valid documentation type
+https://github.com/bio-tools/biotoolsSchema/issues/132
+https://github.com/bio-tools/biotoolsSchema/issues/112
 
 
 ## Dec 14th 2018
