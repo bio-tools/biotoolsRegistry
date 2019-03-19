@@ -11,11 +11,6 @@ Credits to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - [(207)](https://github.com/bio-tools/biotoolsRegistry/issues/207) **Labelling Tool Cards based on broken homepage URL**: using a reasonably sophisticated handling of error codes and other HTTP messsages, a Tool Card may be labelled as down (or this label removed if it becomes available again).  Tools may be labelled (manually) as permanently down where we know (*i.e.* have been told) the tool is now officially obsolete.
 
-- [(357)](https://github.com/bio-tools/biotoolsRegistry/issues/357) **Manually verify tool IDs (added since latest verification)**: ensuring tool IDs (based on tool name) are sensible, and consolidating / resolving duplicates and redundancies arising from this.
-
-### Added
-- [(282)](https://github.com/bio-tools/biotoolsRegistry/issues/282) **Refactoring of names & IDs of tools imported automatically via Galaxy**: using Galaxy Pasteur instance as a trial, refactoring of names & IDs and de-duplications were necessary, to ensure "canonical" tool descriptions.
-
 - [(129)](https://github.com/bio-tools/biotoolsRegistry/issues/129), [(138)](https://github.com/bio-tools/biotoolsRegistry/issues/138), [(128](
 https://github.com/bio-tools/biotoolsSchema/issues/128)) **Extended valid link types**: Add "Galaxy service", "Discussion forum" and "Other" as valid link types
 
@@ -23,6 +18,14 @@ https://github.com/bio-tools/biotoolsSchema/issues/128)) **Extended valid link t
 
 - [(132)](https://github.com/bio-tools/biotoolsRegistry/issues/132), [(112)](https://github.com/bio-tools/biotoolsRegistry/issues/112)) **Extended valid documentation types**: Add "FAQ" and "Release notes" as valid documentation type
 
+
+### Changed
+- [(357)](https://github.com/bio-tools/biotoolsRegistry/issues/357) **Manually verify tool IDs (added since latest verification)**: ensuring tool IDs (based on tool name) are sensible, and consolidating / resolving duplicates and redundancies arising from this.
+
+- [(282)](https://github.com/bio-tools/biotoolsRegistry/issues/282) **Refactoring of names & IDs of tools imported automatically via Galaxy**: using Galaxy Pasteur instance as a trial, refactoring of names & IDs and de-duplications were necessary, to ensure "canonical" tool descriptions.
+
+
+- check https://github.com/bio-tools/content/issues/10 and list things here as needed
 
 ## Dec 14th 2018
 ### Added
