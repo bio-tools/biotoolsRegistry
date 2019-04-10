@@ -5,18 +5,36 @@ Credits to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 ### Added
+### Changed
+### Removed
+### Fixed
+### Deprecated
+### Security
+
+
+## Dec 14th 2018
+### Added
+- [(142)](https://github.com/bio-tools/biotoolsRegistry/issues/142) **Added bio.tools homepage**: including general information, key facts in boxes, EDAM-based navigation on highly used operations and topics, National & institutional credits, new footer
+
+- [(418)](https://github.com/bio-tools/biotoolsRegistry/issues/418) **Improved and extended "About" page**
+
+- [(416)](https://github.com/bio-tools/biotoolsRegistry/issues/416) **Addition of high-quality annotations for proteomics**: annotations including operations, and input/output data types and formats, in support of https://doi.org/10.1093/bioinformatics/bty646
+
 - [(406)](https://github.com/bio-tools/biotoolsRegistry/issues/406) **Labelling of official ELIXIR service assignations**: labelling in Tool Cards of official ELXIIR [Core data resource](https://www.elixir-europe.org/platforms/data/core-data-resources), [ELIXIR Deposition Database](https://www.elixir-europe.org/platforms/data/elixir-deposition-databases) and [Recommended Interoperability Resource](https://www.elixir-europe.org/platforms/interoperability/rirs)
 
 - [(405)](https://github.com/bio-tools/biotoolsRegistry/issues/405) **Inclusion of ELIXIR Node & Platform annotations**: annotation as credits of [ELIXIR Node](https://www.elixir-europe.org/about-us/who-we-are/nodes) and [Platforms](https://www.elixir-europe.org/platforms) for tools and databases in the [ELIXIR Nodes Service Delivery Plans](https://www.elixir-europe.org/services).
 
-- [(207)](https://github.com/bio-tools/biotoolsRegistry/issues/207) **Labelling Tool Cards based on broken homepage URL**: using a reasonably sophisticated handling of error codes and other HTTP messsages, a Tool Card may be labelled as down (or this label removed if it becomes available again).  Tools may be labelled (manually) as permanently down where we know (*i.e.* have been told) the tool is now officially obsolete.
-
-- [(129)](https://github.com/bio-tools/biotoolsRegistry/issues/129), [(138)](https://github.com/bio-tools/biotoolsRegistry/issues/138), [(128](
-https://github.com/bio-tools/biotoolsSchema/issues/128)) **Extended valid link types**: Add "Galaxy service", "Discussion forum" and "Other" as valid link types
+- [(207)](https://github.com/bio-tools/biotoolsRegistry/issues/207) **Labelling Tool Cards based on broken homepage URL**: using a reasonably sophisticated handling of error codes and other HTTP messsages, a Tool Card may be labelled as down (or this label removed if it becomes available again).  Tools may be labelled (manually) as permanently down where we know (*i.e.* have been told) the tool is now officially obsolete. (partial implementation)
 
 - [(139)](https://github.com/bio-tools/biotoolsRegistry/issues/139), [(141)](https://github.com/bio-tools/biotoolsRegistry/issues/141)) **Extended valid download types**: Add "Dowwnloads page" and "Other" as valid downloads type
 
-- [(132)](https://github.com/bio-tools/biotoolsRegistry/issues/132), [(112)](https://github.com/bio-tools/biotoolsRegistry/issues/112)) **Extended valid documentation types**: Add "FAQ" and "Release notes" as valid documentation type
+- [(132)](https://github.com/bio-tools/biotoolsRegistry/issues/132), [(112)](https://github.com/bio-tools/biotoolsRegistry/issues/112) **Extended valid documentation types**: Add "FAQ" and "Release notes" as valid documentation type
+
+- [(129)](https://github.com/bio-tools/biotoolsRegistry/issues/129), [(138)](https://github.com/bio-tools/biotoolsRegistry/issues/138), [(128](https://github.com/bio-tools/biotoolsSchema/issues/128)) **Extended valid link types**: Add "Galaxy service", "Discussion forum" and "Other" as valid link types
+
+- [(422)](https://github.com/bio-tools/biotoolsRegistry/issues/422) **Added tool type to entries lacking this annotation**
+
+- [(420)](https://github.com/bio-tools/biotoolsRegistry/issues/420) **Added topic to entries lacking this annotation**
 
 
 ### Changed
@@ -24,8 +42,26 @@ https://github.com/bio-tools/biotoolsSchema/issues/128)) **Extended valid link t
 
 - [(282)](https://github.com/bio-tools/biotoolsRegistry/issues/282) **Refactoring of names & IDs of tools imported automatically via Galaxy**: using Galaxy Pasteur instance as a trial, refactoring of names & IDs and de-duplications were necessary, to ensure "canonical" tool descriptions.
 
+- [(419)](https://github.com/bio-tools/biotoolsRegistry/issues/419) **Improved curation of high usage tools**
 
-- check https://github.com/bio-tools/content/issues/10 and list things here as needed
+- [(417)](https://github.com/bio-tools/biotoolsRegistry/issues/417) **Clean-up of high-level annotations** *e.g.* Software engineering, Data management, Bioinformatics, Database management, Data integration and warehousing, Data architecture, analysis and design, Omics, Informatics, Algorithms (quite a lot of these were assigned erroneously)
+
+- [(407)](https://github.com/bio-tools/biotoolsRegistry/issues/407) **Credits tab is now Credits & Support**
+
+### Removed
+
+### Fixed
+
+- [(299)](https://github.com/bio-tools/biotoolsRegistry/issues/299) **Systematic check & fix of broken (numeric-appended) IDs**
+
+- [(411)](https://github.com/bio-tools/biotoolsRegistry/issues/411) **Tool IDs no longer contain "beta" or "alpha"**: 20+ of these (names may (temporarily) include "beta", "alpha" etc. but not the IDs).
+
+- [(413)](https://github.com/bio-tools/biotoolsRegistry/issues/413) **Count of search results now cleared correctly**
+
+### Deprecated
+
+### Security
+
 
 ## Dec 14th 2018
 ### Added
