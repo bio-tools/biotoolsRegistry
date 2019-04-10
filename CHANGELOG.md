@@ -12,7 +12,7 @@ Credits to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Security
 
 
-## Dec 14th 2018
+## Apr 10th 2019
 ### Added
 - [(142)](https://github.com/bio-tools/biotoolsRegistry/issues/142) **Added bio.tools homepage**: including general information, key facts in boxes, EDAM-based navigation on highly used operations and topics, National & institutional credits, new footer
 
