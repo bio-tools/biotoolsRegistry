@@ -18,7 +18,7 @@ https://dev.bio.tools (latest development version)
 Please read the [documentation](http://biotools.readthedocs.io/en/latest/).
 
 # Source code
-bio.tools is now open source!  Until Autumn 2018, we plan to work out (with partners) some guidelines on how the open development process shall work.  Please email [Piotr Chmura](mailto:piotr.chmura@cpr.ku.dk) and [Jon Ison](mailto:peterl@dtu.dk) if you want to get involved.
+*bio.tools* is available under [open license](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE).  We plan to work out (with partners) some guidelines on how the open development process shall work.  Please email [Piotr Chmura](mailto:piotr.chmura@cpr.ku.dk) and [Jon Ison](mailto:peterl@dtu.dk) if you want to get involved.
 
 
 # Governance
