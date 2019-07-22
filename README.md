@@ -21,7 +21,7 @@ Please read the [documentation](http://biotools.readthedocs.io/en/latest/).
 *bio.tools* is available under [open license](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE).  We plan to work out (with partners) some guidelines on how the open development process shall work.  Please email [Piotr Chmura](mailto:piotr.chmura@cpr.ku.dk) and [Jon Ison](mailto:peterl@dtu.dk) if you want to get involved.
 
 # Data
-The registry content is freely available to all under the Creative Commons Attribution licence (`CC BY 4.0 <https://creativecommons.org/licenses/by/4.0/>`_). 
+The registry content is freely available to all under the Creative Commons Attribution licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/>).
 
 # Governance
 bio.tools development is covered by the emerging [governance model](http://biotools.readthedocs.io/en/latest/governance.html) of the bio.tools project.  
