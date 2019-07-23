@@ -21,6 +21,17 @@ class Resource(models.Model):
         (2, 'DEAD')
     )
 
+    ELIXIR_BADGE_CHOICES = (
+        (0, "None"),
+        (1, "EDD"),
+        (2, "CDR"),
+        (3, "EDD,CDR"),
+        (4, "RIR"),
+        (5, "EDD,RIR"),
+        (6, "CDR,RIR"),
+        (7, "EDD,CDR,RIR")
+    )
+
 
     # CharField doesn't $have a min_length
     #biotoolsID = models.CharField(min_length=1)
@@ -53,6 +64,7 @@ class Resource(models.Model):
     latest = models.IntegerField(choices=YES_NO_CHOICES, default=1)
     was_id_validated = models.IntegerField(choices=WAS_ID_VALIDATED_CHOICES, default=0)
     homepage_status = models.IntegerField(choices=HOMEPAGE_STATUS_CHOICES, default=0)
+    elixir_badge = models.IntegerField(choices=ELIXIR_BADGE_CHOICES, default=0)
 
     # things that used to be in separate tables
     cost = models.TextField(blank=True, null=True)
@@ -109,6 +121,17 @@ class ElixirNode(models.Model):
         return unicode(self.name) or u''
 
 
+# relations model
+class Relation(models.Model):
+    biotoolsID = models.CharField(blank=False, null=False, max_length=100)
+    type = models.TextField(blank=False, null=False)
+    resource = models.ForeignKey(Resource, null=True, blank=True, related_name='relation', on_delete=models.CASCADE)
+
+     # metadata
+    additionDate = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return unicode(self.name) or u''
 
 # table to keep user requests
 class ResourceRequest(models.Model):

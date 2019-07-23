@@ -146,6 +146,37 @@ class ElixirNodeSerializer(serializers.ModelSerializer):
 	def get_pk_field(self, model_field):
 		return None
 
+# relations
+
+class RelationSerializer(serializers.ModelSerializer):
+	biotoolsID = serializers.CharField(allow_blank=False, required=True)
+	type = serializers.CharField(allow_blank=True, required=True)
+	
+	class Meta:
+		model = Relation
+		fields = ('biotoolsID','type')
+
+	def validate_biotoolsID(self, attrs):
+
+		r = Resource.objects.filter(visibility=1,biotoolsID=attrs)
+
+		if len(r) == 0:
+			raise serializers.ValidationError('There is no resource with biotoolsID:' + attrs + ';The resource might have been deleted.')
+
+		if len(r) > 1:
+			raise serializers.ValidationError('DuplicateBiotoolsIDError on resource with id:' + attrs + ';please contact our support team and paste the error in the message.')
+
+		
+		return attrs
+
+	def validate_type(self, attrs):
+		enum = ENUMValidator([u'isNewVersionOf', u'hasNewVersion', u'uses', u'usedBy', u'include', u'includedIn'])
+		attrs = enum(attrs)
+		return attrs		
+
+	def get_pk_field(self, model_field):
+		return None
+
 
 
 
@@ -172,6 +203,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 	name = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[IsStringTypeValidator, UniqueValidator(queryset=Resource.objects.filter(visibility=1), message="The resource ID (biotoolsID) generated from this name already exists; Use a different name.")])
 	homepage = serializers.CharField(max_length=300, min_length=1, allow_blank=False)
 
+	elixir_badge = serializers.IntegerField(read_only=True)
 	homepage_status = serializers.IntegerField(read_only=True)
 	cost = serializers.CharField(allow_blank=False, max_length=300, min_length=1, required=False)
 	maturity = serializers.CharField(allow_blank=False, max_length=300, min_length=1, required=False)
@@ -182,7 +214,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 	version = VersionSerializer(many=True, required=False, allow_empty=False)
 	#version = serializers.CharField(max_length=100, allow_blank=True, validators=[IsStringTypeValidator], required=False, default=None)
 	otherID = OtherIDSerializer(many=True, required=False, allow_empty=False)
-	canonicalID = serializers.CharField(max_length=50, allow_blank=True, validators=[IsStringTypeValidator], required=False)
+	#canonicalID = serializers.CharField(max_length=50, allow_blank=True, validators=[IsStringTypeValidator], required=False)
 	description = serializers.CharField(min_length=10, max_length=1000, allow_blank=False, validators=[IsStringTypeValidator], required=True)
 	#short_description = serializers.CharField(min_length=10, max_length=100, allow_blank=False, validators=[IsStringTypeValidator], required=False)
 
@@ -203,48 +235,54 @@ class ResourceSerializer(serializers.ModelSerializer):
 	elixirPlatform = ElixirPlatformSerializer(many=True, required=False, allow_empty=False)
 	elixirNode = ElixirNodeSerializer(many=True, required=False, allow_empty=False)
 
+
+
 	# uses = UsesSerializer(many=True, required=False, allow_empty=False)
 	collectionID = CollectionIDSerializer(many=True, required=False, allow_empty=False)
+
+	#relation
+	relation = RelationSerializer(many=True, required=False, allow_empty=False)
+
 	# contact = ContactSerializer(many=True, required=False, allow_empty=False)
 	editPermission = EditPermissionSerializer(many=False, required=False)
 
 	class Meta:
 		model = Resource
 		fields = (
+			'name',
+			'description',
+			'homepage',
 			'biotoolsID',
 			'biotoolsCURIE',
-			'name',
-			'topic',
-			'function',
 			'version',
-			'homepage',
-			'description',
-			'canonicalID',
-			'accessibility',
-			'additionDate',
-			'lastUpdate',
-			'availability',
-			'downtime',
-			'cost',
-			'maturity',
-			'credit',
-			'link',
-			'download',
-			'license',
-			'operatingSystem',
-			'toolType',
-			'language',
-			'documentation',
-			'publication',
-			'collectionID',
-			#'contact',
 			'otherID',
+			'relation',
+			'function',
+			'toolType',
+			'topic',
+			'operatingSystem',
+			'language',
+			'license',
+			'collectionID',
+			'maturity',
+			'cost',
+			'accessibility',
 			'elixirPlatform',
 			'elixirNode',
+			'link',
+			'download',
+			'documentation',
+			'publication',
+			'credit',
 			'owner',
+			'additionDate',
+			'lastUpdate',
+			#'availability',
+			#'downtime',
 			'editPermission',
 			'validated',
-			'homepage_status'
+			'homepage_status',
+			'elixir_badge'
 		)
 		validators = [
 
@@ -267,7 +305,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 		return attrs
 
 	def validate_homepage(self, attrs):
-		attrs = IsURLValidator(attrs)
+		attrs = IsURLFTPValidator(attrs)
 		return attrs
 
 	def validate_cost(self, attrs):
@@ -321,6 +359,9 @@ class ResourceSerializer(serializers.ModelSerializer):
 		accessibility_list = uniq(validated_data, 'accessibility')
 		# uses_list = uniq(validated_data, 'uses')
 		collectionID_list = uniq(validated_data, 'collectionID')
+
+		relation_list = validated_data.pop('relation') if 'relation' in validated_data.keys() else []
+
 		# contact_list = validated_data.pop('contact') if 'contact' in validated_data.keys() else []
 		editPermission_dict = validated_data.pop('editPermission') if 'editPermission' in validated_data.keys() else {}
 		editPermissionAuthor_dict = editPermission_dict.pop('authors') if 'authors' in editPermission_dict.keys() else {}
@@ -455,6 +496,9 @@ class ResourceSerializer(serializers.ModelSerializer):
 		for collectionID in collectionID_list:
 			CollectionID.objects.create(resource=resource, **collectionID)
 
+		for relation in relation_list:
+			Relation.objects.create(resource=resource, **relation)
+		
 		# for contact in contact_list:
 		# 	contact = Contact.objects.create(resource=resource, **contact)
 
@@ -486,40 +530,40 @@ class ResourceUpdateSerializer(ResourceSerializer):
 		# initially it was exclude
 		# we either exclude a lot of hidden stuff or we specify (even though duplicated) the fields below
 		fields = (
+			'name',
+			'description',
+			'homepage',
 			'biotoolsID',
 			'biotoolsCURIE',
-			'name',
-			'topic',
-			'function',
 			'version',
-			'homepage',
-			'description',
-			'canonicalID',
-			'accessibility',
-			'additionDate',
-			'lastUpdate',
-			'availability',
-			'downtime',
-			'cost',
-			'maturity',
-			'credit',
-			'link',
-			'download',
-			'license',
-			'operatingSystem',
+			'otherID',
+			'relation',
+			'function',
 			'toolType',
+			'topic',
+			'operatingSystem',
 			'language',
-			'documentation',
-			'publication',
+			'license',
 			'collectionID',
+			'maturity',
+			'cost',
+			'accessibility',
 			'elixirPlatform',
 			'elixirNode',
-			#'contact',
-			'otherID',
+			'link',
+			'download',
+			'documentation',
+			'publication',
+			'credit',
 			'owner',
+			'additionDate',
+			'lastUpdate',
+			#'availability',
+			#'downtime',
 			'editPermission',
 			'validated',
-			'homepage_status'
+			'homepage_status',
+			'elixir_badge'
 		)
 
 

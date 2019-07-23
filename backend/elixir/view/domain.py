@@ -5,6 +5,9 @@ from elixir.models import *
 from elixir.serializers import *
 from elixir.view.resource import es
 
+def is_superuser(user):
+	return User.objects.get(username=user).is_superuser == 1
+
 class DomainView(APIView):
 	"""
 	Create or list domains.
@@ -12,8 +15,12 @@ class DomainView(APIView):
 	permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, )
 
 	def get(self, request, format=None):
-		if request.user and not request.user.is_anonymous():
+		if request.user and not request.user.is_anonymous() and not(is_superuser(request.user)):
 			subdomains = Domain.objects.filter(owner=request.user)
+			serializer = SubdomainNameSerializer(instance=subdomains, many=True)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		elif request.user and not request.user.is_anonymous() and is_superuser(request.user):
+			subdomains = Domain.objects.all()
 			serializer = SubdomainNameSerializer(instance=subdomains, many=True)
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		else:
@@ -67,7 +74,7 @@ class DomainView(APIView):
 			return Response({"details": "Domain not allowed."}, status=status.HTTP_400_BAD_REQUEST)
 		try:
 			d = Domain.objects.get(name__iexact=domain)
-			if d.owner != request.user:
+			if d.owner != request.user and not(is_superuser(request.user)):
 				return Response({"details": "You are not the owner of this domain."}, status=status.HTTP_401_UNAUTHORIZED)
 			d.domainresource_set.all().delete()
 			d.delete()
@@ -86,12 +93,13 @@ class DomainResourceView(APIView):
 	"""
 	permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, )
 
+
 	def get(self, request, domain='all', format=None):
 		query_dict = request.GET
 		size = query_dict.get('size', 10000)
 
 		if domain != 'all':
-			result = es.search(index='domains', body={'size': size,'query': {'bool': {'must': [{'match': {'domain': {'query': domain}}}]}}})
+			result = es.search(index='domains', body={'size': size,'query': {'bool': {'must': [{'match_phrase': {'domain': {'query': domain}}}]}}})
 			count = result['hits']['total']
 			if count > 0:
 				result = [el['_source'] for el in result['hits']['hits']][0]
@@ -162,7 +170,7 @@ class DomainResourceView(APIView):
 		d = None
 		try:
 			d = Domain.objects.get(name__iexact=domain)
-			if d.owner != request.user:
+			if d.owner != request.user and not(is_superuser(request.user)):
 				return Response({"details": "You are not the owner of this domain."}, status=status.HTTP_401_UNAUTHORIZED)
 
 			##### update & save domain attribute here
@@ -207,7 +215,7 @@ class DomainResourceView(APIView):
 			return Response({"details": "Domain not allowed."}, status=status.HTTP_400_BAD_REQUEST)
 		try:
 			d = Domain.objects.get(name__iexact=domain)
-			if d.owner != request.user:
+			if d.owner != request.user and not(is_superuser(request.user)):
 				return Response({"details": "You are not the owner of this domain."}, status=status.HTTP_401_UNAUTHORIZED)
 			d.domainresource_set.all().delete()
 			d.delete()

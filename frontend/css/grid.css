@@ -11,6 +11,14 @@
 	-o-user-select: none;
 }
 
+.ui-grid-icon-menu:before {
+  content: '\c363';
+}
+
+.ui-grid-icon-ok:before {
+  content: '\c362';
+}
+
 .ui-grid-render-container {
   positon:inherit;
 }

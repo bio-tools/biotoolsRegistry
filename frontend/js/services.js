@@ -198,7 +198,7 @@ angular.module('elixir_front.services', [])
 			columnDescription = {field: 'language', displayName: 'Language', width: '120', resizable: true, cellTemplate: '/partials/grid_cells/listCell.html'};
 		}
 		else if (key == 'Credits') {
-			columnDescription = {field: 'credit', displayName: 'Credits', width: '150', resizable: true, cellTemplate: '/partials/grid_cells/creditsCell.html'};
+			columnDescription = {field: 'credit', displayName: 'Credits & Support', width: '150', resizable: true, cellTemplate: '/partials/grid_cells/creditsCell.html'};
 		}
 		else if (key == 'Accessibility') {
 			columnDescription = {field: key.toLowerCase(), displayName: key, width: '150', resizable: true, cellTemplate: '/partials/grid_cells/listCell.html'};
@@ -369,7 +369,7 @@ angular.module('elixir_front.services', [])
 		},
 		operation: {
 			description: "A basic operation performed by this software function.",
-			label: "Function"
+			label: "Operation"
 		},
 		functionNote: {
 			description: "Concise comment about this function, if not apparent from the description and EDAM annotations.",
@@ -690,6 +690,14 @@ angular.module('elixir_front.services', [])
 		otherIDVersion: {
 			description: "Version information (typically a version number) of the software applicable to this identifier, e.g. “1.4”",
 			label: "otherIDVersion"
+		},
+		relationBiotoolsID: {
+			description: 'bio.tools ID of an existing bio.tools entry to which this software is related, e.g. "needle"',
+			label: "relationBiotoolsID"
+		},
+		relationType: {
+			description: 'Type of relation between this and another registered software, e.g. "isNewVersionOf"',
+			label: "relationType"
 		},
 	};
 })

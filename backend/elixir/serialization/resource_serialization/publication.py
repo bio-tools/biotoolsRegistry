@@ -43,7 +43,7 @@ class PublicationSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Publication
-		fields = ('pmcid', 'pmid', 'doi', 'type', 'version', 'metadata')
+		fields = ('doi', 'pmid', 'pmcid',  'type', 'version', 'metadata')
 
 # TODO: remember to migrate the types, benchmark turns into comparison.
 	def validate_type(self, attrs):

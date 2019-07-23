@@ -1,7 +1,19 @@
 .domain-bar-container {
-	margin-bottom: 2em;
-	padding-left: 1em;
-	padding-right: 1em;
+	padding-bottom: 2em;
+	margin: auto;
+}
+
+
+@media (min-width: 100px) {
+    .domain-bar-container {
+        width: 96%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .domain-bar-container {
+        width: 91%;
+    }
 }
 
 .domain-bar-title {

@@ -43,10 +43,12 @@ class LegacyCreditSerializer(serializers.ModelSerializer):
 		return attrs
 
 	def get_typeRole(self, obj):
- 		typeRole = obj.typeRole.all()[0].typeRole
- 		if typeRole:
- 			return typeRole
- 		return ''
+ 		typeRoles = obj.typeRole.all()
+ 		if len(typeRoles) > 0:
+ 			typeRole = typeRoles[0].typeRole
+ 			if typeRole:
+ 				return typeRole
+ 		return None
 
 	def get_pk_field(self, model_field):
 		return None

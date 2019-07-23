@@ -87,7 +87,7 @@ class OperationSerializer(serializers.ModelSerializer):
 class FunctionSerializer(serializers.ModelSerializer):
 	note = serializers.CharField(max_length=1000, min_length=10, validators=[IsStringTypeValidator], required=False)
 	# check for length restrictions
-	cmd = serializers.CharField(max_length=100, min_length=1, validators=[IsStringTypeValidator], required=False)
+	cmd = serializers.CharField(max_length=1000, min_length=1, validators=[IsStringTypeValidator], required=False)
 
 	# nested attributes
 	operation = OperationSerializer(many=True, required=True, allow_empty=False)
@@ -96,7 +96,7 @@ class FunctionSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Function
-		fields = ('note', 'cmd','operation', 'input', 'output')
+		fields = ('operation', 'input', 'output', 'note', 'cmd')
 		
 class OntologySerializer(serializers.ModelSerializer):
 

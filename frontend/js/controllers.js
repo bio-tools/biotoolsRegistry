@@ -82,13 +82,55 @@ angular.module('elixir_front.controllers', [])
 }])
 .controller('SearchResultController', ['$scope','$state', 'ToolList', 'ToolTableDataSource', 'DisplayModeSelector', 'Domain', function($scope, $state, ToolList, ToolTableDataSource, DisplayModeSelector, Domain){
 
+	function quoteQueryStringValue(v){
+		return '"' + v + '"'
+	}
+
+	function stripEdam(t){
+		return t.replace("http://edamontology.org/", "");
+	}
+
 	$scope.topicNameClicked = function(topic) {
 		//$state.go('search', {'topic': topic.term}, {reload: true});
-		$state.transitionTo('search', {'topic': topic.term}, {
+		$state.transitionTo('search', {'topicID': quoteQueryStringValue(stripEdam(topic.uri))},
+		{
     	reload: true,
     	inherit: false,
     	notify: true
 		});
+	}
+
+	$scope.operationNameClicked = function(operation) {
+		//$state.go('search', {'topic': topic.term}, {reload: true});
+		$state.transitionTo('search', {'operationID': quoteQueryStringValue(stripEdam(operation.uri))},
+		{
+    	reload: true,
+    	inherit: false,
+    	notify: true
+		});
+	}
+
+	$scope.shouldLicenseBeALink = function(license) {
+  	return !_.includes(['Proprietary', 'Other', 'Unlicensed'], license);
+	}
+
+	$scope.getFlatOperations = function(functions){
+
+		var operations = {};
+		for (var i = 0; i < functions.length; i++){
+			for (var j = 0; j < functions[i].operation.length; j++){
+				var o = functions[i].operation[j];
+				operations[o.term] = o;
+			}
+		}
+
+		var arr = Object.keys(operations);
+		var r = [];
+		for (var i = 0; i < arr.length;i++){
+			r.push(operations[arr[i]]);
+		}
+
+		return r;
 	}
 
 	$scope.Domain = Domain;
@@ -133,7 +175,7 @@ angular.module('elixir_front.controllers', [])
 		localStorage.welcome_message = false;
 	};
 }])
-.controller('ToolEditController', ['$scope', '$controller', '$state', '$stateParams', 'Ontology', 'Attribute', 'CheckUserEditingRights', 'User', '$timeout', function($scope, $controller, $state, $stateParams, Ontology, Attribute, CheckUserEditingRights, User, $timeout) {
+.controller('ToolEditController', ['$scope', '$controller', '$state', '$stateParams', 'Ontology', 'Attribute', 'CheckUserEditingRights', 'User', '$timeout', 'UsedTerms','$q','filterFilter', function($scope, $controller, $state, $stateParams, Ontology, Attribute, CheckUserEditingRights, User, $timeout, UsedTerms, $q, filterFilter ) {
 
 	// reference the service
 	$scope.Attribute = Attribute;
@@ -195,6 +237,30 @@ angular.module('elixir_front.controllers', [])
 			$scope.registrationErrorPayload = response.data;
 		});
 	}
+
+
+	// used terms (biotoolsID) for searching in relations
+	function getBiotoolsIDs(){
+		var d = $q.defer();
+		var params = {
+			"usedTermName": "biotoolsID"
+		};
+		UsedTerms.get(params, function(response) {
+			d.resolve(response.data);
+		});
+		return d.promise;
+	}
+	
+	$scope.loadBiotoolsIDs = function(query) {
+		return getBiotoolsIDs().then(function(list) {
+			return list.filter(function (str) { return str.includes(query); }).slice(0,50).sort();
+		});
+	}
+
+
+	console.log($scope.loadBiotoolsIDs('jas'));
+	
+
 
 	// add attribute or list entry
 	$scope.addButtonClick = function (_what, _where, _isList, _isObject) {
@@ -707,6 +773,7 @@ angular.module('elixir_front.controllers', [])
 		{value: "Java", text: "Java"},
 		{value: "JavaScript", text: "JavaScript"},
 		{value: "JSP", text: "JSP"},
+		{value: "Julia", text: "Julia"},
 		{value: "LabVIEW", text: "LabVIEW"},
 		{value: "Lisp", text: "Lisp"},
 		{value: "Lua", text: "Lua"},
@@ -777,19 +844,23 @@ angular.module('elixir_front.controllers', [])
 	];
 
 	$scope.linkTypeOptions = [
-		{value: "Browser", text: "Browser"},
+		{value: "Discussion forum", text: "Discussion forum"},
+		{value: "Galaxy service", text: "Galaxy service"},
 		{value: "Helpdesk", text: "Helpdesk"},
 		{value: "Issue tracker", text: "Issue tracker"},
 		{value: "Mailing list", text: "Mailing list"},
 		{value: "Mirror", text: "Mirror"},
 		{value: "Registry", text: "Registry"},
 		{value: "Repository", text: "Repository"},
-		{value: "Social media", text: "Social media"},
 		{value: "Scientific benchmark", text: "Scientific benchmark"},
-		{value: "Technical monitoring", text: "Technical monitoring"}
+		{value: "Service", text: "Service"},
+		{value: "Social media", text: "Social media"},
+		{value: "Technical monitoring", text: "Technical monitoring"},
+		{value: "Other", text: "Other"}
 	];
 
 	$scope.downloadTypeOptions = [
+		{value: "Downloads page", text: "Downloads page"},
 		{value: "API specification", text: "API specification"},
 		{value: "Biological data", text: "Biological data"},
 		{value: "Binaries", text: "Binaries"},
@@ -807,17 +878,21 @@ angular.module('elixir_front.controllers', [])
 		{value: "Tool wrapper (galaxy)", text: "Tool wrapper (galaxy)"},
 		{value: "Tool wrapper (taverna)", text: "Tool wrapper (taverna)"},
 		{value: "Tool wrapper (other)", text: "Tool wrapper (other)"},
-		{value: "VM Image", text: "VM Image"}
+		{value: "VM Image", text: "VM Image"},
+		{value: "Other", text: "Other"}
 	];
 
 	$scope.documentationTypeOptions = [
 		{value: "API documentation", text: "API documentation"},
 		{value: "Citation instructions", text: "Citation instructions"},
+		{value: "Command-line options", text: "Command-line options"},
 		{value: "Contributions policy", text: "Contributions policy"},
+		{value: "FAQ", text: "FAQ"},
 		{value: "General", text: "General"},
 		{value: "Governance", text: "Governance"},
 		{value: "Installation instructions", text: "Installation instructions"},
 		{value: "Manual", text: "Manual"},
+		{value: "Release notes", text: "Release notes"},
 		{value: "Terms of use", text: "Terms of use"},
 		{value: "Training material", text: "Training material"},
 		{value: "Tutorial", text: "Tutorial"},
@@ -890,6 +965,17 @@ angular.module('elixir_front.controllers', [])
 		{value: "rrid", text: "rrid"},
 		{value: "cpe", text: "cpe"}
 	];
+
+	$scope.relationTypeOptions = [
+		{value: "isNewVersionOf", text: "isNewVersionOf"},
+		{value: "hasNewVersion", text: "hasNewVersion"},
+		{value: "uses", text: "uses"},
+		{value: "usedBy", text: "usedBy"},
+		{value: "include", text: "include"},
+		{value: "includedIn", text: "includedIn"}
+
+	]
+
 }])
 .controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator) {
 	// inherit common controller

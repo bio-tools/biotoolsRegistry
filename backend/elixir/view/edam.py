@@ -35,20 +35,32 @@ class UsedTermsList(APIView):
 
 		if ontology == 'name':
 			fields = ['name.raw']
+		elif ontology == 'biotoolsID':
+			fields = ['biotoolsID']
 		elif ontology == 'topic':
 			fields = ['topic.term.raw']
 		elif ontology == 'operation':
 			fields = ['function.operation.term.raw']
 		elif ontology == 'input':
-			fields = ['function.input.data.term.raw', 'function.input.format.term.raw']
+			fields = ['function.input.data.term.keyword', 'function.input.format.term.keyword']
 		elif ontology == 'output':
-			fields = ['function.output.data.term.raw', 'function.output.format.term.raw']
+			fields = ['function.output.data.term.keyword', 'function.output.format.term.keyword']
 		elif ontology == 'credit':
-			fields = ['credit.name.raw']
+			fields = ['credit.name.keyword']
 		elif ontology == 'collectionID':
 			fields = ['collectionID.raw']
+		elif ontology == 'toolType':
+			fields = ['toolType.raw']
+		elif ontology == 'language':
+			fields = ['language.raw']
+		elif ontology == 'accessibility':
+			fields = ['accessibility.keyword']
+		elif ontology == 'cost':
+			fields = ['cost.raw']
+		elif ontology == 'license':
+			fields = ['license.raw']
 		elif ontology == 'all':
-			fields = ['name.raw', 'topic.term.raw', 'function.operation.term.raw', 'function.input.data.term.raw', 'function.input.format.term.raw', 'function.output.data.term.raw', 'function.output.format.term.raw', 'credit.name.raw', 'collectionID.raw']
+			fields = ['topic.term.raw', 'function.operation.term.raw', 'name.raw', 'function.input.data.term.keyword', 'function.input.format.term.keyword', 'function.output.data.term.keyword', 'function.output.format.term.keyword', 'toolType.raw', 'language.raw', 'accessibility.keyword', 'cost.raw', 'license.raw', 'credit.name.keyword', 'collectionID.raw','name.raw']
 		else:
 			return Response({'detail': 'Unsupported field.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -56,7 +68,7 @@ class UsedTermsList(APIView):
 			query_struct['aggs'][field] = {
 				'terms': {
 					'field': field,
-					'size': 10000
+					'size': 20000
 				}
 			}
 

@@ -3,8 +3,42 @@ from rest_framework.settings import api_settings
 from elasticsearch import Elasticsearch
 from django.conf import settings
 import elixir.search_settings, re
+import json
 
 es = Elasticsearch([{'host':'localhost','port':9200}])
+
+def _byteify(data, ignore_dicts = False):
+		# if this is a unicode string, return its string representation
+		if isinstance(data, unicode):
+				return data.encode('utf-8')
+		# if this is a list of values, return list of byteified values
+		if isinstance(data, list):
+				return [ _byteify(item, ignore_dicts=True) for item in data ]
+		# if this is a dictionary, return dictionary of byteified keys and values
+		# but only if we haven't already byteified it
+		if isinstance(data, dict) and not ignore_dicts:
+				return {
+						_byteify(key, ignore_dicts=True): _byteify(value, ignore_dicts=True)
+						for key, value in data.iteritems()
+				}
+		# if it's anything else, return it in its original form
+		return data
+
+def json_loads_byteified(json_text):
+		return _byteify(
+				json.loads(json_text, object_hook=_byteify),
+				ignore_dicts=True
+		)
+
+
+def format_search(attribute, search_field, search_text,search_struct, elastic_query, query_type):
+	q = elastic_query[search_struct[attribute][query_type]]
+	q_formatted = q % {"field":search_field,"search_text":search_text}
+	#return q
+	#return q_formatted
+	
+	#return json.loads(q_formatted)
+	return json_loads_byteified(q_formatted)
 
 def get_list_of_terms(field):
 	query_struct = {
@@ -38,6 +72,7 @@ def construct_es_query(query_dict):
 	sort_attribute = query_dict.get('sort', None)
 	sort_order = query_dict.get('ord', None) or 'desc'
 	search_struct = elixir.search_settings.search_struct
+	elastic_query = elixir.search_settings.elastic_query
 
 	query_struct = {
 		'size': api_settings.PAGE_SIZE,
@@ -166,13 +201,16 @@ def construct_es_query(query_dict):
 					}
 				}
 				for field in search_struct[attribute]['search_field']:
-					inner_should['bool']['should'].append(
-						{
-							'match_phrase': {
-								field: term
-							}
-						}
-					)
+					# inner_should['bool']['should'].append(
+					# 	{
+					# 		'match_phrase': {
+					# 			field: term
+					# 		}
+					# 	}
+					# )
+					inner_should['bool']['should'].extend(
+						format_search(attribute,field,term, search_struct, elastic_query, "quoted_query")
+						)
 				query_struct['query']['bool']['must'].append(inner_should)
 
 			inexact = ' '.join(rest)
@@ -183,30 +221,33 @@ def construct_es_query(query_dict):
 					}
 				}
 				for field in search_struct[attribute]['search_field']:
-					inner_should['bool']['should'].extend([
-						#{
-						#	'fuzzy': {
-						#		field: {
-						#			'value': inexact
-						#		}
-						#	}
-						#}
-						{
-							"match": {
- 								field:{
-									"query": inexact,
-										"fuzziness": 2
-									}
-								}
-							},
-							{
-							"prefix": {
- 								field:{
-									"value": inexact
-									}
-								}
-							}
+					# inner_should['bool']['should'].extend([
+					# 	#{
+					# 	#	'fuzzy': {
+					# 	#		field: {
+					# 	#			'value': inexact
+					# 	#		}
+					# 	#	}
+					# 	#}
+					# 	{
+					# 		"match": {
+ 				# 				field:{
+					# 				"query": inexact,
+					# 					"fuzziness": 2
+					# 				}
+					# 			}
+					# 		},
+					# 		{
+					# 		"prefix": {
+ 				# 				field:{
+					# 				"value": inexact
+					# 				}
+					# 			}
+					# 		}
 
-					])
+					# ])
+					inner_should['bool']['should'].extend(
+						format_search(attribute,field,inexact, search_struct, elastic_query, "simple_query")
+						)
 				query_struct['query']['bool']['must'].append(inner_should)
 	return query_struct

@@ -576,9 +576,9 @@ http://www.altova.com/mapforce
 						</xsl:for-each>
 						<xsl:for-each select="orcidid">
 							<xsl:variable name="var36_cur" select="."/>
-							<orcidId>
+							<orcidid>
 								<xsl:value-of select="."/>
-							</orcidId>
+							</orcidid>
 						</xsl:for-each>
 						<xsl:for-each select="typeEntity">
 							<xsl:variable name="var37_cur" select="."/>

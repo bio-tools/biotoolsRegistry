@@ -29,7 +29,8 @@ class ResourceList(APIView):
 	"""
 	permission_classes = (IsAuthenticatedOrReadOnly,)
 	parser_classes = (JSONParser, XMLSchemaParser, YAMLParser)
-
+	renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLSchemaRenderer, YAMLRenderer)
+	
 	def get(self, request, format=None):
 		query_dict = request.GET
 		size = api_settings.PAGE_SIZE
@@ -53,7 +54,7 @@ class ResourceList(APIView):
 			return Response({"detail": "Invalid page. That page contains no results."}, status=status.HTTP_404_NOT_FOUND)
 
 		if domain:
-			domain_result = es.search(index='domains', body={'size': 10000,'query': {'bool': {'must': [{'match': {'domain': {'query': domain}}}]}}})
+			domain_result = es.search(index='domains', body={'size': 10000,'query': {'bool': {'must': [{'match_phrase': {'domain': {'query': domain}}}]}}})
 			domain_count = domain_result['hits']['total']
 			
 			if domain_count > 0:
@@ -372,6 +373,7 @@ class ResourceCreateValidator(APIView):
 	"""
 	permission_classes = (IsAuthenticatedOrReadOnly,)
 	parser_classes = (JSONParser, XMLSchemaParser, YAMLParser)
+	renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLSchemaRenderer, YAMLRenderer)
 	#should also have renderers except the browsableapi one since we don't really need it...
 
 	def post(self, request, format=None):
@@ -390,6 +392,7 @@ class ResourceUpdateValidator(APIView):
 	"""
 	permission_classes = (IsAuthenticatedOrReadOnly, HasEditPermissionToEditResourceOrReadOnly,)
 	parser_classes = (JSONParser, XMLSchemaParser, YAMLParser)
+	renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLSchemaRenderer, YAMLRenderer)
 	#should also have renderers except the browsableapi one since we don't really need it...
 
 	def get_object(self, biotoolsID):

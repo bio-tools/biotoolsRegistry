@@ -1,11 +1,12 @@
 angular.module('elixir_front')
 .controller('AboutController', ['$scope', function($scope) {
 	var vm = this;
+	window.scrollTo(0, 0);
 }]);
 
 
 angular.module('elixir_front')
-.directive('aboutContact', ['$state','$stateParams', function($state, $stateParams) {
+.directive('homeInfo', ['$state','$stateParams', function($state, $stateParams) {
 	return {
 		restrict: 'EA',
 		templateUrl: 'components/about/aboutContact.html',
@@ -15,6 +16,7 @@ angular.module('elixir_front')
 			scope.initials = attrs["initials"];
 			scope.role = attrs["role"];
 			scope.image = attrs["image"];
+
 		}
 	}
 }]);

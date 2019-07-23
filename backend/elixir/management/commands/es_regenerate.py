@@ -159,7 +159,10 @@ class Command(BaseCommand):
 														"type" : "text",
 														"analyzer": "not_analyzed_case_insensitive",
 														"fielddata": True
-													}
+													},
+													"keyword": {
+				                		"type": "keyword"
+				              		}
 												}
 											}
 										}
@@ -175,7 +178,10 @@ class Command(BaseCommand):
 														"type" : "text",
 														"analyzer": "not_analyzed_case_insensitive",
 														"fielddata": True
-													}
+													},
+													"keyword": {
+				                		"type": "keyword"
+				              		}
 												}
 											}
 										}
@@ -195,7 +201,10 @@ class Command(BaseCommand):
 														"type" : "text",
 														"analyzer": "not_analyzed_case_insensitive",
 														"fielddata": True
-													}
+													},
+													"keyword": {
+				                		"type": "keyword"
+				              		}
 												}
 											}
 										}
@@ -211,7 +220,10 @@ class Command(BaseCommand):
 														"type" : "text",
 														"analyzer": "not_analyzed_case_insensitive",
 														"fielddata": True
-													}
+													},
+													"keyword": {
+				                		"type": "keyword"
+				              		}
 												}
 											}
 										}
@@ -260,7 +272,10 @@ class Command(BaseCommand):
 										"type" : "text",
 										"analyzer": "not_analyzed_case_insensitive",
 										"fielddata": True
-									}
+									},
+									"keyword": {
+                		"type": "keyword"
+              		}
 								}
 							}
 						}
@@ -287,12 +302,22 @@ class Command(BaseCommand):
 					"language" : {
 						"type" : "text",
 						"fielddata": True,
-						"analyzer": "not_analyzed_case_insensitive"
+						"analyzer": "not_analyzed_case_insensitive",
+						"fields": {
+							"raw": { 
+								"type":  "keyword"
+							}
+						}
 					},
 					"license" : {
 						"type" : "text",
 						"analyzer": "not_analyzed_case_insensitive",
-						"fielddata": True
+						"fielddata": True,
+						"fields": {
+							"raw": { 
+								"type":  "keyword"
+							}
+						}
 					},
 					"operatingSystem" : {
 						"type" : "text",
@@ -321,7 +346,12 @@ class Command(BaseCommand):
 					"toolType" : {
 						"type" : "text",
 						"analyzer": "not_analyzed_case_insensitive",
-						"fielddata": True
+						"fielddata": True,
+						"fields": {
+							"raw": { 
+								"type":  "keyword"
+							}
+						}
 					},
 					"version" : {
 						"type" : "text",
@@ -350,7 +380,12 @@ class Command(BaseCommand):
 					"cost" : {
 						"type" : "text",
 						"fielddata": True,
-						"analyzer": "not_analyzed_case_insensitive"
+						"analyzer": "not_analyzed_case_insensitive",
+						"fields": {
+							"raw": { 
+								"type":  "keyword"
+							}
+						}
 					},
 					"owner" : {
 						"type" : "text",

@@ -93,7 +93,10 @@ def IsDOIValidator(value):
 
 	# doi regexp (a bit modified) from 
 	# https://www.crossref.org/blog/dois-and-matching-regular-expressions/ 
-	matchDOI = re.compile('^10\.[0-9]{4,9}\/[-\._;\(\)\/:a-zA-Z0-9]+$', re.IGNORECASE)
+
+	# added matching for characters: '[', ']', '<' and '>'
+	# old regex was '^10\.[0-9]{4,9}\/[-\._;\(\)\/:a-zA-Z0-9]+$'
+	matchDOI = re.compile('^10\.[0-9]{4,9}\/[-\.\[\]<>_;\(\)\/:a-zA-Z0-9]+$', re.IGNORECASE)
 	matchNone = re.compile('^None$', re.IGNORECASE)
 
 	if not matchDOI.search(value) and not matchNone.search(value):
@@ -137,7 +140,9 @@ def IsVersionValidator(value):
 
 def IsCollectionIDValidator(value):
 	IsStringTypeValidator(value)
-	p = re.compile('^(?!\p{Zs})[\p{Zs}A-Za-z0-9+\.,\-_:;()]*(?<!\p{Zs})$', re.IGNORECASE|re.UNICODE)
+	# this looks wrong
+	#p = re.compile('^(?!\p{Zs})[\p{Zs}A-Za-z0-9+\.,\-_:;()]*(?<!\p{Zs})$', re.IGNORECASE|re.UNICODE)
+	p = re.compile('^[ A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
 	if not p.search(value):
 		message = 'This is not a valid collection ID: ' + unicode(value) + '.'
 		raise serializers.ValidationError(message)

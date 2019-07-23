@@ -43,8 +43,16 @@ class XMLSchemaRenderer(BaseRenderer):
         #raise AssertionError(type(stream.getvalue()));
         generic_xml = stream.getvalue()
 
+        if data.get('count') != None and data.get('list') != None:
+            # deal with multiple tools
+            xmlfile = 'multiple.xslt';
+        else:
+            # deal with a single tool
+            xmlfile = 'framework_XML_to_biotoolsSchema_3.0.0_XML_xslt1.0.xslt';
+
+
         try:
-            xslt1 = lxmletree.parse('/elixir/application/backend/elixir/biotoolsSchema/framework_XML_to_biotoolsSchema_3.0.0_XML_xslt1.0.xslt')
+            xslt1 = lxmletree.parse('/elixir/application/backend/elixir/biotoolsSchema/' + xmlfile)
             transform1 = lxmletree.XSLT(xslt1)
             dom = lxmletree.fromstring(generic_xml)
             newdom = transform1(dom)

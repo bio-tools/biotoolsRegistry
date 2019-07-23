@@ -13,7 +13,7 @@ class DownloadSerializer(serializers.ModelSerializer):
 		fields = ('url', 'type', 'note', 'version')
 
 	def validate_type(self, attrs):
-		enum = ENUMValidator([u'API specification', u'Biological data', u'Binaries', u'Binary package', u'Command-line specification', u'Container file', u'CWL file', u'Icon', u'Ontology', u'Screenshot', u'Source code', u'Source package', u'Test data', u'Test script', u'Tool wrapper (galaxy)', u'Tool wrapper (taverna)', u'Tool wrapper (other)', u'VM image'])
+		enum = ENUMValidator([u'API specification', u'Biological data', u'Binaries', u'Binary package', u'Command-line specification', u'Container file', u'CWL file', u'Icon', u'Ontology', u'Screenshot', u'Source code', u'Source package', u'Test data', u'Test script', u'Tool wrapper (galaxy)', u'Tool wrapper (taverna)', u'Tool wrapper (other)', u'VM image', u'Downloads page', u'Other'])
 		attrs = enum(attrs)
 		return attrs
 

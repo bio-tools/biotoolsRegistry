@@ -35,16 +35,7 @@ from elixir.view.environment import *
 from elixir.view.tools import *
 from elixir.view.edam import *
 from elixir.view.v2.resource import *
-from rest_framework.response import Response
 
-class Hans(APIView):
-	"""
-	Retrieve stats for use with various widgets.
-	"""
-	permission_classes = (IsAuthenticatedOrReadOnly,)
-	
-	def get(self, request, format=None):
-		return Response({"aa":"bb"})
 
 def issue_function(resource, user):
 	# check for issues

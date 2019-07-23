@@ -1,3 +1,13 @@
+img.biotools-logo{
+    transition: transform .2s;
+}
+
+img.biotools-logo:hover{
+    -ms-transform: scale(1.1); /* IE 9 */
+    -webkit-transform: scale(1.1); /* Safari 3-8 */
+    transform: scale(1.1);
+}
+
 /* Panel background */
 .pill-background
 {
@@ -28,6 +38,16 @@
 	position: relative;
 }
 
+.expandable-summary{
+    line-height: 1.5em;
+    height: 3.0em;
+    overflow: hidden;
+}
+
+.min-tall{
+     min-height: 5.0em;
+}
+
 .default-controls-container
 {
 	padding: 1.5em;
@@ -51,6 +71,11 @@
 .default-controls-button.focus, .default-controls-button:focus, .default-controls-button:hover
 {
 	background-color: #d8e9f3;
+}
+
+.biotools-curie{
+    font-size: 12px;
+    color: #575757;
 }
 
 .pill-title
@@ -89,10 +114,38 @@
 	background-color: #F6A623;
 }
 
+.pill-tag-fourth-background
+{
+    color: #212F3D;
+    background-color: #85C1E9;
+    font-weight: lighter;
+}
+
+.pill-tag-fourth-background > a {
+    color: white;
+    font-weight: bold;
+
+}
+
+
+
 .pill-tag-orange-background
 {
 	background-color: #ef7500;
 	color: white;
+    display: inline-block;
+}
+
+.pill-tag-topic{
+    background-color: #b4cca1;
+    color: black;   
+    display: inline-block;
+}
+
+.pill-tag-operation{
+    background-color: #a3b0d1;
+    color: black;   
+    display: inline-block;
 }
 
 .pill-tag-verified {
@@ -104,7 +157,7 @@
     color: lightblue;
 }
 
-.pill-tag-error-small {
+.pill-tag-error-small,.pill-tag-verified {
 	background-color: #BA1E4A;
 	color: white;
 	border-radius: 8px;
@@ -124,7 +177,7 @@
 	margin-top: 0.45em
 }
 
-.pill-tag-primary-background, .pill-tag-secondary-background, .pill-tag-third-background, .pill-tag-orange-background, .pill-tag-verified 
+.pill-tag-primary-background, .pill-tag-secondary-background, .pill-tag-third-background, .pill-tag-fourth-background, .pill-tag-orange-background, .pill-tag-topic, .pill-tag-operation
 {
 	border-radius: 8px;
 	font-family: 'Roboto';
@@ -198,6 +251,7 @@
 	color: #575757;
 	text-align: center;
 	margin-top: 1em;
+    margin-bottom: 1em;
 	/*padding-top: 1em;*/
 }
 
@@ -357,4 +411,34 @@
     /*width : auto;*/
     /*word-spacing : normal;*/
 /*    z-index : auto;*/
+}
+
+
+.elixir_badge{
+    margin-right: 1em;
+}
+
+
+
+.search-results-container {
+    margin: auto;
+}
+
+@media (min-width: 100px) {
+    .search-results-container {
+        width: 95%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .search-results-container {
+        width: 90%;
+    }
+}
+
+
+
+.autocomplete-container > ul{
+    max-height: 250px;
+    overflow-y: auto;
 }

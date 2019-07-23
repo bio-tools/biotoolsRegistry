@@ -1,10 +1,25 @@
 <!-- Name -->
 <h2>
 	{{ ::software.name }}
+	<span tooltips tooltip-content="Unique tool ID" class="biotools-curie">(biotools:{{software.biotoolsID}})</span>
 	<span><a class="pill-tag-verified" tooltips tooltip-content="This tool ID has been verified by a curator." ng-if="software.validated" href="https://biotools.readthedocs.io/en/latest/what_is_biotools.html#bio-tools-tool-identifiers" target="_blank"><i class="fa fa-thumbs-up"></i> ID Verified</a></span>
 	<span data-badge-type='donut' class='altmetric-embed pull-right' data-badge-popover='left' data-hide-no-mentions="true" data-doi='{{ altMetricsScorePublication().doi }}' data-pmid='{{ altMetricsScorePublication().pmid }}'></span>
-	<div data-id="{{ software.biotoolsID | lowercase }}" data-widget-type="widget" data-widget-subtypes="widget" data-widget-tooltip-position="left" data-widget-size="64" class="opeb pull-right" style="width: 64px; height: 64px; margin-right: 10px;"></div>
+
+	<!--<div data-id="{{ software.biotoolsID | lowercase }}" data-widget-type="widget" data-widget-subtypes="widget" data-widget-tooltip-position="left" data-widget-size="64" class="opeb pull-right" style="width: 64px; height: 64px; margin-right: 10px;"></div>-->
+
+	<span data-style="small_circle" class="__dimensions_badge_embed__ pull-right" data-doi="{{ altMetricsScorePublication().doi }}" data-pmid="{{ altMetricsScorePublication().pmid }}" style="margin-right: 16px;"></span>
+
+	<div  data-widget-tooltip-position="left" data-widget-size="64" class="opeb pull-right" style=" margin-right: 10px;">
+		<a href="" ng-href="https://openebench.bsc.es/html/tool/{{ software.biotoolsID | lowercase }}" target="_blank"><img src="img/opeb_logo.gif" width="88" title="Monitoring and benchmarking information" alt="OpenEBench"></a>
+	</div>
+
 </h2>
+<!-- Homepage -->
+	<p style="margin-top: -0.5em;" ng-show="software.homepage" class="pill-text">
+		<a href="{{ ::software.homepage }}" target="_blank" style="font-size: 1.2em;">{{ ::software.homepage }}</a>
+		<span class="pill-tag-error-small" ng-if="software.homepage_status == 1"><i class="fa fa-chain-broken" aria-hidden="true"></i> Temporarily unavailable</span>
+		<span class="pill-tag-error-small" ng-if="software.homepage_status == 2"><i class="fa fa-chain-broken" aria-hidden="true"></i> Permanently unavailable</span>
+	</p>
 <!-- Version list -->
 <div ng-if="software.version.length > 0" >
 	<span class="tool-page-version-text">Available versions</span>
@@ -16,8 +31,8 @@
 </div>
 <!-- Topic list -->
 <div style="display: flex; flex-wrap: wrap;">
-	<span ng-repeat="topic in software.topic">
-		<a ng-if="topic.term != 'N/A'" class="pill-tag-orange-background" href="" ng-click="topicNameClicked(topic)" target="_blank">{{ ::topic.term }} ›</a>
+	<span ng-repeat="topic in software.topic" tooltips tooltip-content="Topic in the Life Sciences : click to find more tools with this topic.">
+		<a ng-if="topic.term != 'N/A'" class="pill-tag-topic" href="" ng-click="topicNameClicked(topic)" target="_blank">{{ ::topic.term }} ›</a>
 		<a ng-if="topic.term == 'N/A'" class="pill-tag-orange-background" href="{{ ::topic.uri }}" target="_blank">{{ ::software.name }} ›</a>
 	</span>
 </div>
@@ -57,11 +72,5 @@
 <div class="pill-spacing">
 	<!-- Description -->
 	<p ng-show="software.description" class="pill-text">{{ ::software.description }}</p>
-	<!-- Homepage -->
-	<p style="margin-top: -0.5em;" ng-show="software.homepage" class="pill-text">
-		<a href="{{ ::software.homepage }}" target="_blank">{{ ::software.homepage }}</a>
-		<span class="pill-tag-error-small" ng-if="software.homepage_status == 1"><i class="fa fa-chain-broken" aria-hidden="true"></i> Temporarily unavailable</span>
-		<span class="pill-tag-error-small" ng-if="software.homepage_status == 2"><i class="fa fa-chain-broken" aria-hidden="true"></i> Permanently unavailable</span>
-	</p>
 </div>
 <br>

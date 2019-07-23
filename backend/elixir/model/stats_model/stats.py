@@ -1,6 +1,7 @@
 from django.db import models
 from elixir.model.resource_model.resource import * 
 from jsonfield import JSONField
+from django.utils import timezone
 
 # table to keep historic stats data
 class StatsData(models.Model):

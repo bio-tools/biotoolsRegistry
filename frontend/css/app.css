@@ -40,7 +40,7 @@ body {
 		#wrap > .container-fluid {
 			padding-top: 60px;
 		}
-		.container-fluid .credit {
+	 .credit {
 			margin: 20px 0;
 		}
 		code {
@@ -441,6 +441,10 @@ tags-input .autocomplete .filter-list {
 	list-style-type: none;
 }
 
+.filter-item{
+	font-size: 14px;
+}
+
 tags-input .autocomplete .filter-list .filter-item {
 	margin: 2px;
 	padding: 0 5px;
@@ -482,7 +486,7 @@ tags-input .autocomplete .filter-list > .selected {
 }
 @media (min-width: 1200px) {
 	.container {
-		width: 1170px;
+		width: 90%;
 	}
 }
 

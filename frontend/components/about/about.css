@@ -73,3 +73,19 @@
 	font-size: 14px;
 	font-weight: 100;
 }
+
+
+
+/* New changes to about page */
+div .about-container{
+	background-color: #FFF !important;
+
+}
+.about-container h2{
+	margin-bottom: 60px;
+}
+
+.about-section{
+	margin-bottom: 45px;
+	margin-top: 45px;
+}

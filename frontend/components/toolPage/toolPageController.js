@@ -7,33 +7,42 @@ angular.module('elixir_front')
 
 	$scope.User = User;
 
+	function quoteQueryStringValue(v){
+		return '"' + v + '"'
+	}
+
+	function stripEdam(t){
+		return t.replace("http://edamontology.org/", "");
+	}
 	// go to 404 in special case when URL is /tool/
 	if ($stateParams.id.length == 0) {
 		$state.go('404');
 	}
 	
 	$scope.topicNameClicked = function(topic) {
-		$state.go('search', {'topic': topic.term});
+		$state.go('search', {'topicID': quoteQueryStringValue(stripEdam(topic.uri))});
 	}
 
 	$scope.functionNameClicked = function(functionName) {
-		$state.go('search', {'operation': functionName.term});
+		$state.go('search', {'operationID': quoteQueryStringValue(stripEdam(functionName.uri))});
 	}
 
 	$scope.inputNameClicked = function(inputName) {
-		$state.go('search', {'input': inputName.data.term});
+		//$state.go('search', {'inputDataType': inputName.data.term});
+		$state.go('search', {'inputDataTypeID': quoteQueryStringValue(stripEdam(inputName.data.uri)) });
 	}
 
 	$scope.inputFormatNameClicked = function(formatName) {
-		$state.go('search', {'input': formatName.term});
+		//$state.go('search', {'inputDataFormat': formatName.term});
+		$state.go('search', {'inputDataFormatID': quoteQueryStringValue(stripEdam(formatName.uri)) });
 	}
 
 	$scope.outputFormatNameClicked = function(formatName) {
-		$state.go('search', {'output': formatName.term});
+		$state.go('search', {'outputDataFormatID': quoteQueryStringValue(stripEdam(formatName.uri))});
 	}
 
 	$scope.outputNameClicked = function(outputName) {
-		$state.go('search', {'output': outputName.data.term});
+		$state.go('search', {'outputDataTypeID': quoteQueryStringValue(stripEdam(outputName.data.uri))});
 	}
 
 	$scope.toolsNameClicked = function(functionName) {
@@ -85,6 +94,15 @@ angular.module('elixir_front')
 		document.body.appendChild(script);
 	}
 
+	var initDimensionsAI = function() {
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = "https://badge.dimensions.ai/badge.js";
+		document.body.appendChild(script);
+	}
+
+
+
 	$scope.altMetricsScorePublication = function() {
 		var publication = ""
 		for (var index in $scope.software.publication) {
@@ -119,9 +137,15 @@ angular.module('elixir_front')
 	$scope.software = Tool.get($stateParams, function(response) {
 		// success handler
 		initAltmetricsScore();
+		//initDimensionsAI();
+		//window.__dimensions_embed.addBadges();
+		//window.__dimensions_embed.addBadges();
 		cleanNulls($scope.software);
-		$scope.setMetadataForSoftware($scope.software)
-		$timeout(function(){ window.OpEB_widgets.OpEB.apply(); }, 100);
+		$scope.setMetadataForSoftware($scope.software);
+		//$timeout(function(){ window.OpEB_widgets.OpEB.apply(); }, 100);*/
+
+		$timeout(function(){ window.__dimensions_embed.addBadges(); }, 100);
+		/*$timeout(function(){ window.OpEB_widgets.OpEB.apply(); }, 100);*/
 	}, function(response) {
 		// error handler
 		if (response.status == 404) {
@@ -150,7 +174,39 @@ angular.module('elixir_front')
 .directive("publicationDetailCallout", function(){
 	return {
 		restrict: 'A',
-		templateUrl: 'components/toolPage/partials/publicationDetailCallout.html'
+		transclude: true,
+		templateUrl: 'components/toolPage/partials/publicationDetailCallout.html',
+		controller: ['$scope', function($scope) {
+			$scope.status = "... More";
+			$scope.expandable_status = "expandable-summary";
+
+			var initDimensionsAI = function() {
+				var script = document.createElement('script');
+				script.type = 'text/javascript';
+				script.src = "https://badge.dimensions.ai/badge.js";
+				document.body.appendChild(script);
+			}
+
+			//initDimensionsAI();
+			$scope.toggleStatus = function(){
+				if ($scope.status == "... More"){
+					$scope.status = "Less";
+					$scope.expandable_status = "";
+				}else{
+					$scope.status = "... More";
+					$scope.expandable_status = "expandable-summary";
+				}
+			}
+
+			$scope.getDoi = function(){
+				return $scope.publication.doi;
+			}
+		}],
+		link: function($scope, element, attrs) {
+				
+				//window.__dimensions_embed.addBadges();
+
+		}
 	};
 })
 .directive("toolPageLinkCallout", function(){
@@ -160,7 +216,7 @@ angular.module('elixir_front')
 		template: function(elem, attr){
 			return '<div class="bs-callout-sm bs-callout-primary" style="border-left-color: ' + attr.color + ';">' +
 			'<div class="tool-page-callout-header" style="color: black;">' + 
-			'<a href="' + attr.url + '" tooltips tooltip-side="top" tooltip-content="' + attr.url + '">' + attr.name + ' › </a>' +
+			'<a target="_blank" href="' + attr.url + '" tooltips tooltip-side="top" tooltip-content="' + attr.url + '">' + attr.name + ' › </a>' +
 			'<i ng-show="' +  attr.toshow  + '" class="fa fa-question-circle" aria-hidden="true" style="font-size: 100%; margin-left: 0.5em; color: ' + attr.color + ';" tooltips tooltip-side="top" tooltip-content="' + attr.comment + '"></i>' +
 			'</div>' + 
 			'</div>';
@@ -171,19 +227,14 @@ angular.module('elixir_front')
 .directive("toolPagePublicationCallout", function(){
 	return {
 		restrict: 'A',
-		transclude: true,
-		template: function(elem, attr){
-			var callout = '<div class="bs-callout-sm bs-callout-primary" style="border-left-color: ' + attr.color + '">';
-			callout += '<span ng-show="' + attr.name + '" class="tool-page-callout-header" style="color: black;">{{::' + attr.name + '}}<br>';
-			callout += '</span>';
-			callout += '<span ng-show="' + attr.pmcid + '"><a href="http://www.ncbi.nlm.nih.gov/pmc/{{::' + attr.pmcid + '}}">PMC › </a>';
-			callout += '<span ng-show="' + attr.pmid + ' || ' + attr.doi + ' " style="color: #CCCCCC;"> | </span></span>';
-			callout += '<span ng-show="' + attr.pmid + '"><a href="http://www.ncbi.nlm.nih.gov/pubmed/{{::' + attr.pmid + '}}">PUBMED › </a><span class="pull-right">Cited by <a href=" http://europepmc.org/search?query=CITES%3A{{::' + attr.pmid + '}}_MED" class="fa fa-external-link" style="padding-top: 3px; text-color=' + attr.color + ';" aria-hidden="true"></a></span></span>';
-			callout += '<span ng-show="(' + attr.pmid + ' || ' + attr.pmcid + ') && ' + attr.doi + '" style="color: #CCCCCC;"> | </span></span>';
-			callout += '<span ng-show="' + attr.doi + '"><a href="https://dx.doi.org/{{::' + attr.doi + '}}">DOI › </a></span>';
-			callout += '</div>';
-			return callout;
+		scope:{
+				'pmcid': '=?',
+				'doi':'=?',
+				'pmid':'=?',
+				'name':'=?',
+				'color':'@?'
 		},
+		templateUrl: 'components/toolPage/partials/toolPagePublicationCalloutHTML.html',
 		replace: true
 	};
 })
@@ -224,11 +275,9 @@ angular.module('elixir_front')
 			callout += '<span ng-show="' + attr.email + ' || ' + attr.url + ' || ' + attr.orcidid + ' || ' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';
 			callout += '<span ng-show="' + attr.email + '"><i class="fa fa-envelope-o" aria-hidden="true"></i> {{' + attr.email +'.replace(\'@\', \' at \') }}';
 			callout += '<span ng-show="' + attr.url + ' || ' + attr.orcidid + ' || ' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';
-			callout += '<span ng-show="' + attr.url + '"><a href="{{' + attr.url + '}}">Link › </a>';
+			callout += '<span ng-show="' + attr.url + '"><a href="{{' + attr.url + '}}" target="_blank">Link › </a>';
 			callout += '<span ng-show="' + attr.orcidid + ' || ' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';
-			callout += '<span ng-show="' + attr.orcidid + '">ORCID {{' + attr.orcidid + '}}';
-			callout += '<span ng-show="' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';
-			callout += '<span ng-show="' + attr.gridid + '">GRIDID {{' + attr.gridid + '}}';
+			callout += '<span ng-show="' + attr.orcidid + '"><a href="{{' + attr.orcidid + '}}" target="_blank">ORCID ›</a></span>';
 			callout += '</div>';
 			callout += '</div>';
 			return callout;

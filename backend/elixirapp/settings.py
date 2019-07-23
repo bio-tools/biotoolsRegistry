@@ -34,7 +34,7 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'supersecret'
+SECRET_KEY = '$a$$kkc_q040nqu&c9k=zshyc+x)%3-k3g7^ik8g$+lgx9#6!w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -114,17 +114,30 @@ SITE_ID = 1
 
 DATABASES = {
        'default':{
-              'ENGINE':'django.db.backends.sqlite3',
-              'NAME':'/Users/hans/elixir.db'
+              'ENGINE':'django.db.backends.mysql',
+              'NAME':'elixir',
+              'USER':'elixir',
+              'PASSWORD':'123',
+              'HOST':'127.0.0.1',
+              'PORT':'',
+              'TEST': {
+                'CHARSET': 'utf8'
+              }
        }
 }
 
 # Mail settings
-EMAIL_HOST = ''
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'dtu.elixir.jira@gmail.com'
+# EMAIL_HOST_PASSWORD = 'dolt-stein-homely'
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = 'no-reply@bio.tools'
+EMAIL_HOST = 'smtp.zoho.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = ''
-DEFAULT_FROM_EMAIL = ''
+EMAIL_HOST_USER = 'support@bio.tools'
+DEFAULT_FROM_EMAIL = 'support@bio.tools'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -164,7 +177,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-         #'rest_framework.renderers.AdminRenderer',
+        # 'rest_framework.renderers.AdminRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework_xml.renderers.XMLRenderer',
         'rest_framework_yaml.renderers.YAMLRenderer',

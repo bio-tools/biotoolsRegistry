@@ -1,4 +1,4 @@
-angular.module('elixir_front')
+	angular.module('elixir_front')
 .directive('searchBar', ['Query', 'ToolList', 'Highlighting', 'Attribute', '$state', '$stateParams', '$timeout', 'UsedTerms', '$q', 'filterFilter', 'Domain', '$rootScope', function(Query, ToolList, Highlighting, Attribute, $state, $stateParams, $timeout, UsedTerms, $q, filterFilter, Domain, $rootScope) {
 	return {
 		restrict: 'A',
@@ -39,8 +39,9 @@ angular.module('elixir_front')
 
 
 			$rootScope.$on('$stateChangeSuccess', function(event, toState, toStateParams, fromState, fromStateParams) {
-				if (toState.name === 'tool' || toState.name === 'home') { 
+				if (toState.name !== 'search') { 
 					Query.current = [];
+					ToolList.refresh();
 				}
 				else if (toState.name === 'search') {
 					updateQuery();
@@ -80,14 +81,19 @@ angular.module('elixir_front')
 				params['ord'] = null;
 
 				// create promises for all suggestions
-				scope.usedTerms['name'] = getUsedTerms('name', params);
+				scope.usedTerms['everything'] = getUsedTerms('all', params);
 				scope.usedTerms['topic'] = getUsedTerms('topic', params);
-				scope.usedTerms['function'] = getUsedTerms('operation', params);
+				scope.usedTerms['operation'] = getUsedTerms('operation', params);
 				scope.usedTerms['input'] = getUsedTerms('input', params);
 				scope.usedTerms['output'] = getUsedTerms('output', params);
+				scope.usedTerms['toolType'] = getUsedTerms('toolType', params);
+				scope.usedTerms['language'] = getUsedTerms('language', params);
+				scope.usedTerms['accessibility'] = getUsedTerms('accessibility', params);
+				scope.usedTerms['cost'] = getUsedTerms('cost', params);
+				scope.usedTerms['license'] = getUsedTerms('license', params);
 				scope.usedTerms['credit'] = getUsedTerms('credit', params);
 				scope.usedTerms['collectionID'] = getUsedTerms('collectionID', params);
-				scope.usedTerms['everything'] = getUsedTerms('all', params);
+				scope.usedTerms['name'] = getUsedTerms('name', params);  
 			}
 
 			// custom object necessary for ngTagsInput
@@ -97,13 +103,18 @@ angular.module('elixir_front')
 			// list of filters to display
 			scope.filter.list = [
 			"everything",
-			"name",
 			"topic",
-			"function",
+			"operation",
 			"input",
 			"output",
+			"toolType",
+			"language",
+			"accessibility",
+			"cost",
+			"license",
 			"credit",
-			"collectionID"
+			"collectionID",
+			"name"	
 			];
 
 			// get initial suggestions
@@ -111,7 +122,7 @@ angular.module('elixir_front')
 
 			// when tag is added save the filter and reset it to 'everything'
 			scope.tagAdded = function(tag) {
-				tag['text'] = scope.normalizeTag(tag)
+				tag['text'] = scope.normalizeTag(tag);
 				tag['filter'] = scope.filter.selected;
 				scope.filter.selected = 'everything';
 			}

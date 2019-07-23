@@ -85,7 +85,7 @@
 														order-by="orderby"
 														reverse-order="false"
 														options="treeOptions"
-														on-selection="input.data.term = node.text; resetError('input', registrationErrorPayload.function[functionIndex], inputIndex)"
+														on-selection="input.data.term = node.text;input.data.uri = node.data.uri; resetError('input', registrationErrorPayload.function[functionIndex], inputIndex)"
 														selected-node="meta.function[functionIndex].input[inputIndex].data.selected"
 														filter-expression="meta.function[functionIndex].input[inputIndex].data.predicate">{{node.text}}</div>
 													</div>
@@ -171,7 +171,7 @@
 														order-by="orderby"
 														reverse-order="false"
 														options="treeOptions"
-														on-selection="output.data.term = node.text; resetError('output', registrationErrorPayload.function[functionIndex], outputIndex)"
+														on-selection="output.data.term = node.text; output.data.uri=node.data.uri; resetError('output', registrationErrorPayload.function[functionIndex], outputIndex)"
 														selected-node="meta.function[functionIndex].output[outputIndex].data.selected"
 														filter-expression="meta.function[functionIndex].output[outputIndex].data.predicate">{{node.text}}</div>
 													</div>

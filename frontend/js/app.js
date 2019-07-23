@@ -1,6 +1,6 @@
 'use strict';
 
-var elixir_front = angular.module('elixir_front',[
+var elixir_front = angular.module('elixir_front', [
 	'elixir_front.filters',
 	'elixir_front.services',
 	'elixir_front.directives',
@@ -31,7 +31,7 @@ var elixir_front = angular.module('elixir_front',[
 // setting up router and states
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 	// default state
-	$urlRouterProvider.when('', '/search');
+	$urlRouterProvider.when('', '/');
 	// for any unmatched url, send to 404
 	$urlRouterProvider.otherwise('/404');
 	$stateProvider
@@ -47,8 +47,8 @@ var elixir_front = angular.module('elixir_front',[
 		resolve: {}
 	})
 	.state('home', {
-		url: "/search",
-		templateUrl: "partials/search_results.html",
+		url: "/",
+		templateUrl: "components/home/home.html",
 		data: {
 			meta: {
 				'title': 'bio.tools · Bioinformatics Tools and Services Discovery Portal',
@@ -60,7 +60,7 @@ var elixir_front = angular.module('elixir_front',[
 			},
 			roles: []
 		},
-		controller: "SearchResultController"
+		resolve: {}
 	})
 	.state('about', {
 		url: "/about",
@@ -96,7 +96,7 @@ var elixir_front = angular.module('elixir_front',[
 		resolve: {}
 	})
 	.state('search', {
-		url: "/?page&q&biotoolsID&name&topic&function&operation&input&inputDataFormat&inputDataType&output&outputDataFormat&outputDataType&homepage&description&version&accessibility&toolType&collectionID&contact&elixirInfo&maturity&operatingSystem&language&cost&license&documentation&link&download&publication&credit&owner&sort&ord&domain",
+		url: "/t?page&q&biotoolsID&name&topic&function&operation&input&inputDataFormat&inputDataType&output&outputDataFormat&outputDataType&homepage&description&version&accessibility&toolType&collectionID&contact&elixirInfo&maturity&operatingSystem&language&cost&license&documentation&link&download&publication&credit&owner&sort&ord&domain&topicID&operationID&dataType&dataTypeID&dataFormat&dataFormatID&inputID&inputDataTypeID&inputDataFormatID&outputID&outputDataTypeID&outputDataFormatID&creditName&creditTypeRole&creditTypeEntity&creditOrcidID&publicationID&publicationType&publicationVersion&linkType&documentationType&downloadType&downloadVersion&otherID&otherIDType&otherIDVersion&otherIDValue",
 		templateUrl: "partials/search_results.html",
 		data: {
 			meta: {
@@ -267,7 +267,7 @@ var elixir_front = angular.module('elixir_front',[
 		controller: "ProfileController"
 	})
 	.state('subdomain', {
-		url: "/?:domain"
+		url: "/t?:domain"
 	})
 	.state('requests', {
 		url: "/requests",
@@ -464,7 +464,7 @@ var elixir_front = angular.module('elixir_front',[
 	// what happens on User logout
 	var logOutCallback = function() {
 		wrongAuthCallback();
-		$state.go('search');
+		$state.go('home');
 	}
 
 	// get initial authentication status

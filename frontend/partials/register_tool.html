@@ -173,7 +173,7 @@
 																						tree-model="EDAM_data"
 																						order-by="text"
 																						options="treeOptions"
-																						on-selection="input.dataType.term = node.text"
+																						on-selection="input.dataType.term = node.text;input.dataType.uri = node.data.uri"
 																						selected-node="meta.function[functionIndex].input[inputIndex].dataType.selected"
 																						filter-expression="meta.function[functionIndex].input[inputIndex].dataType.predicate">{{node.text}}</div>
 																				</div>
@@ -254,7 +254,7 @@
 																						tree-model="EDAM_data"
 																						order-by="text"
 																						options="treeOptions"
-																						on-selection="output.dataType.term = node.text"
+																						on-selection="output.dataType.term = node.text;output.dataType.uri = node.data.uri"
 																						selected-node="meta.function[functionIndex].output[outputIndex].dataType.selected"
 																						filter-expression="meta.function[functionIndex].output[outputIndex].dataType.predicate">{{node.text}}</div>
 																				</div>

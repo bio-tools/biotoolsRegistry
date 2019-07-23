@@ -15,7 +15,7 @@ from elixir.serialization.resource_serialization.v2.link import *
 from elixir.serialization.resource_serialization.v2.download import *
 from elixir.serialization.resource_serialization.v2.documentation import *
 from elixir.serialization.resource_serialization.collection import *
-from elixir.serialization.resource_serialization.contact import *
+from elixir.serialization.resource_serialization.v2.contact import *
 from elixir.serialization.resource_serialization.v2.edam import *
 from elixir.issues import EDAMTopicIssue, EDAMOperationIssue, EDAMDataIssue, EDAMFormatIssue, NoLicenseIssue, NoContactIssue, NoTOSIssue
 from random import randint
@@ -74,7 +74,7 @@ class LegacyResourceSerializer(serializers.ModelSerializer):
 
 	# uses = UsesSerializer(many=True, required=False, allow_empty=False)
 	collectionID = CollectionIDSerializer(many=True, required=False, allow_empty=False)
-	# contact = ContactSerializer(many=True, required=False, allow_empty=False)
+	contact = ContactSerializer(many=True, required=False, allow_empty=False)
 	editPermission = EditPermissionSerializer(many=False, required=False)
 
 	class Meta:
@@ -105,8 +105,8 @@ class LegacyResourceSerializer(serializers.ModelSerializer):
 			'documentation',
 			'publication',
 			'collectionID',
-			#'contact',
-			'otherID',
+			'contact',
+			#'otherID',
 			'owner',
 			'editPermission',
 			'validated',

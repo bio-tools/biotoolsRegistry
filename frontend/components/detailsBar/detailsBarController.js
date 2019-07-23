@@ -8,7 +8,7 @@ angular.module('elixir_front')
 			scope.$watch(function(){
 				return scope.toState.name
 			}, function(newVal, oldVal){
-    			scope.showToolbar = (scope.toState.name == "search" || scope.toState.name == "home");
+    			scope.showToolbar = (scope.toState.name == "search");
 			}) 
 		}
 	}

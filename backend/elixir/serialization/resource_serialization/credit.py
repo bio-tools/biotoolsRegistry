@@ -77,7 +77,7 @@ class CreditSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Credit
-		fields = ('name', 'url', 'email', 'orcidid', 'typeEntity', 'typeRole', 'note')
+		fields = ('name', 'email', 'url', 'orcidid', 'typeEntity', 'typeRole', 'note')
 
 	def validate_typeEntity(self, attrs):
 		enum = ENUMValidator([u'Person', u'Project', u'Division', u'Institute', u'Consortium', u'Funding agency'])
@@ -86,7 +86,7 @@ class CreditSerializer(serializers.ModelSerializer):
 
 
 	def validate_orcidid(self, attrs):
-		p = re.compile('^https?://orcid.org/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$', re.IGNORECASE | re.UNICODE)
+		p = re.compile('^https?://orcid.org/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$', re.IGNORECASE | re.UNICODE)
 		if not p.search(attrs):
 			raise serializers.ValidationError('This field can only contain an Orcid ID')
 		return attrs
