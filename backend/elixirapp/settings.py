@@ -114,15 +114,8 @@ SITE_ID = 1
 
 DATABASES = {
        'default':{
-              'ENGINE':'django.db.backends.mysql',
-              'NAME':'elixir',
-              'USER':'elixir',
-              'PASSWORD':'super secret password here',
-              'HOST':'127.0.0.1',
-              'PORT':'',
-              'TEST': {
-                'CHARSET': 'utf8'
-              }
+              'ENGINE':'django.db.backends.sqlite3',
+              'NAME':'/Users/hans/elixir.db'
        }
 }
 
@@ -171,7 +164,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-        # 'rest_framework.renderers.AdminRenderer',
+         #'rest_framework.renderers.AdminRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework_xml.renderers.XMLRenderer',
         'rest_framework_yaml.renderers.YAMLRenderer',

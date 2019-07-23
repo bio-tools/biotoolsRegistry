@@ -204,7 +204,7 @@ class Command(BaseCommand):
 
 	def handle(self, *args, **options):
 		version = ''
-		path_edam_data = '/elixir/application/backend/data/edam'
+		path_edam_data = '/Users/hans/Documents/WORK/bio.tools/github_setup/backend/data/edam'
 		with open(path_edam_data + '/current_version.txt') as f:
 			version = f.read().strip('\n')
 		path_edam_json = path_edam_data + '/json'

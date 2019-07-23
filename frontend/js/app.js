@@ -1,6 +1,6 @@
 'use strict';
 
-var elixir_front = angular.module('elixir_front', [
+var elixir_front = angular.module('elixir_front',[
 	'elixir_front.filters',
 	'elixir_front.services',
 	'elixir_front.directives',
