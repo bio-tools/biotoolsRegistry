@@ -971,7 +971,7 @@ angular.module('elixir_front.controllers', [])
 		{value: "hasNewVersion", text: "hasNewVersion"},
 		{value: "uses", text: "uses"},
 		{value: "usedBy", text: "usedBy"},
-		{value: "include", text: "include"},
+		{value: "includes", text: "includes"},
 		{value: "includedIn", text: "includedIn"}
 
 	]

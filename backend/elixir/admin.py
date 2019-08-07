@@ -14,13 +14,14 @@
 # from super_inlines.admin import SuperInlineModelAdmin, SuperModelAdmin
 # from django.db.models import Q
 # from pprint import pprint
+# from django.conf import settings
 # from django.core import urlresolvers
 # from django.forms import TextInput, Textarea
 # from models import Workflow, WorkflowAnnotation
 
 
 # # Elastic connection
-# es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+# es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 
 # admin.site.register(Workflow)
 # admin.site.register(WorkflowAnnotation)

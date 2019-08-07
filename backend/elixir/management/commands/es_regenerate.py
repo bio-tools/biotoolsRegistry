@@ -1,3 +1,4 @@
+from django.conf import settings as app_settings
 from django.core.management.base import BaseCommand, CommandError
 from elasticsearch import Elasticsearch
 from elixir.models import *
@@ -19,7 +20,7 @@ class Command(BaseCommand):
 
 	def handle(self, *args, **options):
 		self.stdout.write('Regenerating the ES')
-		es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+		es = Elasticsearch(app_settings.ELASTIC_SEARCH_URLS)
 		resourceList = Resource.objects.filter(visibility=1)
 		self.stdout.write('--------------------\nid\t:\tname\n--------------------')
 		# if sending with curl you need to wrap the object below -> {"mappings": object}

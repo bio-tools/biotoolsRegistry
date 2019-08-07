@@ -1,5 +1,0 @@
-# robots.txt for http://bio.tools/, http://dev.bio.tools/ and https://dev.bio.tools
-
-User-agent: *
-Disallow: /
-Noindex: /

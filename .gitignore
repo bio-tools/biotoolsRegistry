@@ -1,3 +1,6 @@
 frontend/bower_components/
 frontend/node_modules/
 *.pyc
+backend/elixirapp/deployment_settings.py
+*.DS_Store
+deployment/

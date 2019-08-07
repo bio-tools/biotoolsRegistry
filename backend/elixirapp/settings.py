@@ -15,14 +15,32 @@ import os
 import datetime
 import djcelery
 
+
+# Prefix for environment variables settings.
+ENV_NAMESPACE = "BIOTOOLS"
+
+
+def getenv(key, default=None, castf=str, ns=ENV_NAMESPACE):
+    """Helper function to retrieve namespaced environment variables."""
+    value = os.environ.get('{ns}_{key}'.format(ns=ns, key=key), None)
+    return castf(value) if value is not None else default
+
+
 # CELERY SETTINGS
-BROKER_URL = 'redis://localhost:6379/0'
+REDIS_HOST = getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = getenv('REDIS_PORT', '6379')
+REDIS_DB = getenv('REDIS_DB', '0')
+BROKER_URL = 'redis://{host}:{port}/{db}'.format(
+    host=REDIS_HOST,
+    port=REDIS_PORT,
+    db=REDIS_DB,
+)
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
-CELERY_ALWAYS_EAGER = True
+CELERY_ALWAYS_EAGER = getenv('CELERY_ALWAYS_EAGER', True, castf=bool)
 
 djcelery.setup_loader()
 
@@ -34,12 +52,26 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '$a$$kkc_q040nqu&c9k=zshyc+x)%3-k3g7^ik8g$+lgx9#6!w'
+# NOTE: This setting is currently overwritten by deployment_settings import
+SECRET_KEY = getenv(
+    'SECRET_KEY',
+    '$a$$kkc_q040nqu&c9k=zshyc+x)%3-k3g7^ik8g$+lgx9#6!w'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# NOTE: This setting is currently overwritten by deployment_settings import
+DEBUG = getenv('DEBUG', True, castf=bool)
 
 ALLOWED_HOSTS = ['*']
+
+# Separator character for setting multiple Elasticsearch RFC-1738 URLs.
+ELASTIC_SEARCH_SEP = ';'
+
+ELASTIC_SEARCH_URLS = getenv(
+    'ELASTIC_SEARCH_URLS',
+    ['http://localhost:9200'],
+    castf=lambda v: v.split(ELASTIC_SEARCH_SEP)
+)
 
 ELASTIC_SEARCH_INDEX = 'elixir'
 ELASTIC_SEARCH_INDEX_V2 = 'elixir_v2'
@@ -97,7 +129,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'elixirapp.wsgi.application'
+WSGI_APPLICATION = getenv('WSGI_APPLICATION', 'elixirapp.wsgi.application')
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -107,7 +139,7 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-SITE_ID = 1
+SITE_ID = getenv('SITE_ID', 1, castf=int)
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -115,50 +147,59 @@ SITE_ID = 1
 DATABASES = {
        'default':{
               'ENGINE':'django.db.backends.mysql',
-              'NAME':'elixir',
-              'USER':'elixir',
-              'PASSWORD':'123',
-              'HOST':'127.0.0.1',
-              'PORT':'',
+              'HOST': getenv('MYSQL_HOST', '127.0.0.1'),
+              'PORT': getenv('MYSQL_PORT', '3306'),
+              'NAME': getenv('MYSQL_DB', 'elixir'),
+              'USER': getenv('MYSQL_USER', 'elixir'),
+              'PASSWORD': getenv('MYSQL_PASSWORD', '123'),
               'TEST': {
                 'CHARSET': 'utf8'
               }
        }
 }
 
-# Mail settings
+# Gmail Mail settings (don't usually work because Gmail requires extra security)
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_PORT = 587
-# EMAIL_HOST_USER = 'dtu.elixir.jira@gmail.com'
-# EMAIL_HOST_PASSWORD = 'dolt-stein-homely'
+# EMAIL_HOST_USER = ''
+# EMAIL_HOST_PASSWORD = ''
 # EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = 'no-reply@bio.tools'
-EMAIL_HOST = 'smtp.zoho.com'
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'support@bio.tools'
-DEFAULT_FROM_EMAIL = 'support@bio.tools'
+# DEFAULT_FROM_EMAIL = 'no-reply@local-bio.tools'
+
+# Zoho Mail works (create an account)
+# EMAIL_HOST = 'smtp.zoho.com'
+# EMAIL_PORT = 465
+# EMAIL_USE_SSL = True
+# EMAIL_HOST_USER =  'zoho_email_here'
+# EMAIL_HOST_PASSWORD = ''
+# DEFAULT_FROM_EMAIL = 'no-reply@local-bio.tools'
+
+EMAIL_HOST = getenv('EMAIL_HOST', 'smtp.zoho.com')
+EMAIL_PORT = getenv('EMAIL_PORT', 465, castf=int)
+EMAIL_USE_SSL = getenv('EMAIL_USE_SSL', True, castf=bool)
+EMAIL_HOST_USER = getenv('EMAIL_HOST_USER', 'support@bio.tools')
+DEFAULT_FROM_EMAIL = getenv('DEFAULT_FROM_EMAIL', 'support@bio.tools')
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = getenv('LANGUAGE_CODE', 'en-us')
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = getenv('TIME_ZONE', 'UTC')
 
-USE_I18N = True
+USE_I18N = getenv('USE_I18N', True, castf=bool)
 
-USE_L10N = True
+USE_L10N = getenv('USE_L10N', True, castf=bool)
 
-USE_TZ = True
+USE_TZ = getenv('USE_TZ', True, castf=bool)
 
 
-STATIC_ROOT = '/elixir/application/frontend/static/'
+STATIC_ROOT = getenv('STATIC_ROOT', '/elixir/application/frontend/static/')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = getenv('STATIC_URL', '/static/')
 
 # Django REST Framework
 
@@ -184,14 +225,16 @@ REST_FRAMEWORK = {
         #'elixir.renderers.XMLSchemaRenderer',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': getenv('PAGE_SIZE', 10, castf=int),
     'NON_FIELD_ERRORS_KEY': 'general_errors'
 }
 
 # JWT Authentication
 
+JWT_EXPIRATION_DELTA_DAYS = getenv('JWT_EXPIRATION_DELTA_DAYS', 1, castf=int)
+
 JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=JWT_EXPIRATION_DELTA_DAYS),
 }
 
 # REST Auth
@@ -206,15 +249,31 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_ADAPTER = 'elixir.adapters.CustomDefaultAccountAdapter'
-URL_FRONT = 'http://localhost:8090/'
-DEPLOYMENT = 'dev'
+ACCOUNT_EMAIL_REQUIRED = getenv('ACCOUNT_EMAIL_REQUIRED', True, castf=bool)
+ACCOUNT_USERNAME_REQUIRED = getenv(
+    'ACCOUNT_USERNAME_REQUIRED',
+    True,
+    castf=bool,
+)
+ACCOUNT_AUTHENTICATION_METHOD = getenv(
+    'ACCOUNT_AUTHENTICATION_METHOD'
+    'username_email'
+)
+ACCOUNT_CONFIRM_EMAIL_ON_GET = getenv(
+    'ACCOUNT_CONFIRM_EMAIL_ON_GET',
+    True,
+    castf=bool,
+)
+# NOTE: This setting is currently overwritten by deployment_settings import
+URL_FRONT = getenv('URL_FRONT', 'http://localhost:8000/')
+# NOTE: This setting is currently overwritten by deployment_settings import
+DEPLOYMENT = getenv('DEPLOYMENT', 'dev')
 
 RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate', 'f', 'function', 'o', 'ontology', 'used-terms', 'stats', 'env', 'sitemap.xml', 'd', 'domain', 'request', 'tool-list', 'w', 'register', 'edit-subdomain', 'subdomain', 'login', 'signup', 'reset-password', 'profile', 'requests', 'workflows', '404', 'documentation', 'about', 'schema', 'governance', 'roadmap', 'events', 'mail', 'faq', 'apidoc', 'changelog', 'helpdesk', 'projects']
 
 # settings specific to deployment
-from deployment_settings import *
+try:
+    from deployment_settings import *
+except ImportError:
+    print ("Could not import deployment settings")

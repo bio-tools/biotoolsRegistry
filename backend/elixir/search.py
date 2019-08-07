@@ -5,7 +5,7 @@ from django.conf import settings
 import elixir.search_settings, re
 import json
 
-es = Elasticsearch([{'host':'localhost','port':9200}])
+es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 
 def _byteify(data, ignore_dicts = False):
 		# if this is a unicode string, return its string representation

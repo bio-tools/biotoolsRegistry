@@ -21,7 +21,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework_yaml.parsers import YAMLParser
 from elixir.parsers import XMLSchemaParser
 
-es = Elasticsearch([{'host':'localhost','port':9200}])
+es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 
 class ResourceList(APIView):
 	"""

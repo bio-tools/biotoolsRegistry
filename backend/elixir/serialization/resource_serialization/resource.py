@@ -170,7 +170,7 @@ class RelationSerializer(serializers.ModelSerializer):
 		return attrs
 
 	def validate_type(self, attrs):
-		enum = ENUMValidator([u'isNewVersionOf', u'hasNewVersion', u'uses', u'usedBy', u'include', u'includedIn'])
+		enum = ENUMValidator([u'isNewVersionOf', u'hasNewVersion', u'uses', u'usedBy', u'includes', u'includedIn'])
 		attrs = enum(attrs)
 		return attrs		
 

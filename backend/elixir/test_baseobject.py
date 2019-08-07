@@ -27,7 +27,7 @@ class BaseTestObject(APITestCase):
 
 		self.client.login(username='test_user', password='test_user_password')
 
-		es = Elasticsearch([{'host':'localhost','port':9200}])
+		es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 		try:
 			resp = es.indices.delete(index=settings.ELASTIC_SEARCH_INDEX)
 		except ESExceptions.TransportError as TE:
@@ -734,7 +734,7 @@ class BaseTestObject(APITestCase):
 		
 
 	def tearDown(self):
-		es = Elasticsearch([{'host':'localhost','port':9200}])
+		es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 		try:
 			resp = es.indices.delete(index='test')
 		except ESExceptions.TransportError as TE:
