@@ -29,7 +29,7 @@ South==1.0.2
 ssh-import-id==3.21
 stevedore==0.15
 tornado==4.1
-urllib3==1.7.1
+urllib3==1.23
 virtualenv-clone==0.2.5
 virtualenv==1.11.6
 virtualenvwrapper==4.3.1
@@ -47,3 +47,5 @@ djangorestframework-yaml==1.0.3
 sqlparse==0.2.3
 supervisor==3.2.0
 redis==2.10.3
+python-dateutil==2.8.0
+dateutils==0.6.6
