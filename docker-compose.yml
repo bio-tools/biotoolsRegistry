@@ -1,0 +1,91 @@
+# docker-compose file to setup:
+# - mysql
+# - elasticsearch
+# - backend: depends on mysql and elasticsearch
+# - frontnend: depends on backend
+
+# This file is meant to aid local development and testing. It *must not* be
+# used for production deployment.
+
+version: "3.5"
+
+services:
+
+  mysql:
+    container_name: biotools-mysql
+    image: mysql:5.5.62
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=elixirroot
+      - MYSQL_DATABASE=elixir
+      - MYSQL_USER=elixir
+      - MYSQL_PASSWORD=123
+    volumes:
+      - "data-mysql:/var/lib/mysql"
+    ports:
+      - "3306:3306"
+    networks:
+      - net
+
+  elasticsearch:
+    container_name: biotools-elasticsearch
+    image: elasticsearch:5.6.16
+    restart: unless-stopped
+    volumes:
+      - "data-elasticsearch:/usr/share/elasticsearch/data"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - net
+      
+  backend:
+    container_name: biotools-backend
+    image: biotools/backend:latest
+    build:
+      context: ./backend
+    environment:
+      - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
+      - BIOTOOLS_MYSQL_DB=elixir
+      - BIOTOOLS_MYSQL_HOST=mysql
+      - BIOTOOLS_MYSQL_PASSWORD=123
+      - BIOTOOLS_MYSQL_USER=elixir
+    ports:
+      - "8000:80"
+    networks:
+      - net
+    depends_on:
+      - mysql
+      - elasticsearch
+    links:
+      - mysql
+      - elasticsearch
+    volumes:
+      - ./backend:/elixir/application/backend:consistent
+      - ./frontend:/elixir/application/frontend
+
+  # dockerfile in frontend dir
+  frontend:
+    container_name: biotools-frontend
+    image: biotools/frontend:latest
+    build:
+      context: ./frontend
+    networks:
+      - net
+    depends_on:
+       - backend
+    volumes:
+      - ./frontend:/home/biotools/frontend:consistent
+      - biotools_node_modules:/home/biotools/frontend/node_modules
+      - biotools_bower_components:/home/biotools/frontend/bower_components
+
+
+networks:
+  net:
+    name: biotools-net
+
+volumes:
+  data-mysql: {}
+  data-elasticsearch: {}
+  biotools_node_modules: {}
+  biotools_bower_components: {}
