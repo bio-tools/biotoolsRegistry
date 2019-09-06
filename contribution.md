@@ -1,81 +1,69 @@
-**CAUTION:: WORK IN PROGRESS - THINGS MAY CHANGE**
+**CAUTION:: WORK IN PROGRESS - THINGS ARE CHANGING**
 
 
 # Code repo / branch structure
-The repo structure follows [branching standards & conventions](https://gist.github.com/digitaljhelms/4287848).  There are two main (permanent) branches ("dev" and "stable"), with other supporting (temporary) branches ("features-<id>", "bugfixes-<id>" and "hotfixes-<id>") each with a specific purpose.  Strict rules mandate which branches may be originating branches and which branches must be merge targets.
+The repo structure is heavily inspired by [branching standards & conventions](https://gist.github.com/digitaljhelms/4287848) and [GitFlow](https://datasift.github.io/gitflow/IntroducingGitFlow.html).  There are two main (permanent) branches ("develop" and "master"), with other supporting (temporary) branches ("features/<id>", "bugfixes/<id>" and "hotfixes/<id>") each with a specific purpose. Strict rules mandate which branches may be originating branches and which branches must be merge targets.
 
 
 Instance     | Branch         | Comment
 -----------  | ------         | -------
-"stable"     | stable         | Accepts merges from "dev" and "hotfixes"
-"dev"        | master         | Accepts merges from "features", "bugfixes" and "hotfixes"
-"features"   | feature-\<id\> | Always branch off HEAD of "dev"
-"bugfixes"   | bugfix-\<id\>  | Always branch off HEAD of "dev"
-"hotfixes"   | hotfix-\<id\>  | Always branch off "stable"
+"master"     | master         | Accepts merges from "develop" and "hotfixes"
+"development"        | develop         | Accepts merges from "features", "bugfixes" and "hotfixes"
+"features"   | feature/\<id\> | Always branch off HEAD of "develop"
+"bugfixes"   | bugfix/\<id\>  | Always branch off HEAD of "develop"
+"hotfixes"   | hotfix/\<id\>  | Always branch off "master"
 
 
-- **"dev" branch** (`origin/master`) (code deployed on https://dev.bio.tools) 
+- **"development" branch** (`origin/develop`) (code deployed on https://dev.bio.tools) 
   - the default / base branch of the repo, against which all pull requests and code pushes are automatically made
   - holds changes for the next release
   - developers will branch from / merge to it
   - accepts pull requests (see [Community Development Guidelines](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-development-guidelines))
 
-- **"stable"** branch (`origin/stable`) (code deployed on https://bio.tools) 
+- **"master"** branch (`origin/master`) (code deployed on https://bio.tools) 
   - latest code deployed to (and allowing bug fixing of) production system
   - not normally interacted with (other than hot fixes)
-  - periodically updated from "dev" branch (see [Release Process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
-- **"feature"** and **"bug"** branches
+  - periodically updated from "develop" branch (see [Release Process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
+- **"feature"**, **"bug"** and **"hotfix"** branches
   - **"feature"** branches are created for significant new features / enhancements (*i.e.* whose development may take longer than a single deployment) 
   - **"bug"** branches are created to address - in the next deployment - bugs found on the live site (a bug branch typically lasts one deployment cycle only)
   - should always be publicly available (development should never exist in just one developer's local branch)
-  - always branch from, and merge back into "dev" branch
-  - feature developer (or bug fixer) must watch the "dev" branch for pushes, ensuring all changes to it are merged into the feature/bug fix before merging back to "dev" (ideally as one goes along, to make conflict resolution easier)
+  - always branch from, and merge back into "develop" branch
+  - feature developer (or bug fixer) must watch the "develop" branch for pushes, ensuring all changes to it are merged into the feature/bug fix before merging back to "develop" (ideally as one goes along, to make conflict resolution easier)
   - branch naming convention, where `<id>` is a GitHub issue number (all features and bugs should be tracked as GitHub issues):
 
-    - `feature-<id>`
-    - `bug-<id>`
+    - `feature/<id>`
+    - `bug/<id>`
 
 - **"hotfix"** branches
   - created when there's a need to immediately fix a problem with the production system (changes can be pushed any time, outside of scheduled deployment)
-  - always branch from "stable" (and tag the branch), and merge back into both "stable" and "dev"
+  - always branch from "master" (and tag the branch), and merge back into both "master" and "develop"
 
-    - development of "dev" can continue while the hotfix is being addressed
+    - development of "develop" can continue while the hotfix is being addressed
     - tagged stable branch still represents what is in production.
     
   - branch naming convention:
 
-    - `hotfix-<id>`
+    - `hotfix/<id>`
 
 # Governance, roles & responsibilities
 The Danish ELIXIR node provides stable funding for bio.tools as part of the ELIXIR-DK Service Delivery Plan.  bio.tools strives to be a "do-ocracy", *i.e.* driven primarily on a day-to-day basis by the people most active in developing the software and content, whilst respecting the executive / decision-making power of ELIXIR-DK management.  We follow a simple governance model:
 
-- **bio.tools core-dev**
-
-  - people with significant capacity (*e.g.* funded) to develop bio.tools 
-  - can push changes to "dev" branch
-
-- **bio.tools dev**
-
-  - people with some capacity develop bio.tools (whether funded or not)
-  - can make pull requests on "dev" and "stable" branches
+- **bio.tools developer**
+  - this could be you :)
 
 - **Release Manager** (currently [Hans Ienasescu](mailto:hans@bio.tools) and [Piotr Chmura](mailto:piotr.chmura@cpr.ku.dk))
 
-  - can push changes to "stable" branch (merging from "dev" or "hotfixes")
+  - can push changes to "master" branch (merging from "develop" or "hotfixes")
   - responsible for:
+    - building the "master" (https://bio.tools) and "develop" (https://dev.bio.tools) deployments, as per the [release process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
 
-    - building the "stable" (https://bio.tools) and "dev" (https://dev.bio.tools) deployments, as per the [release process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
-    - ensuring all changes to "dev" deployment are thoroughly (and independently) tested before being pushed to production
 
 - **Community Leader** (currently [Jon Ison](mailto:jison@bioinformatics.dtu.dk)) responsibilities:
 
-  - ensure significant proposed changes are discussed, seeking consensus amongst core-dev (at least) ahead of implementation
-  - settle with core-dev what features and fixes will go into the next milestone (and when)
-  - settle disputes and decide (in case of disagreements) what is pushed to "stable" branch
-  - announce changes to "dev" deployment, allowing adequate time for testing and evaluation
-  - announce planned and actual changes to "stable" deployment (esp. any potentially breaking changes to API) via all available channels
+  - announce changes to "develop" deployment, support the projects dependant on bio.tools in migrating them to the new version
+  - announce planned and actual changes to "master" deployment (esp. any potentially breaking changes to API) via all available channels
   - maintain the issue tracker, creating, [labelling](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#issue-tracking--labelling) and closing issues as required
-    - manage the "core-dev" and "dev" groups (repo permissions, mailing lists, *etc.*)
   - oversee (and promote where necessary) the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct) 
 
 *All developers* must:
