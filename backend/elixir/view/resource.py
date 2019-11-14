@@ -23,6 +23,13 @@ from elixir.parsers import XMLSchemaParser
 
 es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 
+
+def check_update_confidence_flag(resource_confidence_flag, request_confidence_flag):
+	# cannot change confidence_flag to high, medium, low, very low once it's been set to None or 'tool'
+	if (resource_confidence_flag == 'tool' or resource_confidence_flag == None) and (request_confidence_flag != None and request_confidence_flag != 'tool'):
+		return False			
+	return True
+
 class ResourceList(APIView):
 	"""
 	List all resources, or create a new resource.
@@ -111,6 +118,8 @@ class ResourceList(APIView):
 		serializer = ResourceSerializer(data=request.data, context={'request':request,"request_type":"POST"})
 
 		if serializer.is_valid():
+			if not(request.user.is_superuser) and request.data.get('confidence_flag') and request.data.get('confidence_flag') != 'tool':
+				return Response({"detail": 'Error: Only superusers can add entries with a confidence score other than \'tool\'.'}, status=status.HTTP_403_FORBIDDEN)
 			serializer.save(owner=request.user)
 			issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), request.user)
 
@@ -292,6 +301,9 @@ class ResourceDetail(APIView):
 		serializer = ResourceUpdateSerializer(data=request.data,context={'request':request,"request_type":"PUT"})
 
 		if serializer.is_valid():
+			# only superusers can change confidence_flag from tool to something else
+			if not(request.user.is_superuser) and not(check_update_confidence_flag(resource.confidence_flag, request.data.get('confidence_flag'))):
+				return Response({"detail": 'Error: Cannot change confidence_flag once it has been set to describe a tool.'}, status=status.HTTP_403_FORBIDDEN)
 			# setting the visibility of the current resource to 0
 			resource.visibility = 0
 			resource.save()
@@ -383,6 +395,8 @@ class ResourceCreateValidator(APIView):
 		# with context
 		serializer = ResourceSerializer(data=request.data, context={'request':request,"request_type":"POST"})
 		if serializer.is_valid():
+			if not(request.user.is_superuser) and request.data.get('confidence_flag') and request.data.get('confidence_flag') != 'tool':
+				return Response({"detail": 'Error: Only superusers can add entries with a confidence score other than \'tool\'.'}, status=status.HTTP_403_FORBIDDEN)
 			return Response(serializer.validated_data, status=status.HTTP_200_OK)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -397,7 +411,7 @@ class ResourceUpdateValidator(APIView):
 
 	def get_object(self, biotoolsID):
 		try:
-			obj = Resource.objects.filter(visibility=1).get(biotoolsID__iexact=biotoolsID)
+			obj = Resource.objects.filter(visibility=1).get(biotoolsID=biotoolsID)
 			self.check_object_permissions(self.request, obj)
 			return obj
 		except Resource.DoesNotExist:
@@ -407,6 +421,9 @@ class ResourceUpdateValidator(APIView):
 		resource = self.get_object(biotoolsID)
 		serializer = ResourceUpdateSerializer(data=request.data, context={'request':request,"request_type":"PUT"})
 		if serializer.is_valid():
+			# only superusers can change confidence_flag from tool to something else
+			if not(request.user.is_superuser) and not(check_update_confidence_flag(resource.confidence_flag, request.data.get('confidence_flag'))):
+				return Response({"detail": 'Error: Cannot change confidence_flag once it has been set to describe a tool.'}, status=status.HTTP_403_FORBIDDEN)
 			return Response(serializer.validated_data)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 		

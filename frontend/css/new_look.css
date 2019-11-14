@@ -158,7 +158,6 @@ img.biotools-logo:hover{
 }
 
 .pill-tag-error-small,.pill-tag-verified {
-	background-color: #BA1E4A;
 	color: white;
 	border-radius: 8px;
 	font-family: 'Roboto';
@@ -171,6 +170,11 @@ img.biotools-logo:hover{
 	margin-left: 0.25em;
 	margin-bottom: 0.25em;
 }
+
+.pill-tag-error-small,.pill-tag-verified {
+    background-color: #BA1E4A;
+}
+
 
 .pill-spacing
 {

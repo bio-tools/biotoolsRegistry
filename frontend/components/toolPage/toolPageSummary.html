@@ -1,4 +1,9 @@
 <!-- Name -->
+<div ng-class="confidenceClass()" class="alert" role="alert" ng-if="software.confidence_flag && software.confidence_flag != 'tool'">
+		This entry has been automatically generated from a publication and has been assigned a <b>{{software.confidence_flag}}</b> confidence score of describing a valid <em>bio.tools</em> entry.
+		<br>
+		Users can update and verify the tool publication and mark the entry as a valid tool for <em>bio.tools</em> by changing the confidence score in the 'Labels' tab to <b>tool</b>.
+</div>
 <h2>
 	{{ ::software.name }}
 	<span tooltips tooltip-content="Unique tool ID" class="biotools-curie">(biotools:{{software.biotoolsID}})</span>

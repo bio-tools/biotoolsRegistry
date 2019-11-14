@@ -205,6 +205,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 
 	elixir_badge = serializers.IntegerField(read_only=True)
 	homepage_status = serializers.IntegerField(read_only=True)
+	confidence_flag = serializers.CharField(allow_blank=False, max_length=8, min_length=1, required=False)
 	cost = serializers.CharField(allow_blank=False, max_length=300, min_length=1, required=False)
 	maturity = serializers.CharField(allow_blank=False, max_length=300, min_length=1, required=False)
 	license = serializers.CharField(allow_blank=False, max_length=300, min_length=1, required=False)
@@ -282,7 +283,8 @@ class ResourceSerializer(serializers.ModelSerializer):
 			'editPermission',
 			'validated',
 			'homepage_status',
-			'elixir_badge'
+			'elixir_badge',
+			'confidence_flag'
 		)
 		validators = [
 
@@ -306,6 +308,12 @@ class ResourceSerializer(serializers.ModelSerializer):
 
 	def validate_homepage(self, attrs):
 		attrs = IsURLFTPValidator(attrs)
+		return attrs
+
+
+	def validate_confidence_flag(self, attrs):
+		enum = ENUMValidator([u'tool', u'high',u'medium', u'low', u'very low'])
+		attrs = enum(attrs)
 		return attrs
 
 	def validate_cost(self, attrs):
@@ -563,7 +571,8 @@ class ResourceUpdateSerializer(ResourceSerializer):
 			'editPermission',
 			'validated',
 			'homepage_status',
-			'elixir_badge'
+			'elixir_badge',
+			'confidence_flag'
 		)
 
 

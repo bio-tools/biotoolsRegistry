@@ -699,6 +699,10 @@ angular.module('elixir_front.services', [])
 			description: 'Type of relation between this and another registered software, e.g. "isNewVersionOf"',
 			label: "relationType"
 		},
+		confidence: {
+			description: 'Related to automatically generated entries from publications: describes the confidence score of an entry being a valid bio.tools entry.',
+			label: "Tool confidence"
+		},
 	};
 })
 .factory('CheckUserEditingRights', ['User', function(User) {

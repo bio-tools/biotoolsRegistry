@@ -974,7 +974,16 @@ angular.module('elixir_front.controllers', [])
 		{value: "includes", text: "includes"},
 		{value: "includedIn", text: "includedIn"}
 
-	]
+	];
+
+	$scope.confidenceOptions = [
+		{value: "tool", text: "tool"},
+		{value: "high", text: "high"},
+		{value: "medium", text: "medium"},
+		{value: "low", text: "low"},
+		{value: "very low", text: "very low"},
+	];
+
 
 }])
 .controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator) {

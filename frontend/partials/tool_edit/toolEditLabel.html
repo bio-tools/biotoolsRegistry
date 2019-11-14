@@ -232,6 +232,15 @@
 						</div>
 					</div>
 				</div>
+				<!-- Tool Confidence -->
+				<div class="form-group" ng-class="{'has-error': form.labelForm.confidence.errorMessages[0]};">
+					<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.confidence.description}}">Tool Confidence score <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#confidence"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+					<div class="col-sm-9">
+						<select class="form-control select-btn-group" ng-options="item.value as item.text for item in confidenceOptions" ng-model="software.confidence_flag" name="confidence" validate-edit-resource-field>
+						</select>
+						<label class="help-block" ng-repeat="error in form.labelForm.confidence.errorMessages" bo-text="error"></label>
+					</div>
+				</div>
 				<!-- Other id -->
 				<div class="form-group no-margin-bottom">
 					<form name="form.otherIdForm" class="form-horizontal" novalidate>

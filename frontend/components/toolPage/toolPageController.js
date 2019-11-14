@@ -7,6 +7,18 @@ angular.module('elixir_front')
 
 	$scope.User = User;
 
+	$scope.confidenceClass = function() {
+		if ($scope.software.confidence_flag === 'high'){
+			return 'alert-info'
+		}
+
+		if ($scope.software.confidence_flag === 'medium'){
+			return 'alert-warning'
+		}
+
+		return 'alert-danger';
+	}
+
 	function quoteQueryStringValue(v){
 		return '"' + v + '"'
 	}

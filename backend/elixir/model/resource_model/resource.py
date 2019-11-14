@@ -65,6 +65,7 @@ class Resource(models.Model):
     was_id_validated = models.IntegerField(choices=WAS_ID_VALIDATED_CHOICES, default=0)
     homepage_status = models.IntegerField(choices=HOMEPAGE_STATUS_CHOICES, default=0)
     elixir_badge = models.IntegerField(choices=ELIXIR_BADGE_CHOICES, default=0)
+    confidence_flag = models.TextField(blank=True, null=True)
 
     # things that used to be in separate tables
     cost = models.TextField(blank=True, null=True)
