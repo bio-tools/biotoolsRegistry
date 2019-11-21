@@ -18,7 +18,7 @@ class DocumentationSerializer(serializers.ModelSerializer):
 		fields = ('url', 'type', 'note')
 
 	def validate_type(self, attrs):
-		enum = ENUMValidator([u'API documentation', u'Citation instructions', u'Command-line options', u'General', u'Manual', u'Terms of use', u'Training material', u'Governance', u'Contributions policy', u'Installation instructions', u'Tutorial', u'FAQ', u'Release notes', u'Other'])
+		enum = ENUMValidator([u'API documentation', u'Citation instructions', u'Command-line options', u'General', u'User manual', u'Terms of use', u'Training material', u'Governance', u'Contributions policy', u'Installation instructions', u'Tutorial', u'FAQ', u'Release notes', u'Other'])
 		attrs = enum(attrs)
 		return attrs
 
