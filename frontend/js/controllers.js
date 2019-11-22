@@ -1020,6 +1020,15 @@ angular.module('elixir_front.controllers', [])
 		},100);
 	}
 
+	$scope.naviagateToTool = function(biotoolsID) {
+		$timeout(function() {
+			if (confirm("Make sure you save before navigating away! Are you sure you want to leave? ")) {
+				$state.go('tool', {id: biotoolsID});
+			}
+		},100);
+	}
+
+
 	// when a tool is being updated, display the current URL
 	// $scope.$watch('software', function() {
 	// 	$scope.setURL();
