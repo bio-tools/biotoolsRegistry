@@ -827,6 +827,7 @@ angular.module('elixir_front.controllers', [])
 	];
 
 	$scope.toolTypeOptions = [
+		{value: "Bioinformatics portal", text: "Bioinformatics portal"},
 		{value: "Command-line tool", text: "Command-line tool"},
 		{value: "Database portal", text: "Database portal"},
 		{value: "Desktop application", text: "Desktop application"},
@@ -1019,6 +1020,15 @@ angular.module('elixir_front.controllers', [])
 			}
 		},100);
 	}
+
+	$scope.naviagateToTool = function(biotoolsID) {
+		$timeout(function() {
+			if (confirm("Make sure you save before navigating away! Are you sure you want to leave? ")) {
+				$state.go('tool', {id: biotoolsID});
+			}
+		},100);
+	}
+
 
 	// when a tool is being updated, display the current URL
 	// $scope.$watch('software', function() {

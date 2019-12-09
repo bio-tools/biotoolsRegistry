@@ -20,6 +20,6 @@ class ToolTypeSerializer(serializers.ModelSerializer):
 		# checking if blank
 		IsNotBlankValidator(data)
 		# checking if within enum
-		enum = ENUMValidator([u'Command-line tool', u'Web application', u'Desktop application', u'Script', u'Suite', u'Workbench', u'Database portal', u'Ontology', u'Workflow', u'Plug-in', u'Library', u'Web API', u'Web service', u'SPARQL endpoint'])
+		enum = ENUMValidator([u'Bioinformatics portal',u'Command-line tool', u'Web application', u'Desktop application', u'Script', u'Suite', u'Workbench', u'Database portal', u'Ontology', u'Workflow', u'Plug-in', u'Library', u'Web API', u'Web service', u'SPARQL endpoint'])
 		data = enum(data)
 		return {'name': data}
