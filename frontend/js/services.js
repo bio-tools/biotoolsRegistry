@@ -643,6 +643,10 @@ angular.module('elixir_front.services', [])
 			description: "Version information (typically a version number) of the software applicable to this publication.",
 			label: "publicationVersion"
 		},
+		publicationNote: {
+			description: "Comment about the publication.",
+			label: "publicationNote"
+		},
 		creditName: {
 			description: "Name of the entity that is credited.",
 			label: "creditName"

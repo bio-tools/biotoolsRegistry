@@ -33,6 +33,7 @@ class PublicationSerializer(serializers.ModelSerializer):
 	doi = serializers.CharField(allow_blank=False, validators=[IsDOIValidator], required=False)
 	type = serializers.CharField(allow_blank=True, max_length=300, min_length=1, required=False)
 	version = serializers.CharField(allow_blank=False, max_length=100, min_length=1, required=False)
+	note = serializers.CharField(allow_blank=True, min_length=10, max_length=1000, validators=[IsStringTypeValidator], required=False)
 	metadata = PublicationMetadataSerializer(read_only=True, required=False, many=False)
 
 # TODO: add these to interfaces
@@ -43,7 +44,7 @@ class PublicationSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Publication
-		fields = ('doi', 'pmid', 'pmcid',  'type', 'version', 'metadata')
+		fields = ('doi', 'pmid', 'pmcid',  'type', 'version', 'note', 'metadata')
 
 # TODO: remember to migrate the types, benchmark turns into comparison.
 	def validate_type(self, attrs):

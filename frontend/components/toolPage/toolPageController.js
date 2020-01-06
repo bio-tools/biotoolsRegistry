@@ -244,7 +244,8 @@ angular.module('elixir_front')
 				'doi':'=?',
 				'pmid':'=?',
 				'name':'=?',
-				'color':'@?'
+				'color':'@?',
+				'note':'=?'
 		},
 		templateUrl: 'components/toolPage/partials/toolPagePublicationCalloutHTML.html',
 		replace: true

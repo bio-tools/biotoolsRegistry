@@ -20,6 +20,7 @@ class Publication(models.Model):
     doi = models.TextField(blank=True, null=True)
     type = models.TextField(blank=True, null=True)
     version = models.TextField(blank=True, null=True)
+    note = models.TextField(blank=True, null=True)
     resource = models.ForeignKey(Resource, null=True, blank=True, related_name='publication', on_delete=models.CASCADE)
     metadata = models.OneToOneField(PublicationMetadata, null=True, blank=True, related_name='publication', on_delete=models.CASCADE)
 
