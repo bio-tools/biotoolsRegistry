@@ -886,6 +886,7 @@ angular.module('elixir_front.controllers', [])
 	$scope.documentationTypeOptions = [
 		{value: "API documentation", text: "API documentation"},
 		{value: "Citation instructions", text: "Citation instructions"},
+		{value: "Code of conduct", text: "Code of conduct"},
 		{value: "Command-line options", text: "Command-line options"},
 		{value: "Contributions policy", text: "Contributions policy"},
 		{value: "FAQ", text: "FAQ"},
