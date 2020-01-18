@@ -111,7 +111,7 @@ angular.module('elixir_front.controllers', [])
 	}
 
 	$scope.shouldLicenseBeALink = function(license) {
-  	return !_.includes(['Proprietary', 'Other', 'Unlicensed'], license);
+  	return !_.includes(['Freeware','Proprietary', 'Other', 'Not licensed'], license);
 	}
 
 	$scope.getFlatOperations = function(functions){
@@ -415,6 +415,10 @@ angular.module('elixir_front.controllers', [])
 	];
 
 	$scope.licenseOptions = [
+		{value: "Freeware", text: "Freeware"},
+		{value: "Proprietary", text: "Proprietary"},
+		{value: "Other", text: "Other"},
+		{value: "Not licensed", text: "Not licensed"},
 		{value: "0BSD", text: "0BSD"},
 		{value: "AAL", text: "AAL"},
 		{value: "ADSL", text: "ADSL"},
@@ -740,7 +744,7 @@ angular.module('elixir_front.controllers', [])
 		{value: "Freeware", text: "Freeware"},
 		{value: "Proprietary", text: "Proprietary"},
 		{value: "Other", text: "Other"},
-		{value: "Unlicensed", text: "Unlicensed"}
+		{value: "Not licensed", text: "Not licensed"}
 	]
 
 	$scope.costOptions = [

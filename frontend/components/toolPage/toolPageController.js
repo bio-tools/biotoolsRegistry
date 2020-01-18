@@ -135,7 +135,7 @@ angular.module('elixir_front')
 	}
 
 	$scope.shouldLicenseBeALink = function(license) {
-		return !_.includes(['Proprietary', 'Other', 'Unlicensed'], license);
+		return !_.includes(['Freeware','Proprietary', 'Other','Not licensed'], license);
 	}
 
 	$scope.setMetadataForSoftware = function(software) {
