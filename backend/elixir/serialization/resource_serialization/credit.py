@@ -88,7 +88,7 @@ class CreditSerializer(serializers.ModelSerializer):
 	def validate_orcidid(self, attrs):
 		p = re.compile('^https?://orcid.org/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$', re.IGNORECASE | re.UNICODE)
 		if not p.search(attrs):
-			raise serializers.ValidationError('This field can only contain an Orcid ID')
+			raise serializers.ValidationError('This field can only contain a valid ORCID ID')
 		return attrs
 
 	def validate(self, data):
@@ -100,7 +100,7 @@ class CreditSerializer(serializers.ModelSerializer):
 	def validate_gridid(self, attrs):
 		p = re.compile('^grid.[0-9]{4,}.[a-f0-9]{1,2}$', re.IGNORECASE | re.UNICODE)
 		if not p.search(attrs):
-			raise serializers.ValidationError('This field can only contain a valid Grid ID')
+			raise serializers.ValidationError('This field can only contain a valid GRID ID')
 		return attrs
 
 # TODO: in validate make this either elixirInfo or other info
