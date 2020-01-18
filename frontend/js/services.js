@@ -663,6 +663,10 @@ angular.module('elixir_front.services', [])
 			description: "Unique identifier (ORCID iD) of a person that is credited.",
 			label: "creditOrcidID"
 		},
+		creditGridID: {
+			description: "Unique identifier (GRID ID) of an organisation that is credited.",
+			label: "creditGridID"
+		},
 		creditEntityType: {
 			description: "Type of entity that is credited.",
 			label: "creditEntityType"

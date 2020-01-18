@@ -10,7 +10,7 @@ class Credit(models.Model):
     email = models.TextField(blank=True, null=True)
     url = models.TextField(blank=True, null=True)
     orcidid = models.TextField(blank=True, null=True)
-    #gridid = models.TextField(blank=True, null=True)
+    gridid = models.TextField(blank=True, null=True)
     typeEntity = models.TextField(blank=True, null=True)
     
     #typeRole = models.TextField(blank=True, null=True)

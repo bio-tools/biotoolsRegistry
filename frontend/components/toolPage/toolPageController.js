@@ -291,6 +291,8 @@ angular.module('elixir_front')
 			callout += '<span ng-show="' + attr.url + '"><a href="{{' + attr.url + '}}" target="_blank">Link › </a>';
 			callout += '<span ng-show="' + attr.orcidid + ' || ' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';
 			callout += '<span ng-show="' + attr.orcidid + '"><a href="{{' + attr.orcidid + '}}" target="_blank">ORCID ›</a></span>';
+			callout += '<span ng-show="' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';
+			callout += '<span ng-show="' + attr.gridid + '"><a href="https://www.grid.ac/institutes/{{' + attr.gridid + '}}" target="_blank">gridid ›</a></span>';
 			callout += '</div>';
 			callout += '</div>';
 			return callout;

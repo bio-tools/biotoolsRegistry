@@ -45,6 +45,14 @@
 									<label class="help-block" ng-repeat="error in creditDetailForm.url.errorMessages" bo-text="error"></label>
 								</div>
 							</div>
+							<!-- gridid -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.credit[$index].gridid}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.creditGridID.description}}">gridid <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#grid-id"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+								<div class="col-sm-9">
+									<input ng-model="software.credit[$index].gridid" type="text" class="form-control" placeholder="e.g. grid.5170.3" name="gridid" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in creditDetailForm.gridid.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
 							<!-- Entity type -->
 							<div class="form-group">
 								<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.creditEntityType.description}}">Entity type <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#entity-type"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
