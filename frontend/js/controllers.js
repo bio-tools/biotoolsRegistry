@@ -820,9 +820,7 @@ angular.module('elixir_front.controllers', [])
 
 	$scope.accessibilityOptions = [
 		{value: "Open access", text: "Open access"},
-		{value: "Restricted access", text: "Restricted access"},
-		{value: "Proprietary", text: "Proprietary"},
-		{value: "Freeware", text: "Freeware"}
+		{value: "Restricted access", text: "Restricted access"}
 	];
 
 	$scope.maturityOptions = [
