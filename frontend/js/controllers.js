@@ -856,11 +856,10 @@ angular.module('elixir_front.controllers', [])
 		{value: "Issue tracker", text: "Issue tracker"},
 		{value: "Mailing list", text: "Mailing list"},
 		{value: "Mirror", text: "Mirror"},
-		{value: "Registry", text: "Registry"},
 		{value: "Repository", text: "Repository"},
-		{value: "Scientific benchmark", text: "Scientific benchmark"},
 		{value: "Service", text: "Service"},
 		{value: "Social media", text: "Social media"},
+		{value: "Software catalogue", text: "Software catalogue"},
 		{value: "Technical monitoring", text: "Technical monitoring"},
 		{value: "Other", text: "Other"}
 	];
@@ -906,7 +905,7 @@ angular.module('elixir_front.controllers', [])
 
 	$scope.publicationTypeOptions = [
 		{value: "Primary", text: "Primary"},
-		{value: "Comparison", text: "Comparison"},
+		{value: "Benchmarking study", text: "Benchmarking study"},
 		{value: "Method", text: "Method"},
 		{value: "Usage", text: "Usage"},
 		{value: "Review", text: "Review"},

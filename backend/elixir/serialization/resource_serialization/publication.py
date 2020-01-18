@@ -46,9 +46,8 @@ class PublicationSerializer(serializers.ModelSerializer):
 		model = Publication
 		fields = ('doi', 'pmid', 'pmcid',  'type', 'version', 'note', 'metadata')
 
-# TODO: remember to migrate the types, benchmark turns into comparison.
 	def validate_type(self, attrs):
-		enum = ENUMValidator([u'Primary', u'Method', u'Usage', u'Comparison', u'Review', u'Other'])
+		enum = ENUMValidator([u'Primary', u'Method', u'Usage', u'Benchmarking study', u'Review', u'Other'])
 		attrs = enum(attrs)
 		return attrs
 
