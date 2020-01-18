@@ -643,6 +643,10 @@ angular.module('elixir_front.services', [])
 			description: "Version information (typically a version number) of the software applicable to this publication.",
 			label: "publicationVersion"
 		},
+		publicationNote: {
+			description: "Comment about the publication.",
+			label: "publicationNote"
+		},
 		creditName: {
 			description: "Name of the entity that is credited.",
 			label: "creditName"
@@ -658,6 +662,10 @@ angular.module('elixir_front.services', [])
 		creditOrcidID: {
 			description: "Unique identifier (ORCID iD) of a person that is credited.",
 			label: "creditOrcidID"
+		},
+		creditGridID: {
+			description: "Unique identifier (GRID ID) of an organisation that is credited.",
+			label: "creditGridID"
 		},
 		creditEntityType: {
 			description: "Type of entity that is credited.",

@@ -135,7 +135,7 @@ angular.module('elixir_front')
 	}
 
 	$scope.shouldLicenseBeALink = function(license) {
-		return !_.includes(['Proprietary', 'Other', 'Unlicensed'], license);
+			return !_.includes(['Freeware','Proprietary', 'Other','Not licensed'], license);
 	}
 
 	$scope.setMetadataForSoftware = function(software) {
@@ -244,7 +244,8 @@ angular.module('elixir_front')
 				'doi':'=?',
 				'pmid':'=?',
 				'name':'=?',
-				'color':'@?'
+				'color':'@?',
+				'note':'=?'
 		},
 		templateUrl: 'components/toolPage/partials/toolPagePublicationCalloutHTML.html',
 		replace: true
@@ -290,6 +291,8 @@ angular.module('elixir_front')
 			callout += '<span ng-show="' + attr.url + '"><a href="{{' + attr.url + '}}" target="_blank">Link › </a>';
 			callout += '<span ng-show="' + attr.orcidid + ' || ' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';
 			callout += '<span ng-show="' + attr.orcidid + '"><a href="{{' + attr.orcidid + '}}" target="_blank">ORCID ›</a></span>';
+			callout += '<span ng-show="' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';
+			callout += '<span ng-show="' + attr.gridid + '"><a href="https://www.grid.ac/institutes/{{' + attr.gridid + '}}" target="_blank">gridid ›</a></span>';
 			callout += '</div>';
 			callout += '</div>';
 			return callout;

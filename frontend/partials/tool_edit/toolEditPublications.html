@@ -66,7 +66,15 @@
 									<label class="help-block" ng-repeat="error in publicationDetailForm.version.errorMessages" bo-text="error"></label>
 								</div>
 							</div>
-							
+
+							<!--  Note	 -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].note}">
+								<label class="col-sm-4 control-label"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.publicationNote.description}}">Note <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#note-publication"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+								<div class="col-sm-8">
+									<textarea ng-model="software.publication[$index].note" name="note" class="form-control" rows="3" placeholder="Note about the publication" validate-edit-resource-field index={{$index}}></textarea>
+									<label class="help-block" ng-repeat="error in publicationDetailForm.note.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
 						</div>
 					</div>
 				</ng-form>	

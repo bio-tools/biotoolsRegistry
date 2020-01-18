@@ -65,7 +65,7 @@ class CreditSerializer(serializers.ModelSerializer):
 	url = serializers.CharField(allow_blank=False, validators=[IsURLValidator], required=False)
 	email = serializers.CharField(allow_blank=False, max_length=300, validators=[IsStringTypeValidator, IsEmailValidator], required=False)
 	orcidid = serializers.CharField(allow_blank=False, validators=[IsStringTypeValidator], required=False)
-	#gridid = serializers.CharField(allow_blank=False, validators=[IsStringTypeValidator], required=False)
+	gridid = serializers.CharField(allow_blank=False, validators=[IsStringTypeValidator], required=False)
 	typeEntity = serializers.CharField(allow_blank=False, required=False)
 	# TODO: now there can be several typeRoles
 	#typeRole = serializers.CharField(allow_blank=False, required=False)
@@ -77,7 +77,7 @@ class CreditSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Credit
-		fields = ('name', 'email', 'url', 'orcidid', 'typeEntity', 'typeRole', 'note')
+		fields = ('name', 'email', 'url', 'orcidid', 'gridid', 'typeEntity', 'typeRole', 'note')
 
 	def validate_typeEntity(self, attrs):
 		enum = ENUMValidator([u'Person', u'Project', u'Division', u'Institute', u'Consortium', u'Funding agency'])
@@ -88,7 +88,7 @@ class CreditSerializer(serializers.ModelSerializer):
 	def validate_orcidid(self, attrs):
 		p = re.compile('^https?://orcid.org/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$', re.IGNORECASE | re.UNICODE)
 		if not p.search(attrs):
-			raise serializers.ValidationError('This field can only contain an Orcid ID')
+			raise serializers.ValidationError('This field can only contain a valid ORCID ID')
 		return attrs
 
 	def validate(self, data):
@@ -96,12 +96,12 @@ class CreditSerializer(serializers.ModelSerializer):
 			raise serializers.ValidationError('At least one of credit name, credit email or credit URL is mandatory.')
 		return data
 
-# TODO in the user interface, wherever there is a regex we should give an example of what is expected
-	# def validate_gridid(self, attrs):
-	# 	p = re.compile('^grid.[0-9]{4,}.[a-f0-9]{1,2}$', re.IGNORECASE | re.UNICODE)
-	# 	if not p.search(attrs):
-	# 		raise serializers.ValidationError('This field can only contain a Grid ID')
-	# 	return attrs
+	# TODO in the user interface, wherever there is a regex we should give an example of what is expected
+	def validate_gridid(self, attrs):
+		p = re.compile('^grid.[0-9]{4,}.[a-f0-9]{1,2}$', re.IGNORECASE | re.UNICODE)
+		if not p.search(attrs):
+			raise serializers.ValidationError('This field can only contain a valid GRID ID')
+		return attrs
 
 # TODO: in validate make this either elixirInfo or other info
 

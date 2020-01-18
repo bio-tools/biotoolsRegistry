@@ -20,6 +20,6 @@ class AccessibilitySerializer(serializers.ModelSerializer):
 		# checking if blank
 		IsNotBlankValidator(data)
 		# checking if within enum
-		enum = ENUMValidator([u'Open access', u'Restricted access', u'Proprietary', u'Freeware'])
+		enum = ENUMValidator([u'Open access', u'Restricted access'])
 		data = enum(data)
 		return {'name': data}

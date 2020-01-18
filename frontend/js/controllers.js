@@ -111,7 +111,7 @@ angular.module('elixir_front.controllers', [])
 	}
 
 	$scope.shouldLicenseBeALink = function(license) {
-  	return !_.includes(['Proprietary', 'Other', 'Unlicensed'], license);
+  	return !_.includes(['Freeware','Proprietary', 'Other', 'Not licensed'], license);
 	}
 
 	$scope.getFlatOperations = function(functions){
@@ -415,6 +415,10 @@ angular.module('elixir_front.controllers', [])
 	];
 
 	$scope.licenseOptions = [
+		{value: "Freeware", text: "Freeware"},
+		{value: "Proprietary", text: "Proprietary"},
+		{value: "Other", text: "Other"},
+		{value: "Not licensed", text: "Not licensed"},
 		{value: "0BSD", text: "0BSD"},
 		{value: "AAL", text: "AAL"},
 		{value: "ADSL", text: "ADSL"},
@@ -737,9 +741,10 @@ angular.module('elixir_front.controllers', [])
 		{value: "xinetd", text: "xinetd"},
 		{value: "xpp", text: "xpp"},
 		{value: "zlib-acknowledgement", text: "zlib-acknowledgement"},
+		{value: "Freeware", text: "Freeware"},
 		{value: "Proprietary", text: "Proprietary"},
 		{value: "Other", text: "Other"},
-		{value: "Unlicensed", text: "Unlicensed"}
+		{value: "Not licensed", text: "Not licensed"}
 	]
 
 	$scope.costOptions = [
@@ -815,9 +820,7 @@ angular.module('elixir_front.controllers', [])
 
 	$scope.accessibilityOptions = [
 		{value: "Open access", text: "Open access"},
-		{value: "Restricted access", text: "Restricted access"},
-		{value: "Proprietary", text: "Proprietary"},
-		{value: "Freeware", text: "Freeware"}
+		{value: "Restricted access", text: "Restricted access"}
 	];
 
 	$scope.maturityOptions = [
@@ -851,11 +854,10 @@ angular.module('elixir_front.controllers', [])
 		{value: "Issue tracker", text: "Issue tracker"},
 		{value: "Mailing list", text: "Mailing list"},
 		{value: "Mirror", text: "Mirror"},
-		{value: "Registry", text: "Registry"},
 		{value: "Repository", text: "Repository"},
-		{value: "Scientific benchmark", text: "Scientific benchmark"},
 		{value: "Service", text: "Service"},
 		{value: "Social media", text: "Social media"},
+		{value: "Software catalogue", text: "Software catalogue"},
 		{value: "Technical monitoring", text: "Technical monitoring"},
 		{value: "Other", text: "Other"}
 	];
@@ -865,20 +867,18 @@ angular.module('elixir_front.controllers', [])
 		{value: "API specification", text: "API specification"},
 		{value: "Biological data", text: "Biological data"},
 		{value: "Binaries", text: "Binaries"},
-		{value: "Binary package", text: "Binary package"},
 		{value: "Command-line specification", text: "Command-line specification"},
 		{value: "Container file", text: "Container file"},
-		{value: "CWL file", text: "CWL file"},
 		{value: "Icon", text: "Icon"},
-		{value: "Ontology", text: "Ontology"},
 		{value: "Screenshot", text: "Screenshot"},
+		{value: "Software package", text: "Software package"},
 		{value: "Source code", text: "Source code"},
-		{value: "Source package", text: "Source package"},
 		{value: "Test data", text: "Test data"},
 		{value: "Test script", text: "Test script"},
-		{value: "Tool wrapper (galaxy)", text: "Tool wrapper (galaxy)"},
-		{value: "Tool wrapper (taverna)", text: "Tool wrapper (taverna)"},
-		{value: "Tool wrapper (other)", text: "Tool wrapper (other)"},
+		{value: "Tool wrapper (CWL)", text: "Tool wrapper (CWL)"},
+		{value: "Tool wrapper (Galaxy)", text: "Tool wrapper (Galaxy)"},
+		{value: "Tool wrapper (Taverna)", text: "Tool wrapper (Taverna)"},
+		{value: "Tool wrapper (Other)", text: "Tool wrapper (Other)"},
 		{value: "VM Image", text: "VM Image"},
 		{value: "Other", text: "Other"}
 	];
@@ -886,6 +886,7 @@ angular.module('elixir_front.controllers', [])
 	$scope.documentationTypeOptions = [
 		{value: "API documentation", text: "API documentation"},
 		{value: "Citation instructions", text: "Citation instructions"},
+		{value: "Code of conduct", text: "Code of conduct"},
 		{value: "Command-line options", text: "Command-line options"},
 		{value: "Contributions policy", text: "Contributions policy"},
 		{value: "FAQ", text: "FAQ"},
@@ -902,7 +903,7 @@ angular.module('elixir_front.controllers', [])
 
 	$scope.publicationTypeOptions = [
 		{value: "Primary", text: "Primary"},
-		{value: "Comparison", text: "Comparison"},
+		{value: "Benchmarking study", text: "Benchmarking study"},
 		{value: "Method", text: "Method"},
 		{value: "Usage", text: "Usage"},
 		{value: "Review", text: "Review"},
