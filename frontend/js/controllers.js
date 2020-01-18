@@ -737,6 +737,7 @@ angular.module('elixir_front.controllers', [])
 		{value: "xinetd", text: "xinetd"},
 		{value: "xpp", text: "xpp"},
 		{value: "zlib-acknowledgement", text: "zlib-acknowledgement"},
+		{value: "Freeware", text: "Freeware"},
 		{value: "Proprietary", text: "Proprietary"},
 		{value: "Other", text: "Other"},
 		{value: "Unlicensed", text: "Unlicensed"}
