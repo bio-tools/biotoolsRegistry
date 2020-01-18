@@ -873,7 +873,6 @@ angular.module('elixir_front.controllers', [])
 		{value: "Command-line specification", text: "Command-line specification"},
 		{value: "Container file", text: "Container file"},
 		{value: "Icon", text: "Icon"},
-		{value: "Ontology", text: "Ontology"},
 		{value: "Screenshot", text: "Screenshot"},
 		{value: "Software package", text: "Software package"},
 		{value: "Source code", text: "Source code"},
