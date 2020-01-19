@@ -897,7 +897,6 @@ angular.module('elixir_front.controllers', [])
 		{value: "Release notes", text: "Release notes"},
 		{value: "Terms of use", text: "Terms of use"},
 		{value: "Training material", text: "Training material"},
-		{value: "Tutorial", text: "Tutorial"},
 		{value: "Other", text: "Other"}
 	];
 
