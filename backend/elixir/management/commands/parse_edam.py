@@ -52,15 +52,23 @@ def getRemoved(node):
 def flatten(lst, node, prev):
 	tmp = {}
 	tmp['definition'] = ''
-	tmp['path'] = ''
+	tmp['path'] = {}
+	tmp['path']['name'] = ''
+	tmp['path']['key']  = ''
 	tmp['name'] = node['text']
 	if prev == '':
-		tmp['path'] = node['text']
+		tmp['path']['name'] = node['text']
+		tmp['path']['key'] =  node['data']['uri'].lower().replace('http://edamontology.org/','')
 	else:
-		tmp['path'] = prev + '//' + node['text']
+		tmp['path']['name'] = prev['name'] + '||' + node['text']
+		tmp['path']['key'] =  prev['key'] + '||' + node['data']['uri'].lower().replace('http://edamontology.org/','')
+
 	if 'definition' in node:
 		tmp['definition'] = node['definition']
 	tmp['uri'] = node['data']['uri']
+	tmp['exact_synonyms'] = node['exact_synonyms']
+	tmp['narrow_synonyms'] = node['narrow_synonyms']
+
 	lst.append(tmp)
 	if len(node['children']) > 0:
 		for child in node['children']:
@@ -121,6 +129,19 @@ def treefy(node, o):
 	for ch in node['children']:
 		treefy(ch, o)
 
+def indexify(flat_data):
+	index_data = {}
+	for el in flat_data:
+		key = el['uri'].lower().replace('http://edamontology.org/','')
+		if index_data.get(key) == None:
+			index_data[key] = el
+			index_data[key]['path'] = [index_data[key]['path']]
+		else:
+			index_data[key]['path'].append(el['path'])
+
+	return index_data
+
+
 
 def ontology_save(name, data, path_edam_json, version):
 
@@ -132,6 +153,7 @@ def ontology_save(name, data, path_edam_json, version):
 		if el['definition'] == '' and el['name'] == '' and el['uri'] == '':
 			flat_data.remove(el)
 	flat_data_json = json.dumps(flat_data)
+	index_data = indexify(flat_data)
 
 	with open(path_edam_json + '/current/' + name + '.json', 'w') as outfile:
 		json.dump(data, outfile)
@@ -142,10 +164,15 @@ def ontology_save(name, data, path_edam_json, version):
 		json.dump(data, outfile)
 	with open(path_edam_json + '/' + version + '/flat_' + name + '_' + version + '.json', 'w') as outfile:
 		json.dump(flat_data, outfile)
+	with open(path_edam_json + '/' + version + '/index_' + name + '_' + version + '.json', 'w') as outfile:
+		json.dump(index_data, outfile)
 
 
 	ontology_structure_json = json.dumps(data)
 	flat_data_structure_json = json.dumps(flat_data)
+	index_data_structure_json = json.dumps(index_data)
+
+	# regular EDAM
 	# populating a fresh DB 'current'
 	query = Ontology.objects.filter(name__exact=name)
 	if len(query) == 0:
@@ -172,6 +199,7 @@ def ontology_save(name, data, path_edam_json, version):
 	else:
 		self.stdout.write('ERROR PARSING ' + name + '_' + version)
 
+	# flat EDAM
 	# populating a fresh DB 'current'
 	query = Ontology.objects.filter(name__exact='flat_' + name)
 	if len(query) == 0:
@@ -180,7 +208,7 @@ def ontology_save(name, data, path_edam_json, version):
 	# updating records
 	elif len(query) == 1:
 		o = query[0]
-		o.data = json.dumps(data)
+		o.data = json.dumps(flat_data)
 		o.save()
 	else:
 		self.stdout.write('ERROR PARSING ' + 'flat_' + name)
@@ -193,10 +221,37 @@ def ontology_save(name, data, path_edam_json, version):
 	# updating records
 	elif len(query) == 1:
 		o = query[0]
-		o.data = json.dumps(data)
+		o.data = json.dumps(flat_data)
 		o.save()
 	else:
-		self.stdout.write('ERROR PARSING ' + name + '_' + version)
+		self.stdout.write('ERROR PARSING ' + 'flat_' + name + '_' + version)
+
+	# index EDAM
+	# populating a fresh DB 'current'
+	query = Ontology.objects.filter(name__exact='index_' + name)
+	if len(query) == 0:
+		o = Ontology(name='index_' + name, data=index_data_structure_json)
+		o.save()
+	# updating records
+	elif len(query) == 1:
+		o = query[0]
+		o.data = json.dumps(index_data)
+		o.save()
+	else:
+		self.stdout.write('ERROR PARSING ' + 'index_' + name)
+
+	# populating a DB with version EDAM
+	query = Ontology.objects.filter(name__exact='index_' + name + '_' + version)
+	if len(query) == 0:
+		o = Ontology(name='index_' + name + '_' + version, data=index_data_structure_json)
+		o.save()
+	# updating records
+	elif len(query) == 1:
+		o = query[0]
+		o.data = json.dumps(index_data)
+		o.save()
+	else:
+		self.stdout.write('ERROR PARSING ' + 'index_' + name + '_' + version)
 
 
 class Command(BaseCommand):
@@ -252,6 +307,8 @@ class Command(BaseCommand):
 			'data': {
 				'uri': 'http://www.w3.org/2002/07/owl#DeprecatedClass'
 			},
+			"narrow_synonyms": [],
+            "exact_synonyms": [],
 			'children': []
 		}
 		treefy(obsolete_tree, listify(obsolete_list))
@@ -261,6 +318,9 @@ class Command(BaseCommand):
 			'data': {
 				'uri': 'http://edamontology.org/topic_0003'
 			},
+			'definition':'A category denoting a rather broad domain or field of interest, of study, application, work, data, or technology. Topics have no clearly defined borders between each other.',
+			'exact_synonyms':[],
+			'narrow_synonyms': [],
 			'children': []
 		}
 		treefy(topic_tree, listify(topic_list))
@@ -270,6 +330,9 @@ class Command(BaseCommand):
 			'data': {
 				'uri': 'http://edamontology.org/operation_0004'
 			},
+			'definition':'A function that processes a set of inputs and results in a set of outputs, or associates arguments (inputs) with values (outputs). Special cases are: a) An operation that consumes no input (has no input arguments). Such operation is either a constant function, or an operation depending only on the underlying state. b) An operation that may modify the underlying state but has no output. c) The singular-case operation with no input or output, that still may modify the underlying state.',
+			'exact_synonyms':[],
+			'narrow_synonyms': ['Computational procedure', 'Computational subroutine', 'Computational tool', 'Computational operation', 'Function (programming)', 'Lambda abstraction', 'sumo:Function', 'Mathematical function', 'Process', 'Mathematical operation', 'Function', 'Computational method'],
 			'children': []
 		}
 		treefy(operation_tree, listify(operation_list))
@@ -279,6 +342,9 @@ class Command(BaseCommand):
 			'data': {
 				'uri': 'http://edamontology.org/data_0006'
 			},
+			'definition':"Information, represented in an information artefact (data record) that is 'understandable' by dedicated computational tools that can use the data as input or produce it as output.",
+			'exact_synonyms': ["Data record"],
+			'narrow_synonyms': ["Data set","Datum"],
 			'children': []
 		}
 		treefy(data_tree, listify(data_list))
@@ -288,6 +354,9 @@ class Command(BaseCommand):
 			'data': {
 				'uri': 'http://edamontology.org/format_1915'
 			},
+			'definition':"A defined way or layout of representing and structuring data in a computer file, blob, string, message, or elsewhere. The main focus in EDAM lies on formats as means of structuring data exchanged between different tools or resources. The serialisation, compression, or encoding of concrete data formats/models is not in scope of EDAM. Format 'is format of' Data.",
+			'exact_synonyms':["Exchange format","Data format"],
+			'narrow_synonyms': ["File format"],
 			'children': []
 		}
 		treefy(format_tree, listify(format_list))
