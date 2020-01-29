@@ -56,6 +56,7 @@ def flatten(lst, node, prev):
 	tmp['path']['name'] = ''
 	tmp['path']['key']  = ''
 	tmp['name'] = node['text']
+		
 	if prev == '':
 		tmp['path']['name'] = node['text']
 		tmp['path']['key'] =  node['data']['uri'].lower().replace('http://edamontology.org/','')
@@ -68,6 +69,11 @@ def flatten(lst, node, prev):
 	tmp['uri'] = node['data']['uri']
 	tmp['exact_synonyms'] = node['exact_synonyms']
 	tmp['narrow_synonyms'] = node['narrow_synonyms']
+
+	tmp['children'] = []
+	if not(tmp.get('children')):
+		for ch in node['children']:
+			tmp['children'].append({'name':ch['text'], 'uri':ch['data']['uri']})
 
 	lst.append(tmp)
 	if len(node['children']) > 0:
@@ -129,6 +135,17 @@ def treefy(node, o):
 	for ch in node['children']:
 		treefy(ch, o)
 
+def minify_tree(data):
+	return json.loads(json.dumps(data)
+		.replace('"definition":','"d":')
+		.replace('"text":','"t":')
+		.replace('"narrow_synonyms":','"ns":')
+		.replace('"exact_synonyms":','"es":')
+		.replace('"children":','"ch":')
+		.replace('"consider":','"co":')
+		.replace('"replaced_by":','"rb":')
+	)
+
 def indexify(flat_data):
 	index_data = {}
 	for el in flat_data:
@@ -141,36 +158,130 @@ def indexify(flat_data):
 
 	return index_data
 
+def minify_data(data):
+	return json.loads(json.dumps(data).replace('http://edamontology.org/',''))
+
+def minify_flat_data(flat_data):
+	new_flat_data = []
+	for e in flat_data:
+		n = {}
+		n['d'] = e['definition']
+		n['n'] = e['name']
+		n['ns'] = e['narrow_synonyms']
+		n['u'] = e['uri']
+		n['es'] = e['exact_synonyms']
+		n['ch'] = json.loads(json.dumps(e['children'])
+			.replace('"name":','"n":')
+			.replace('"uri":','"u":')
+		)
+		n['p'] = json.loads(json.dumps(e['path'])
+			.replace('"name":','"n":')
+			.replace('"key":','"k":')
+		)
+		
+		new_flat_data.append(n)
+
+	return new_flat_data
+		
+def minify_index_data(index_data):
+	new_index_data = {}
+	for k in index_data.keys():
+		new_index_data[k] = {}
+		new_index_data[k]['d'] = index_data[k]['definition']
+		new_index_data[k]['n'] = index_data[k]['name']
+		new_index_data[k]['ns'] = index_data[k]['narrow_synonyms']
+		new_index_data[k]['u'] = index_data[k]['uri']
+		new_index_data[k]['es'] = index_data[k]['exact_synonyms']
+		new_index_data[k]['ns'] = index_data[k]['narrow_synonyms']
+		new_index_data[k]['ch'] = json.loads(json.dumps(index_data[k]['children'])
+			.replace('"name":','"n":')
+			.replace('"uri":','"u":')
+		)
+		new_index_data[k]['p'] = json.loads(json.dumps(index_data[k]['path'])
+			.replace('"name":','"n":')
+			.replace('"key":','"k":')
+		)
+	
+	return new_index_data
+
+
+def minify_string_data(string_data):
+	return string_data.replace('http://edamontology.org/','')
 
 
 def ontology_save(name, data, path_edam_json, version):
 
 	# data -> tree of the ontology
 	# flat_data -> flattened tree
+	# index_data -> index tree
 	flat_data = []
 	flatten(flat_data, data, '')
 	for el in flat_data:
 		if el['definition'] == '' and el['name'] == '' and el['uri'] == '':
 			flat_data.remove(el)
-	flat_data_json = json.dumps(flat_data)
 	index_data = indexify(flat_data)
+	min_data = minify_data(data)
+	min_data = minify_tree(min_data)
+	
+	# if name != 'EDAM_obsolete':
+	# 	min_data = minify_tree_properties(min_data, False)
+	# else:
+	# 	min_data = minify_tree_properties(min_data, True)
 
+	min_flat_data = minify_data(flat_data)
+	min_flat_data = minify_flat_data(min_flat_data)
+	min_index_data = minify_data(index_data)
+	min_index_data = minify_index_data(min_index_data)
+
+	# Generic unversioned (latest) EDAM
+
+	# regular data + min data
 	with open(path_edam_json + '/current/' + name + '.json', 'w') as outfile:
 		json.dump(data, outfile)
+	with open(path_edam_json + '/current/min_' + name + '.json', 'w') as outfile:
+		json.dump(min_data, outfile)
+
+	# flat data + min flat data
 	with open(path_edam_json + '/current/flat_' + name + '.json', 'w') as outfile:
 		json.dump(flat_data, outfile)
+	with open(path_edam_json + '/current/min_flat_' + name + '.json', 'w') as outfile:
+		json.dump(min_flat_data, outfile)
+	
+	# index data + min index data
+	with open(path_edam_json + '/current/index_' + name + '.json', 'w') as outfile:
+		json.dump(index_data, outfile)
+	with open(path_edam_json + '/current/min_index_' + name + '.json', 'w') as outfile:
+		json.dump(min_index_data, outfile)
 
+	# Versioned EDAM
+
+	# regular data + min data
 	with open(path_edam_json + '/' + version + '/' + name + '_' + version + '.json', 'w') as outfile:
 		json.dump(data, outfile)
+	with open(path_edam_json + '/' + version + '/min_' + name + '_' + version + '.json', 'w') as outfile:
+		json.dump(min_data, outfile)
+	
+	# flat data + min flat data
 	with open(path_edam_json + '/' + version + '/flat_' + name + '_' + version + '.json', 'w') as outfile:
 		json.dump(flat_data, outfile)
+	with open(path_edam_json + '/' + version + '/min_flat_' + name + '_' + version + '.json', 'w') as outfile:
+		json.dump(min_flat_data, outfile)
+
+	# index data + min index data
 	with open(path_edam_json + '/' + version + '/index_' + name + '_' + version + '.json', 'w') as outfile:
 		json.dump(index_data, outfile)
+	with open(path_edam_json + '/' + version + '/min_index_' + name + '_' + version + '.json', 'w') as outfile:
+		json.dump(min_index_data, outfile)
 
 
 	ontology_structure_json = json.dumps(data)
+	min_ontology_structure_json = json.dumps(min_data)
+	
 	flat_data_structure_json = json.dumps(flat_data)
+	min_flat_data_structure_json = json.dumps(min_flat_data)
+
 	index_data_structure_json = json.dumps(index_data)
+	min_index_data_structure_json = json.dumps(min_index_data)
 
 	# regular EDAM
 	# populating a fresh DB 'current'
@@ -254,6 +365,88 @@ def ontology_save(name, data, path_edam_json, version):
 		self.stdout.write('ERROR PARSING ' + 'index_' + name + '_' + version)
 
 
+	# min regular EDAM
+	# populating a fresh DB 'current'
+	query = Ontology.objects.filter(name__exact='min_' + name)
+	if len(query) == 0:
+		o = Ontology(name='min_' + name, data=min_ontology_structure_json)
+		o.save()
+	# updating records
+	elif len(query) == 1:
+		o = query[0]
+		o.data = json.dumps(min_data)
+		o.save()
+	else:
+		self.stdout.write('ERROR PARSING ' + name)
+
+	# populating a DB with version EDAM
+	query = Ontology.objects.filter(name__exact='min_' + name + '_' + version)
+	if len(query) == 0:
+		o = Ontology(name='min_' + name + '_' + version, data=min_ontology_structure_json)
+		o.save()
+	# updating records
+	elif len(query) == 1:
+		o = query[0]
+		o.data = json.dumps(min_data)
+		o.save()
+	else:
+		self.stdout.write('ERROR PARSING min_' + name + '_' + version)
+
+	# min flat EDAM
+	# populating a fresh DB 'current'
+	query = Ontology.objects.filter(name__exact='min_flat_' + name)
+	if len(query) == 0:
+		o = Ontology(name='min_flat_' + name, data=min_flat_data_structure_json)
+		o.save()
+	# updating records
+	elif len(query) == 1:
+		o = query[0]
+		o.data = json.dumps(min_flat_data)
+		o.save()
+	else:
+		self.stdout.write('ERROR PARSING ' + 'min_flat_' + name)
+
+	# populating a DB with version EDAM
+	query = Ontology.objects.filter(name__exact='min_flat_' + name + '_' + version)
+	if len(query) == 0:
+		o = Ontology(name='min_flat_' + name + '_' + version, data=min_flat_data_structure_json)
+		o.save()
+	# updating records
+	elif len(query) == 1:
+		o = query[0]
+		o.data = json.dumps(min_flat_data)
+		o.save()
+	else:
+		self.stdout.write('ERROR PARSING ' + 'min_flat_' + name + '_' + version)
+
+	
+	# min index EDAM
+	# populating a fresh DB 'current'
+	query = Ontology.objects.filter(name__exact='min_index_' + name)
+	if len(query) == 0:
+		o = Ontology(name='min_index_' + name, data=min_index_data_structure_json)
+		o.save()
+	# updating records
+	elif len(query) == 1:
+		o = query[0]
+		o.data = json.dumps(min_index_data)
+		o.save()
+	else:
+		self.stdout.write('ERROR PARSING ' + 'min_index_' + name)
+
+	# populating a DB with version EDAM
+	query = Ontology.objects.filter(name__exact='min_index_' + name + '_' + version)
+	if len(query) == 0:
+		o = Ontology(name='min_index_' + name + '_' + version, data=min_index_data_structure_json)
+		o.save()
+	# updating records
+	elif len(query) == 1:
+		o = query[0]
+		o.data = json.dumps(min_index_data)
+		o.save()
+	else:
+		self.stdout.write('ERROR PARSING ' + 'min_index_' + name + '_' + version)
+
 class Command(BaseCommand):
 	help = 'Regenerate the EDAM ontology'
 
@@ -322,6 +515,7 @@ class Command(BaseCommand):
 			'exact_synonyms':[],
 			'narrow_synonyms': [],
 			'children': []
+
 		}
 		treefy(topic_tree, listify(topic_list))
 
