@@ -307,8 +307,14 @@ class ResourceDetail(APIView):
 			# setting the visibility of the current resource to 0
 			resource.visibility = 0
 			resource.save()
+
+			# only superusers can change the validated / was_id_validated flag, even so, it can only be 0 or 1
+			is_id_valid = resource.was_id_validated
+			if request.user.is_superuser and request.data.get('validated') in [0,1]:
+				is_id_valid = request.data['validated']
+
 			# copying the textual id and additionDate to the newly created resource
-			serializer.save(biotoolsID=resource.biotoolsID, biotoolsCURIE=resource.biotoolsCURIE, additionDate=resource.additionDate, owner=resource.owner)
+			serializer.save(biotoolsID=resource.biotoolsID, biotoolsCURIE=resource.biotoolsCURIE, additionDate=resource.additionDate, owner=resource.owner, was_id_validated=is_id_valid)
 			issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), str(resource.owner))
 			
 			# update the existing resource in elastic
