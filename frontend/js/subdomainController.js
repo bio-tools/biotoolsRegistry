@@ -171,7 +171,7 @@ angular.module('elixir_front.controllers')
 	$scope.makeIdURLSafe = function(value) {
 		$scope.errors.domain = "";
 		if (typeof value != 'undefined') {
-			var id = value.replace(/[^a-zA-Z0-9_~ .-]*/g,'').replace(/[ ]+/g, '_');
+			var id = value.replace(/[^a-zA-Z0-9_~ .-]*/g,'').replace(/[ ]+/g, '_').toLowerCase();
 		}
 		if (value != id) {
 			$scope.errors.domain = "Entered value '" + value + "' has been modified. Only URL safe characters can be used for the identifier.";

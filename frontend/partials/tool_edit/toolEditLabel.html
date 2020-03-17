@@ -1,6 +1,6 @@
 <br>
 <div class="panel panel-info">
-	<div class="panel-heading" style="position: relative;"><label align="justify">Miscellaneous scientific, technical and administrative details of the software, expressed in terms from controlled vocabularies. 
+	<div class="panel-heading" style="position: relative;"><label align="justify">Miscellaneous scientific, technical and administrative details of the tool, expressed in terms from controlled vocabularies. 
 		<br>We recommend you specify at least the tool type, license, and one or more topics. See the <a target="_blank" ng-href="http://biotools.readthedocs.io/en/latest/curators_guide.html#labels-group">Curation Guidelines <i class="fa fa-external-link"></i></a>.</label>
 	</div>
 </div>
@@ -146,7 +146,7 @@
 				</div>
 				<!-- Collection -->
 				<div class="form-group no-margin-bottom">
-					<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.collectionId.description}}">Collection</span></label>
+					<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.collectionID.description}}">Collection <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#collection"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 					<div class="col-sm-9">
 						<div class="form-group" ng-repeat="collection in software.collectionID track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.collectionID[$index][0]};">
 							<ng-form name="collectionForm">

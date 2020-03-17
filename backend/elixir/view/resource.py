@@ -314,6 +314,10 @@ class ResourceDetail(APIView):
 				is_id_valid = request.data['validated']
 
 			# copying the textual id and additionDate to the newly created resource
+			# Perhaps we should throw a validation error if there was a change
+			# attempt on the biotoolsID or biotoolsCURIE
+			# Note that we need throw errors here we need to throw them before
+			# makeing the old resource visibility 0 (see above)
 			serializer.save(biotoolsID=resource.biotoolsID, biotoolsCURIE=resource.biotoolsCURIE, additionDate=resource.additionDate, owner=resource.owner, was_id_validated=is_id_valid)
 			issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), str(resource.owner))
 			

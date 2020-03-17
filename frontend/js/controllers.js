@@ -1024,7 +1024,7 @@ angular.module('elixir_front.controllers', [])
 	$scope.naviagateToTool = function(biotoolsID) {
 		$timeout(function() {
 			if (confirm("Make sure you save before navigating away! Are you sure you want to leave? ")) {
-				$state.go('tool', {id: biotoolsID});
+				$state.go('tool', {id: biotoolsID}, {reload: true});
 			}
 		},100);
 	}
@@ -1044,12 +1044,31 @@ angular.module('elixir_front.controllers', [])
 	$scope.controller = 'create';
 
 	// initially set the ID to change automatically when name is modified
-	$scope.autoUpdateId = true;
+	$scope.biotoolsIDDisabled = true;
+	$scope.editIdButtonText = 'Edit ID';
+
+	// remove or replace all URL unsafe characters and set software.id
+	$scope.makeIdURLSafe = function(value) {
+		if (typeof value != 'undefined' && $scope.biotoolsIDDisabled) {
+			$scope.software.biotoolsID = value.replace(/[^a-zA-Z0-9_~ .-]*/g,'').replace(/[ ]+/g, '_').toLowerCase();
+		}else if ($scope.biotoolsIDDisabled){
+			$scope.software.biotoolsID = "";
+		}
+		
+	}
 
 	$scope.editIdToggleButtonClick = function () {
-		$scope.autoUpdateId = !$scope.autoUpdateId;
+		$scope.biotoolsIDDisabled = !$scope.biotoolsIDDisabled;
 		$scope.makeIdURLSafe($scope.software.name);
+
+		if ($scope.biotoolsIDDisabled){
+			$scope.editIdButtonText = 'Edit ID';
+		}else{
+			$scope.editIdButtonText = 'From Name';
+		}
 	}
+
+	
 
 	$scope.validateButtonClick = function() {
 		$timeout(function() {
@@ -1058,7 +1077,7 @@ angular.module('elixir_front.controllers', [])
 	}
 
 	$scope.registerButtonClick = function() {
-		if (confirm("Are you sure you want to save the resource? ")) {
+		if (confirm("Are you sure you want to save the resource?\nOnce saved the tool ID cannot be changed!")) {
 			$timeout(function() {
 				$scope.sendResource(ToolListConnection.save, $scope.savingProgress, false, 'create');
 			},100);

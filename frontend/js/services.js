@@ -352,23 +352,27 @@ angular.module('elixir_front.services', [])
 			label: "Everything"
 		},
 		name: {
-			description: "Sofware name.",
+			description: "Tool name.",
 			label: "Name"
+		},
+		biotoolsID: {
+			description: "Unique, persistent bio.tools identifier.",
+			label: "biotoolsID"
 		},
 		toolType: {
 			description: "A type of application software: a tool can have more than one type.",
 			label: "Tool type"
 		},
 		version: {
-			description: "Software version information. Use 'Add version' to enter individual version numbers (if practical).",
+			description: "Tool version information. Use 'Add version' to enter individual version numbers (if practical).",
 			label: "Current version"
 		},
 		description: {
-			description: "Software description, e.g. a few sentences adapted from the software publication abstract or homepage.",
+			description: "Tool description, e.g. a few sentences adapted from the tool publication abstract or homepage.",
 			label: "Description"
 		},
 		operation: {
-			description: "A basic operation performed by this software function.",
+			description: "A basic operation performed by this tool function.",
 			label: "Operation"
 		},
 		functionNote: {
@@ -412,7 +416,7 @@ angular.module('elixir_front.services', [])
 			label: "Topic"
 		},
 		homepage: {
-			description: "Homepage of the software, or some URL that best serves this purpose.",
+			description: "Homepage of the tool, or some URL that best serves this purpose.",
 			label: "Homepage URL"
 		},
 		contact: {
@@ -488,11 +492,11 @@ angular.module('elixir_front.services', [])
 			label: "Mirror"
 		},
 		collectionID: {
-			description: "A tag which assigns the software to a collection in bio.tools.",
+			description: "A tag which assigns the tool to a collection in bio.tools.",
 			label: "Collection"
 		},
 		sourceRegistry: {
-			description: "Link to the registry (or other collection) from which the software was imported (URL)",
+			description: "Link to the registry (or other collection) from which the tool was imported (URL)",
 			label: "Source registry"
 		},
 		canonicalID: {
@@ -500,7 +504,7 @@ angular.module('elixir_front.services', [])
 			label: "Canonical ID"
 		},
 		cost: {
-			description: "Monetary cost of acquiring the software.",
+			description: "Monetary cost of acquiring the tool.",
 			label: "Cost"
 		},
 		elixirInfo: {
@@ -524,7 +528,7 @@ angular.module('elixir_front.services', [])
 			label: "Platform"
 		},
 		language: {
-			description: "Name of a programming language, e.g. used for the software source code.",
+			description: "Name of a programming language, e.g. used for the tool source code.",
 			label: "Language"
 		},
 		license: {
@@ -584,7 +588,7 @@ angular.module('elixir_front.services', [])
 			label: "Command"
 		},
 		linkURL: {
-			description: "A link of some relevance to the software (URL).",
+			description: "A link of some relevance to the tool (URL).",
 			label: "linkURL"
 		},
 		linkType: {
@@ -596,7 +600,7 @@ angular.module('elixir_front.services', [])
 			label: "linkNote"
 		},
 		downloadURL: {
-			description: "Link to download (or repository providing a download) for the software.",
+			description: "Link to download (or repository providing a download) for the tool.",
 			label: "downloadURL"
 		},
 		downloadType: {
@@ -624,15 +628,15 @@ angular.module('elixir_front.services', [])
 			label: "documentationNote"
 		},
 		publicationPMCID: {
-			description: "PubMed Central Identifier (PMCID) of a publication about the software.",
+			description: "PubMed Central Identifier (PMCID) of a publication about the tool.",
 			label: "publicationPMCID"
 		},
 		publicationPMID: {
-			description: "PubMed Identifier (PMID) of a publication about the software.",
+			description: "PubMed Identifier (PMID) of a publication about the tool.",
 			label: "publicationPMID"
 		},
 		publicationDOI: {
-			description: "Digital Object Identifier (DOI) of a publication about the software.",
+			description: "Digital Object Identifier (DOI) of a publication about the tool.",
 			label: "publicationDOI"
 		},
 		publicationType: {
@@ -679,12 +683,12 @@ angular.module('elixir_front.services', [])
 			description: "A comment about the credit.",
 			label: "creditNote"
 		},
-		elixirPlatfrom: {
+		elixirPlatform: {
 			description: "Name of one of countries participating in ELIXIR",
 			label: "elixirPlatform"
 		},
 		otherID: {
-			description: "A unique identifier of the software, typically assigned by an ID-assignment authority other than bio.tools, e.g. “RRID:SCR_015644”",
+			description: "A unique identifier of the tool, typically assigned by an ID-assignment authority other than bio.tools, e.g. “RRID:SCR_015644”",
 			label: "otherID"
 		},
 		otherIDValue: {
@@ -700,11 +704,11 @@ angular.module('elixir_front.services', [])
 			label: "otherIDVersion"
 		},
 		relationBiotoolsID: {
-			description: 'bio.tools ID of an existing bio.tools entry to which this software is related, e.g. "needle"',
+			description: 'bio.tools ID of an existing bio.tools entry to which this tool is related, e.g. "needle"',
 			label: "relationBiotoolsID"
 		},
 		relationType: {
-			description: 'Type of relation between this and another registered software, e.g. "isNewVersionOf"',
+			description: 'Type of relation between this and another registered tool, e.g. "isNewVersionOf"',
 			label: "relationType"
 		},
 		confidence: {

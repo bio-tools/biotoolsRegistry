@@ -440,9 +440,11 @@ img.biotools-logo:hover{
     }
 }
 
-
-
-.autocomplete-container > ul{
-    max-height: 250px;
-    overflow-y: auto;
+a.edit-link{
+    position: absolute;
+    left: 91%;
+    top: 6px;
+    font-weight: bold;
 }
+
+

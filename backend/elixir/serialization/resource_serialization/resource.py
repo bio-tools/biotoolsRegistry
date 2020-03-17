@@ -194,13 +194,13 @@ class ResourceSerializer(serializers.ModelSerializer):
 	# alias for 'was_id_validated'
 	validated = serializers.IntegerField(read_only=True, source='was_id_validated')
 
-	#biotoolsID = serializers.CharField(allow_blank=False, validators=[UniqueValidator(queryset=Resource.objects.filter(visibility=1), message="A resource with this ID already exists.")])
+	biotoolsID = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[UniqueValidator(queryset=Resource.objects.filter(visibility=1), message="A resource with this ID already exists. bio.tools IDs need to be unique")])
 	#biotoolsCURIE = serializers.CharField(allow_blank=False, validators=[UniqueValidator(queryset=Resource.objects.filter(visibility=1), message="A resource with this ID already exists.")])
-	biotoolsID = serializers.CharField(read_only=True);
+	# biotoolsID = serializers.CharField(read_only=True);
 	biotoolsCURIE = serializers.CharField(read_only=True);
+	# name = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[IsStringTypeValidator, UniqueValidator(queryset=Resource.objects.filter(visibility=1), message="The resource ID (biotoolsID) generated from this name already exists; Use a different name.")])
 
-
-	name = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[IsStringTypeValidator, UniqueValidator(queryset=Resource.objects.filter(visibility=1), message="The resource ID (biotoolsID) generated from this name already exists; Use a different name.")])
+	name = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[IsStringTypeValidator])
 	homepage = serializers.CharField(max_length=300, min_length=1, allow_blank=False)
 
 	elixir_badge = serializers.IntegerField(read_only=True)
@@ -300,10 +300,21 @@ class ResourceSerializer(serializers.ModelSerializer):
 		#p = re.compile('^[\p{Zs}A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
 
 		#use this
-		p = re.compile('^[ A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
+		p = re.compile('^[ A-Za-z0-9+\.,\-\~_:;()]*$', re.IGNORECASE | re.UNICODE)
 
 		if not p.search(attrs):
-			raise serializers.ValidationError('This field can only contain letters, numbers, spaces or these characters: + . , - _ : ; ( )')
+			raise serializers.ValidationError('This field can only contain letters, numbers, spaces or these characters: + . , - ~ _ : ; ( )')
+		return attrs
+
+	def validate_biotoolsID(self, attrs):
+		p = re.compile('^[A-Za-z0-9\.\-\~_]*$', re.IGNORECASE | re.UNICODE)
+		p1 = re.compile('^[A-Za-z0-9]+.*$', re.IGNORECASE | re.UNICODE)
+		if not p.search(attrs):
+			raise serializers.ValidationError('The biotoolsID can only contain letters, numbers or these characters: . - _ ~ ')
+		if not p1.search(attrs):
+			raise serializers.ValidationError('The biotoolsID can only start with letters and numbers')
+		if attrs.endswith("."):
+			raise serializers.ValidationError('The biotoolsID cannnot end with a dot')
 		return attrs
 
 	def validate_homepage(self, attrs):
@@ -398,19 +409,21 @@ class ResourceSerializer(serializers.ModelSerializer):
 				author.editPermissions.add(editPermission)
 				editPermission.authors.add(author)
 
-		# if biotoolsID not passed in save(), then generate one out of name
-		if 'biotoolsID' not in validated_data:
-			# create id and randomize it if there are conflicts
-			biotoolsID = re.sub(r"[^a-zA-Z0-9_. -]*", "", validated_data['name'])
-			biotoolsID = re.sub(r"[ ]+", "_", biotoolsID)
-			if len(Resource.objects.filter(visibility=1, biotoolsID__iexact=biotoolsID)) > 0 or biotoolsID in settings.RESERVED_URL_KEYWORDS:
-				raise CustomError('The name you provided clashes with an existing biotoolsID. Please provide a different name.', 'biotoolsID', status_code=status.HTTP_400_BAD_REQUEST)
-				# biotoolsID = initialbiotoolsID + str(randint(1000, 9999))
-				# count += 1
-				# if count > 9998:
-				# 	raise CustomError('ID could not be generated', 'id', status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
-			validated_data['biotoolsID'] = biotoolsID
-			validated_data['biotoolsCURIE'] = 'biotools:' + biotoolsID
+		validated_data['biotoolsCURIE'] = 'biotools:' + validated_data['biotoolsID']
+
+		# # if biotoolsID not passed in save(), then generate one out of name
+		# if 'biotoolsID' not in validated_data:
+		# 	# create id and randomize it if there are conflicts
+		# 	biotoolsID = re.sub(r"[^a-zA-Z0-9_. -]*", "", validated_data['name'])
+		# 	biotoolsID = re.sub(r"[ ]+", "_", biotoolsID)
+		# 	if len(Resource.objects.filter(visibility=1, biotoolsID__iexact=biotoolsID)) > 0 or biotoolsID in settings.RESERVED_URL_KEYWORDS:
+		# 		raise CustomError('The name you provided clashes with an existing biotoolsID. Please provide a different name.', 'biotoolsID', status_code=status.HTTP_400_BAD_REQUEST)
+		# 		# biotoolsID = initialbiotoolsID + str(randint(1000, 9999))
+		# 		# count += 1
+		# 		# if count > 9998:
+		# 		# 	raise CustomError('ID could not be generated', 'id', status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+		# 	validated_data['biotoolsID'] = biotoolsID
+		# 	validated_data['biotoolsCURIE'] = 'biotools:' + biotoolsID
 
 		# create parent attribute
 		resource = Resource.objects.create(editPermission=editPermission, **validated_data)
@@ -517,7 +530,7 @@ class ResourceUpdateSerializer(ResourceSerializer):
 	#id = serializers.CharField(source="biotoolsID", read_only=True)
 	#curie = serializers.CharField(source="biotoolsCURIE", read_only=True)
 
-	name = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[IsStringTypeValidator,])
+	biotoolsID = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[IsStringTypeValidator,])
 	# publication is not mandatory for updates, nor for anything else
 	# this is so that other fields can be updated, without the lack of publication being a blocker
 	#publication = PublicationSerializer(many=True, required=False, allow_empty=False)
