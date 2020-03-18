@@ -770,6 +770,7 @@ angular.module('elixir_front.controllers', [])
 		{value: "Delphi", text: "Delphi"},
 		{value: "Dylan", text: "Dylan"},
 		{value: "Eiffel", text: "Eiffel"},
+		{value: "Elm", text: "Elm"},
 		{value: "Forth", text: "Forth"},
 		{value: "Fortran", text: "Fortran"},
 		{value: "Groovy", text: "Groovy"},
