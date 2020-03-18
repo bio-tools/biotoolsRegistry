@@ -23,7 +23,7 @@
 					<input ng-model="software.name" name="name"
 						ng-change="biotoolsIDDisabled ? makeIdURLSafe(software.name) : null;" type="text"
 						class="form-control" placeholder="Tool name" validate-edit-resource-field>
-					<label class="help-block" ng-repeat="error in form.summaryForm.name.errorMes	ges"
+					<label class="help-block" ng-repeat="error in form.summaryForm.name.errorMessages"
 						bo-text="error"></label>
 				</div>
 			</div>
