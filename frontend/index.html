@@ -28,11 +28,6 @@
 	<div navigation-bar></div>
 	<div details-bar></div>
 	<div class="container-fluid" style="margin-top: 20px;">
-		<div ng-show="domain.Domain.isLoaded()" ng-controller="DomainBarController as domain" class="domain-bar-container" ng-cloak>
-			<span class="domain-bar-title">{{ domain.Domain.current.title }}</span>
-			<span class="domain-bar-subtitle">{{ domain.Domain.current.sub_title }}</span>
-			<div class="domain-bar-description">{{ domain.Domain.current.description }}</div>
-		</div>
 		<div ng-controller="AlertsController">
 			<uib-alert ng-cloak ng-show="cookie_alert" class="alert-panel" type="info" close="closeCookieInfoButtonClick()">This site uses cookies. By continuing to browse the site you are agreeing to our use of cookies. Find out more <a href="http://www.cookielaw.org/the-cookie-law/">here</a>.</uib-alert>
 			<!-- <uib-alert ng-cloak ng-show="dev_alert" class="alert-panel" type="warning">This is a development version of the registry. There is no guarantee that the data entered here will be preserved in the future. If you want to add new tools please use the stable version avaliable at <a href="http://bio.tools/" target="_blank">bio.tools</a>.</uib-alert> -->

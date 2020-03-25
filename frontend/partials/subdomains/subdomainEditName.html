@@ -39,7 +39,7 @@
 	<div class="content-page-element-spacing-top">
 		<!-- Description -->
 		<span class="content-page-input-title-label">Description</span>
-		<input ng-model="subdomain.description" name="description" type="text" class="form-control content-page-input-field" placeholder="Description">
+		<textarea rows="4" ng-model="subdomain.description" name="description" type="text" class="form-control content-page-input-field" placeholder="Description"></textarea>
 		<div class="content-page-danger-text" ng-if="errors.domain.description">
 			<i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{errors.domain.description}}
 		</div>

@@ -1,18 +1,23 @@
 .domain-bar-container {
+	padding-top: 2em;
 	padding-bottom: 2em;
-	margin: auto;
+	padding-left: 1em;
+	background-color: #FFF;
+	margin-bottom: 20px;
+	border-radius: 8px;
+	border: 1px solid #d3d3d3;
 }
 
 
 @media (min-width: 100px) {
     .domain-bar-container {
-        width: 96%;
+        /* width: 96%; */
     }
 }
 
 @media (min-width: 1200px) {
     .domain-bar-container {
-        width: 91%;
+        /* width: 91%; */
     }
 }
 
@@ -33,6 +38,7 @@
 .domain-bar-description {
 	color: #4A4A4A;
 	font-family: 'Roboto' !important;
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: 100 !important;
+	white-space: pre-wrap;
 }

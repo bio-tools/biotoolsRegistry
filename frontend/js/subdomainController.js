@@ -5,8 +5,13 @@ angular.module('elixir_front.controllers')
 	$scope.isLoadingSubdomains = true;
 	$scope.subdomains = [];
 
-	$scope.deleteSubdomainAtIndex = function(index) {
+	$scope.deleteSubdomainAtIndex = function(index){
 		if (confirm("Are you sure you want to remove this subdomain?")){
+			// COVID-19 subdomain hack
+			if ($scope.subdomains[index].name.toLowerCase() == 'covid-19'){
+				alert('Cannot delete the covid-19 subdomain');
+				return;
+			}
 			var deleteSubdomain = $scope.subdomains[index];
 			$scope.subdomains.splice(index, 1);
 			var deleteResponse = DomainDetailConnection.delete({'domain': deleteSubdomain.name}, function(data) {
