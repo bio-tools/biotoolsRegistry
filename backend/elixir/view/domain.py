@@ -201,16 +201,7 @@ class DomainResourceView(APIView):
 		return Response(status=status.HTTP_200_OK)
 
 
-	def delete(self, request, domain=None, format=None):
-		
-		# temporary hack around the covid-19 subdomain
-		# can only be deleted by superusers
-
-		if domain.lower() == 'covid-19' and not(is_superuser(request.user)):
-			return Response({"detail": 'Cannot delete the covid-19 subdomain.'}, status=status.HTTP_403_FORBIDDEN)
-
-
-
+	def delete(self, request, domain=None, format=None):	
 		if not domain:
 			payload = request.data
 			if not payload:
