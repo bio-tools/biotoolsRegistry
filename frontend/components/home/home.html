@@ -20,6 +20,10 @@
 		<p class="description-text">
 			If you believe any tools are missing, please feel free to update the list as specified in the instructions at <a ng-href="/t?domain=covid-19">https://covid-19.bio.tools</a>.
 		</p>
+		<p class="description-text">
+			You can also browse tools by EDAM concepts from the <a href="" ng-click='navElement("virology-vaccine-design")'>Virology and vaccine design</a> section below.
+		</p>
+		
 	</div>
 
 	<div  class="jumbotron home-text">
@@ -603,6 +607,79 @@ Each <em>bio.tools</em> entry is assigned a human-readable, <span class="bolder-
 			</div>
 			<!-- end panel -->
 
+			<!--virus related panel-->
+			<div class="browse-topic panel panel-default" id="virology-vaccine-design">
+				<div class="panel-heading topic-heading" >
+					<h3>Virology and vaccine design</h3>
+					<p>Resources which may be applicable to rational vaccine strategies for the design of novel immunogens capable of inducing long-term protective immunity.</p>
+				</div>
+				<div class="subtopics panel-body">
+					<div class="subtopics-list">
+						<span ng-click="topicNameClicked('Virology')">
+						Virology<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Virulence prediction')">
+						Virulence prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Virtual screening')">
+						Virtual screening<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Peptide immunogenicity prediction')">
+						Peptide immunogenicity prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Epitope mapping')">
+						Epitope mapping<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="operationNameClicked('DNA vaccine design')">
+						DNA vaccine design<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein structure prediction')">
+						Protein structure prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Side chain modelling')">
+						Side chain modelling<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="operationNameClicked('Backbone modelling')">
+						Backbone modelling<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Ligand-binding site prediction')">
+						Ligand-binding site prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein-ligand docking')">
+						Protein-ligand docking<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="topicNameClicked('Immunoinformatics ')">
+						Immunoinformatics <span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Subcellular localisation prediction')">
+						Subcellular localisation prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="topicNameClicked('Immunoproteins and antigens')">
+						Immunoproteins and antigens<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Transmembrane protein prediction ')">
+						Transmembrane protein prediction <span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Molecular dynamics')">
+						Molecular dynamics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Molecular docking')">
+						Molecular docking<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Public health and epidemiology')">
+						Public health and epidemiology<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Infectious disease')">
+						Infectious disease<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Pathology')">
+						Pathology<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+					</div>
+
+				</div>
+			</div>
+			<!-- end panel -->
 
 			<!-- new design panel Other-->
 			<div class="browse-topic panel panel-default">

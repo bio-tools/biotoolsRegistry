@@ -5,7 +5,7 @@ angular.module('elixir_front')
 }]);
 
 	angular.module('elixir_front')
-.directive('homeSearch', ['Query', 'ToolList', 'Highlighting', 'Attribute', '$state', '$stateParams', '$timeout', 'UsedTerms', '$q', 'filterFilter', 'Domain', '$rootScope', function(Query, ToolList, Highlighting, Attribute, $state, $stateParams, $timeout, UsedTerms, $q, filterFilter, Domain, $rootScope) {
+.directive('homeSearch', ['Query', 'ToolList', 'Highlighting', 'Attribute', '$state', '$stateParams', '$timeout', 'UsedTerms', '$q', 'filterFilter', 'Domain', '$rootScope', '$location', '$anchorScroll', function(Query, ToolList, Highlighting, Attribute, $state, $stateParams, $timeout, UsedTerms, $q, filterFilter, Domain, $rootScope, $location, $anchorScroll) {
 	return {
 		restrict: 'A',
 		templateUrl: 'components/home/homeSearch.html',
@@ -86,8 +86,13 @@ angular.module('elixir_front')
 				});
 			}
 
-			scope.goToLink = function(link){
-				alert("clicked");
+			scope.navElement = function(elementid) {
+				$anchorScroll.yOffset = 75;
+				// set the location.hash
+				$location.hash(elementid);
+			 
+				$anchorScroll();
+				$location.hash(null);
 			}
 
 			// helper function for getting used terms
