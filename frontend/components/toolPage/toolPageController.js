@@ -166,12 +166,14 @@ angular.module('elixir_front')
 	});
 
 	$scope.requestOwnership = function(resourceId) {
-		$scope.ownershipRequestedSuccess = null;
-		ResourceRequestProvider.requestOwnership(resourceId).then(function successCallback(response) {
-			$scope.ownershipRequestedSuccess = true;
-		}, function errorCallback(response) {
-			$scope.ownershipRequestedSuccess = false;
-		});
+		if (confirm("We recommend that only the tool developers/maintainers request ownership.\nAll other users should request edit-rights.\nAre you sure you want to request ownership of this tool?")){
+			$scope.ownershipRequestedSuccess = null;
+			ResourceRequestProvider.requestOwnership(resourceId).then(function successCallback(response) {
+				$scope.ownershipRequestedSuccess = true;
+			}, function errorCallback(response) {
+				$scope.ownershipRequestedSuccess = false;
+			});
+		}
 	}
 
 	$scope.requestEditing = function(resourceId) {
