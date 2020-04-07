@@ -447,4 +447,60 @@ a.edit-link{
     font-weight: bold;
 }
 
+p.community-description{
+    text-align: justify;
+    padding-left: 15px;
+    padding-right: 15px;
+}
 
+a.biolib_logo{
+    margin-right: 20px;
+}
+
+a.biolib_pill{
+    color: #FFF;
+    position: relative;
+    top: 4px;
+    margin-right: 20px;
+    text-decoration: none;
+    font-size: 14px;    
+    display: inline-block;
+}
+
+span.biolib_label, span.biolib_value{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+span.biolib_label{
+    background-color: #60b0b1;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+span.biolib_value{
+    background-color: #275a78;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+span.biolib_value > i.fa{
+    font-size: 1em;
+    position: relative;
+    top: 1px;
+}
+
+@media (max-width: 768px) {
+    a.biolib_logo{
+        display: block;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    a.biolib_pill{
+        margin-bottom: 20px;
+    }
+}

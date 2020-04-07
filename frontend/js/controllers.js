@@ -258,9 +258,6 @@ angular.module('elixir_front.controllers', [])
 	}
 
 
-	console.log($scope.loadBiotoolsIDs('jas'));
-	
-
 
 	// add attribute or list entry
 	$scope.addButtonClick = function (_what, _where, _isList, _isObject) {
@@ -275,6 +272,23 @@ angular.module('elixir_front.controllers', [])
 			// if object does not exist create it
 			if (typeof _where[_what] == 'undefined') {
 				_where[_what] = _isObject ? {} : '';
+			}
+		}
+	}
+
+	$scope.addObjectClick = function(_what, _parent, _where){
+		_parent[_where] = {}
+		_parent[_where][_what] = {}
+
+	}
+
+	$scope.removeObjectClick = function(_what, _parent, _where){
+		if (confirm("Are you sure you want to remove this element?")){
+			if (_parent[_where][_what]){
+				delete _parent[_where][_what];
+			}
+			if (Object.keys(_parent[_where]).length === 0){
+				delete _parent[_where];
 			}
 		}
 	}
