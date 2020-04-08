@@ -715,6 +715,18 @@ angular.module('elixir_front.services', [])
 			description: 'Related to automatically generated entries from publications: describes the confidence score of an entry being a valid bio.tools entry.',
 			label: "Tool confidence"
 		},
+		bioLibAppName: {
+			description: 'Application Name of an existing BioLib app',
+			label: "App name"
+		},
+		bioLibAuthorUsername: {
+			description: 'Username of the user that created the BioLib app',
+			label: "Author username"
+		},
+		bioLibAuthorName: {
+			description: 'The display name of the author that created the BioLib app',
+			label: "Author name"
+		}
 	};
 })
 .factory('CheckUserEditingRights', ['User', function(User) {
