@@ -392,6 +392,8 @@ class ResourceSerializer(serializers.ModelSerializer):
 		# then create the community object out of the smaller object(s)
 
 		community_dict = validated_data.pop('community') if 'community' in validated_data.keys() else {}
+		community = None
+
 		if community_dict.get('biolib'):
 			b = community_dict['biolib']
 			biolib_object = BioLib.objects.create(
