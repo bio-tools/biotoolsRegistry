@@ -50,9 +50,8 @@ class ResourceList(APIView):
 		domain_resources = []
 		query_struct = search.construct_es_query(query_dict)
 
-		#return Response({str(query_struct)}, status=status.HTTP_200_OK)
-
 		result = es.search(index=settings.ELASTIC_SEARCH_INDEX, body=query_struct)
+		
 		count = result['hits']['total']
 		results = [el['_source'] for el in result['hits']['hits']]
 
@@ -60,44 +59,33 @@ class ResourceList(APIView):
 		if (not results and count > 0):
 			return Response({"detail": "Invalid page. That page contains no results."}, status=status.HTTP_404_NOT_FOUND)
 
+		# If subdomain is specified
 		if domain:
 			domain_result = es.search(index='domains', body={'size': 10000,'query': {'bool': {'must': [{'match_phrase': {'domain': {'query': domain}}}]}}})
 			domain_count = domain_result['hits']['total']
 			
+			# there should be a single domain always, so this condition is not really necessary
+			#	we can improve on this later
 			if domain_count > 0:
 				domain_result = [el['_source'] for el in domain_result['hits']['hits']][0]
+				
 				domain_resources = set(map(lambda x: (x['biotoolsID']), domain_result['resources']))
 
 				# get touples of returned tools
 				returned_resource = set(map(lambda x: (x['biotoolsID']), results))
 				
-				
+				# if the query is just of the subdomain (e.g. domain=covid-19)
+				# 	and no other search terms are provided
+				#	then the total counts value "count" is the number of the tools in the domain
 				
 				if len(list(set(query_dict.keys()) - set([u'sort', u'domain', u'ord', u'page']))) == 0:
 					diff = list(domain_resources)
+					count = len(diff)
 				else:
 					diff = list(returned_resource & domain_resources)
-				
+
 				if len(diff) > 0:
-					count = len(diff)
-					
-					if len(diff) > 1000:
-						results = []
-						for i in range(0,len(diff) / 1000):
-							rest = len(diff) if len(diff) <= i*1000+1000 else i*1000+1000
-							query_struct['query'] = {'bool': {'should': map(lambda x: {'bool': {'must': [{'match': {'id': {'query': x[0]}}}]}}, diff[i*1000:rest])}}
-							result = es.search(index='elixir', body=query_struct)
-							sub_results = [el['_source'] for el in result['hits']['hits']]
-							results += sub_results
-					else:
-
-						query_struct['query'] = {'bool': {'should': map(lambda x: {'bool': {'must': [{'match': {'biotoolsID': {'query': x}}}]}}, diff)}}
-
-
-						result = es.search(index='elixir', body=query_struct)
-						#return Response({str(result)}, status=status.HTTP_400_BAD_REQUEST)
-						count = result['hits']['total']
-						results = [el['_source'] for el in result['hits']['hits']]
+					results = [t for t in results if t['biotoolsID'] in diff]
 				else:
 					return Response({'count': 0,
 						 'next': None if (page*size >= count) else "?page=" + str(page + 1),
@@ -108,6 +96,7 @@ class ResourceList(APIView):
 					'next': None if (page*size >= count) else "?page=" + str(page + 1),
 				 	'previous': None if page == 1 else "?page=" + str(page - 1),
 				 	'list': []}, status=200)
+
 
 		return Response({'count': count,
 						 'next': None if (page*size >= count) else "?page=" + str(page + 1),
