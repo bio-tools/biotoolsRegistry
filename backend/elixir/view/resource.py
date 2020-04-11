@@ -48,7 +48,25 @@ class ResourceList(APIView):
 
 		domain = query_dict.get('domain', None)
 		domain_resources = []
+
 		query_struct = search.construct_es_query(query_dict)
+
+		# if domain is present then we add to the elasticsearch query
+		# 	we select all the ids from the subdomain and then we use them
+		#	in the regular query
+		if domain:
+			domain_result = es.search(index='domains', body={'size': 10000,'query': {'bool': {'must': [{'match_phrase': {'domain': {'query': domain}}}]}}})
+			domain_count = domain_result['hits']['total']
+
+			# there should be a single domain always, so this condition is not really necessary
+			#	we can improve on this later
+			if domain_count > 0:
+				domain_result = [el['_source'] for el in domain_result['hits']['hits']][0]
+				domain_resources = set(map(lambda x: (x['biotoolsID']), domain_result['resources']))
+				
+				# lowercase the biotoolsIDs so that it matches the elastic analyzer
+				domain_ids = [rid.lower() for rid in list(domain_resources)]
+				query_struct['query']['bool']['must'].append({"terms":{"biotoolsID": domain_ids}})
 
 		result = es.search(index=settings.ELASTIC_SEARCH_INDEX, body=query_struct)
 		
@@ -60,42 +78,42 @@ class ResourceList(APIView):
 			return Response({"detail": "Invalid page. That page contains no results."}, status=status.HTTP_404_NOT_FOUND)
 
 		# If subdomain is specified
-		if domain:
-			domain_result = es.search(index='domains', body={'size': 10000,'query': {'bool': {'must': [{'match_phrase': {'domain': {'query': domain}}}]}}})
-			domain_count = domain_result['hits']['total']
+		# if domain:
+		# 	domain_result = es.search(index='domains', body={'size': 10000,'query': {'bool': {'must': [{'match_phrase': {'domain': {'query': domain}}}]}}})
+		# 	domain_count = domain_result['hits']['total']
 			
-			# there should be a single domain always, so this condition is not really necessary
-			#	we can improve on this later
-			if domain_count > 0:
-				domain_result = [el['_source'] for el in domain_result['hits']['hits']][0]
+		# 	# there should be a single domain always, so this condition is not really necessary
+		# 	#	we can improve on this later
+		# 	if domain_count > 0:
+		# 		domain_result = [el['_source'] for el in domain_result['hits']['hits']][0]
 				
-				domain_resources = set(map(lambda x: (x['biotoolsID']), domain_result['resources']))
+		# 		domain_resources = set(map(lambda x: (x['biotoolsID']), domain_result['resources']))
 
-				# get touples of returned tools
-				returned_resource = set(map(lambda x: (x['biotoolsID']), results))
+		# 		# get touples of returned tools
+		# 		returned_resource = set(map(lambda x: (x['biotoolsID']), results))
 				
-				# if the query is just of the subdomain (e.g. domain=covid-19)
-				# 	and no other search terms are provided
-				#	then the total counts value "count" is the number of the tools in the domain
+		# 		# if the query is just of the subdomain (e.g. domain=covid-19)
+		# 		# 	and no other search terms are provided
+		# 		#	then the total counts value "count" is the number of the tools in the domain
 				
-				if len(list(set(query_dict.keys()) - set([u'sort', u'domain', u'ord', u'page']))) == 0:
-					diff = list(domain_resources)
-					count = len(diff)
-				else:
-					diff = list(returned_resource & domain_resources)
+		# 		if len(list(set(query_dict.keys()) - set([u'sort', u'domain', u'ord', u'page']))) == 0:
+		# 			diff = list(domain_resources)
+		# 			count = len(diff)
+		# 		else:
+		# 			diff = list(returned_resource & domain_resources)
 
-				if len(diff) > 0:
-					results = [t for t in results if t['biotoolsID'] in diff]
-				else:
-					return Response({'count': 0,
-						 'next': None if (page*size >= count) else "?page=" + str(page + 1),
-						 'previous': None if page == 1 else "?page=" + str(page - 1),
-						 'list': []}, status=200)
-			else:
-				return Response({'count': 0,
-					'next': None if (page*size >= count) else "?page=" + str(page + 1),
-				 	'previous': None if page == 1 else "?page=" + str(page - 1),
-				 	'list': []}, status=200)
+		# 		if len(diff) > 0:
+		# 			results = [t for t in results if t['biotoolsID'] in diff]
+		# 		else:
+		# 			return Response({'count': 0,
+		# 				 'next': None if (page*size >= count) else "?page=" + str(page + 1),
+		# 				 'previous': None if page == 1 else "?page=" + str(page - 1),
+		# 				 'list': []}, status=200)
+		# 	else:
+		# 		return Response({'count': 0,
+		# 			'next': None if (page*size >= count) else "?page=" + str(page + 1),
+		# 		 	'previous': None if page == 1 else "?page=" + str(page - 1),
+		# 		 	'list': []}, status=200)
 
 
 		return Response({'count': count,
