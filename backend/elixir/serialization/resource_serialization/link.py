@@ -13,19 +13,42 @@ from elixir.validators import *
 # 	 	"type": "Helpdesk"
 # 	}
 # ]
+
+class LinkTypeSerializer(serializers.ModelSerializer):
+	type = serializers.CharField(allow_blank=False, required=True)
+
+	class Meta:
+		model = LinkType
+		fields = ('type',)
+
+	def get_pk_field(self, model_field):
+		return None
+
+	def to_representation(self, obj):
+		return obj.type
+
+	def to_internal_value(self, data):
+		# checking if blank
+		IsNotBlankValidator(data)
+		# checking if within enum
+		enum = ENUMValidator([u'Helpdesk', u'Issue tracker', u'Mailing list', u'Mirror', u'Registry', u'Repository', u'Social media', u'Service', u'Software catalogue', u'Technical monitoring', u'Galaxy service', u'Discussion forum', u'Other'])
+		data = enum(data)
+		return {'type': data}
+
 class LinkSerializer(serializers.ModelSerializer):
 	url = serializers.CharField(allow_blank=False, validators=[IsURLFTPValidator], required=True)
-	type = serializers.CharField(allow_blank=True, required=True)
+	type = LinkTypeSerializer(many=True, required=True, allow_empty=False)
 	note = serializers.CharField(allow_blank=True, min_length=10, max_length=1000, validators=[IsStringTypeValidator], required=False)
 
 	class Meta:
 		model = Link
 		fields = ('url', 'type', 'note')
 
-	def validate_type(self, attrs):
-		enum = ENUMValidator([u'Helpdesk', u'Issue tracker', u'Mailing list', u'Mirror', u'Registry', u'Repository', u'Social media', u'Service', u'Software catalogue', u'Technical monitoring', u'Galaxy service', u'Discussion forum', u'Other'])
-		attrs = enum(attrs)
-		return attrs
+	# def validate_type(self, attrs):
+	# 	enum = ENUMValidator([u'Helpdesk', u'Issue tracker', u'Mailing list', u'Mirror', u'Registry', u'Repository', u'Social media', u'Service', u'Software catalogue', u'Technical monitoring', u'Galaxy service', u'Discussion forum', u'Other'])
+	# 	attrs = enum(attrs)
+	# 	return attrs
 
 	def get_pk_field(self, model_field):
 		return None
+

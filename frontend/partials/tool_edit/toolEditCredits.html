@@ -72,22 +72,26 @@
 									<label class="help-block" ng-repeat="error in creditDetailForm.roleType.errorMessages" bo-text="error"></label>
 								</div>
  -->
-								<div class="col-sm-9" ng-init="contactIndex = $index">
-									<div class="form-group" ng-repeat="typeRole in software.credit[contactIndex].typeRole track by $index" ng-init="roleIndex = $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.credit[contactIndex].typeRole[roleIndex][0]};">
-										<ng-form name="toolTypeForm">
+								<div class="col-sm-9" ng-init="creditIndex = $index">
+									<div class="form-group" ng-repeat="typeRole in software.credit[creditIndex].typeRole track by $index" ng-init="roleIndex = $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.credit[creditIndex].typeRole[roleIndex][0]};">
 											<div class="input-group">
-												<select class="form-control select-btn-group" ng-options="item.value as item.text for item in roleTypeOptions" ng-model="software.credit[contactIndex].typeRole[roleIndex]" name="typeRole" validate-edit-resource-field index={{roleIndex}}>
+												<select class="form-control select-btn-group" ng-options="item.value as item.text for item in roleTypeOptions" ng-model="software.credit[creditIndex].typeRole[roleIndex]">
 												</select>
 												<span class="input-group-btn">
-													<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('typeRole', software.credit[contactIndex], roleIndex)"><i class="fa fa-times remove-icon-button"></i> </button>
+													<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('typeRole', software.credit[creditIndex], roleIndex)"><i class="fa fa-times remove-icon-button"></i> </button>
 												</span>
 											</div>
-											<label class="help-block" ng-repeat="error in toolTypeForm.typeRole.errorMessages" bo-text="error"></label>
-										</ng-form>
+											<label class="help-block" ng-repeat="error in registrationErrorPayload.credit[creditIndex].typeRole[roleIndex]" bo-text="error"></label>
+											<label class="help-block" ng-repeat="error in creditDetailForm.credit[creditIndex]" bo-text="error"></label>
 									</div>
 									<label class="help-block" ng-if="isString(error)" ng-repeat="error in registrationErrorPayload.typeRole" bo-text="error"></label>
+									
 									<div class="form-group" style="padding-top:7px;">
-										<a href="" ng-click="addButtonClick('typeRole', software.credit[contactIndex], true, false);">Add role</a>
+										<a href="" ng-click="addButtonClick('typeRole', software.credit[creditIndex], true, false);">Add role</a>
+									</div>
+
+									<div ng-class="{'has-error': true};" ng-show="registrationErrorPayload.credit[creditIndex].typeRole[0]=='This field is required.'">
+										<label class="help-block" ng-repeat="error in registrationErrorPayload.credit[creditIndex].typeRole" bo-text="error"></label>
 									</div>
 								</div>
 

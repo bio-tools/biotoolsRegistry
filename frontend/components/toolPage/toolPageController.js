@@ -238,6 +238,21 @@ angular.module('elixir_front')
 		replace: true
 	};
 })
+.directive("toolPageNewLinkCallout", function(){
+	return {
+		restrict: 'A',
+		scope:{
+			'url': '=?',
+			'types':'=?',
+			'toshow':'@?',
+			'color':'@?',
+			'cssclass':"@?",
+			'note':'=?'
+		},
+		templateUrl: 'components/toolPage/partials/toolPageNewLinkCallout.html',
+		replace: true
+	};
+})
 .directive("toolPagePublicationCallout", function(){
 	return {
 		restrict: 'A',

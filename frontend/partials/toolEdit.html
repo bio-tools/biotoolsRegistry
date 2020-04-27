@@ -51,7 +51,7 @@
 								<div ng-include="'/partials/tool_edit/toolEditLabel.html'"></div>
 							</uib-tab>
 							<uib-tab>
-								<tab-heading><span ng-class="{ 'tool-edit-tab-error': form.linksForm.$invalid }">Links</span></tab-heading>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': form.linksForm.$invalid || registrationErrorPayload.link }">Links</span></tab-heading>
 								<div ng-include="'/partials/tool_edit/toolEditLinks.html'"></div>
 							</uib-tab>
 							<uib-tab>
@@ -67,7 +67,7 @@
 								<div ng-include="'/partials/tool_edit/toolEditPublications.html'"></div>
 							</uib-tab>
 							<uib-tab>
-								<tab-heading><span ng-class="{ 'tool-edit-tab-error': form.creditsForm.$invalid }">Credits & Support</span></tab-heading>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': registrationErrorPayload.credit || form.creditsForm.$invalid }">Credits & Support</span></tab-heading>
 								<div ng-include="'/partials/tool_edit/toolEditCredits.html'"></div>
 							</uib-tab>
 							<uib-tab>

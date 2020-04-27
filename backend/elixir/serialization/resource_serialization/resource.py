@@ -485,7 +485,12 @@ class ResourceSerializer(serializers.ModelSerializer):
 				CreditTypeRole.objects.create(credit=credit, **typeRole)
 
 		for link in link_list:
-			Link.objects.create(resource=resource, **link)
+			linktype_list = link.pop('type') if 'type' in link.keys() else []
+			
+			link_object = Link.objects.create(resource=resource, **link)
+
+			for linktype in linktype_list:
+				LinkType.objects.create(link=link_object, **linktype)
 
 		for download in download_list:
 			Download.objects.create(resource=resource, **download)
