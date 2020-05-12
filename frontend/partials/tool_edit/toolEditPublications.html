@@ -10,7 +10,7 @@
 	<div class="form-group">
 		<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
 			<!-- Publications -->
-			<div class="panel panel-default" ng-repeat="link in software.publication track by $index" ng-class="{'no-margin-bottom': $last};">
+			<div class="panel panel-default" ng-repeat="publication in software.publication track by $index" ng-class="{'no-margin-bottom': $last};">
 				<div class="panel-heading" style="position: relative;">
 						<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('publication', software, $index)"></i>
 						<label class="control-label">Details for a single publication</label>
@@ -47,14 +47,31 @@
 								</div>
 							</div>
 
-							<!-- Publication type -->
-							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].type}">
+							<!-- New publication type -->
+							<div class="form-group">
 								<label class="col-sm-4 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.publicationType.description}}">Publication type <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#publication-type"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
 								</label>
-								<div class="col-sm-8">
-									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in publicationTypeOptions" ng-model="software.publication[$index].type" name="type" validate-edit-resource-field index={{$index}}>
-									</select>
-									<label class="help-block" ng-repeat="error in publicationDetailForm.type.errorMessages" bo-text="error"></label>
+								<div class="col-sm-8" ng-init="entryIndex = $index">
+									<div class="form-group" ng-repeat="type in software.publication[entryIndex].type track by $index" ng-init="typeIndex = $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.publication[entryIndex].type[typeIndex][0]};">
+										
+											<div class="input-group">
+												<select class="form-control select-btn-group" ng-options="item.value as item.text for item in publicationTypeOptions" ng-model="software.publication[entryIndex].type[typeIndex]">
+												</select>
+												<span class="input-group-btn">
+													<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('type', software.publication[entryIndex], typeIndex)"><i class="fa fa-times remove-icon-button"></i> </button>
+												</span>
+											</div>
+											<label class="help-block" ng-repeat="error in registrationErrorPayload.publication[entryIndex].type[typeIndex]" bo-text="error"></label>
+									</div>
+									<label class="help-block" ng-repeat="error in publicationDetailForm.publication[entryIndex]" bo-text="error"></label>
+									
+									<div class="form-group" style="padding-top:7px;">
+										<a href="" ng-click="addButtonClick('type', software.publication[entryIndex], true, false);">Add publication type</a>
+									</div>
+									<div ng-class="{'has-error': true};" ng-show="registrationErrorPayload.publication[entryIndex].type[0]=='This field is required.'">
+										<label class="help-block" ng-repeat="error in registrationErrorPayload.publication[entryIndex].type" bo-text="error"></label>
+									</div>
+
 								</div>
 							</div>
 

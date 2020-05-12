@@ -18,7 +18,7 @@ class Publication(models.Model):
     pmcid = models.TextField(blank=True, null=True)
     pmid = models.TextField(blank=True, null=True)
     doi = models.TextField(blank=True, null=True)
-    type = models.TextField(blank=True, null=True)
+    type_old = models.TextField(blank=True, null=True)
     version = models.TextField(blank=True, null=True)
     note = models.TextField(blank=True, null=True)
     resource = models.ForeignKey(Resource, null=True, blank=True, related_name='publication', on_delete=models.CASCADE)
@@ -29,6 +29,16 @@ class Publication(models.Model):
 
     def __unicode__(self):
         return unicode(self.pmcid) or u''
+
+class PublicationType(models.Model):
+    type = models.TextField(blank=True, null=True)
+    publication = models.ForeignKey(Publication, null=True, blank=True, related_name='type', on_delete=models.CASCADE) 
+
+    # metadata
+    additionDate = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return unicode(self.name) or u''
 
 
 class PublicationAuthor(models.Model):

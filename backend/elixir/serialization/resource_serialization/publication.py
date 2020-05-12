@@ -16,22 +16,33 @@ class PublicationMetadataSerializer(serializers.ModelSerializer):
 		model = PublicationMetadata
 		fields = ('title', 'abstract', 'date', 'citationCount', 'authors', 'journal')
 
+class PublicationTypeSerializer(serializers.ModelSerializer):
+	type = serializers.CharField(allow_blank=False, required=True)
 
-# TODO: make this into that:
-# "publication": {
-# 	"isAvailable": true,
-# 	"list": [
-# 		{
-# 			"doi":"123",
-# 			"pmcid": "234"
-# 		}
-# 	]
-# }
+	class Meta:
+		model = PublicationType
+		fields = ('type',)
+
+	def get_pk_field(self, model_field):
+		return None
+
+	def to_representation(self, obj):
+		return obj.type
+
+	def to_internal_value(self, data):
+		# checking if blank
+		IsNotBlankValidator(data)
+		# checking if within enum
+		enum = enum = ENUMValidator([u'Primary', u'Method', u'Usage', u'Benchmarking study', u'Review', u'Other'])
+		data = enum(data)
+		return {'type': data}
+
 class PublicationSerializer(serializers.ModelSerializer):
 	pmcid = serializers.CharField(allow_blank=False, validators=[IsPMCIDValidator], required=False)
 	pmid = serializers.CharField(allow_blank=False, validators=[IsPMIDValidator], required=False)
 	doi = serializers.CharField(allow_blank=False, validators=[IsDOIValidator], required=False)
-	type = serializers.CharField(allow_blank=True, max_length=300, min_length=1, required=False)
+	# type = serializers.CharField(allow_blank=True, max_length=300, min_length=1, required=False)
+	type = PublicationTypeSerializer(many=True, required=False, allow_empty=False)
 	version = serializers.CharField(allow_blank=False, max_length=100, min_length=1, required=False)
 	note = serializers.CharField(allow_blank=True, min_length=10, max_length=1000, validators=[IsStringTypeValidator], required=False)
 	metadata = PublicationMetadataSerializer(read_only=True, required=False, many=False)
@@ -46,10 +57,10 @@ class PublicationSerializer(serializers.ModelSerializer):
 		model = Publication
 		fields = ('doi', 'pmid', 'pmcid',  'type', 'version', 'note', 'metadata')
 
-	def validate_type(self, attrs):
-		enum = ENUMValidator([u'Primary', u'Method', u'Usage', u'Benchmarking study', u'Review', u'Other'])
-		attrs = enum(attrs)
-		return attrs
+	# def validate_type(self, attrs):
+	# 	enum = ENUMValidator([u'Primary', u'Method', u'Usage', u'Benchmarking study', u'Review', u'Other'])
+	# 	attrs = enum(attrs)
+	# 	return attrs
 
 	def validate_version(self, attrs):
 		# make sure the version matches the regular expression

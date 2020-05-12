@@ -470,8 +470,17 @@ class ResourceSerializer(serializers.ModelSerializer):
 		for topic in topic_list:
 			Topic.objects.create(resource=resource, **topic)
 
+
 		for publication in publication_list:
-			Publication.objects.create(resource=resource, **publication)
+			publicationtype_list = publication.pop('type') if 'type' in publication.keys() else []
+			
+			publication_object = Publication.objects.create(resource=resource, **publication)
+
+			for publicationtype in publicationtype_list:
+				PublicationType.objects.create(publication=publication_object, **publicationtype)
+
+		# for publication in publication_list:
+		# 	Publication.objects.create(resource=resource, **publication)
 
 		# for documentation in documentation_list:
 		# 	Documentation.objects.create(resource=resource, **documentation)

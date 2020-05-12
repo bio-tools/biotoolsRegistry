@@ -261,7 +261,7 @@ angular.module('elixir_front')
 				'pmcid': '=?',
 				'doi':'=?',
 				'pmid':'=?',
-				'name':'=?',
+				'types':'=?',
 				'color':'@?',
 				'note':'=?'
 		},
