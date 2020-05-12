@@ -188,7 +188,8 @@ img.biotools-logo:hover{
 .pill-tag-orange-background, 
 .pill-tag-topic, 
 .pill-tag-operation,
-.pill-tag-link-element
+.pill-tag-link-element,
+.pill-tag-documentation-element
 {
 	border-radius: 8px;
 	font-family: 'Roboto';
@@ -511,14 +512,25 @@ span.biolib_value > i.fa{
 div.link-element{
     border-left-color: #524656;
 }
+div.documentation-element{
+    border-left-color: #EB7B59;
+}
 
 .pill-tag-link-element{
     color: white;
     background-color: #524656;
     font-size:12px !important;
+    display: inline-block;
 }
 
-a.link-element{
+.pill-tag-documentation-element{
+    color: white;
+    background-color: #EB7B59;
+    font-size:12px !important;
+    display: inline-block;
+}
+
+a.link-element, a.documentation-element{
     font-size: 100%;
     display: block;
     margin-bottom: 10px;

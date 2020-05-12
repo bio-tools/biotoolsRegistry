@@ -247,7 +247,8 @@ angular.module('elixir_front')
 			'toshow':'@?',
 			'color':'@?',
 			'cssclass':"@?",
-			'note':'=?'
+			'note':'=?',
+			'hovertext':'@?'
 		},
 		templateUrl: 'components/toolPage/partials/toolPageNewLinkCallout.html',
 		replace: true
