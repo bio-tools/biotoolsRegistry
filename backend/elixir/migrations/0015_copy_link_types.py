@@ -62,12 +62,12 @@ def copy_link_types(apps, schema_editor):
         print("!!!!!!!!!!")
         
     print("Copying regular simple links...")
-    for link in Link.objects.all():
-        if(link.resource_id not in link_rids_with_same_urls):
+    for l in Link.objects.all():
+        if(l.resource_id not in link_rids_with_same_urls):
             lt = LinkType()
             lt.type = l.type_old
             lt.additionDate = l.additionDate
-            lt.link_id = link.id
+            lt.link_id = l.id
             lt.save()
     print("Done")
 

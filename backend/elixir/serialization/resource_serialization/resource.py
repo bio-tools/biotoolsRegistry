@@ -473,8 +473,16 @@ class ResourceSerializer(serializers.ModelSerializer):
 		for publication in publication_list:
 			Publication.objects.create(resource=resource, **publication)
 
+		# for documentation in documentation_list:
+		# 	Documentation.objects.create(resource=resource, **documentation)
+
 		for documentation in documentation_list:
-			Documentation.objects.create(resource=resource, **documentation)
+			documentationtype_list = documentation.pop('type') if 'type' in documentation.keys() else []
+			
+			documentation_object = Documentation.objects.create(resource=resource, **documentation)
+
+			for documentationtype in documentationtype_list:
+				DocumentationType.objects.create(documentation=documentation_object, **documentationtype)
 
 		for credit in credit_list:
 			typerole_list = credit.pop('typeRole') if 'typeRole' in credit.keys() else []
@@ -491,6 +499,8 @@ class ResourceSerializer(serializers.ModelSerializer):
 
 			for linktype in linktype_list:
 				LinkType.objects.create(link=link_object, **linktype)
+		
+		
 
 		for download in download_list:
 			Download.objects.create(resource=resource, **download)
