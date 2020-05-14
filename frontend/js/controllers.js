@@ -908,10 +908,11 @@ angular.module('elixir_front.controllers', [])
 		{value: "General", text: "General"},
 		{value: "Governance", text: "Governance"},
 		{value: "Installation instructions", text: "Installation instructions"},
-		{value: "User manual", text: "User manual"},
+		{value: "Quick start guide", text: "Quick start guide"},
 		{value: "Release notes", text: "Release notes"},
 		{value: "Terms of use", text: "Terms of use"},
 		{value: "Training material", text: "Training material"},
+		{value: "User manual", text: "User manual"},
 		{value: "Other", text: "Other"}
 	];
 

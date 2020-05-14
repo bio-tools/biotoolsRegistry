@@ -20,7 +20,7 @@ class DocumentationTypeSerializer(serializers.ModelSerializer):
 		# checking if blank
 		IsNotBlankValidator(data)
 		# checking if within enum
-		enum = ENUMValidator([u'API documentation', u'Citation instructions', u'Code of conduct', u'Command-line options', u'General', u'User manual', u'Terms of use', u'Training material', u'Governance', u'Contributions policy', u'Installation instructions', u'FAQ', u'Release notes', u'Other'])
+		enum = ENUMValidator([u'API documentation', u'Citation instructions', u'Code of conduct', u'Command-line options', u'General', u'User manual', u'Terms of use', u'Training material', u'Governance', u'Contributions policy', u'Installation instructions', u'FAQ', u'Release notes', u'Other', u'Quick start guide'])
 		data = enum(data)
 		return {'type': data}
 
