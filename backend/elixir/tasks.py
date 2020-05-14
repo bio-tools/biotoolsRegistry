@@ -13,7 +13,7 @@ import requests
 import json
 import requests
 from elixir.publication_metadata import update_publication
-    
+
 def backup_stats_with_date(upperDateLimit=datetime.today()):
     #django.db.close_connection()
     statsData = StatsData()
@@ -99,3 +99,15 @@ def genereate_missing_stats():
     for i in range(12):
         backup_stats_with_date(currentMonth)
         currentMonth = (currentMonth - timedelta(days=1)).replace(day=1)
+
+
+# Background tasks
+from background_task import background
+from django.contrib.auth.models import User
+
+@background(schedule=60)
+def notify_user(user_id):
+    # lookup user by id and send them a message
+    user = User.objects.get(pk=user_id)
+    user.email_user('Here is a notification', 'You have been notified')
+

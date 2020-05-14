@@ -96,7 +96,8 @@ INSTALLED_APPS = (
     'rest_auth.registration',
     'django_extensions',
     'djcelery',
-    'kombu.transport.django'
+    'kombu.transport.django',
+    'background_task'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -271,6 +272,11 @@ URL_FRONT = getenv('URL_FRONT', 'http://localhost:8000/')
 DEPLOYMENT = getenv('DEPLOYMENT', 'dev')
 
 RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate', 'f', 'function', 'o', 'ontology', 'used-terms', 'stats', 'env', 'sitemap.xml', 'd', 'domain', 'request', 'tool-list', 'w', 'register', 'edit-subdomain', 'subdomain', 'login', 'signup', 'reset-password', 'profile', 'requests', 'workflows', '404', 'documentation', 'about', 'schema', 'governance', 'roadmap', 'events', 'mail', 'faq', 'apidoc', 'changelog', 'helpdesk', 'projects']
+
+
+# Settings for Github Ecosystem
+GITHUB_ECOSYSTEM_ON = getenv('GITHUB_ECOSYSTEM_ON', False, castf=bool)
+
 
 # settings specific to deployment
 try:
