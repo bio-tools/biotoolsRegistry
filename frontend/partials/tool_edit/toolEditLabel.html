@@ -164,7 +164,7 @@
 						<a href="" ng-click="addButtonClick('collectionID', software, true, false);">Add collection</a>
 					</div>
 				</div>
-				<!-- 	Accessability	 -->
+				<!-- 	Accessibility	 -->
 				<div class="form-group no-margin-bottom">
 					<label class="control-label col-sm-3" style="position: relative;">
 						<span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.accessibility.description}}">Accessibility <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#accessibility"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
@@ -229,6 +229,28 @@
 						</div>
 						<div class="form-group" style="padding-top:7px;">
 							<a href="" ng-click="addButtonClick('elixirNode', software, true, false);">Add ELIXIR Node</a>
+						</div>
+					</div>
+				</div>
+				<!-- ELIXIR community -->
+				<div class="form-group no-margin-bottom">
+					<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.elixirCommunity.description}}">ELIXIR Community <a target="_blank" href="https://biotools.readthedocs.io/en/latest/curators_guide.html#elixir-community"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+					</label>
+					<div class="col-sm-9">
+						<div class="form-group" ng-repeat="elixirCommunity in software.elixirCommunity track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.elixirCommunity[$index][0]};">
+							<ng-form name="elixirCommunityForm">
+								<div class="input-group">
+									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in elixirCommunityOptions" ng-model="software.elixirCommunity[$index]" name="elixirCommunity" validate-edit-resource-field index={{$index}}>
+									</select>
+									<span class="input-group-btn">
+										<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('elixirCommunity', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+									</span>
+								</div>
+								<label class="help-block" ng-repeat="error in elixirCommunityForm.elixirCommunity.errorMessages" bo-text="error"></label>
+							</ng-form>
+						</div>
+						<div class="form-group" style="padding-top:7px;">
+							<a href="" ng-click="addButtonClick('elixirCommunity', software, true, false);">Add ELIXIR Community</a>
 						</div>
 					</div>
 				</div>

@@ -104,7 +104,7 @@ class OtherID(models.Model):
     def __unicode__(self):
         return unicode(self.value) or u''
 
-
+# elixirPlatform
 class ElixirPlatform(models.Model):
     elixirPlatform = models.TextField(blank=False, null=True)
     resource = models.ForeignKey(Resource, null=True, blank=True, related_name='elixirPlatform', on_delete=models.CASCADE)
@@ -115,10 +115,22 @@ class ElixirPlatform(models.Model):
     def __unicode__(self):
         return unicode(self.name) or u''
 
-
+# elixirNode
 class ElixirNode(models.Model):
     elixirNode = models.TextField(blank=False, null=True)
     resource = models.ForeignKey(Resource, null=True, blank=True, related_name='elixirNode', on_delete=models.CASCADE)
+
+    # metadata
+    additionDate = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return unicode(self.name) or u''
+
+
+# elixirCommunity
+class ElixirCommunity(models.Model):
+    elixirCommunity = models.TextField(blank=False, null=True)
+    resource = models.ForeignKey(Resource, null=True, blank=True, related_name='elixirCommunity', on_delete=models.CASCADE)
 
     # metadata
     additionDate = models.DateTimeField(auto_now_add=True)

@@ -687,6 +687,10 @@ angular.module('elixir_front.services', [])
 			description: "Name of one of countries participating in ELIXIR",
 			label: "elixirPlatform"
 		},
+		elixirCommunity: {
+			description: "Name of the community participating in ELIXIR",
+			label: "elixirCommunity"
+		},
 		otherID: {
 			description: "A unique identifier of the tool, typically assigned by an ID-assignment authority other than bio.tools, e.g. “RRID:SCR_015644”",
 			label: "otherID"

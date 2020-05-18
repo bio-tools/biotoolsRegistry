@@ -17,11 +17,17 @@
 	border-radius: 3px;
 }
 
-.tool-page-version-text {
+span.tool-page-version-text {
 	color: #7f7f7f;
 	font-weight: lighter;
-	font-size: 0.65em;
+	display: block;
+	font-size: 0.95em;
 	margin-left: 5px;
+	margin-bottom: 5px;
+}
+
+.elixir-info{
+	margin-bottom: 10px;
 }
 
 /*.tool-tag-divider {

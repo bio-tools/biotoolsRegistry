@@ -7,6 +7,22 @@ angular.module('elixir_front')
 
 	$scope.User = User;
 
+	$scope.elixirCommunityIndex = {
+		"3D-BioInfo":"3d-bioinfo",
+		"3D-BioInfo": "3d-bioinfo",
+		"Federated Human Data": "human-data",
+		"Galaxy": "galaxy",
+		"Human Copy Number Variation": "hcnv",
+		"Intrinsically Disordered Proteins": "intrinsically-disordered-proteins",
+		"Marine Metagenomics": "marine-metagenomics",
+		"Metabolomics": "metabolomics",
+		"Microbial Biotechnology": "microbial-biotechnology",
+		"Plant Sciences": "plant-sciences",
+		"Proteomics": "proteomics",
+		"Rare Diseases": "rare-diseases"
+	}
+
+
 	$scope.confidenceClass = function() {
 		if ($scope.software.confidence_flag === 'high'){
 			return 'alert-info'

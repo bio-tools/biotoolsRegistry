@@ -19,7 +19,7 @@
 	<div class="tool-page-diver-label">
 		<span>ELIXIR credits and links</span>
 	</div>
-<div ng-if="software.elixirPlatform.length > 0">
+<div ng-if="software.elixirPlatform.length > 0" class="elixir-info">
 	<!-- Elixir Platform -->
 	<span class="tool-page-version-text">ELIXIR platform</span>
 	<div style="display: flex; flex-wrap: wrap;">
@@ -28,12 +28,22 @@
 		</span>
 	</div>
 </div>
-<div ng-if="software.elixirNode.length > 0">
+<div ng-if="software.elixirNode.length > 0" class="elixir-info">
 	<!-- Elixir Node -->
 	<span class="tool-page-version-text">ELIXIR node</span>
 	<div style="display: flex; flex-wrap: wrap;">
 		<span ng-repeat="node in software.elixirNode track by $index" style="margin-bottom: 7px;">
 			<a class="pill-tag-third-background" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/{{node.replace(' ','-')}}" target="_blank">{{ ::node }}</a>
+		</span>
+	</div>
+</div>
+
+<div ng-if="software.elixirCommunity.length > 0" class="elixir-info">
+	<!-- Elixir Community -->
+	<span class="tool-page-version-text">ELIXIR community</span>
+	<div style="display: flex; flex-wrap: wrap;">
+		<span ng-repeat="community in software.elixirCommunity track by $index" style="margin-bottom: 7px;">
+			<a class="pill-tag-third-background" href="https://elixir-europe.org/communities/{{elixirCommunityIndex[community]}}" target="_blank">{{ ::community }}</a>
 		</span>
 	</div>
 </div>

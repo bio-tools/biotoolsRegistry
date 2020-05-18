@@ -147,8 +147,39 @@ class ElixirNodeSerializer(serializers.ModelSerializer):
 	def get_pk_field(self, model_field):
 		return None
 
-# relations
+# elixirCommunity
+class ElixirCommunitySerializer(serializers.ModelSerializer):
+	elixirCommunity = serializers.CharField(allow_blank=False, required=False)
+	
+	class Meta:
+		model = ElixirCommunity
+		fields = ('elixirCommunity',)
 
+	def validate_elixirCommunity(self, attrs):
+		enum = ENUMValidator([u'3D-BioInfo', u'Federated Human Data', u'Galaxy', u'Human Copy Number Variation', u'Intrinsically Disordered Proteins', u'Marine Metagenomics', u'Metabolomics', u'Microbial Biotechnology', u'Plant Sciences', u'Proteomics', u'Rare Diseases'])
+		attrs = enum(attrs)
+		return attrs
+
+	def to_representation(self, obj):
+		return obj.elixirCommunity
+
+
+	def to_internal_value(self, data):
+		# checking if blank
+	
+		IsNotBlankValidator(data)
+		enum = ENUMValidator([u'3D-BioInfo', u'Federated Human Data', u'Galaxy', u'Human Copy Number Variation', u'Intrinsically Disordered Proteins', u'Marine Metagenomics', u'Metabolomics', u'Microbial Biotechnology', u'Plant Sciences', u'Proteomics', u'Rare Diseases'])
+		data = enum(data)
+
+		return {"elixirCommunity":data}
+
+	def get_pk_field(self, model_field):
+		return None
+
+
+
+
+# relations
 class RelationSerializer(serializers.ModelSerializer):
 	biotoolsID = serializers.CharField(allow_blank=False, required=True)
 	type = serializers.CharField(allow_blank=True, required=True)
@@ -236,6 +267,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 
 	elixirPlatform = ElixirPlatformSerializer(many=True, required=False, allow_empty=False)
 	elixirNode = ElixirNodeSerializer(many=True, required=False, allow_empty=False)
+	elixirCommunity = ElixirCommunitySerializer(many=True, required=False, allow_empty=False)
 
 
 
@@ -274,6 +306,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 			'accessibility',
 			'elixirPlatform',
 			'elixirNode',
+			'elixirCommunity',
 			'link',
 			'download',
 			'documentation',
@@ -374,6 +407,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 		credit_list = validated_data.pop('credit') if 'credit' in validated_data.keys() else []
 		elixirPlatform_list = validated_data.pop('elixirPlatform') if 'elixirPlatform' in validated_data.keys() else []
 		elixirNode_list = validated_data.pop('elixirNode') if 'elixirNode' in validated_data.keys() else []
+		elixirCommunity_list = validated_data.pop('elixirCommunity') if 'elixirCommunity' in validated_data.keys() else []
 
 		credit_dict = validated_data.pop('credit') if 'credit' in validated_data.keys() else []
 		# elixirInfo_dict = validated_data.pop('elixirInfo') if 'elixirInfo' in validated_data.keys() else []
@@ -466,6 +500,9 @@ class ResourceSerializer(serializers.ModelSerializer):
 
 		for elixirNode in elixirNode_list:
 			ElixirNode.objects.create(resource=resource, **elixirNode)
+
+		for elixirCommunity in elixirCommunity_list:
+			ElixirCommunity.objects.create(resource=resource, **elixirCommunity)
 
 		for topic in topic_list:
 			Topic.objects.create(resource=resource, **topic)
@@ -621,6 +658,7 @@ class ResourceUpdateSerializer(ResourceSerializer):
 			'accessibility',
 			'elixirPlatform',
 			'elixirNode',
+			'elixirCommunity',
 			'link',
 			'download',
 			'documentation',

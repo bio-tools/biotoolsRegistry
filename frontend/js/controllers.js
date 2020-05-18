@@ -977,6 +977,21 @@ angular.module('elixir_front.controllers', [])
 		{value: "UK", text: "UK"}
 	];
 
+	$scope.elixirCommunityOptions = [
+		{value: "3D-BioInfo", text: "3D-BioInfo", link: "3d-bioinfo"},
+		{value: "Federated Human Data", text: "Federated Human Data", link: "human-data"},
+		{value: "Galaxy", text: "Galaxy", link: "galaxy"},
+		{value: "Human Copy Number Variation", text: "Human Copy Number Variation", link: "hcnv"},
+		{value: "Intrinsically Disordered Proteins", text: "Intrinsically Disordered Proteins", link: "intrinsically-disordered-proteins"},
+		{value: "Marine Metagenomics", text: "Marine Metagenomics", link: "marine-metagenomics"},
+		{value: "Metabolomics", text: "Metabolomics", link: "metabolomics"},
+		{value: "Microbial Biotechnology", text: "Microbial Biotechnology", link: "microbial-biotechnology"},
+		{value: "Plant Sciences", text: "Plant Sciences", link: "plant-sciences"},
+		{value: "Proteomics", text: "Proteomics", link: "proteomics"},
+		{value: "Rare Diseases", text: "Rare Diseases", link: "rare-diseases"}
+		
+	];
+
 	$scope.otherIdTypeOptions = [
 		{value: "doi", text: "doi"},
 		{value: "rrid", text: "rrid"},
