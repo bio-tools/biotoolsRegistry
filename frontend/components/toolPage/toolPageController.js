@@ -8,7 +8,6 @@ angular.module('elixir_front')
 	$scope.User = User;
 
 	$scope.elixirCommunityIndex = {
-		"3D-BioInfo":"3d-bioinfo",
 		"3D-BioInfo": "3d-bioinfo",
 		"Federated Human Data": "human-data",
 		"Galaxy": "galaxy",
@@ -327,6 +326,8 @@ angular.module('elixir_front')
 			callout += '<span ng-show="' + attr.orcidid + '"><a href="{{' + attr.orcidid + '}}" target="_blank">ORCID ›</a></span>';
 			callout += '<span ng-show="' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';
 			callout += '<span ng-show="' + attr.gridid + '"><a href="https://www.grid.ac/institutes/{{' + attr.gridid + '}}" target="_blank">gridid ›</a></span>';
+			callout += '<span ng-show="' + attr.rorid + '" style="color: #CCCCCC;"> | </span></span>';
+			callout += '<span ng-show="' + attr.rorid + '"><a href="https://ror.org/{{' + attr.rorid + '}}" target="_blank">rorid ›</a></span>';
 			callout += '</div>';
 			callout += '</div>';
 			return callout;

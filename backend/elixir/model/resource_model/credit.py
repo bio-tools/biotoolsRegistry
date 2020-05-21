@@ -11,6 +11,7 @@ class Credit(models.Model):
     url = models.TextField(blank=True, null=True)
     orcidid = models.TextField(blank=True, null=True)
     gridid = models.TextField(blank=True, null=True)
+    rorid = models.TextField(blank=True, null=True)
     typeEntity = models.TextField(blank=True, null=True)
     
     #typeRole = models.TextField(blank=True, null=True)

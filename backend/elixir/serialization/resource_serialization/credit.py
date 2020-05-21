@@ -66,6 +66,7 @@ class CreditSerializer(serializers.ModelSerializer):
 	email = serializers.CharField(allow_blank=False, max_length=300, validators=[IsStringTypeValidator, IsEmailValidator], required=False)
 	orcidid = serializers.CharField(allow_blank=False, validators=[IsStringTypeValidator], required=False)
 	gridid = serializers.CharField(allow_blank=False, validators=[IsStringTypeValidator], required=False)
+	rorid = serializers.CharField(allow_blank=False, validators=[IsStringTypeValidator], required=False)
 	typeEntity = serializers.CharField(allow_blank=False, required=False)
 	# TODO: now there can be several typeRoles
 	#typeRole = serializers.CharField(allow_blank=False, required=False)
@@ -77,7 +78,7 @@ class CreditSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Credit
-		fields = ('name', 'email', 'url', 'orcidid', 'gridid', 'typeEntity', 'typeRole', 'note')
+		fields = ('name', 'email', 'url', 'orcidid', 'gridid', 'rorid' ,'typeEntity', 'typeRole', 'note')
 
 	def validate_typeEntity(self, attrs):
 		enum = ENUMValidator([u'Person', u'Project', u'Division', u'Institute', u'Consortium', u'Funding agency'])
@@ -101,6 +102,12 @@ class CreditSerializer(serializers.ModelSerializer):
 		p = re.compile('^grid.[0-9]{4,}.[a-f0-9]{1,2}$', re.IGNORECASE | re.UNICODE)
 		if not p.search(attrs):
 			raise serializers.ValidationError('This field can only contain a valid GRID ID')
+		return attrs
+
+	def validate_rorid(self, attrs):
+		p = re.compile('^0[0-9a-zA-Z]{6}[0-9]{2}$', re.IGNORECASE | re.UNICODE)
+		if not p.search(attrs):
+			raise serializers.ValidationError('This field can only contain a valid ROR ID')
 		return attrs
 
 # TODO: in validate make this either elixirInfo or other info

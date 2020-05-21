@@ -272,6 +272,20 @@ search_struct = {
 		'simple_query':'default',
 		'quoted_query':'phrase'
 	},
+	'creditGridID': {
+		'attribute': 'creditGridID',
+		'search_field': ['credit.gridid'],
+		'exact': True,
+		'simple_query':'default',
+		'quoted_query':'phrase'
+	},
+	'creditRORID': {
+		'attribute': 'creditRORID',
+		'search_field': ['credit.rorid'],
+		'exact': True,
+		'simple_query':'default',
+		'quoted_query':'phrase'
+	},
 	'publication': {
 		'attribute': 'publication',
 		'search_field': ['publication.doi', 'publication.pmid', 'publication.pmcid','publication.type','publication.version'],
@@ -314,13 +328,6 @@ search_struct = {
 		'simple_query':'default',
 		'quoted_query':'phrase'
 	},
-	# 'contact': {
-	# 	'attribute': 'contact',
-	# 	'search_field': ['contact.name.raw'],
-	# 	'exact': True,
-	#	'simple_query':'default',
-	#	'quoted_query':'phrase'
-	# },
 	'documentation': {
 		'attribute': 'documentation',
 		'search_field': ['documentation.note','documentation.url','documentation.type'],
@@ -380,6 +387,27 @@ search_struct = {
 	'otherIDValue': {
 		'attribute': 'otherIDValue',
 		'search_field': ['otherID.value'],
+		'exact': True,
+		'simple_query':'default',
+		'quoted_query':'phrase'
+	},
+	'elixirNode': {
+		'attribute': 'elixirNode',
+		'search_field': ['elixirNode'],
+		'exact': True,
+		'simple_query':'default',
+		'quoted_query':'phrase'
+	},
+	'elixirPlatform': {
+		'attribute': 'elixirPlatform',
+		'search_field': ['elixirPlatform'],
+		'exact': True,
+		'simple_query':'default',
+		'quoted_query':'phrase'
+	},
+	'elixirCommunity': {
+		'attribute': 'elixirCommunity',
+		'search_field': ['elixirCommunity'],
 		'exact': True,
 		'simple_query':'default',
 		'quoted_query':'phrase'
