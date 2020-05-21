@@ -12,6 +12,7 @@ class Credit(models.Model):
     orcidid = models.TextField(blank=True, null=True)
     gridid = models.TextField(blank=True, null=True)
     rorid = models.TextField(blank=True, null=True)
+    fundrefid = models.TextField(blank=True, null=True)
     typeEntity = models.TextField(blank=True, null=True)
     
     #typeRole = models.TextField(blank=True, null=True)

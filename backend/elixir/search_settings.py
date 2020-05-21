@@ -286,6 +286,13 @@ search_struct = {
 		'simple_query':'default',
 		'quoted_query':'phrase'
 	},
+	'creditFundRefID': {
+		'attribute': 'creditFundRefID',
+		'search_field': ['credit.fundrefid'],
+		'exact': True,
+		'simple_query':'default',
+		'quoted_query':'phrase'
+	},
 	'publication': {
 		'attribute': 'publication',
 		'search_field': ['publication.doi', 'publication.pmid', 'publication.pmcid','publication.type','publication.version'],

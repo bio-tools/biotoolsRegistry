@@ -96,7 +96,7 @@ var elixir_front = angular.module('elixir_front', [
 		resolve: {}
 	})
 	.state('search', {
-		url: "/t?page&q&biotoolsID&name&topic&function&operation&input&inputDataFormat&inputDataType&output&outputDataFormat&outputDataType&homepage&description&version&accessibility&toolType&collectionID&maturity&operatingSystem&language&cost&license&documentation&link&download&publication&credit&owner&sort&ord&domain&topicID&operationID&dataType&dataTypeID&dataFormat&dataFormatID&inputID&inputDataTypeID&inputDataFormatID&outputID&outputDataTypeID&outputDataFormatID&creditName&creditTypeRole&creditTypeEntity&creditOrcidID&publicationID&publicationType&publicationVersion&linkType&documentationType&downloadType&downloadVersion&otherID&otherIDType&otherIDVersion&otherIDValue&elixirPlatform&elixirNode&elixirCommunity",
+		url: "/t?page&q&biotoolsID&name&topic&function&operation&input&inputDataFormat&inputDataType&output&outputDataFormat&outputDataType&homepage&description&version&accessibility&toolType&collectionID&maturity&operatingSystem&language&cost&license&documentation&link&download&publication&credit&owner&sort&ord&domain&topicID&operationID&dataType&dataTypeID&dataFormat&dataFormatID&inputID&inputDataTypeID&inputDataFormatID&outputID&outputDataTypeID&outputDataFormatID&creditName&creditTypeRole&creditTypeEntity&creditOrcidID&publicationID&publicationType&publicationVersion&linkType&documentationType&downloadType&downloadVersion&otherID&otherIDType&otherIDVersion&otherIDValue&elixirPlatform&elixirNode&elixirCommunity&creditGridID&creditRORID&creditFundRefID",
 		templateUrl: "partials/search_results.html",
 		data: {
 			meta: {

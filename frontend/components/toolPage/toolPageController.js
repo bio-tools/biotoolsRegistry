@@ -328,6 +328,8 @@ angular.module('elixir_front')
 			callout += '<span ng-show="' + attr.gridid + '"><a href="https://www.grid.ac/institutes/{{' + attr.gridid + '}}" target="_blank">gridid ›</a></span>';
 			callout += '<span ng-show="' + attr.rorid + '" style="color: #CCCCCC;"> | </span></span>';
 			callout += '<span ng-show="' + attr.rorid + '"><a href="https://ror.org/{{' + attr.rorid + '}}" target="_blank">rorid ›</a></span>';
+			callout += '<span ng-show="' + attr.fundrefid + '" style="color: #CCCCCC;"> | </span></span>';
+			callout += '<span ng-show="' + attr.fundrefid + '"><a href="https://dx.doi.org/{{' + attr.fundrefid + '}}" target="_blank">fundrefid ›</a></span>';
 			callout += '</div>';
 			callout += '</div>';
 			return callout;
