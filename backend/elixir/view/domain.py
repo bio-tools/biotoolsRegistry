@@ -47,7 +47,7 @@ class DomainView(APIView):
 		if struct['domain'] in ['all']:
 			return Response({"details": "Domain not allowed."}, status=status.HTTP_400_BAD_REQUEST)
 
-		x = re.match('^[a-zA-Z0-9.~_-]{2,20}$', struct['domain'])
+		x = re.match('^[a-zA-Z0-9.~_-]{2,40}$', struct['domain'])
 		if not x:
 			return Response({"details": "Invalid domain format. Expecting url-safe string between 2 and 20 characters in length."}, status=status.HTTP_400_BAD_REQUEST)
 

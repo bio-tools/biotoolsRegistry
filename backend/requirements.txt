@@ -49,3 +49,4 @@ supervisor==3.2.0
 redis==2.10.3
 python-dateutil==2.8.0
 dateutils==0.6.6
+django-background-tasks==1.2.5

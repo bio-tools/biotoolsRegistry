@@ -13,8 +13,8 @@ http://www.altova.com/mapforce
 	<xsl:template match="/">
 		<xsl:variable name="var1_initial" select="."/>
 		<tools xmlns="biotoolsSchema">
-			<xsl:attribute name="xsi:schemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">biotoolsSchema file:///E:/repos/GitHub/biotoolsShim/genericxml2xml/versions/biotools-3.3.0/biotools_3.3.0.xsd</xsl:attribute>
-			<xsl:for-each select="*[local-name()='root' and namespace-uri()='']/*[local-name()='list' and namespace-uri()='']/*[local-name()='list-item' and namespace-uri()='']">
+			<xsl:attribute name="xsi:schemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">biotoolsSchema file:///E:/repos/GitHub/biotoolsShim/genericxml2xml-singletool/versions/biotools-3.3.0/biotools_3.3.0.xsd</xsl:attribute>
+			<xsl:for-each select="*[local-name()='root' and namespace-uri()='']">
 				<xsl:variable name="var2_cur" select="."/>
 				<tool>
 					<name>

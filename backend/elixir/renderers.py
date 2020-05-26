@@ -48,7 +48,7 @@ class XMLSchemaRenderer(BaseRenderer):
             xmlfile = 'multiple.xslt';
         else:
             # deal with a single tool
-            xmlfile = 'framework_XML_to_biotoolsSchema_3.0.0_XML_xslt1.0.xslt';
+            xmlfile = 'framework_XML_to_biotoolsSchema_3.3.0_XML_xslt1.0.xslt';
 
 
         try:

@@ -25,7 +25,8 @@ class XMLSchemaParser(BaseParser):
 		Parses the incoming bytestream as XML and returns the resulting data.
 		"""
 
-		with open('/elixir/application/backend/elixir/biotoolsSchema/biotools_3.0.0-singletool.xsd', 'r') as f:
+		# Identical to biotools_3.3.0.xsd except no maxOccurs="unbounded" on the "tool" element
+		with open('/elixir/application/backend/elixir/biotoolsSchema/biotools_3.3.0-singletool.xsd', 'r') as f:
 			schema_root = lxmletree.XML(f.read())
 		
 		schema = lxmletree.XMLSchema(schema_root)
@@ -42,7 +43,7 @@ class XMLSchemaParser(BaseParser):
 				raise ParseError("Can only work with a single tool at a time")
 			
 			#xslt for transforming from biotoolsSchema to generic xml from django
-			xslt1 = lxmletree.parse('/elixir/application/backend/elixir/biotoolsSchema/biotoolsSchema_3.0.0_XML_to_framework_XML_xslt1.0.xslt')
+			xslt1 = lxmletree.parse('/elixir/application/backend/elixir/biotoolsSchema/biotoolsSchema_3.3.0_XML_to_framework_XML_xslt1.0.xslt')
 			transform1 = lxmletree.XSLT(xslt1)
 			dom = lxmletree.fromstring(xml_string)
 			newdom = transform1(dom)

@@ -41,4 +41,6 @@
 	font-size: 16px;
 	font-weight: 100 !important;
 	white-space: pre-wrap;
+	text-align: justify;
+	padding: 15px;
 }
