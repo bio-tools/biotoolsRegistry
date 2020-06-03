@@ -157,7 +157,7 @@ img.biotools-logo:hover{
     color: lightblue;
 }
 
-.pill-tag-error-small,.pill-tag-verified {
+.pill-tag-error-small{
 	color: white;
 	border-radius: 8px;
 	font-family: 'Roboto';
@@ -189,7 +189,9 @@ img.biotools-logo:hover{
 .pill-tag-topic, 
 .pill-tag-operation,
 .pill-tag-link-element,
-.pill-tag-documentation-element
+.pill-tag-verified,
+.pill-tag-documentation-element,
+.pill-tag-covid-element
 {
 	border-radius: 8px;
 	font-family: 'Roboto';
@@ -523,6 +525,19 @@ div.documentation-element{
     display: inline-block;
 }
 
+.pill-tag-covid-element{
+    color: white;
+    background-color: #BA1E4A;
+    display: inline-block;
+}
+
+a.covid-tag-link{
+    color: #BA1E4A;
+}
+
+.pill-tag-covid-element:hover {
+    color: lightblue;
+}
 .pill-tag-documentation-element{
     color: white;
     background-color: #EB7B59;

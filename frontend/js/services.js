@@ -799,4 +799,39 @@ angular.module('elixir_front.services', [])
 			})
 		}
 	};
-}]);
+}])
+.service('Covid', function(){
+	self.tag = 'COVID-19';
+	this.hasCovid = function(collection){
+		if (collection && Array.isArray(collection) && collection.length > 0){
+			return collection.includes(self.tag);
+		}
+		return false;
+	}
+
+	this.addCovid = function(collection){
+		if (!this.hasCovid(collection)){
+			
+			// if the collection property is not set or is set but is not an array
+			if (!collection || (collection && !Array.isArray(collection))){
+				return [self.tag];
+			}
+			if (Array.isArray(collection)){
+				collection.push(self.tag);
+				return collection;
+			}
+		}
+	}
+	this.removeCovid = function(collection){
+		var result = [];
+		if (this.hasCovid(collection)){
+			result = collection.filter(function(c){
+				return c != self.tag;
+			});
+		}
+		if (result.length == 0){
+			return undefined
+		}
+		return result;
+	}
+});

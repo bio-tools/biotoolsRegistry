@@ -109,6 +109,15 @@ angular.module('elixir_front.controllers', [])
     	notify: true
 		});
 	}
+	$scope.collectionNameClicked = function(collection) {
+		//$state.go('search', {'topic': topic.term}, {reload: true});
+		$state.transitionTo('search', {'collectionID': quoteQueryStringValue(collection)},
+		{
+    	reload: true,
+    	inherit: false,
+    	notify: true
+		});
+	}
 
 	$scope.shouldLicenseBeALink = function(license) {
   	return !_.includes(['Freeware','Proprietary', 'Other', 'Not licensed'], license);
@@ -1018,7 +1027,7 @@ angular.module('elixir_front.controllers', [])
 
 
 }])
-.controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator) {
+.controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', 'Covid', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator, Covid) {
 	// inherit common controller
 	$controller('ToolEditController', {$scope: $scope});
 
@@ -1027,7 +1036,7 @@ angular.module('elixir_front.controllers', [])
 
 	// set the ID to not autoupdate when name is changed
 	$scope.autoUpdateId = false;
-
+	$scope.Covid = Covid;
 	$scope.validateButtonClick = function() {
 		$timeout(function() {
 			$scope.sendResource(ToolUpdateValidator.update, $scope.validationProgress, false, 'update-validate');
@@ -1067,7 +1076,7 @@ angular.module('elixir_front.controllers', [])
 	// })
 
 }])
-.controller('ToolCreateController', ['$scope', '$controller', '$timeout', 'ToolListConnection', 'ToolCreateValidator', 'User', '$stateParams', function($scope, $controller, $timeout, ToolListConnection, ToolCreateValidator, User, $stateParams){
+.controller('ToolCreateController', ['$scope', '$controller', '$timeout', 'ToolListConnection', 'ToolCreateValidator', 'User', '$stateParams', 'Covid', function($scope, $controller, $timeout, ToolListConnection, ToolCreateValidator, User, $stateParams, Covid){
 	// inherit common controller
 	$controller('ToolEditController', {$scope: $scope});
 	$scope.orderby = 'text';
@@ -1077,7 +1086,7 @@ angular.module('elixir_front.controllers', [])
 	// initially set the ID to change automatically when name is modified
 	$scope.biotoolsIDDisabled = true;
 	$scope.editIdButtonText = 'Edit ID';
-
+	$scope.Covid = Covid;
 	// remove or replace all URL unsafe characters and set software.id
 	$scope.makeIdURLSafe = function(value) {
 		if (typeof value != 'undefined' && $scope.biotoolsIDDisabled) {

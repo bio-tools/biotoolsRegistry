@@ -11,6 +11,10 @@
 					<i style="font-size:110%;" class="fa fa-3x fa-windows" ng-show="operatingSystem == 'Windows'" tooltips tooltip-side="top" tooltip-content="Operating system:: {{ operatingSystem }}"></i>
 				</span>
 			</span>
+			<span ng-if="Covid.hasCovid(tool.collectionID)">
+				<span style="color: #CCCCCC"> | </span>
+				<span style="color: #BA1E4A">COVID-19</span>
+			</span>
 		</div>
 		<div class="panel pill-background pill-text">
 			<!-- Tool description -->
@@ -25,13 +29,14 @@
 				</span>
 
 			</div>
-			<!-- Tool type -->
-			<div bo-show="tool.toolType.length > 0 || tool.licence" class="pill-spacing">
+			<!-- Tool type, license and collection -->
+			<div bo-show="tool.toolType.length > 0 || tool.licence || tool.collectionID" class="pill-spacing">
 				<span ng-repeat="toolType in tool.toolType track by $index" class="label pill-tag-secondary-background"><span bo-html="toolType | highlight:Highlighting.terms" tooltips tooltip-content="Type of tool"></span></span>
 				<span ng-if="tool.license" class="label pill-tag-primary-background" tooltips tooltip-content="Software or data license">
 					<a ng-show="shouldLicenseBeALink(tool.license)" href="https://spdx.org/licenses/{{ ::tool.license }}" target="_blank" bo-html="tool.license | highlight:Highlighting.terms"></a>
 					<span ng-show="!shouldLicenseBeALink(tool.license)" bo-html="tool.license | highlight:Highlighting.terms"></span>
 				</span>
+				<a ng-repeat="collection in tool.collectionID track by $index" class="pill-tag-secondary-background" href="" ng-click="collectionNameClicked(collection)"><span bo-html="collection | highlight:Highlighting.terms" tooltips tooltip-content="Tool collection"></span></a>
 			</div>
 		</div>
 	</div>
