@@ -99,7 +99,7 @@ class DomainResourceView(APIView):
 		size = query_dict.get('size', 10000)
 
 		if domain != 'all':
-			result = es.search(index='domains', body={'size': size,'query': {'bool': {'must': [{'match_phrase': {'domain': {'query': domain}}}]}}})
+			result = es.search(index='domains', body={'size': size,'query': {'bool': {'must': [{'match_phrase': {'domain.raw': {'query': domain}}}]}}})
 			count = result['hits']['total']
 			if count > 0:
 				result = [el['_source'] for el in result['hits']['hits']][0]
@@ -182,7 +182,7 @@ class DomainResourceView(APIView):
 
 
 			d.domainresource_set.all().delete()
-			result = es.search(index='domains', body={'size': 10,'query': {'bool': {'must': [{'match': {'domain': {'query': domain}}}]}}})
+			result = es.search(index='domains', body={'size': 10,'query': {'bool': {'must': [{'match': {'domain.raw': {'query': domain}}}]}}})
 			count = result['hits']['total']
 			
 			if count > 0:
@@ -219,7 +219,7 @@ class DomainResourceView(APIView):
 				return Response({"details": "You are not the owner of this domain."}, status=status.HTTP_401_UNAUTHORIZED)
 			d.domainresource_set.all().delete()
 			d.delete()
-			result = es.search(index='domains', body={'size': 10,'query': {'bool': {'must': [{'match': {'domain': {'query': domain}}}]}}})
+			result = es.search(index='domains', body={'size': 10,'query': {'bool': {'must': [{'match': {'domain.raw': {'query': domain}}}]}}})
 			es.delete(index='domains', doc_type='subdomains', id=result['hits']['hits'][0]['_id'])
 		except Domain.DoesNotExist:
 			return Response({"details": "Domain does not exist."}, status=status.HTTP_400_BAD_REQUEST)

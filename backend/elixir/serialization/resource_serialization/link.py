@@ -31,7 +31,7 @@ class LinkTypeSerializer(serializers.ModelSerializer):
 		# checking if blank
 		IsNotBlankValidator(data)
 		# checking if within enum
-		enum = ENUMValidator([u'Helpdesk', u'Issue tracker', u'Mailing list', u'Mirror', u'Registry', u'Repository', u'Social media', u'Service', u'Software catalogue', u'Technical monitoring', u'Galaxy service', u'Discussion forum', u'Other'])
+		enum = ENUMValidator([u'Helpdesk', u'Issue tracker', u'Mailing list', u'Mirror', u'Repository', u'Social media', u'Service', u'Software catalogue', u'Technical monitoring', u'Galaxy service', u'Discussion forum', u'Other'])
 		data = enum(data)
 		return {'type': data}
 
