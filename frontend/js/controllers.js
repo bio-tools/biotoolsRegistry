@@ -262,7 +262,7 @@ angular.module('elixir_front.controllers', [])
 	
 	$scope.loadBiotoolsIDs = function(query) {
 		return getBiotoolsIDs().then(function(list) {
-			return list.filter(function (str) { return str.toLowerCase().includes(query.toLowerCase()); }).slice(0,20).sort();
+			return list.filter(function (str) { return str.toLowerCase().includes(query.toLowerCase()); }).slice(0,50).sort();
 		});
 	}
 
