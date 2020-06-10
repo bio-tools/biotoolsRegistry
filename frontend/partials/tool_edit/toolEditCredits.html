@@ -4,7 +4,7 @@
 					<br>You must specify one or more of name, email and URL of the primary contact person. We recommend you also provide an ORCID iD (if available). See the <a target="_blank" ng-href="">Curation Guidelines <i class="fa fa-external-link"></i></a>.</label>
 					</div>
 				</div>
-<form name="form.creditsForm" class="form-horizontal" novalidate>
+<form name="form.creditsForm" class="form-horizontal" novalidate autocomplete="off">
 	<div class="form-group">
 		<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
 			<!-- Credits -->
@@ -25,7 +25,8 @@
 							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.credit[$index].name}">
 								<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.creditName.description}}">Name <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#name-credit"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 								<div class="col-sm-9">
-									<input ng-model="software.credit[$index].name" type="text" class="form-control" placeholder="e.g. Josiah Carberry" name="name" validate-edit-resource-field index={{$index}}>
+									<input ng-model="software.credit[$index].name" type="text" class="form-control" placeholder="e.g. Josiah Carberry" name="name" validate-edit-resource-field index={{$index}}
+									typeahead="creditName for creditName in loadCreditNames($viewValue)" typeahead-min-length="2">
 									<label class="help-block" ng-repeat="error in creditDetailForm.name.errorMessages" bo-text="error"></label>
 								</div>
 							</div>

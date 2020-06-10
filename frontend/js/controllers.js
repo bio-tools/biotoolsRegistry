@@ -262,7 +262,43 @@ angular.module('elixir_front.controllers', [])
 	
 	$scope.loadBiotoolsIDs = function(query) {
 		return getBiotoolsIDs().then(function(list) {
-			return list.filter(function (str) { return str.includes(query); }).slice(0,50).sort();
+			return list.filter(function (str) { return str.toLowerCase().includes(query.toLowerCase()); }).slice(0,50).sort();
+		});
+	}
+
+	// used terms (collectionID) for searching in collections
+	function getCollectionIDs(){
+		var d = $q.defer();
+		var params = {
+			"usedTermName": "collectionID"
+		};
+		UsedTerms.get(params, function(response) {
+			d.resolve(response.data);
+		});
+		return d.promise;
+	}
+	
+	$scope.loadCollectionIDs = function(query) {
+		return getCollectionIDs().then(function(list) {
+			return list.filter(function (str) { return str.toLowerCase().includes(query.toLowerCase()); }).slice(0,50).sort();
+		});
+	}
+
+	// used terms (credit names) for searching in credits
+	function getCreditNames(){
+		var d = $q.defer();
+		var params = {
+			"usedTermName": "credit"
+		};
+		UsedTerms.get(params, function(response) {
+			d.resolve(response.data);
+		});
+		return d.promise;
+	}
+	
+	$scope.loadCreditNames = function(query) {
+		return getCreditNames().then(function(list) {
+			return list.filter(function (str) { return str.toLowerCase().includes(query.toLowerCase()); }).slice(0,50).sort();
 		});
 	}
 

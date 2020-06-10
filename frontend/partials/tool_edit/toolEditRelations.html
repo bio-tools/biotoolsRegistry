@@ -4,7 +4,7 @@
 					<br>See the <a target="_blank" ng-href="https://biotools.readthedocs.io/en/latest/curators_guide.html#relation-group">Curation Guidelines <i class="fa fa-external-link"></i></a>.</label>
 					</div>
 				</div>
-<form name="form.relationsForm" class="form-horizontal" novalidate>
+<form name="form.relationsForm" class="form-horizontal" novalidate autocomplete="off">
 	<div class="form-group">
 		<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
 			<!-- link -->
@@ -34,7 +34,7 @@
 								</label>
 								<div class="col-sm-9 autocomplete-container">
 									<input ng-model="software.relation[$index].biotoolsID" type="text" class="form-control" placeholder="biotoolsID" name="biotoolsID" validate-edit-resource-field index={{$index}}
-									typeahead="state for state in loadBiotoolsIDs($viewValue)" typeahead-min-length="2">
+									typeahead="biotoolsID for biotoolsID in loadBiotoolsIDs($viewValue)" typeahead-min-length="2">
 									<label class="help-block" ng-repeat="error in relationsDetailForm.biotoolsID.errorMessages" bo-text="error"></label>
 								</div>
 							</div>							

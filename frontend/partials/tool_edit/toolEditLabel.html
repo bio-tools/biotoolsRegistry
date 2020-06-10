@@ -4,7 +4,7 @@
 		<br>We recommend you specify at least the tool type, license, and one or more topics. See the <a target="_blank" ng-href="http://biotools.readthedocs.io/en/latest/curators_guide.html#labels-group">Curation Guidelines <i class="fa fa-external-link"></i></a>.</label>
 	</div>
 </div>
-<form name="form.labelForm" class="form-horizontal" novalidate>
+<form name="form.labelForm" class="form-horizontal" novalidate  autocomplete="off">
 	<div class="form-group">
 		<div class="col-xs-12 col-sm-12 col-md-9 col-md-offset-1 no-side-padding">
 			<!-- Tag with COVID-19 -->
@@ -168,7 +168,8 @@
 						<div class="form-group" ng-repeat="collection in software.collectionID track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.collectionID[$index][0]};">
 							<ng-form name="collectionForm">
 								<div class="input-group">
-									<input class="form-control" name="collection" ng-model="software.collectionID[$index]" validate-edit-resource-field index={{$index}}>
+									<input class="form-control" name="collection" ng-model="software.collectionID[$index]" validate-edit-resource-field index={{$index}}
+									typeahead="collectionID for collectionID in loadCollectionIDs($viewValue)" typeahead-min-length="2">
 								</input>
 								<span class="input-group-btn">
 									<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('collectionID', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
