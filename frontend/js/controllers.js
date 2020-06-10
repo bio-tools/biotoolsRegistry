@@ -262,7 +262,7 @@ angular.module('elixir_front.controllers', [])
 	
 	$scope.loadBiotoolsIDs = function(query) {
 		return getBiotoolsIDs().then(function(list) {
-			return list.filter(function (str) { return str.toLowerCase().includes(query.toLowerCase()); }).slice(0,50).sort();
+			return list.filter(function (str) { return str.toLowerCase().includes(query.toLowerCase()); }).slice(0,20).sort();
 		});
 	}
 
@@ -280,7 +280,7 @@ angular.module('elixir_front.controllers', [])
 	
 	$scope.loadCollectionIDs = function(query) {
 		return getCollectionIDs().then(function(list) {
-			return list.filter(function (str) { return str.toLowerCase().includes(query.toLowerCase()); }).slice(0,50).sort();
+			return list.filter(function (str) { return str.toLowerCase().includes(query.toLowerCase()); }).slice(0,10).sort();
 		});
 	}
 
@@ -298,7 +298,7 @@ angular.module('elixir_front.controllers', [])
 	
 	$scope.loadCreditNames = function(query) {
 		return getCreditNames().then(function(list) {
-			return list.filter(function (str) { return str.toLowerCase().includes(query.toLowerCase()); }).slice(0,50).sort();
+			return list.filter(function (str) { return str.toLowerCase().includes(query.toLowerCase()); }).slice(0,10).sort();
 		});
 	}
 
