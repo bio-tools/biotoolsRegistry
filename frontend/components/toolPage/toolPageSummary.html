@@ -54,8 +54,8 @@
 	</span>
 	<span ng-if="software.cost" class="pill-tag-primary-background" tooltips tooltip-content="Cost of acquiring the software">
 	{{ ::software.cost }}</span>
-	<span ng-if="software.accessibility.length > 0" ng-repeat="accessibility in software.accessibility" class="pill-tag-primary-background" tooltips tooltip-content="Accessibility of tool for use">
-		{{ ::accessibility }}
+	<span ng-if="software.accessibility" class="pill-tag-primary-background" tooltips tooltip-content="Accessibility of tool for use">
+		{{ ::software.accessibility }}
 	</span>
 </div>
 <div class="pill-spacing">

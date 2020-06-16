@@ -201,7 +201,7 @@ angular.module('elixir_front.services', [])
 			columnDescription = {field: 'credit', displayName: 'Credits & Support', width: '150', resizable: true, cellTemplate: '/partials/grid_cells/creditsCell.html'};
 		}
 		else if (key == 'Accessibility') {
-			columnDescription = {field: key.toLowerCase(), displayName: key, width: '150', resizable: true, cellTemplate: '/partials/grid_cells/listCell.html'};
+			columnDescription = {field: key.toLowerCase(), displayName: key, width: '150', resizable: true, cellTemplate: '/partials/grid_cells/defaultCell.html'};
 		}
 		else if (key == 'Cost') {
 			columnDescription = {field: key.toLowerCase(), displayName: key, width: '90', resizable: true, cellTemplate: '/partials/grid_cells/defaultCell.html'};

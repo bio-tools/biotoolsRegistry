@@ -70,6 +70,7 @@ class Resource(models.Model):
 
     # things that used to be in separate tables
     cost = models.TextField(blank=True, null=True)
+    accessibility = models.TextField(blank=True, null=True)
     maturity = models.TextField(blank=True, null=True)
     license = models.TextField(blank=True, null=True)
 

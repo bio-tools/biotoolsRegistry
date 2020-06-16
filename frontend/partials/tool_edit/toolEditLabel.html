@@ -182,28 +182,13 @@
 						<a href="" ng-click="addButtonClick('collectionID', software, true, false);">Add collection</a>
 					</div>
 				</div>
-				<!-- 	Accessibility	 -->
-				<div class="form-group no-margin-bottom">
-					<label class="control-label col-sm-3" style="position: relative;">
-						<span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.accessibility.description}}">Accessibility <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#accessibility"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
-					</label>
+				<!-- New Accessibility -->
+				<div class="form-group" ng-class="{'has-error': form.labelForm.accessibility.errorMessages[0]};">
+					<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.accessibility.description}}">Accessibility <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#accessibility"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 					<div class="col-sm-9">
-						<div class="form-group" ng-repeat="accessibility in software.accessibility track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.accessibility[$index][0]};">
-							<ng-form name="resourceTypeForm">
-								<div class="input-group">
-									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in accessibilityOptions" ng-model="software.accessibility[$index]" name="accessibility" validate-edit-resource-field index={{$index}}>
-									</select>
-									<span class="input-group-btn">
-										<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('accessibility', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
-									</span>
-								</div>
-								<label class="help-block" ng-repeat="error in resourceTypeForm.accessibility.errorMessages" bo-text="error"></label>
-							</ng-form>
-						</div>
-						<label class="help-block" ng-if="isString(error)" ng-repeat="error in registrationErrorPayload.accessibility" bo-text="error"></label>
-						<div class="form-group" style="padding-top:7px;">
-							<a href="" ng-click="addButtonClick('accessibility', software, true, false);">Add accessibility</a>
-						</div>
+						<select class="form-control select-btn-group" ng-options="item.value as item.text for item in accessibilityOptions" ng-model="software.accessibility" name="accessibility" validate-edit-resource-field>
+						</select>
+						<label class="help-block" ng-repeat="error in form.labelForm.accessibility.errorMessages" bo-text="error"></label>
 					</div>
 				</div>
 				<!-- Elixir Platform -->
