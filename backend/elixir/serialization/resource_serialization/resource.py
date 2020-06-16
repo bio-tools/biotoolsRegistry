@@ -376,7 +376,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 		return attrs
 
 	def validate_accessibility(self, attrs):
-		enum = ENUMValidator([u'Open access', u'Restricted access'])
+		enum = ENUMValidator([u'Open access', u'Open access (with restrictions)', u'Restricted access'])
 		attrs = enum(attrs)
 		return attrs
 
