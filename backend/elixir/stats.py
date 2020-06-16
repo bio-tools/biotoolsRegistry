@@ -251,7 +251,7 @@ class StatsInfo():
 		return {'codeAvailabilityAnnotationCount': count}
 
 	def accessibilityAnnotationCount(self, upperDateLimit=datetime.today()):
-		return {'accessibilityAnnotationCount': Resource.objects.filter(resource__visibility=1,additionDate__lt=upperDateLimit).exclude(accessibility__isnull=True).exclude(accessibility="").count()}
+		return {'accessibilityAnnotationCount': Resource.objects.filter(visibility=1,additionDate__lt=upperDateLimit).exclude(accessibility__isnull=True).exclude(accessibility="").count()}
 
 	def dataFormatsAnnotationCount(self, upperDateLimit=datetime.today()):
 		count = 0
