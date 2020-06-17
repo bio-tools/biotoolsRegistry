@@ -24,14 +24,15 @@ from rest_framework.validators import UniqueValidator
 
 
 def issue_function(resource, user):
+	pass
 	# check for issues
-	EDAMTopicIssue([resource], user=user).report()
-	EDAMOperationIssue([resource], user=user).report()
-	EDAMDataIssue([resource], user=user).report()
-	EDAMFormatIssue([resource], user=user).report()
-	NoLicenseIssue([resource], user=user).report()
-	NoContactIssue([resource], user=user).report()
-	NoTOSIssue([resource], user=user).report()
+	# EDAMTopicIssue([resource], user=user).report()
+	# EDAMOperationIssue([resource], user=user).report()
+	# EDAMDataIssue([resource], user=user).report()
+	# EDAMFormatIssue([resource], user=user).report()
+	# NoLicenseIssue([resource], user=user).report()
+	# NoContactIssue([resource], user=user).report()
+	# NoTOSIssue([resource], user=user).report()
 
 class OtherIDSerializer(serializers.ModelSerializer):
 	value = serializers.CharField(allow_blank=False, required=True)

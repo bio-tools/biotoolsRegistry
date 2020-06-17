@@ -13,7 +13,7 @@ urlpatterns = [
 	url(r'^t(ool)?/validate/?$', views.ResourceCreateValidator.as_view()),
 	url(r'^t(ool)?/(biotools\:)?(?P<biotoolsID>[a-zA-Z0-9.~_-]+)/?$', views.ResourceDetail.as_view()),
 	url(r'^t(ool)?/(biotools\:)?(?P<biotoolsID>[a-zA-Z0-9.~_-]+)/validate/?$', views.ResourceUpdateValidator.as_view()),
-	url(r'^t(ool)?/(biotools\:)?(?P<biotoolsID>[a-zA-Z0-9.~_-]+)/i(ssues)?/(?P<issueId>[a-zA-Z0-9.~_-]+)?$', views.IssueView.as_view()),
+	# url(r'^t(ool)?/(biotools\:)?(?P<biotoolsID>[a-zA-Z0-9.~_-]+)/i(ssues)?/(?P<issueId>[a-zA-Z0-9.~_-]+)?$', views.IssueView.as_view()),
 	url(r'^t(ool)?/(biotools\:)?(?P<biotoolsID>[a-zA-Z0-9.~_-]+)/disown/?$', views.DisownResourceView.as_view()),
 	url(r'^f(unction)?/?$', views.FunctionList.as_view()),
 	url(r'^o(ntology)?/(?P<name>[a-zA-Z0-9.~_-]+)/?$', views.OntologyDetail.as_view()),
@@ -33,7 +33,7 @@ urlpatterns = [
 	url(r'^w/(?P<id>[a-zA-Z0-9.~_-]+)/?$', views.WorkflowDetailView.as_view()),
 	url(r'^(biotools\:)?(?P<biotoolsID>[a-zA-Z0-9.~_-]+)/?$', views.ResourceDetail.as_view()),
 	url(r'^(biotools\:)?(?P<biotoolsID>[a-zA-Z0-9.~_-]+)/validate/?$', views.ResourceUpdateValidator.as_view()),
-	url(r'^(biotools\:)?(?P<biotoolsID>[a-zA-Z0-9.~_-]+)/i(ssues)?/(?P<issueId>[a-zA-Z0-9.~_-]+)?$', views.IssueView.as_view()),
+	# url(r'^(biotools\:)?(?P<biotoolsID>[a-zA-Z0-9.~_-]+)/i(ssues)?/(?P<issueId>[a-zA-Z0-9.~_-]+)?$', views.IssueView.as_view()),
 	url(r'^(biotools\:)?(?P<biotoolsID>[a-zA-Z0-9.~_-]+)/disown/?$', views.DisownResourceView.as_view()),
 ]
 
