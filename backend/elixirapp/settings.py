@@ -74,7 +74,6 @@ ELASTIC_SEARCH_URLS = getenv(
 )
 
 ELASTIC_SEARCH_INDEX = 'elixir'
-ELASTIC_SEARCH_INDEX_V2 = 'elixir_v2'
 # Application definition
 
 INSTALLED_APPS = (

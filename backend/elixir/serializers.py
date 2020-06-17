@@ -32,7 +32,6 @@ from elixir.serialization.resource_serialization.user import *
 from elixir.serialization.resource_serialization.resourceRequest import *
 from elixir.serialization.resource_serialization.version import *
 from elixir.serialization.workflow_serialization.workflow import *
-from elixir.serialization.resource_serialization.v2.resource import *
 from elixir.serialization.user_serialization.user import *
 from elixir.serialization.issues_serialization.issues import *
 

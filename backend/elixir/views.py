@@ -34,7 +34,6 @@ from elixir.view.user import *
 from elixir.view.environment import *
 from elixir.view.tools import *
 from elixir.view.edam import *
-from elixir.view.v2.resource import *
 
 
 def issue_function(resource, user):
