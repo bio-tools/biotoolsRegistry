@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 
 class Domain(models.Model):
-    name = models.CharField(blank=False, null=False, max_length=32, unique=True)
+    name = models.CharField(blank=False, null=False, max_length=50, unique=True)
 
     title = models.TextField(blank=True, null=True)
     sub_title = models.TextField(blank=True, null=True)
