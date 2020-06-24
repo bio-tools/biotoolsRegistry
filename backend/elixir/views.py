@@ -34,15 +34,15 @@ from elixir.view.user import *
 from elixir.view.environment import *
 from elixir.view.tools import *
 from elixir.view.edam import *
-from elixir.view.v2.resource import *
 
 
 def issue_function(resource, user):
 	# check for issues
-	EDAMTopicIssue([resource], user=user).report()
-	EDAMOperationIssue([resource], user=user).report()
-	EDAMDataIssue([resource], user=user).report()
-	EDAMFormatIssue([resource], user=user).report()
-	NoLicenseIssue([resource], user=user).report()
-	NoContactIssue([resource], user=user).report()
-	NoTOSIssue([resource], user=user).report()
+	pass
+	# EDAMTopicIssue([resource], user=user).report()
+	# EDAMOperationIssue([resource], user=user).report()
+	# EDAMDataIssue([resource], user=user).report()
+	# EDAMFormatIssue([resource], user=user).report()
+	# NoLicenseIssue([resource], user=user).report()
+	# NoContactIssue([resource], user=user).report()
+	# NoTOSIssue([resource], user=user).report()

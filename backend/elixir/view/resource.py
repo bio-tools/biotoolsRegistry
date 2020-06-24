@@ -128,7 +128,7 @@ class ResourceList(APIView):
 			if not(request.user.is_superuser) and request.data.get('confidence_flag') and request.data.get('confidence_flag') != 'tool':
 				return Response({"detail": 'Error: Only superusers can add entries with a confidence score other than \'tool\'.'}, status=status.HTTP_403_FORBIDDEN)
 			serializer.save(owner=request.user)
-			issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), request.user)
+			# issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), request.user)
 
 			es.index(index=settings.ELASTIC_SEARCH_INDEX, doc_type='tool', body=serializer.data)
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -326,7 +326,7 @@ class ResourceDetail(APIView):
 			# Note that we need throw errors here we need to throw them before
 			# makeing the old resource visibility 0 (see above)
 			serializer.save(biotoolsID=resource.biotoolsID, biotoolsCURIE=resource.biotoolsCURIE, additionDate=resource.additionDate, owner=resource.owner, was_id_validated=is_id_valid)
-			issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), str(resource.owner))
+			# issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), str(resource.owner))
 			
 			# update the existing resource in elastic
 			result = es.search(index=settings.ELASTIC_SEARCH_INDEX, body={

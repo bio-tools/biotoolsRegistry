@@ -53,34 +53,38 @@ def backup_stats():
     backup_stats_with_date()
 
 def check_publications(queryset, user):
-    NoPublicationIssue(queryset, user).report()
-    NonePublicationIssue(queryset, user).report()
+    pass
+    # NoPublicationIssue(queryset, user).report()
+    # NonePublicationIssue(queryset, user).report()
 
 def check_broken_links(queryset, user):
-    URLHomepageIssue(queryset, user).report()
-    URLCreditIssue(queryset, user).report()
-    URLContactIssue(queryset, user).report()
-    URLDownloadIssue(queryset, user).report()
-    URLDocumentationIssue(queryset, user).report()
-    URLLinkIssue(queryset, user).report()
+    pass
+    # URLHomepageIssue(queryset, user).report()
+    # URLCreditIssue(queryset, user).report()
+    # URLContactIssue(queryset, user).report()
+    # URLDownloadIssue(queryset, user).report()
+    # URLDocumentationIssue(queryset, user).report()
+    # URLLinkIssue(queryset, user).report()
 
 
 def check_EDAM(queryset, user):
-    EDAMTopicIssue(queryset, user).report()
-    EDAMOperationIssue(queryset, user).report()
-    EDAMDataIssue(queryset, user).report()
-    EDAMFormatIssue(queryset, user).report()
+    pass
+    # EDAMTopicIssue(queryset, user).report()
+    # EDAMOperationIssue(queryset, user).report()
+    # EDAMDataIssue(queryset, user).report()
+    # EDAMFormatIssue(queryset, user).report()
 
 
 @shared_task
 def qa_qc_task():
-    _q = Resource.objects.all()
-    check_publications(_q, 'system')
+    pass
+    # _q = Resource.objects.all()
+    # check_publications(_q, 'system')
     # check_broken_links(_q)
-    NoContactIssue(_q, 'system').report()
-    NoTOSIssue(_q, 'system').report()
-    NoLicenseIssue(_q, 'system').report()
-    check_EDAM(_q, 'system')
+    # NoContactIssue(_q, 'system').report()
+    # NoTOSIssue(_q, 'system').report()
+    # NoLicenseIssue(_q, 'system').report()
+    # check_EDAM(_q, 'system')
 
 
 @shared_task

@@ -11,10 +11,6 @@ def parallel_function(x):
 	resource = ResourceSerializer(Resource.objects.get(id=x[0]), many=False).data
 	return JSONRenderer().render(resource)
 
-def parallel_function_v2(x):
-	resource = LegacyResourceSerializer(Resource.objects.get(id=x[0]), many=False).data
-	return JSONRenderer().render(resource)
-
 class Command(BaseCommand):
 	help = 'Regenerate the Elasticsearch index'
 
@@ -63,7 +59,6 @@ class Command(BaseCommand):
 		}
 	
 		es.indices.create('elixir', ignore=400)
-		es.indices.create('elixir_v2', ignore=400)
 		time.sleep(3)
 
 		# ADD SETTINGS
@@ -81,11 +76,8 @@ class Command(BaseCommand):
 			}
 		}
 		es.indices.close (index='elixir')
-		es.indices.close (index='elixir_v2')
 		es.indices.put_settings (index='elixir', body=settings)
-		es.indices.put_settings (index='elixir_v2', body=settings)
 		es.indices.open (index='elixir')
-		es.indices.open (index='elixir_v2')
 
 		# ADD MAPPING
 		mapping = {
@@ -397,19 +389,12 @@ class Command(BaseCommand):
 			}
 		}
 		es.indices.put_mapping(index='elixir', doc_type='tool', body=mapping)
-		es.indices.put_mapping(index='elixir_v2', doc_type='tool', body=mapping)
-
+		
 		es.indices.create('domains')
 		es.indices.put_mapping(index='domains', doc_type='subdomains', body=mapping_subdomains)
 
 		rl_id = Resource.objects.filter(visibility=1).values_list('id')
 		pool = Pool(processes=cpu_count())
-
-		# schema 2.0
-		res_v2 = pool.map_async(parallel_function_v2, rl_id)
-		results_v2 = res_v2.get(timeout=10000)
-		for el in results_v2:
-			es.index(index='elixir_v2', doc_type='tool', body=el)
 
 		# schema 3.0
 		res = pool.map_async(parallel_function, rl_id)
@@ -428,8 +413,3 @@ class Command(BaseCommand):
 		for domain in Domain.objects.all():
 			es.index(index='domains', doc_type='subdomains', body={'domain':domain.name, 'title': domain.title, 'sub_title': domain.sub_title, 'description': domain.description, 'resources': map(lambda x: {'biotoolsID': x.biotoolsID, 'versionId': x.versionId, 'name': x.name, 'version': x.version}, domain.domainresource_set.all())})
 			self.stdout.write('%s'%(domain.name))
-
-
-		# for domain in Domain.objects.all():
-		# 	es.index(index='domains', doc_type='subdomains', body={'domain':domain.name, 'title': domain.title, 'sub_title': domain.sub_title, 'description': domain.description, 'resources': map(lambda x: {'biotoolsID': x.biotoolsID, 'versionId': x.versionId, 'name': x.name}, domain.domainresource_set.all())})
-		# 	self.stdout.write('%s'%(domain.name))
