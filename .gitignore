@@ -8,3 +8,5 @@ backend/data/edam/json/*
 !backend/data/edam/json/.gitkeep
 backend/data/edam/owl/*
 !backend/data/edam/owl/.gitkeep 
+*.log
+*__secret_settings__.py*

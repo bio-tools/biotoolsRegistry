@@ -55,7 +55,7 @@ class ResourceList(APIView):
 		# 	we select all the ids from the subdomain and then we use them
 		#	in the regular query
 		if domain:
-			domain_result = es.search(index='domains', body={'size': 10000,'query': {'bool': {'must': [{'match_phrase': {'domain': {'query': domain}}}]}}})
+			domain_result = es.search(index='domains', body={'size': 10000,'query': {'bool': {'must': [{'match_phrase': {'domain.raw': {'query': domain}}}]}}})
 			domain_count = domain_result['hits']['total']
 
 			# there should be a single domain always, so this condition is not really necessary
