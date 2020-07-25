@@ -28,7 +28,7 @@ class EditPermissionAuthorSerializer(serializers.ModelSerializer):
 
 	def validateUser(self, username):
 		if User.objects.filter(username = username).count() == 0:
-			raise serializers.ValidationError("Specified user does not exsist: " + username + ".")
+			raise serializers.ValidationError("Specified user does not exist: " + username + ".")
 
 	# need to add validation here since this method overrides all validation
 	def to_internal_value(self, data):
