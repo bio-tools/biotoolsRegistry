@@ -12,6 +12,10 @@ angular.module('elixir_front')
 	});
 
 	$scope.disownEntry = function(entry) {
+		if (!confirm("Are you sure you want to disown this resource?")){
+			return;
+		}
+
 		DisownToolService.disown({id: entry.id, version: entry.versionId}, function(response) {
 			$scope.profile.resources = _.difference($scope.profile.resources, [entry]);
 		}, function(response) {
