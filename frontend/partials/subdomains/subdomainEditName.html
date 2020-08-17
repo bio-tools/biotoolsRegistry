@@ -4,7 +4,7 @@
 		<!-- Name -->
 		<span class="content-page-input-title-label">Name</span>
 		<div ng-if="subdomain.exists == false">
-			<input ng-model="subdomain.domain" name="identifier" type="text" ng-change="makeIdURLSafe(subdomain.domain)" class="form-control content-page-input-field" placeholder="Name of the domain to be created">
+			<input ng-model="subdomain.domain" name="identifier" type="text" ng-change="makeSubdomainURLSafe(subdomain.domain)" class="form-control content-page-input-field" placeholder="Name of the domain to be created">
 			<div class="content-page-danger-text" ng-if="errors.domain">
 				<i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{errors.domain}}
 			</div>
