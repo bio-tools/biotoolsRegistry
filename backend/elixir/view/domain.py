@@ -99,7 +99,7 @@ class DomainResourceView(APIView):
 		size = query_dict.get('size', 10000)
 
 		if domain != 'all':
-			result = es.search(index='domains', body={'size': size,'query': {'bool': {'must': [{'match_phrase': {'domain.raw': {'query': domain}}}]}}})
+			result = es.search(index='domains', body={'size': size,'query': {'bool': {'must': [{'match_phrase': {'domain.normalize': {'query': domain}}}]}}})
 			count = result['hits']['total']
 			if count > 0:
 				result = [el['_source'] for el in result['hits']['hits']][0]

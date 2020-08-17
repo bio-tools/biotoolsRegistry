@@ -19,6 +19,20 @@ class Command(BaseCommand):
 		es = Elasticsearch(app_settings.ELASTIC_SEARCH_URLS)
 		resourceList = Resource.objects.filter(visibility=1)
 		self.stdout.write('--------------------\nid\t:\tname\n--------------------')
+
+		settings_subdomains = {
+			"settings": {
+				"analysis": {
+					"normalizer": {
+						"my_normalizer": {
+							"type": "custom",
+							"filter": ["lowercase"]
+						}
+					}
+				}
+  			}
+		}
+
 		# if sending with curl you need to wrap the object below -> {"mappings": object}
 		mapping_subdomains = {
 			"subdomains": {
@@ -29,6 +43,10 @@ class Command(BaseCommand):
 							"raw": {
 								"type": "string",
 								"index": "not_analyzed"
+							},
+							"normalize": {
+								"type": "keyword",
+								"normalizer": "my_normalizer"
 							}
 						}
 					},
@@ -391,6 +409,9 @@ class Command(BaseCommand):
 		es.indices.put_mapping(index='elixir', doc_type='tool', body=mapping)
 		
 		es.indices.create('domains')
+		es.indices.close (index='domains')
+		es.indices.put_settings(index='domains', body=settings_subdomains)
+		es.indices.open (index='domains')
 		es.indices.put_mapping(index='domains', doc_type='subdomains', body=mapping_subdomains)
 
 		rl_id = Resource.objects.filter(visibility=1).values_list('id')
