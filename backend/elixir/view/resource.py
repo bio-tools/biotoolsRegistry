@@ -12,7 +12,7 @@ from elixir.serializers import *
 from django.http import Http404
 import uuid
 from django.db.models import Q
-from elixir.renderers import XMLSchemaRenderer
+from elixir.renderers import XMLSchemaRenderer, JSONLDRenderer
 from rest_framework.renderers import JSONRenderer
 from rest_framework.renderers import BrowsableAPIRenderer
 from rest_framework_yaml.renderers import YAMLRenderer
@@ -221,7 +221,7 @@ class ResourceDetail(APIView):
 	# because otherwise it will be by default format=api
 	# to really make it clean, should have renderer for get() and rederers for put and delete
 	# best here is to use functions instead of classes, and have api_view decorators for functions
-	renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLSchemaRenderer, YAMLRenderer)
+	renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLSchemaRenderer, YAMLRenderer, JSONLDRenderer)
 	parser_classes = (JSONParser, XMLSchemaParser, YAMLParser)
 
 	def get_object(self, biotoolsID):

@@ -10,6 +10,7 @@ from django.utils.encoding import force_text
 from rest_framework.renderers import BaseRenderer
 from lxml import etree as lxmletree
 from rest_framework.exceptions import ParseError
+import json
 
 class XMLSchemaRenderer(BaseRenderer):
     """
@@ -86,3 +87,39 @@ class XMLSchemaRenderer(BaseRenderer):
 
         else:
             xml.characters(force_text(data))
+
+
+from rdflib import ConjunctiveGraph
+from elixir.biotools_to_bioschemas import rdfize
+from boltons.iterutils import remap
+import ast
+
+class JSONLDRenderer(BaseRenderer):
+    media_type = 'text/plain'
+    format = 'jsonld'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        # return smart_text(data, encoding=self.charset)
+        data['biotoolsID'] = data["biotoolsID"].lower()
+        
+        
+        # this was the initial way
+        # jsonld = rdfize(data)
+
+
+        # but we might change to this to remove empty properties
+        #   when Alban's code will work. Now it won't because it doesn't test for empty arrays
+        # tool = json.loads(json.dumps(data.serializer._data))
+        # drop_false = lambda path, key, value: bool(value)
+        # tool_cleaned = remap(tool, visit=drop_false)
+
+        jsonld = rdfize(data)
+        
+
+        temp_graph = ConjunctiveGraph()
+        temp_graph.parse(data=jsonld, format="json-ld")
+        return temp_graph.serialize(
+            format="json-ld",
+            auto_compact=True
+        )
+
