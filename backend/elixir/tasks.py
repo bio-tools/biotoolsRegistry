@@ -97,6 +97,17 @@ def update_publication_metadata():
         currentPublicationIndex = currentPublicationIndex + 1
 
 @shared_task
+def update_pmcid_only_publication_metadata():
+    currentPublicationIndex = 1
+    pubs = [p for p in Publication.objects.filter(pmcid__isnull=False).select_related('resource') if p.resource.visibility == 1]
+    publicationCount = len(pubs)
+    for publication in pubs: 
+        print("Processing publication " + str(currentPublicationIndex) + " out of " + str(publicationCount))
+        update_publication(publication)
+        currentPublicationIndex = currentPublicationIndex + 1
+
+
+@shared_task
 def genereate_missing_stats():
     monthsCount = 12
     currentMonth = datetime.today().replace(day=1)

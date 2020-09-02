@@ -102,21 +102,22 @@ def save_publication_data(data, citation_count, publication):
 def update_publication(publication):
     try:
         data = None
-        if publication.pmcid:
-            #print("Fetching metadata for: " + 'pubmed_id/' + publication.pmcid)
+        
+        if publication.doi:
+            #print("Fetching metadata for: " + 'doi/' + publication.doi.replace('doi:',''))
             if publication_metadata_needs_update(publication):
-                count = fetch_publication_citation('pmid(' + publication.pmcid + ')')
-                data = fetch_publication_data('pubmed_id/' + publication.pmcid)
+                count = fetch_publication_citation('doi(' + publication.doi.replace('doi:','') + ')')
+                data = fetch_publication_data('doi/' + publication.doi.replace('doi:',''))
         elif publication.pmid:
             #print("Fetching metadata for: " + 'pubmed_id/' + publication.pmid)
             if publication_metadata_needs_update(publication):
                 count = fetch_publication_citation('pmid(' + publication.pmid + ')')
                 data = fetch_publication_data('pubmed_id/' + publication.pmid)
-        elif publication.doi:
-            #print("Fetching metadata for: " + 'doi/' + publication.doi.replace('doi:',''))
+        elif publication.pmcid:
+            #print("Fetching metadata for: " + 'pubmed_id/' + publication.pmcid)
             if publication_metadata_needs_update(publication):
-                count = fetch_publication_citation('doi(' + publication.doi.replace('doi:','') + ')')
-                data = fetch_publication_data('doi/' + publication.doi.replace('doi:',''))
+                count = fetch_publication_citation('pmid(' + publication.pmcid + ')')
+                data = fetch_publication_data('pubmed_id/' + publication.pmcid)
         if data != None: 
             save_publication_data(data, count, publication)
     except:
