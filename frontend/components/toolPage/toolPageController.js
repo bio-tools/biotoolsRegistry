@@ -1,5 +1,5 @@
 angular.module('elixir_front')
-.controller('ToolPageController', ['$scope', '$state', '$timeout', '$stateParams', 'Tool', 'User', 'CheckUserEditingRights', 'ResourceRequestProvider', 'ngMeta', 'Query', 'Covid', function($scope, $state, $timeout, $stateParams, Tool, User, CheckUserEditingRights, ResourceRequestProvider, ngMeta, Query, Covid) {
+.controller('ToolPageController', ['$scope', '$state', '$timeout', '$stateParams', 'Tool', 'User', 'CheckUserEditingRights', 'ResourceRequestProvider', 'ngMeta', 'Query', 'Covid', '$http',  function($scope, $state, $timeout, $stateParams, Tool, User, CheckUserEditingRights, ResourceRequestProvider, ngMeta, Query, Covid, $http) {
 	$scope.notFound = false;
 	$scope.versions = [];
 	$scope.CheckUserEditingRights = CheckUserEditingRights;
@@ -20,7 +20,6 @@ angular.module('elixir_front')
 		"Proteomics": "proteomics",
 		"Rare Diseases": "rare-diseases"
 	}
-
 
 	$scope.confidenceClass = function() {
 		if ($scope.software.confidence_flag === 'high'){
@@ -128,8 +127,6 @@ angular.module('elixir_front')
 		document.body.appendChild(script);
 	}
 
-
-
 	$scope.altMetricsScorePublication = function() {
 		var publication = ""
 		for (var index in $scope.software.publication) {
@@ -199,6 +196,40 @@ angular.module('elixir_front')
 			$scope.editingRequestedSuccess = false;
 		});
 	}
+
+	// console.log($scope.software);
+	// console.log("calling API "+"/api/"+$scope.software.name+"?format=jsonld");
+	// $http.get("/api/"+$scope.software.biotoolsID+"?format=jsonld").then(function(response) {
+	// 	console.log($scope.software.name);
+	// 	console.log(response.data);
+	// 	//$scope.myWelcome = response.data;
+	// });
+
+	$scope.bioschemas = {
+	  "@context": {
+	    "biotools": "https://bio.tools/ontology/",
+	    "bsc": "http://bioschemas.org/",
+	    "edam": "http://edamontology.org/",
+	    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+	    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+	    "sc": "http://schema.org/",
+	    "xsd": "http://www.w3.org/2001/XMLSchema#"
+	  },
+	  "@graph": [
+	    {
+	      "@id": "https://bio.tools/varaft",
+	      "@type": "sc:SoftwareApplication",
+	  	},
+	  ]};
+
+
+	var script = document.createElement('script');
+	script.type = 'application/ld+json';
+	script.innerHTML = JSON.stringify($scope.bioschemas);
+
+	document.getElementsByTagName('head')[0].appendChild(script);
+	
+
 }])
 .directive("publicationDetailCallout", function(){
 	return {
