@@ -197,38 +197,23 @@ angular.module('elixir_front')
 		});
 	}
 
-	// console.log($scope.software);
-	// console.log("calling API "+"/api/"+$scope.software.name+"?format=jsonld");
-	// $http.get("/api/"+$scope.software.biotoolsID+"?format=jsonld").then(function(response) {
-	// 	console.log($scope.software.name);
-	// 	console.log(response.data);
-	// 	//$scope.myWelcome = response.data;
-	// });
+	// Call the API t retrieve and inject JSON-LD semantic annotations (Bioschemas tool profile)
+	$scope.software.$promise.then(function(data) {
+     		// console.log('Success: '+JSON.stringify(data));
+     		// console.log("calling API "+"/api/"+data.biotoolsID+"?format=jsonld");
+			$http.get("/api/"+data.biotoolsID+"?format=jsonld").then(function(response) {
+				// console.log(response.data);
 
-	$scope.bioschemas = {
-	  "@context": {
-	    "biotools": "https://bio.tools/ontology/",
-	    "bsc": "http://bioschemas.org/",
-	    "edam": "http://edamontology.org/",
-	    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-	    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-	    "sc": "http://schema.org/",
-	    "xsd": "http://www.w3.org/2001/XMLSchema#"
-	  },
-	  "@graph": [
-	    {
-	      "@id": "https://bio.tools/varaft",
-	      "@type": "sc:SoftwareApplication",
-	  	},
-	  ]};
+				var script = document.createElement('script');
+				script.type = 'application/ld+json';
+				script.innerHTML = JSON.stringify(response.data);
 
+				document.getElementsByTagName('head')[0].appendChild(script);
 
-	var script = document.createElement('script');
-	script.type = 'application/ld+json';
-	script.innerHTML = JSON.stringify($scope.bioschemas);
-
-	document.getElementsByTagName('head')[0].appendChild(script);
-	
+			 });
+		}, function (reason) {
+     		console.log('ERROR: '+JSON.stringify(reason));
+   	});
 
 }])
 .directive("publicationDetailCallout", function(){
