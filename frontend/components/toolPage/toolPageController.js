@@ -1,5 +1,5 @@
 angular.module('elixir_front')
-.controller('ToolPageController', ['$scope', '$state', '$timeout', '$stateParams', 'Tool', 'User', 'CheckUserEditingRights', 'ResourceRequestProvider', 'ngMeta', 'Query', 'Covid', function($scope, $state, $timeout, $stateParams, Tool, User, CheckUserEditingRights, ResourceRequestProvider, ngMeta, Query, Covid) {
+.controller('ToolPageController', ['$scope', '$state', '$timeout', '$stateParams', 'Tool', 'User', 'CheckUserEditingRights', 'ResourceRequestProvider', 'ngMeta', 'Query', 'Covid', '$http',  function($scope, $state, $timeout, $stateParams, Tool, User, CheckUserEditingRights, ResourceRequestProvider, ngMeta, Query, Covid, $http) {
 	$scope.notFound = false;
 	$scope.versions = [];
 	$scope.CheckUserEditingRights = CheckUserEditingRights;
@@ -20,7 +20,6 @@ angular.module('elixir_front')
 		"Proteomics": "proteomics",
 		"Rare Diseases": "rare-diseases"
 	}
-
 
 	$scope.confidenceClass = function() {
 		if ($scope.software.confidence_flag === 'high'){
@@ -128,8 +127,6 @@ angular.module('elixir_front')
 		document.body.appendChild(script);
 	}
 
-
-
 	$scope.altMetricsScorePublication = function() {
 		var publication = ""
 		for (var index in $scope.software.publication) {
@@ -199,6 +196,25 @@ angular.module('elixir_front')
 			$scope.editingRequestedSuccess = false;
 		});
 	}
+
+	// Call the API t retrieve and inject JSON-LD semantic annotations (Bioschemas tool profile)
+	$scope.software.$promise.then(function(data) {
+     		// console.log('Success: '+JSON.stringify(data));
+     		// console.log("calling API "+"/api/"+data.biotoolsID+"?format=jsonld");
+			$http.get("/api/"+data.biotoolsID+"?format=jsonld").then(function(response) {
+				// console.log(response.data);
+
+				var script = document.createElement('script');
+				script.type = 'application/ld+json';
+				script.innerHTML = JSON.stringify(response.data);
+
+				document.getElementsByTagName('head')[0].appendChild(script);
+
+			 });
+		}, function (reason) {
+     		console.log('ERROR: '+JSON.stringify(reason));
+   	});
+
 }])
 .directive("publicationDetailCallout", function(){
 	return {
