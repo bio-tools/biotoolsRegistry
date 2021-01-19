@@ -11,3 +11,8 @@ class SubdomainNameSerializer(serializers.ModelSerializer):
 
 	def get_resourcesCount(self, obj):
 		return obj.domainresource_set.count()
+
+
+# class DomainSerializer(serializers.ModelSerializer):
+# 	name = serializers.CharField(min_length=1, max_length=50, allow_blank=False, validators=[IsStringTypeValidator], required=True)
+	
