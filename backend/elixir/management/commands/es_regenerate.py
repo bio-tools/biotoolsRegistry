@@ -432,5 +432,5 @@ class Command(BaseCommand):
 		# this is not really correct because the there are multiple versions to a resource
 		# should probably be the same for domain resource , or just remove version and versionId
 		for domain in Domain.objects.all():
-			es.index(index='domains', doc_type='subdomains', body={'domain':domain.name, 'title': domain.title, 'sub_title': domain.sub_title, 'description': domain.description, 'resources': map(lambda x: {'biotoolsID': x.biotoolsID, 'versionId': x.versionId, 'name': x.name, 'version': x.version}, domain.domainresource_set.all())})
+			es.index(index='domains', doc_type='subdomains', id=domain.name.lower(), body={'domain':domain.name, 'title': domain.title, 'sub_title': domain.sub_title, 'description': domain.description, 'resources': map(lambda x: {'biotoolsID': x.biotoolsID,'name': x.name}, domain.resource.all())})
 			self.stdout.write('%s'%(domain.name))

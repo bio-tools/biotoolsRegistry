@@ -52,3 +52,20 @@
 .edit-subdomain .pagination {
 	margin: 0px !important;
 }
+
+
+.domain-data-error{
+	color:#d9534f;
+}
+
+.domain-list-element{
+	display: block;
+	margin-bottom: 10px;
+	width: 100%;
+}
+
+@media (min-width: 1100px) {
+	.domain-list-element{
+		width: 50%;
+	}
+}

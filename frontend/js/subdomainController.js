@@ -36,7 +36,7 @@ angular.module('elixir_front.controllers')
 	// Initialization
 	vm.loadSubdomains()
 }])
-.controller('SubdomainController', ['$scope',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', function($scope, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection) {
+.controller('SubdomainController', ['$scope',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', function($scope, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms) {
 	var vm = this;
 	$scope.ToolListOverviewConnection = ToolListOverviewConnection;
 	$scope.updating = false;
@@ -60,6 +60,9 @@ angular.module('elixir_front.controllers')
 	$scope.subdomain.description = '';
 	$scope.subdomain.toolList = [];
 	$scope.subdomain.resources = [];
+	$scope.subdomain.tag = [];
+	$scope.subdomain.collection = [];
+	$scope.subdomain.is_private = true;
 	$scope.subdomain.currentPage = 1;
 	$scope.subdomain.totalPages = 1;
 
@@ -67,6 +70,8 @@ angular.module('elixir_front.controllers')
 	$scope.errors.general = '';
 	$scope.errors.domain = '';
 	$scope.errors.loading = '';
+	$scope.errors.data = {}
+
 
 	$scope.response = {};
 	$scope.response.general = '';
@@ -89,7 +94,7 @@ angular.module('elixir_front.controllers')
 	$scope.toolInSubdomain = function(toolID, versionID) {
 		for (var index in $scope.subdomain.resources) {
 			var currentTool = $scope.subdomain.resources[index];
-			//console.log(currentTool['biotoolsID']);
+			
 			if (currentTool['biotoolsID'] == toolID){// && currentTool['versionId'] == versionID) {
 				return true;
 			}
@@ -99,11 +104,69 @@ angular.module('elixir_front.controllers')
 
 	$scope.addToSubdomain = function(index) {
 		var selectedTool = $scope.search.searchResults[index];
-		//console.log($scope.search);
+		
 		var selectedDict = { "biotoolsID": selectedTool.biotoolsID, "versionId": selectedTool.versionId };
 		$scope.subdomain.toolList.push(selectedTool);
 		$scope.subdomain.resources.push(selectedDict);
 		$scope.subdomain.totalPages = ($scope.subdomain.toolList.length / $scope.toolsPerPageCount) * 10;
+	}
+
+	$scope.domainAddButtonClick = function (_what, _where, _isList, _isObject) {
+		if (_isList) {
+			// if array does not exist create it
+			if (typeof _where[_what] == 'undefined') {
+				_where[_what] = [];
+			}
+			// add either an object or string to array
+			_where[_what].push(_isObject ? {} : '');
+		} else {
+			// if object does not exist create it
+			if (typeof _where[_what] == 'undefined') {
+				_where[_what] = _isObject ? {} : '';
+			}
+		}
+	}
+
+	$scope.removeButtonClick = function (_what, _parent, _index, _event){
+		$scope.removeButtonClickAux(_what, _parent, _index, _event);
+
+		if ($scope.errors.data[_what] && $scope.errors.data[_what][_index]){
+			$scope.removeButtonClickAux(_what, $scope.errors.data, _index, _event);
+		}
+		
+	}
+
+	// remove attribute or list entry
+	$scope.removeButtonClickAux = function (_what, _parent, _index, _event) {
+		if (_parent[_what][_index] ? confirm("Are you sure you want to remove this element?") : 1) {
+			// remove jstree if exists
+			if (_event) {
+				$(_event.target).closest('div').find('.jstree').jstree("destroy").remove();
+			}
+			_parent[_what].splice(_index, 1);
+			// if last instance in array delete entire attribute from the software object
+			if (_parent[_what].length == 0) {
+				delete _parent[_what];
+			}
+		}
+	}
+
+	// used terms (collectionID) for searching in collections
+	function getCollectionIDs(){
+		var d = $q.defer();
+		var params = {
+			"usedTermName": "collectionID"
+		};
+		UsedTerms.get(params, function(response) {
+			d.resolve(response.data);
+		});
+		return d.promise;
+	}
+	
+	$scope.loadCollectionIDs = function(query) {
+		return getCollectionIDs().then(function(list) {
+			return list.filter(function (str) { return str.toLowerCase().includes(query.toLowerCase()); }).slice(0,10).sort();
+		});
 	}
 
 	$scope.addAllToSubdomain = function() {
@@ -134,6 +197,7 @@ angular.module('elixir_front.controllers')
 		}, function(error) {
 			$scope.errors.general = error.data.details;
 			$scope.updating = false;
+			$scope.errors.data = error.data;
 		});
 	}
 
@@ -150,6 +214,17 @@ angular.module('elixir_front.controllers')
 				$scope.subdomain.toolList.push(tool);
 				$scope.subdomain.resources.push(tool);
 			}
+
+			for (var i in data.data.tag){
+				$scope.subdomain.tag.push(data.data.tag[i]);
+			}
+		
+			for (var i in data.data.collection){
+				$scope.subdomain.collection.push(data.data.collection[i]);
+			}
+
+			$scope.subdomain.is_private = data.data.is_private;
+
 			$scope.loading = false;
 			$scope.updating = false;
 			$scope.subdomain.totalPages = ($scope.subdomain.toolList.length / $scope.toolsPerPageCount) * 10;
@@ -169,6 +244,7 @@ angular.module('elixir_front.controllers')
 		}, function(error) {
 			$scope.errors.general = error.data.details;
 			$scope.updating = false;
+			$scope.errors.data = error.data;
 		});
 	}
 
@@ -184,6 +260,7 @@ angular.module('elixir_front.controllers')
 		}
 		$scope.subdomain.domain = id;
 	}
+
 
 	vm.performSearch = function(query) {
 		$scope.search.loadingSearchResults = true;
@@ -204,7 +281,10 @@ angular.module('elixir_front.controllers')
 		'title': $scope.subdomain.title,
 		'sub_title': $scope.subdomain.subtitle,
 		'description': $scope.subdomain.description,
-		'resources': $scope.subdomain.resources
+		'resources': $scope.subdomain.resources,
+		'tag': $scope.subdomain.tag,
+		'collection': $scope.subdomain.collection,
+		'is_private': $scope.subdomain.is_private
 	};
 }
 
