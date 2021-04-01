@@ -79,9 +79,9 @@ class DomainSerializer(serializers.ModelSerializer):
 	domain = serializers.CharField(source='name',min_length=2, max_length=50, allow_blank=False, allow_null=False, required=True,
 		validators=[IsStringTypeValidator, UniqueValidator(queryset=Domain.objects.filter(visibility=1), message="A domain with this name already exists. Choose a different domain name")]
 	)
-	title = serializers.CharField(max_length=50, allow_blank=True, required=False)
-	sub_title = serializers.CharField(max_length=150, allow_blank=True, required=False)
-	description = serializers.CharField(allow_blank=True, required=False)
+	title = serializers.CharField(max_length=50, allow_blank=True, required=False, allow_null=True)
+	sub_title = serializers.CharField(max_length=150, allow_blank=True, required=False, allow_null=True)
+	description = serializers.CharField(allow_blank=True, required=False, allow_null=True)
 	is_private = serializers.BooleanField(default=True)
 	resources = DomainResourceSerializer(source='resource', many=True, required=False, allow_empty=True, allow_null=False)
 	tag = DomainTagSerializer(many=True, required=False, allow_empty=True, allow_null=False)
