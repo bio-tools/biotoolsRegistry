@@ -95,17 +95,25 @@ class DomainResourceView(APIView):
 				return Response(status=status.HTTP_404_NOT_FOUND)
 
 		else:
-			try:
-				result = es.get(index='domains',doc_type='subdomains', id=domain.lower())
-				return Response(
-					{
-						'count': 1,
-						'data': result['_source']
-					}
+			# try:
+			# 	result = es.get(index='domains',doc_type='subdomains', id=domain.lower())
+			# 	return Response(
+			# 		{
+			# 			'count': 1,
+			# 			'data': result['_source']
+			# 		}
 					
-				)
-			except ESNotFoundError:
-				return Response(status=status.HTTP_404_NOT_FOUND)
+			# 	)
+			# except ESNotFoundError:
+			# 	return Response(status=status.HTTP_404_NOT_FOUND)
+			d = self.get_object(domain)
+			result = DomainSerializer(d)
+			return Response(
+			 		{
+			 			'count': 1,
+			 			'data': result.data
+			 		}
+			)
 
 	def put(self, request, domain=None, format=None):	
 		# Updating a domain creates a new domain object and the old one gets a visibility of 0
