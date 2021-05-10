@@ -144,7 +144,7 @@ class DomainResourceView(APIView):
 
 	def delete(self, request, domain, format=None):
 		if not(request.user.is_superuser) and domain.strip().lower() in NOT_DELETABLE_DOMAINS:
-			return Response({"details": "You do not have permission to delete this domain."}, status=status.HTTP_403_FORBIDDEN)
+			return Response({"detail": "You do not have permission to delete this domain."}, status=status.HTTP_403_FORBIDDEN)
 
 		d = self.get_object(domain)
 		d.visibility = 0

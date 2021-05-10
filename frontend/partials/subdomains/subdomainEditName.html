@@ -39,6 +39,10 @@
 		<div class="content-page-danger-text" ng-if="errors.domain.title">
 			<i cla§ss="fa fa-exclamation-circle" aria-hidden="true"></i> {{errors.domain.title}}
 		</div>
+
+		<div ng-repeat="error in errors.data.title">
+			<span class="content-page-danger-text"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{error}}</span>
+		</div>
 	</div>
 	<!-- Domain sub-title -->
 	<div class="content-page-element-spacing-top">
@@ -46,9 +50,9 @@
 		<span class="content-page-input-title-label">Subtitle</span>
 		<input ng-model="subdomain.subtitle" name="subtitle" type="text" class="form-control content-page-input-field"
 			placeholder="Subtitle">
-		<div class="content-page-danger-text" ng-if="errors.domain.subtitle">
-			<i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{errors.domain.subtitle}}
-		</div>
+			<div ng-repeat="error in errors.data.sub_title">
+				<span class="content-page-danger-text"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{error}}</span>
+			</div>
 	</div>
 	
 	<!-- {{subdomain}} -->

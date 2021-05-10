@@ -195,7 +195,8 @@ angular.module('elixir_front.controllers')
 			$scope.response.general = "Domain '" + $scope.subdomain.domain + "' was created.";
 			$scope.updating = false;
 		}, function(error) {
-			$scope.errors.general = error.data.details;
+			$scope.errors.general = error.data.detail;
+			console.log(error);
 			$scope.updating = false;
 			$scope.errors.data = error.data;
 		});
@@ -242,7 +243,7 @@ angular.module('elixir_front.controllers')
 			$scope.response.general = "Domain '" + $scope.subdomain.domain + "' was updated with " + $scope.subdomain.resources.length + " entries." ;
 			$scope.updating = false;
 		}, function(error) {
-			$scope.errors.general = error.data.details;
+			$scope.errors.general = error.data.detail;
 			$scope.updating = false;
 			$scope.errors.data = error.data;
 		});
