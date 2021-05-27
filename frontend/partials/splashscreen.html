@@ -1,0 +1,21 @@
+<form class="form-horizontal" role="form" ng-submit="search()">
+	<div class="col-sm-8 col-sm-offset-2">
+		<img class="center-block img-responsive" style="margin-top:60px;padding:60px;" src="img/elixir_logo_large.png" width="50%" height="50%">
+		<div class="form-group has-feedback">
+			<div align="center">
+				<font size="5">
+					<b>Tools and Data Services Registry YEEES</b>
+				</font>
+			</div>
+			<br>
+			<div class="input-group">
+				<input type="text" class="form-control" ng-model="query" placeholder="Enter a keyword to search for a tool or data service">
+				<span class="input-group-btn" style="height:34px;">
+					<button class="btn btn-default" type="submit" style="height:34px;"><span class="glyphicon glyphicon-search"></span> Search</button>
+				</span>
+			</div>
+			<span class="help-block" style="text-align:center;">Enter a search phrase or go directly to <a ui-sref="search">Advanced Search</a>.</span>
+			<!-- <span class="glyphicon glyphicon-search form-control-feedback"></span> -->
+		</div>
+	</div>
+</form>

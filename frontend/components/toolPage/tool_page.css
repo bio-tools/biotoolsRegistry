@@ -1,0 +1,154 @@
+.label-outline {
+	background-color: transparent;
+	outline-color: grey;
+	/*border: 1px solid #CCCCCC;*/
+	color: #575757;
+}
+
+.label-outline[href]:hover,
+.label-outline[href]:focus {
+	background-color: #3071a9;
+}
+
+.badge-topic {
+	margin-top: -1em;
+	background-color: #ED7520;
+	border: 0px solid #CCCCCC;
+	border-radius: 3px;
+}
+
+span.tool-page-version-text {
+	color: #7f7f7f;
+	font-weight: lighter;
+	display: block;
+	font-size: 0.95em;
+	margin-left: 5px;
+	margin-bottom: 5px;
+}
+
+.elixir-info{
+margin-bottom: 10px;
+}
+
+/*.tool-tag-divider {
+	color: #CCCCCC;
+}*/
+
+/*.tool-tag-divider::after { 
+	content: "|";
+	font-family: 'Open Sans';
+	font-size: 18px;
+	font-weight: 100;
+	margin-right: 4px;
+	margin-left: 0px;
+}*/
+
+.label-outline-orange {
+	background-color: transparent;
+	border: 1px solid #ED7520;
+	color: #ED7520;
+}
+
+.label-outline-orange[href]:hover,
+.label-outline-orange[href]:focus {
+	background-color: lightgrey;
+	color: #575757;
+	border: 1px solid white;
+}
+
+.tool-page-danger-text {
+	margin-bottom: 2em;
+	color: #d9534f;
+}
+
+
+.function-image-element {
+	background-color: #D0E0EB;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	border-radius: 5px;
+	color: #575757;
+	/*font-weight: bold;*/
+	font-size: 90%;
+	border: 0px solid #CCCCCC;
+}
+
+.function-arrow-element {
+	color: #575757;
+}
+
+.function-input-output-element {
+
+}
+
+.tool-page-function-comment-label {
+	text-align: center; 
+	width:100%; 
+	margin-top:7px; 
+	font-weight: lighter;
+}
+
+.tool-page-grey-text {
+	color: #575757;
+}
+
+.tool-page-diver-label {
+	display: block;
+	text-align: left;
+	overflow: hidden;
+	white-space: nowrap; 
+	margin-top: 40px;
+	margin-bottom: 4px;
+	color: #575757;
+	font-weight: bold;
+	font-size: 80%;
+}
+
+.tool-page-diver-label > span {
+	position: relative;
+	display: inline-block;
+}
+
+.tool-page-diver-label > span:before,
+.tool-page-diver-label > span:after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	width: 9999px;
+	border-top: 1px solid #E6E6E6;
+}
+
+.tool-page-diver-label > span:before {
+	right: 100%;
+	margin-right: 15px;
+}
+
+.tool-page-diver-label > span:after {
+	left: 100%;
+	margin-left: 15px;
+}
+
+/* Callouts */
+
+.tool-page-callout-header {
+	color: #428bca;
+	font-weight: lighter;
+	font-size: 90%;
+}
+
+
+.tool-page-callout-text {
+	color: #575757;
+	font-weight: lighter;
+	font-size: 90%;
+	margin-top: -0.25em;
+	display:block;
+	text-align: justify;
+}
+
+.tool-page-row {
+	width: 100%; 
+	margin-left: 0px;
+}
+

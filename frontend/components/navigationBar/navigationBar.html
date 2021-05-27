@@ -1,0 +1,41 @@
+<div class="navbar navbar-default navbar-fixed-top" role="navigation" ng-if="$state.current.name != 'root'" ng-controller="NavbarController" ng-cloak>
+	<div class="container-fluid navbar-default-background">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle navbar-toggle-options" ng-click="isCollapsed = !isCollapsed">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+		<div class="navbar-collapse" uib-collapse="!isCollapsed">
+			<div class="col-sm-12 col-lg-12" ng-controller="LoginMangerController as loginCtrl">
+				<ul class="nav navbar-nav col-sm-12" style="display: flex; flex-wrap: wrap;">
+					<li class="navbar-button-bold"><a href="" ng-click="homeButtonClicked()"><img src="img/elixir_biotools_transparent.png" alt="Responsive image" width="88" height="66" style="margin-top:-17px; margin-bottom: -3000px; display: flex;" class="biotools-logo"></a></li>
+					<li class="navbar-button" style="flex-grow: 1;"><div search-bar ng-cloak ng-if="showSearch"></div></li>
+					<li class="navbar-button-bold"><a href="" ng-click="aboutButtonClicked()">About</a></li>
+					<li uib-dropdown ng-if="User.authenticated" class="navbar-button">
+						<a href="" uib-dropdown-toggle>Menu <span class="caret"></span></a>
+						<ul class="uib-dropdown-menu dropdown-menu-navbar">
+							<li ui-sref-active="active"><a ui-sref="register">Add content</a></li>
+							<li ng-if="User.authenticated" ui-sref-active="active"><a ui-sref="admin-subdomain">Manage subdomains</a></li>
+						</ul>
+					</li>
+
+					<li uib-dropdown ng-if="User.authenticated" class="navbar-button-bold">
+						<a href="" uib-dropdown-toggle>{{ User.current.username }} <span ng-show="User.current.requests_count > 0" class="badge label-navbar">  {{User.current.requests_count}}</span><span class="caret"></span></a>
+						<ul class="uib-dropdown-menu dropdown-menu-navbar">
+							<li><a ui-sref="profile">My profile</a></li>
+							<li><a ui-sref="requests">Requests <span ng-show="User.current.requests_count > 0" class="badge label-navbar pull-right">  {{User.current.requests_count}}</span></a></li>
+							<li><a href="" ng-click="logoutButtonClick()">Log out {{ User.current.username }}</a></li>
+						</ul>
+					</li>
+
+					<li ng-if="!User.authenticated" class="navbar-button-bold"><a href="" uib-dropdown-toggle ng-click="loginCtrl.openLoginModal()">Login</a></li>
+					<li ng-if="!User.authenticated" class="navbar-button-bold"><a href="" uib-dropdown-toggle ng-click="loginCtrl.openLoginModal()">Sign-up</a></li>
+
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

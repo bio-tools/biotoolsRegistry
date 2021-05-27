@@ -1,0 +1,30 @@
+
+<div ng-show="publication" ng-init="metadata=publication.metadata" class="bs-callout-sm bs-callout-primary min-tall" style="border-left-color:#9DA8AA">
+	<div tool-page-publication-callout
+		pmcid="publication.pmcid" 
+		doi="publication.doi" 
+		pmid="publication.pmid" 
+		types="publication.type"
+		color="#9DA8AA"
+		note="publication.note">
+		</div>
+	<div ng-show="metadata">
+		<div ng-class="{{expandable_status}}" class="{{expandable_status}}">
+			<span ng-show="metadata.title" class="tool-page-callout-header" style="color: black;"><strong>{{::metadata.title}}</strong><br></span>
+			<div><span ng-show="metadata.authors.count != 0" ng-repeat="author in metadata.authors" class="tool-page-callout-header" style="color: gray;">{{::author['name']}} </span></div>
+			<span ng-show="metadata.journal" class="tool-page-callout-header" style="color: black;"> <em>{{::metadata.journal}}</em></span><span ng-show="metadata.date" class="tool-page-callout-header" style="color: black;">, {{::metadata.date| date:'yyyy'}} </span><br>
+			<!-- <span ng-show="metadata.citationCount" class="tool-page-callout-header pull-right" style="color: gray;">Citation count: {{::metadata.citationCount}}<br></span> -->
+			<div>
+				<object ng-show="publication.doi" height="50" data="https://api.elsevier.com/content/abstract/citation-count?doi={{::publication.doi.replace('doi:','')}}&httpAccept=text/html&apiKey=ddd4165bfdfe4dc9d3fb4b289aa321fe"></object> 
+				<object ng-show="publication.pmid && !publication.doi" height="50" data="https://api.elsevier.com/content/abstract/citation-count?pubmed_id={{::publication.pmid}}&httpAccept=text/html&apiKey=ddd4165bfdfe4dc9d3fb4b289aa321fe"></object> 
+				<object ng-show="publication.pmcid && !publication.doi" height="50" data="https://api.elsevier.com/content/abstract/citation-count?pubmed_id={{::publication.pmcid}}&httpAccept=text/html&apiKey=ddd4165bfdfe4dc9d3fb4b289aa321fe"></object> 
+			</div>
+			<span ng-show="metadata.abstract" class="tool-page-callout-text" style="margin-top: 14px;">{{::metadata.abstract}}</span>
+		</div>
+		<div>
+			<span><button type="button" class="btn btn-link" ng-click="toggleStatus()">{{status}}</button></span>
+		</div>
+	</div>
+			
+</div>
+

@@ -1,0 +1,95 @@
+<div class="container" bindonce>
+	<div class="row" ng-cloak>
+		<div ng-show="notFound" class="jumbotron col-md-offset-2 col-md-8">
+			<h1>Error 404</h1>
+			<p>Tool not found.</p>
+		</div>
+		<div ng-if="!notFound">
+			<div class="spinner" ng-if="!software.biotoolsID && newVersion" style="text-align:center;"><i class="fa fa-spinner fa-5x fa-spin icon-cog" style="margin:40px;display:inline-block;"></i></div>
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" ng-if="$state.current.name == 'tool.edit' && !canEditTool && software.biotoolsID">
+				<div class="col-md-offset-2 col-md-8" style="text-align:center;">
+					<div class="page-header" >
+						<h1>You don't have permissions to update this resource</h1>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" ng-if="($state.current.name != 'tool.edit' || canEditTool && software.biotoolsID) && (software.biotoolsID || !newVersion)">
+				<div class="row">
+					<div class="col-xs-12 col-sm-8 col-md-8">
+						<h1 ng-show="controller == 'create' && !newVersion">Add new tool</h1>
+						<h1 ng-show="controller == 'update'">Update tool</h1>
+					</div>
+					<div class="col-xs-12 col-sm-4 col-md-4">
+						<div class="form-group has-success text-right align-xs" style="margin-top:20px;">
+							<span ng-show="registrationSuccess" style="color: #3c763d;">Success</span>
+							<button ng-if="controller != 'create'" ng-disabled="deletingProgress.inProgress" class="btn btn-sm btn-danger" ng-click="deleteButtonClick()">Remove <span ng-show="deletingProgress.inProgress"><i class="fa fa-circle-o-notch fa-spin" ></i></span><i class="fa fa-check" ng-show="deletingProgress.success"></i><i class="fa fa-close" ng-show="deletingProgress.error"></i></button>
+							<button ng-disabled="validationProgress.inProgress" class="btn btn-sm btn-warning" ng-click="validateButtonClick()" ng-style="validationProgress.error && {'border-color':'red'}">Validate <span ng-show="validationProgress.inProgress"><i class="fa fa-circle-o-notch fa-spin" ></i></span><i class="fa fa-check" ng-show="validationProgress.success"></i><i class="fa fa-close" ng-show="validationProgress.error" ng-style="validationProgress.error && {'color':'red'}" ></i></button>
+							<button ng-disabled="savingProgress.inProgress" class="btn btn-sm btn-primary" ng-click="registerButtonClick()" ng-style="savingProgress.error && {'border-color':'red'}">Save <span ng-show="savingProgress.inProgress"><i class="fa fa-circle-o-notch fa-spin" ng-style="savingProgress.error && {'border-color':'red'}"></i></span><i class="fa fa-check" ng-show="savingProgress.success"></i><i class="fa fa-close" ng-show="savingProgress.error"></i></button>
+							<button ng-if="controller != 'create'" ng-disabled="(savingProgress.inProgress || validationProgress.inProgress || deletingProgress.inProgress)" class="btn btn-sm btn-primary" ng-click="naviagateToTool(software.biotoolsID)">Go to entry</button>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group has-error" ng-show="registrationErrorPayload">
+							<label class="help-block">There are validation errors: please fix values shown in red. See the `JSON` tab for a list of all errors.</label>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-12">
+						<uib-tabset style="margin-top:30px;">
+							<!-- Include the summary tab	-->
+							<uib-tab>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': form.summaryForm.$invalid }">Summary</span><span style="color:#ff0000;"><b> *</b></span></tab-heading>
+								<div ng-include="'/partials/tool_edit/toolEditSummary.html'"></div>
+							</uib-tab>
+							<uib-tab>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': registrationErrorPayload.function }">Function</span></tab-heading>
+								<div ng-include="'/partials/tool_edit/toolEditFunction.html'"></div>
+							</uib-tab>
+							<uib-tab>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': form.labelForm.$invalid }">Labels</span></tab-heading>
+								<div ng-include="'/partials/tool_edit/toolEditLabel.html'"></div>
+							</uib-tab>
+							<uib-tab>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': form.linksForm.$invalid || registrationErrorPayload.link }">Links</span></tab-heading>
+								<div ng-include="'/partials/tool_edit/toolEditLinks.html'"></div>
+							</uib-tab>
+							<uib-tab>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': form.downloadForm.$invalid }">Download</span></tab-heading>
+								<div ng-include="'/partials/tool_edit/toolEditDownload.html'"></div>
+							</uib-tab>
+							<uib-tab>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': form.documentationForm.$invalid || registrationErrorPayload.documentation }">Documentation</span></tab-heading>
+								<div ng-include="'/partials/tool_edit/toolEditDocumentation.html'"></div>
+							</uib-tab>
+							<uib-tab>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': form.publicationsForm.$invalid || registrationErrorPayload.publication }">Publications</span></tab-heading>
+								<div ng-include="'/partials/tool_edit/toolEditPublications.html'"></div>
+							</uib-tab>
+							<uib-tab>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': registrationErrorPayload.credit || form.creditsForm.$invalid }">Credits & Support</span></tab-heading>
+								<div ng-include="'/partials/tool_edit/toolEditCredits.html'"></div>
+							</uib-tab>
+							<uib-tab>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': form.relationsForm.$invalid }">Relations</span></tab-heading>
+								<div ng-include="'/partials/tool_edit/toolEditRelations.html'"></div>
+							</uib-tab>
+							<uib-tab>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': form.communityForm.$invalid }">Community</span></tab-heading>
+								<div ng-include="'/partials/tool_edit/toolEditCommunity.html'"></div>
+							</uib-tab>
+							<uib-tab>
+								<tab-heading><span ng-class="{ 'tool-edit-tab-error': form.JSONForm.$invalid || registrationErrorPayload }">JSON</span></tab-heading>
+								<div ng-include="'/partials/tool_edit/toolEditJSON.html'"></div>
+							</uib-tab>
+							<uib-tab ng-show="User.current.username == software.owner || User.current.is_superuser == true">
+								<tab-heading><span>Permissions</span></tab-heading>
+								<div ng-include="'/partials/tool_edit/toolEditPermissions.html'"></div>
+							</uib-tab>
+						</uib-tabset>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,105 @@
+
+
+	
+	<div ng-if="software.relation.length > 0">
+		<div class="tool-page-diver-label" >
+			<span>Relations</span>
+		</div>
+
+		<div style="display: flex; flex-wrap: wrap;">
+			<span ng-repeat="relation in software.relation track by $index" style="margin-bottom: 7px;">
+				<span class="pill-tag-fourth-background">{{relation.type}}: <a target="_blank" ng-href="/{{relation.biotoolsID}}">{{relation.biotoolsID}}</a></span>
+			</span>
+		</div>
+
+	</div>
+
+
+	<!-- Divider line -->
+	<div class="tool-page-diver-label">
+		<span>ELIXIR credits and links</span>
+	</div>
+<div ng-if="software.elixirPlatform.length > 0" class="elixir-info">
+	<!-- Elixir Platform -->
+	<span class="tool-page-version-text">ELIXIR platform</span>
+	<div style="display: flex; flex-wrap: wrap;">
+		<span ng-repeat="platform in software.elixirPlatform track by $index" style="margin-bottom: 7px;">
+			<a class="pill-tag-third-background" href="https://www.elixir-europe.org/platforms/{{platform}}" target="_blank">{{ ::platform }}</a>
+		</span>
+	</div>
+</div>
+<div ng-if="software.elixirNode.length > 0" class="elixir-info">
+	<!-- Elixir Node -->
+	<span class="tool-page-version-text">ELIXIR node</span>
+	<div style="display: flex; flex-wrap: wrap;">
+		<span ng-repeat="node in software.elixirNode track by $index" style="margin-bottom: 7px;">
+			<a class="pill-tag-third-background" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/{{node.replace(' ','-')}}" target="_blank">{{ ::node }}</a>
+		</span>
+	</div>
+</div>
+
+<div ng-if="software.elixirCommunity.length > 0" class="elixir-info">
+	<!-- Elixir Community -->
+	<span class="tool-page-version-text">ELIXIR community</span>
+	<div style="display: flex; flex-wrap: wrap;">
+		<span ng-repeat="community in software.elixirCommunity track by $index" style="margin-bottom: 7px;">
+			<a class="pill-tag-third-background" href="https://elixir-europe.org/communities/{{elixirCommunityIndex[community]}}" target="_blank">{{ ::community }}</a>
+		</span>
+	</div>
+</div>
+
+	<div style="">
+		<a href="" ng-href="https://tess.elixir-europe.org" target="_blank"><img src="img/tess_logo.png" width="64" title="ELIXIR's Training Portal" alt="TeSS"></a>
+		<span style="margin-bottom: 7px;">
+			<a class="" href="https://tess.elixir-europe.org/materials?q={{software.name}}" target="_blank">Training materials ›</a>
+		</span>
+		<span> | </span>
+		<span style="margin-bottom: 7px;">
+			<a class="" href="https://tess.elixir-europe.org/events?q={{software.name}}" target="_blank">Training events ›</a>
+		</span>
+	</div>
+	<br>
+
+  <!--elixir badge-->
+	<div ng-if="software.elixir_badge > 0 && software.elixir_badge < 8">
+		<span class="elixir_badge" ng-if="software.elixir_badge == 1 || software.elixir_badge == 3 || software.elixir_badge == 5 || software.elixir_badge == 7">
+			
+			<a href="" ng-href="https://www.elixir-europe.org/platforms/data/elixir-deposition-databases" target="_blank"><img src="img/edd.png" width="56" title="ELIXIR Deposition Database" alt="EDD"></a>
+
+			<span>
+				<a href="" ng-href="https://www.elixir-europe.org/platforms/data/elixir-deposition-databases" target="_blank">ELIXIR Deposition Database ›</a>
+			</span>
+
+
+			<span ng-if="software.elixir_badge == 3 || software.elixir_badge == 5 || software.elixir_badge == 7"> | </span>
+		</span>
+
+		<span class="elixir_badge" ng-if="software.elixir_badge == 4 || software.elixir_badge == 5 || software.elixir_badge == 6 || software.elixir_badge == 7">
+			<a href="" ng-href="https://www.elixir-europe.org/platforms/interoperability/rir-selection" target="_blank"> <img src="img/rir.png" width="56" title="Recommended Interoperability Resource" alt="RIR"></a>			
+
+			<span>
+				<a href="" ng-href="https://www.elixir-europe.org/platforms/interoperability/rir-selection" target="_blank">Recommended Interoperability Resource ›</a>
+			</span>
+
+			<span ng-if="software.elixir_badge == 6 || software.elixir_badge == 7"> | </span>
+		</span>
+
+		<span class="elixir_badge" ng-if="software.elixir_badge == 2 || software.elixir_badge == 3 || software.elixir_badge == 6 || software.elixir_badge == 7">
+
+			<a href="" ng-href="https://www.elixir-europe.org/platforms/data/core-data-resources" target="_blank">	 <img src="img/cdr.png" width="56" title="Core Data Resources" alt="CDR"></a>
+			<span>
+				<a href="" ng-href="https://www.elixir-europe.org/platforms/data/core-data-resources" target="_blank">Core Data Resources ›</a>
+			</span>
+		</span>
+		
+	</div>
+</div>
+<div ng-if="software.collectionID.length > 0">
+	<div class="tool-page-diver-label">
+		<span tooltips tooltip-content="Tool has been assigned to the following collections">Tool collection(s)</span>
+	</div>
+	<span> <a ng-if="software.collectionID.length > 0" ng-repeat="collection in software.collectionID" class="pill-tag-secondary-background" href="" ng-click = collectionNameClicked(collection)>
+		{{ ::collection }}
+	</a></span>
+</div>
+

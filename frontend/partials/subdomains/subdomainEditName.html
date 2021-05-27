@@ -1,0 +1,121 @@
+<div class="form-group content-page-element-spacing">
+	<!-- Domain name -->
+	<div>
+		<!-- Name -->
+		<span class="content-page-input-title-label">Name</span>
+		<div ng-if="subdomain.exists == false">
+			<input ng-model="subdomain.domain" name="identifier" type="text"
+				ng-change="makeSubdomainURLSafe(subdomain.domain)" class="form-control content-page-input-field"
+				placeholder="Name of the domain to be created">
+			<div class="content-page-danger-text" ng-if="errors.domain">
+				<i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{errors.domain}}
+			</div>
+			<div>
+				<span class="content-page-danger-text" ng-repeat="error in errors.data.domain"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{error}}</span>
+			</div>
+		</div>
+		<div ng-if="subdomain.exists == true">
+			<input ng-model="subdomain.domain" type="text" class="form-control content-page-input-field" disabled>
+		</div>
+		<!-- Warnings -->
+		<div class="content-page-info-text">
+			<i class="fa fa-question-circle" aria-hidden="true"></i> Subdomain's name is not editable after creation.
+		</div>
+	</div>
+
+	<!-- Domain is_private -->
+	<div class="content-page-element-spacing-top">
+		<span class="content-page-input-title-label">Is private</span>&nbsp;
+		<label class="radio-inline"><input type="radio" name="isprivate" ng-model="subdomain.is_private" ng-value="true">Yes</label>
+		<label class="radio-inline"><input type="radio" name="isprivate" ng-model="subdomain.is_private" ng-value="false">No</label>
+	</div>
+
+	<!-- Domain title -->
+	<div class="content-page-element-spacing-top">
+		<!-- Title -->
+		<span class="content-page-input-title-label">Title</span>
+		<input ng-model="subdomain.title" name="title" type="text" class="form-control content-page-input-field"
+			placeholder="Title">
+		<div class="content-page-danger-text" ng-if="errors.domain.title">
+			<i cla§ss="fa fa-exclamation-circle" aria-hidden="true"></i> {{errors.domain.title}}
+		</div>
+
+		<div ng-repeat="error in errors.data.title">
+			<span class="content-page-danger-text"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{error}}</span>
+		</div>
+	</div>
+	<!-- Domain sub-title -->
+	<div class="content-page-element-spacing-top">
+		<!-- Subtitle -->
+		<span class="content-page-input-title-label">Subtitle</span>
+		<input ng-model="subdomain.subtitle" name="subtitle" type="text" class="form-control content-page-input-field"
+			placeholder="Subtitle">
+			<div ng-repeat="error in errors.data.sub_title">
+				<span class="content-page-danger-text"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{error}}</span>
+			</div>
+	</div>
+	
+	<!-- {{subdomain}} -->
+
+	<!-- Domain tags -->
+	<div class="content-page-element-spacing-top">
+		<span class="content-page-input-title-label">Tags</span>
+	</div>
+	
+	<div class="domain-list-element" ng-repeat="tag in subdomain.tag track by $index">
+		<div class="input-group">
+			<input type="text" class="form-control" placeholder="type a tag"
+				ng-model="subdomain.tag[$index]">
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button"
+					ng-click="removeButtonClick('tag', subdomain, $index)">
+					<i class="fa fa-times remove-icon-button"></i></button>
+			</span>
+		</div>
+		<div>
+			<span class="content-page-danger-text" ng-repeat="error in errors.data.tag[$index]"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{error}}</span>
+		</div>
+	</div>
+
+	<div class="form-group" style="padding-top:7px;">
+		<a href="" ng-click="domainAddButtonClick('tag', subdomain, true, false);">Add tag</a>
+	</div>
+
+	<!-- Domain collection -->
+	<div class="content-page-element-spacing-top">
+		<span class="content-page-input-title-label">Collections</span>
+	</div>
+
+	<div class="domain-list-element" ng-repeat="collection in subdomain.collection track by $index">
+		<div class="input-group">
+			<input type="text" class="form-control" placeholder="type a tag"
+				ng-model="subdomain.collection[$index]"
+				typeahead="collection for collection in loadCollectionIDs($viewValue)"
+				typeahead-min-length="2">
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button"
+					ng-click="removeButtonClick('collection', subdomain, $index)">
+					<i class="fa fa-times remove-icon-button"></i></button>
+			</span>
+		</div>
+		<div>
+			<span class="content-page-danger-text" ng-repeat="error in errors.data.collection[$index]"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{error}}</span>
+		</div>
+	</div>
+
+	<div class="form-group" style="padding-top:7px;">
+		<a href="" ng-click="domainAddButtonClick('collection', subdomain, true, false);">Add collection</a>
+	</div>
+
+	
+	<!-- Domain description -->
+	<div class="content-page-element-spacing-top">
+		<!-- Description -->
+		<span class="content-page-input-title-label">Description</span>
+		<textarea rows="4" ng-model="subdomain.description" name="description" type="text"
+			class="form-control content-page-input-field" placeholder="Description"></textarea>
+		<div class="content-page-danger-text" ng-if="errors.domain.description">
+			<i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{errors.domain.description}}
+		</div>
+	</div>
+</div>

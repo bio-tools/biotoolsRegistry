@@ -1,0 +1,43 @@
+<div ui-view>
+	<link rel="stylesheet" href="/css/login.css">
+	<div class="container">
+		<div class="col-md-offset-3 col-md-6">
+			<div class="page-header" style="text-align:center;">
+				<h1>Create an account</h1>
+			</div>
+			<form role="form" novalidate name="signup_form" autocomplete="off">
+				<div class="form-group has-feedback" ng-class="{'has-error': signup_form.username.$dirty && signup_form.username.$invalid || error_message.username, 'has-success': signup_form.username.$dirty && signup_form.username.$valid && !error_message.username}">
+					<label>Username (this will be your login)</label>
+					<input type="text" name="username" class="form-control" placeholder="Username" ng-model="credentials.username" ng-model-options="{ debounce: 500 }" ng-pattern="/^[A-Za-z0-9-_.]*$/" required>
+					<span ng-show="signup_form.username.$valid && !error_message.username" class="glyphicon glyphicon-ok form-control-feedback"></span>
+					<span ng-show="signup_form.username.$dirty && signup_form.username.$invalid || error_message.username" class="glyphicon glyphicon-remove form-control-feedback"></span>
+					<span class="help-block" ng-show="signup_form.username.$error.required && signup_form.username.$dirty">Username is required.</span>
+					<span class="help-block" ng-show="signup_form.username.$error.pattern && signup_form.username.$dirty">This field can only contain uppercase and lowercase letters, decimal digits, or these characters - _ .</span>
+					<span class="help-block" ng-show="error_message.username">{{ error_message.username }}</span>
+				</div>
+				<div class="form-group has-feedback" ng-class="{'has-error': signup_form.email2.$dirty && signup_form.email2.$invalid || error_message.email, 'has-success': signup_form.email2.$dirty && signup_form.email2.$valid && !error_message.email}">
+					<label>Email</label>
+					<input type="text" name="email2" class="form-control" placeholder="Email" ng-model="credentials.email" ng-model-options="{ debounce: 500 }" required autocomplete="new-password">
+					<span ng-show="signup_form.email2.$valid && !error_message.email" class="glyphicon glyphicon-ok form-control-feedback"></span>
+					<span ng-show="signup_form.email2.$dirty && signup_form.email2.$invalid || error_message.email" class="glyphicon glyphicon-remove form-control-feedback"></span>
+					<span class="help-block" ng-show="signup_form.email2.$error.required && signup_form.email2.$dirty">Email is required.</span>
+					<span class="help-block" ng-show="signup_form.email2.$error.email && signup_form.email2.$dirty">Not a proper email address.</span>
+					<span class="help-block" ng-show="error_message.email">{{ error_message.email }}</span>
+				</div>
+				<div class="form-group has-feedback" ng-class="{'has-error': signup_form.password.$dirty && signup_form.password.$invalid, 'has-success': signup_form.password.$dirty && signup_form.password.$valid}">
+					<label>Password</label>
+					<input type="password" name="password" ng-minlength="8" class="form-control" placeholder="Password" ng-model="credentials.password" required autocomplete="new-password">
+					<span ng-show="signup_form.password.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
+					<span ng-show="signup_form.password.$dirty && (signup_form.password.$invalid)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+					<span class="help-block" ng-show="signup_form.password.$error.required && signup_form.password.$dirty">Password is required.</span>
+					<span class="help-block" ng-show="signup_form.password.$error.minlength">Password too short - needs to be at least 8 characters.</span>
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg btn-block" ng-disabled="signup_form.$invalid || loading" ng-click="signupButtonClick()">Create account <span ng-show="loading"><i class="fa fa-spinner fa-spin icon-cog"></i></span></button>
+				<div class="form-group has-feedback has-error" ng-show="error_message.creation">
+					<span class="help-block">{{ error_message.creation }}</span>
+				</div>
+			</form>
+			<br>
+		</div>
+	</div>
+</div>

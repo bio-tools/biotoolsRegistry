@@ -1,0 +1,51 @@
+<div class="row" ng-cloak>
+	<div class="col-xs-12 col-sm-10 col-md-10 col-md-offset-1 col-sm-offset-1">
+		<!-- Headers -->
+		<h3 class="content-page-header" ng-show="subdomain.exists == false">Register subdomain</h3>
+		<h3 class="content-page-header" ng-show="subdomain.exists == true">Update subdomain</h3>
+		<hr class="content-page-divider">
+		<!-- Server responses -->
+		<uib-alert ng-cloak ng-show="response.general" type="success"><i class="fa fa-info-circle" aria-hidden="true"></i> {{response.general}}</uib-alert>
+		<uib-alert ng-cloak ng-show="errors.general" type="danger">Domain could not be created. {{errors.general}}</uib-alert>
+		<!-- Content of the page -->
+		<div ng-if="loading && !errors.loading" style="margin: 50px;">
+			<div large-spinner></div>
+		</div>
+		<!-- Display error if website failed to load -->
+		<div ng-if="loading && errors.loading" error-dialog errorcode="404" errormessage="errors.loading">
+		</div>
+		<!-- Page loaded display subdomain editing options -->
+		<div class="content-page-section" ng-show="!loading">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<!-- Name editing -->
+					<div ng-include="'/partials/subdomains/subdomainEditName.html'"></div>
+					<!-- Tool List -->
+					<div class="panel panel-default content-page-panel" ng-if="subdomain.exists == true">
+						<div class="panel-body">
+							<div ng-include="'/partials/subdomains/subdomainEditToolList.html'"></div>
+						</div>
+					</div>
+					<!-- Page controls -->
+					<hr class="content-page-divider content-page-element-spacing-top">
+					<!-- Server responses -->
+					<uib-alert ng-cloak ng-show="response.general" type="success"><i class="fa fa-info-circle" aria-hidden="true"></i> {{response.general}}</uib-alert>
+					<uib-alert ng-cloak ng-show="errors.general" type="danger">Domain could not be created. {{errors.general}}</uib-alert>
+					<div ng-show="!updating">
+						<!-- Save button -->
+						<button ng-show="!subdomain.exists" class="btn btn-default btn-sm content-page-control pull-right"  ng-click="saveSubdomain()">Save 
+							<span ng-show="!errors.general">›</span>
+							<span ng-show="errors.general">›︎</span>
+						</button>
+						<!-- Update button -->
+						<button ng-show="subdomain.exists" class="btn btn-default btn-sm content-page-control pull-right" ng-click="updateSubdomain()">Update 
+							<span ng-show="!errors.general">›</span>
+							<span ng-show="errors.general">›</span>
+						</button>
+					</div>
+					<div ng-show="updating" large-spinner></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

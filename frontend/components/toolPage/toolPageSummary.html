@@ -1,0 +1,83 @@
+<!-- Name -->
+<div ng-class="confidenceClass()" class="alert" role="alert" ng-if="software.confidence_flag && software.confidence_flag != 'tool'">
+	This entry has been automatically generated from a publication and has been assigned a <b>{{software.confidence_flag}}</b> confidence score of describing a valid <em>bio.tools</em> entry.
+	<br>
+	This entry can be edited by anyone with an account. If you are the owner of this too, please request ownership of this tool at the bottom of the page.
+	<br>
+	Users can update and verify the tool publication and mark the entry as a valid tool for bio.tools by changing the confidence score in the 'Labels' tab to tool.
+	<br>
+	Please verify all the fields before marking the entry as a valid tool (e.g. the description field may have additional metadata that needs to be removed).
+</div>
+<h2>
+	{{ ::software.name }}
+	<span tooltips tooltip-content="Unique tool ID" class="biotools-curie">(biotools:{{software.biotoolsID}})</span>
+	<span><a class="pill-tag-covid-element" tooltips tooltip-content="This tool is tagged as COVID-19." ng-if="Covid.hasCovid(software.collectionID)" ng-href="/t?domain=covid-19" target="_blank">COVID-19</a></span>
+	<span><a class="pill-tag-verified" tooltips tooltip-content="This tool ID has been verified by a curator." ng-if="software.validated" href="https://biotools.readthedocs.io/en/latest/what_is_biotools.html#bio-tools-tool-identifiers" target="_blank"><i class="fa fa-thumbs-up"></i> ID Verified</a></span>
+
+	<!--<div data-id="{{ software.biotoolsID | lowercase }}" data-widget-type="widget" data-widget-subtypes="widget" data-widget-tooltip-position="left" data-widget-size="64" class="opeb pull-right" style="width: 64px; height: 64px; margin-right: 10px;"></div>-->
+
+	<div  data-widget-tooltip-position="left" data-widget-size="64" class="opeb pull-right" style=" margin-right: 10px;">
+		<a href="" ng-href="https://openebench.bsc.es/html/tool/{{ software.biotoolsID | lowercase }}" target="_blank"><img src="img/opeb_logo.gif" width="88" title="Monitoring and benchmarking information" alt="OpenEBench"></a>
+	</div>
+
+</h2>
+<!-- Homepage -->
+	<p style="margin-top: -0.5em;" ng-show="software.homepage" class="pill-text">
+		<a href="{{ ::software.homepage }}" target="_blank" style="font-size: 1.2em;">{{ ::software.homepage }}</a>
+		<span class="pill-tag-error-small" ng-if="software.homepage_status == 1"><i class="fa fa-chain-broken" aria-hidden="true"></i> Temporarily unavailable</span>
+		<span class="pill-tag-error-small" ng-if="software.homepage_status == 2"><i class="fa fa-chain-broken" aria-hidden="true"></i> Permanently unavailable</span>
+	</p>
+<!-- Version list -->
+<div ng-if="software.version.length > 0" >
+	<span class="tool-page-version-text">Available versions</span>
+	<div style="display: flex; flex-wrap: wrap;">
+		<span ng-repeat="version in software.version" style="margin-bottom: 7px;">
+			<span class="pill-tag-third-background" href="" target="_blank">{{ ::version }}</span>
+		</span>
+	</div>
+</div>
+<!-- Topic list -->
+<div style="display: flex; flex-wrap: wrap;">
+	<span ng-repeat="topic in software.topic" tooltips tooltip-content="Topic in the Life Sciences : click to find more tools with this topic.">
+		<a ng-if="topic.term != 'N/A'" class="pill-tag-topic" href="" ng-click="topicNameClicked(topic)" target="_blank">{{ ::topic.term }} ›</a>
+		<a ng-if="topic.term == 'N/A'" class="pill-tag-orange-background" href="{{ ::topic.uri }}" target="_blank">{{ ::software.name }} ›</a>
+	</span>
+</div>
+<hr class="pill-hr-divider">
+<div style="padding-bottom: 5px;">
+	<!-- Version tags -->
+	<span ng-if="software.maturity" class="pill-tag-primary-background" tooltips tooltip-content="Development stage of the tool">
+	{{ ::software.maturity }}</span>
+	<span ng-if="software.license" class="pill-tag-primary-background" tooltips tooltip-content="Software or data license">
+		<a ng-show="shouldLicenseBeALink(software.license)" href="https://spdx.org/licenses/{{ ::software.license }}" target="_blank">{{ software.license }}</a>
+		<div ng-show="!shouldLicenseBeALink(software.license)">{{ software.license }}</div>
+	</span>
+	<span ng-if="software.cost" class="pill-tag-primary-background" tooltips tooltip-content="Cost of acquiring the software">
+	{{ ::software.cost }}</span>
+	<span ng-if="software.accessibility" class="pill-tag-primary-background" tooltips tooltip-content="Accessibility of tool for use">
+		{{ ::software.accessibility }}
+	</span>
+</div>
+<div class="pill-spacing">
+	<!-- Tool type list -->
+	<span ng-if="software.toolType.length > 0" ng-repeat="toolType in software.toolType" class="pill-tag-secondary-background" tooltips tooltip-content="Type of tool">
+		{{ ::toolType }}
+	</span>
+	<!-- Language list -->
+	<span ng-if="software.language.length > 0" ng-repeat="language in software.language" class="pill-tag-secondary-background" tooltips tooltip-content="Programming language">
+		{{ ::language }}
+	</span>
+	<span style="color:#575757;" ng-if="software.operatingSystem.length > 0">
+		<span ng-repeat="operatingSystem in software.operatingSystem track by $index" style="margin-left:4px; padding-bottom: -2px;">
+			<i style="font-size:110%;" class="fa fa-3x fa-apple" ng-show="operatingSystem == 'Mac'" tooltips tooltip-side="top" tooltip-content="Operating system: {{ operatingSystem }}"></i>
+			<i style="font-size:110%;" class="fa fa-3x fa-linux" ng-show="operatingSystem == 'Linux'" tooltips tooltip-side="top" tooltip-content="Operating system: {{ operatingSystem }}"></i>
+			<i style="font-size:110%;" class="fa fa-3x fa-windows" ng-show="operatingSystem == 'Windows'" tooltips tooltip-side="top" tooltip-content="Operating system: {{ operatingSystem }}"></i>
+		</span>
+	</span>
+</div>
+<hr class="pill-hr-divider">
+<div class="pill-spacing">
+	<!-- Description -->
+	<p ng-show="software.description" class="pill-text">{{ ::software.description }}</p>
+</div>
+<br>

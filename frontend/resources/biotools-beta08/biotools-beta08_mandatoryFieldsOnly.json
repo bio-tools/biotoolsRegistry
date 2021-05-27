@@ -1,0 +1,134 @@
+		[
+			{
+				"name": "ResourceName",
+				"homepage": "http://resourcename.org",
+				"resourceType": [
+					{
+						"uri": "http://someURL.org",
+						"term": "Library"
+					}, {
+						"uri": "http://someURL.org",
+						"term": "Suite"
+					}
+				],
+				"interface": [
+					{
+						"interfaceType": {
+							"uri": "http://someURL.org",
+							"term": "SQL"
+						}
+					}, {
+						"interfaceType": {
+							"uri": "http://someURL.org",
+							"term": "Command line"
+						}
+					}
+				],
+				"description": "Description of resource goes here.",
+				"topic": [
+					{
+						"uri": "http://edamontology.org/topic_0003",
+						"term": "EDAM Topic"
+					}, {
+						"uri": "http://edamontology.org/topic_0003",
+						"term": "EDAM Topic"
+					}
+				],
+				"function": [
+					{
+						"functionName": [
+							{
+								"uri": "http://edamontology.org/operation_0004",
+								"term": "EDAM Function"
+							}, {
+								"uri": "http://edamontology.org/operation_0004",
+								"term": "EDAM Function"
+							}
+						]
+					}, {
+						"functionName": [
+							{
+								"uri": "http://edamontology.org/operation_0004",
+								"term": "EDAM Function"
+							}, {
+								"uri": "http://edamontology.org/operation_0004",
+								"term": "EDAM Function"
+							}
+						]
+					}
+				],
+				"contact": [
+					{
+						"contactEmail": "FredBloggs@gmail.com"
+					}, {
+						"contactURL": "http://someURL.org"
+					}
+				]
+			}, {
+				"name": "ResourceName",
+				"homepage": "http://resourcename.org",
+				"resourceType": [
+					{
+						"uri": "http://someURL.org",
+						"term": "Workflow"
+					}, {
+						"uri": "http://someURL.org",
+						"term": "Database"
+					}
+				],
+				"interface": [
+					{
+						"interfaceType": {
+							"uri": "http://someURL.org",
+							"term": "REST API"
+						}
+					}, {
+						"interfaceType": {
+							"uri": "http://someURL.org",
+							"term": "Web UI"
+						}
+					}
+				],
+				"description": "Description of resource goes here.",
+				"topic": [
+					{
+						"uri": "http://edamontology.org/topic_0003",
+						"term": "EDAM Topic"
+					}, {
+						"uri": "http://edamontology.org/topic_0003",
+						"term": "EDAM Topic"
+					}
+				],
+				"function": [
+					{
+						"functionName": [
+							{
+								"uri": "http://edamontology.org/operation_0004",
+								"term": "EDAM Function"
+							}, {
+								"uri": "http://edamontology.org/operation_0004",
+								"term": "EDAM Function"
+							}
+						]
+					}, {
+						"functionName": [
+							{
+								"uri": "http://edamontology.org/operation_0004",
+								"term": "EDAM Function"
+							}, {
+								"uri": "http://edamontology.org/operation_0004",
+								"term": "EDAM Function"
+							}
+						]
+					}
+				],
+				"contact": [
+					{
+						"contactEmail": "FredBloggs@gmail.com"
+					}, {
+						"contactEmail": "FredBloggs@gmail.com"
+					}
+				]
+			}
+		]
+	

@@ -1,0 +1,26 @@
+<div ui-view>
+	<div ng-show="notFound" resource-not-found-dialog></div>
+	<div style="text-align:center" ng-if="!software.biotoolsID">
+		<div spinner style="margin:40px;"></div>
+	</div>
+	<div ng-if="software.biotoolsID">
+		<div style="padding-left: 40px; padding-right: 40px; padding-top: 20px; padding-bottom: 60px;" class="default-background">
+			<div ng-include="'/components/toolPage/toolPageHeader.html'"></div>
+			<div ng-include="'/components/toolPage/toolPageSummary.html'"></div>
+			<div ng-include="'/components/toolPage/toolPageOperation.html'"></div>
+			<div class="row">
+				<!--<div class="col-md-4 col-sm-6" ng-if="software.publication.length > 0" ng-include="'/components/toolPage/toolPagePublications.html'"></div>-->
+				<div class="col-md-4 col-sm-6" ng-if="software.credit.length > 0" ng-include="'/components/toolPage/toolPageCredits.html'"></div>
+				<div class="col-md-4 col-sm-6" ng-if="software.documentation.length > 0" ng-include="'/components/toolPage/toolPageDocumentation.html'"></div>
+				<div class="col-md-4 col-sm-6" ng-if="software.download.length > 0" ng-include="'/components/toolPage/toolPageDownload.html'"></div>
+				<div class="col-md-4 col-sm-6" ng-if="software.link.length > 0" ng-include="'/components/toolPage/toolPageLinks.html'"></div>
+				<div class="col-md-4 col-sm-6" ng-if="software.contact.length > 0" ng-include="'/components/toolPage/toolPageContact.html'"></div>
+			</div>
+			<div ng-if="software.publication.length > 0" ng-include="'/components/toolPage/toolPagePublicationDetail.html'"></div>
+			<div ng-include="'/components/toolPage/toolPageElixirInfo.html'"></div>
+			<div ng-include="'/components/toolPage/toolPageCommunity.html'"></div>
+		</div>
+		<div ng-include="'/components/toolPage/toolPageControls.html'"></div>
+		<div class="default-controls-background"></div>
+	</div>
+</div>

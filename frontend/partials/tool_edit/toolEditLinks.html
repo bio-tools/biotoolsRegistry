@@ -1,0 +1,79 @@
+<br>
+<div class="panel panel-info">
+					<div class="panel-heading" style="position: relative;"><label align="justify">Miscellaneous links of relevance to the tool.
+					<br>We recommend you specify at least the repository, issue tracker and mailing list URLs, if available. See the <a target="_blank" ng-href="http://biotools.readthedocs.io/en/latest/curators_guide.html#links-group">Curation Guidelines <i class="fa fa-external-link"></i></a>.</label>
+					</div>
+				</div>
+<form name="form.linksForm" class="form-horizontal" novalidate>
+	<div class="form-group">
+		<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
+		<!-- link  -->
+			<div class="panel panel-default" ng-repeat="link in software.link track by $index" ng-class="{'no-margin-bottom': $last};">
+				<ng-form name="linkDetailForm">
+					<div class="panel-body" style="position: relative;">
+						<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('link', software, $index)"></i>
+						<div>
+							<!-- URL -->
+							<div class="form-group" style="margin-top:8px;" ng-class="{'has-error': registrationErrorPayload.link[$index].url}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.linkURL.description}}">URL <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#url-link"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+								<span style="color:#ff0000;position: absolute; right: 5px;"><b>*</b></span>
+								</label>
+								<div class="col-sm-9">
+									<input ng-model="software.link[$index].url" type="text" class="form-control" placeholder="URL" name="url" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in linkDetailForm.url.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+
+							
+
+							<!-- New Link type -->
+							<div class="form-group">
+								<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.linkType.description}}">Link type <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#linktype"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+									<span style="color:#ff0000;position: absolute; right: 5px;"><b>*</b></span>
+								</label>
+								<div class="col-sm-9" ng-init="entryIndex = $index">
+									<div class="form-group" ng-repeat="type in software.link[entryIndex].type track by $index" ng-init="typeIndex = $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.link[entryIndex].type[typeIndex][0]};">
+										
+											<div class="input-group">
+												<select class="form-control select-btn-group" ng-options="item.value as item.text for item in linkTypeOptions" ng-model="software.link[entryIndex].type[typeIndex]">
+												</select>
+												<span class="input-group-btn">
+													<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('type', software.link[entryIndex], typeIndex)"><i class="fa fa-times remove-icon-button"></i> </button>
+												</span>
+											</div>
+											<label class="help-block" ng-repeat="error in registrationErrorPayload.link[entryIndex].type[typeIndex]" bo-text="error"></label>
+									</div>
+									<label class="help-block" ng-repeat="error in linkDetailForm.link[entryIndex]" bo-text="error"></label>
+									
+									<div class="form-group" style="padding-top:7px;">
+										<a href="" ng-click="addButtonClick('type', software.link[entryIndex], true, false);">Add link type</a>
+									</div>
+									<div ng-class="{'has-error': true};" ng-show="registrationErrorPayload.link[entryIndex].type[0]=='This field is required.'">
+										<label class="help-block" ng-repeat="error in registrationErrorPayload.link[entryIndex].type" bo-text="error"></label>
+									</div>
+	
+								</div>
+							</div>
+
+							<!--  Comment	 -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.link[$index].note}">
+								<label class="col-sm-3 control-label"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.linkNote.description}}">Note <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#note-link"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+								<div class="col-sm-9">
+									<textarea ng-model="software.link[$index].note" name="note" class="form-control" rows="3" placeholder="Comment about the link" validate-edit-resource-field index={{$index}}></textarea>
+									<label class="help-block" ng-repeat="error in linkDetailForm.note.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div ng-class="{'has-error': true};">
+						<label class="help-block" style="margin-left: 20px;" ng-repeat="error in linksForm.errorMessages" bo-text="error"></label>
+					</div>
+				</ng-form>
+			</div>
+			<!-- Add link -->
+			<div class="form-group" style="padding-top:7px;">
+				<a href="" ng-show="!meta.function.visibility" ng-click="addButtonClick('link', software, true, true)">Add link</a>
+			</div>
+		</div>
+	</div>
+</form>

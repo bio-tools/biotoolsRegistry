@@ -1,0 +1,370 @@
+.home-search-icon {
+    position: relative;
+    right: 30px;
+    margin-top: 12px;
+    width: 0px;
+}
+
+.home-search-bar .tags
+{
+	
+	height: 50px !important;
+	padding-top: 7px !important;
+	padding-left: 8px !important;
+	border-radius: 25px !important;
+}
+
+.home-search-bar input{
+	font-weight: bold !important;
+}
+
+.home-search-bar .tag-item{
+	font-size: 15px !important;	
+}
+
+.top-text-front{
+  margin: 0 auto;
+  font-family: serif;
+  text-align: center;
+  padding-bottom: 90px;
+}
+
+.jumbotron, .topic_browser_heading{
+	/*background-color: #C2DFFF;*/
+	background-color: #D3EEFF;
+}
+
+.bolder-text{
+	font-weight: bolder
+}
+
+.home-text{
+	 color: black;
+	 border: 1px solid lightgrey;
+
+}
+
+p.description-text{
+	font-size: 16px;
+	text-align: justify;
+}
+
+.home-summary p{
+	margin-top: 20px;
+}
+
+.subtopic-arrow{
+	font-size: 18px;
+}
+
+div.topic-heading, .logo-container , .flag-container{
+	background-color: #FFF !important;
+}
+
+.flag-item{
+	margin-bottom: 25px;
+	margin-top: 15px;	
+}
+.flag-item img{
+	border: 1px solid lightgrey;
+}
+
+.flag-item span{
+	font-size: 12px;
+	display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+  text-align: center !important; 
+  font-weight: bolder;
+
+}
+
+.new-logo-item img, .flag-item img{
+	transition: transform .2s;
+	display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin: auto;
+ 
+}
+
+.new-logo-item img:hover, .flag-item img:hover{
+  -ms-transform: scale(1.1); /* IE 9 */
+  -webkit-transform: scale(1.1); /* Safari 3-8 */
+  transform: scale(1.1); 
+}
+
+.logos-text{
+	margin: 3%;
+}
+
+.logos-text h3{
+	font-size: 30px;
+}
+
+.logo-container{
+	padding-bottom: 1%;
+}
+
+.flag-container{
+	padding-top: 4%;
+	padding-bottom: 3%;
+}
+
+.browse-topic{
+	margin-top: 30px;
+}
+
+.browse-topic div.panel-body{
+	padding-bottom: 35px;
+}
+
+
+.topic-heading p{
+	font-size: 16px;
+}
+
+.topic-heading h3{
+	margin-bottom: 20px;
+}
+
+.topic_browser_heading h2, .topic_browser_heading p {
+	text-align: justify;
+	color: black;
+}
+
+.topic_browser_heading p{
+	margin-bottom: 15px !important;
+}
+
+
+
+div.subtopic{
+	border-right: 1px solid #d3d8da;	
+}
+
+.row.match-my-cols {
+    overflow: hidden;
+    margin-left: 0px;
+}
+
+.row.match-my-cols [class*="col-"]{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+
+.about-summary-cell h4{
+	text-align: center;
+}
+
+.about-summary-cell p{
+	font-size: 14px;
+}
+
+.about-summary-cell{
+	padding: 10px;
+	background-color: #FFF;
+	border: 1px solid #5CACEE;
+	border-radius: 5px;
+	
+	margin: 0px;
+}
+
+@media (min-width: 992px) {
+    .about-summary-cell{
+			min-height: 200px !important;
+		}
+}
+
+@media (min-width: 1100px) {
+    .about-summary-cell{
+			min-height: 180px !important;
+		}
+}
+
+@media (min-width: 1200px) {
+    .about-summary-cell{
+			min-height: 180px !important;
+		}
+}
+
+@media (min-width: 1300px) {
+    .about-summary-cell{
+			min-height: 160px !important;
+		}
+}
+
+@media (min-width: 1700px) {
+    .about-summary-cell{
+			min-height: 140px !important;
+		}
+}
+
+
+.about-summary-container{
+	margin-top: 33px;
+	padding: 5px;
+	background-color: #D3EEFF;
+	border-radius: 5px;
+}
+
+.outer-summary-cell{
+	padding: 10px;
+}
+
+
+
+/* New design on topic browser */
+
+div.subtopics-list{
+	margin: 0px !important;
+	padding: 0px !important;
+	width: 100% !important;
+	display: table;
+}
+
+div.subtopics-list > span{
+	margin: 0px !important;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-right: 10px;
+	padding-left: 30px;
+	font-size: 15px;
+	text-align: left;
+	font-weight: bolder;
+	color: #000 !important;
+}
+
+div.subtopics-list > span:hover{
+	background-color:#D3EEFF !important;
+	cursor: pointer;
+}
+
+div.subtopics-list > span:hover span:not(:hover) {
+    color:#ffa500 !important;
+}
+
+div.subtopics-list > span > span:hover {
+    color:#ffa500 !important;
+}
+
+
+/* smaller widths */ 
+@media only screen and (max-width : 991px) {
+	div.subtopics-list > span{
+		background-color:white;
+		display: inline-block;		
+		width: 100%;
+		border-bottom: 1px solid #bdbdbd;
+		border-right: 1px solid #bdbdbd;
+		border-left: 1px solid #bdbdbd;
+		border-radius: 4px;
+	}
+
+	div.subtopics-list > span:nth-child(1){
+		border-top: 1px solid #bdbdbd;
+	}
+}
+
+/* Medium Devices, Desktops and big ones*/
+@media only screen and (min-width : 992px) {
+	
+	div.subtopics-list > span{
+		background-color:white;
+		display: inline-block;		
+		width: 49.5%;
+		border-bottom: 1px solid #bdbdbd;
+	}
+
+	div.subtopics-list > span:nth-child(1){
+		border-top: 1px solid #bdbdbd;
+		
+	}
+
+	div.subtopics-list > span:nth-child(2){
+		border-top: 1px solid #bdbdbd;
+		
+	}
+
+	div.subtopics-list > span:nth-last-child(-n+2){
+		border-bottom: 1px solid #bdbdbd;
+	}
+	
+	div.subtopics-list > span:nth-child(odd){
+		border-top-left-radius: 4px; 
+		border-left: 1px solid #bdbdbd;
+		border-bottom-left-radius: 4px;
+		border-right: 2px solid #bdbdbd;
+	}
+
+	div.subtopics-list > span:nth-child(even){
+		border-bottom-right-radius: 4px;
+		border-top-right-radius: 4px;
+		border-right: 1px solid #d3d3d3;
+	}
+
+}
+
+/* New design on institution logos */
+.inner-logo-container{
+		width: 100%;
+		padding-left: 1%;
+		padding-right: 1%;
+		padding-bottom: 5%;
+		margin-left: auto;
+		margin-right: auto;
+}
+
+.new-logo-item{
+		max-height: 70px;
+		display: inline-block;
+		margin-bottom: 50px;
+
+}
+
+.new-logo-item > a > img{
+		max-height: 70px;
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+}
+
+@media only screen and (max-width : 755px) {
+	.new-logo-item{
+		width: 49% !important;
+	}
+}
+
+@media only screen and (min-width : 756px) and (max-width : 991px) {
+	.new-logo-item{
+		width: 33% !important;
+	}
+}
+@media only screen and (min-width : 992px) {
+	.new-logo-item{
+		width: 19.5% !important;
+	}
+
+}
+
+
+div.funding-section {
+    width: 100%;
+    height: 50px; 
+}
+
+div.flag {
+    height: 50px;
+    float: left;
+    margin-right: 10px;
+}
+div.fund-text {
+    height: 50px;
+    font-size: 16px;
+    text-align: justify;
+}
+
+div.fund-text > span > a{
+	font-weight: bolder;
+}

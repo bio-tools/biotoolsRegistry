@@ -1,0 +1,29 @@
+<div ng-if="software.community">
+    <div class="tool-page-diver-label" >
+        <span>Communities and external partners</span>
+    </div>
+
+    <div ng-if="software.community.biolib">
+        <a class="biolib_logo"
+            ng-href="https://biolib.com/{{software.community.biolib.author_username}}/{{software.community.biolib.app_name}}" 
+            target="_blank"><img src="img/biolib_logo.svg" 
+            height="40" 
+            title="BioLib platform" 
+            alt="BioLib">
+        </a>
+        <a 
+            class="biolib_pill" 
+            ng-href="https://biolib.com/{{software.community.biolib.author_username}}/{{software.community.biolib.app_name}}"
+            target="_blank"
+        >
+            <span class="biolib_label">Run app</span><span class="biolib_value">{{software.community.biolib.app_name}}&nbsp;&nbsp;<i class="fa fa-external-link"></i></span>
+        </a>
+        <a 
+            class="biolib_pill" 
+            ng-href="https://biolib.com/{{software.community.biolib.author_username}}"
+            target="_blank"
+        >
+            <span class="biolib_label">App author</span><span class="biolib_value">{{software.community.biolib.author_name}}&nbsp;&nbsp;<i class="fa fa-external-link"></i></span>
+        </a>
+    </div>
+</div>

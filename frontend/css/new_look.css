@@ -1,0 +1,552 @@
+img.biotools-logo{
+    transition: transform .2s;
+}
+
+img.biotools-logo:hover{
+    -ms-transform: scale(1.1); /* IE 9 */
+    -webkit-transform: scale(1.1); /* Safari 3-8 */
+    transform: scale(1.1);
+}
+
+/* Panel background */
+.pill-background
+{
+	padding-top: 1em;
+	padding-bottom: 1.5em;
+	min-height: 40px;
+	border-radius: 8px;
+	border-top-left-radius: 0px;
+}
+
+.default-background
+{
+	padding-top: 1em;
+	padding-bottom: 1.5em;
+	min-height: 40px;
+	border-radius: 8px;
+}
+
+.default-controls-background
+{
+	min-height: 7.5em;
+	margin-top: -1em;
+	padding-top: 1em;
+	border-radius: 8px;
+	background-color: #F0F0F0;
+	border: 1px solid #E6E6E6;
+	z-index: -1;
+	position: relative;
+}
+
+.expandable-summary{
+    line-height: 1.5em;
+    height: 3.0em;
+    overflow: hidden;
+}
+
+.min-tall{
+     min-height: 5.0em;
+}
+
+.default-controls-container
+{
+	padding: 1.5em;
+	z-index: 1;
+}
+
+.default-controls-button
+{
+	height: 3em;
+	background-color: white;
+	font-family: 'Roboto';
+	font-size: 14px;
+	font-weight: 100;
+	color: #575757; 
+	box-shadow: 0px 2px 4px 0px rgba(74,74,74,0.15);
+	border-radius: 8px;
+	min-width: 220px;
+	border: 0px solid white;
+}
+
+.default-controls-button.focus, .default-controls-button:focus, .default-controls-button:hover
+{
+	background-color: #d8e9f3;
+}
+
+.biotools-curie{
+    font-size: 12px;
+    color: #575757;
+}
+
+.pill-title
+{
+	font-family: 'Open Sans';
+	font-size: 14px;
+	font-weight: 400;
+	color: #575757;
+}
+
+.pill-text
+{
+	font-family: 'Roboto';
+	font-size: 13px;
+	font-weight: 100;
+	color: #575757;
+	text-align: justify;
+}
+
+.pill-tag-primary-background
+{
+	color: #000000;
+	background-color: #b2d2e1;
+	display: inline-block;
+}
+
+.pill-tag-secondary-background
+{
+	color: #000000;
+	background-color: #d8e9f3;
+}
+
+.pill-tag-third-background
+{
+	color: white;
+	background-color: #F6A623;
+}
+
+.pill-tag-fourth-background
+{
+    color: #212F3D;
+    background-color: #85C1E9;
+    font-weight: lighter;
+}
+
+.pill-tag-fourth-background > a {
+    color: white;
+    font-weight: bold;
+
+}
+
+
+
+.pill-tag-orange-background
+{
+	background-color: #ef7500;
+	color: white;
+    display: inline-block;
+}
+
+.pill-tag-topic{
+    background-color: #b4cca1;
+    color: black;   
+    display: inline-block;
+}
+
+.pill-tag-operation{
+    background-color: #a3b0d1;
+    color: black;   
+    display: inline-block;
+}
+
+.pill-tag-verified {
+	background-color: #BA1E4A;
+	color: white;
+}
+
+.pill-tag-verified:hover {
+    color: lightblue;
+}
+
+.pill-tag-error-small{
+	color: white;
+	border-radius: 8px;
+	font-family: 'Roboto';
+	font-size: 11px;
+	font-weight: 100;
+	padding: 0.3em;
+	padding-left: 0.75em;
+	padding-right: 0.75em;
+	margin-right: 0.25em;
+	margin-left: 0.25em;
+	margin-bottom: 0.25em;
+}
+
+.pill-tag-error-small,.pill-tag-verified {
+    background-color: #BA1E4A;
+}
+
+
+.pill-spacing
+{
+	margin-top: 0.45em
+}
+
+.pill-tag-primary-background, 
+.pill-tag-secondary-background, 
+.pill-tag-third-background, 
+.pill-tag-fourth-background, 
+.pill-tag-orange-background, 
+.pill-tag-topic, 
+.pill-tag-operation,
+.pill-tag-link-element,
+.pill-tag-verified,
+.pill-tag-documentation-element,
+.pill-tag-covid-element
+{
+	border-radius: 8px;
+	font-family: 'Roboto';
+	font-size: 13px;
+	font-weight: 100;
+	padding: 0.3em;
+	padding-left: 0.75em;
+	padding-right: 0.75em;
+	margin-right: 0.25em;
+	margin-bottom: 0.25em;
+}
+
+.pill-title-background
+{
+	position: relative;
+	display: inline-block;
+	padding-top: 1em;
+	padding-bottom: -0.5em;
+	margin-bottom: -0.25em;
+	marigin-right: 2em;
+	border-radius: 8px;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	z-index: 1;
+}
+
+.pill-title-background, .pill-background, .default-background
+{
+	background-color: #FFFFFF;
+	padding-left: 1em;
+	padding-right: 1em;
+	/*box-shadow: 0px 2px 4px 0px rgba(74,74,74,0.15);*/
+}
+
+.pill-hr-divider
+{
+	margin-top: 1em; 
+	margin-bottom: 1em; 
+	border-top: solid 1px #E6E6E6;
+}
+
+/*.results-info-text
+{
+	position: absolute;
+	top: 50%;
+	left:50%;
+	transform: translate(-50%,-50%);
+	font-family: 'Open Sans';
+	font-size: 18px;
+	font-weight: 200;
+	color: #8c8e8e;
+	text-shadow: 0px 2px 5px rgba(150, 150, 150, 0.5);
+}*/
+
+/*Info dialog displayed on the page background for example when no results have been found on the main page.*/
+.info-dialog-background
+{
+	min-height: 7.5em;
+	margin-top: -1em;
+	padding-top: 1em;
+	border-radius: 8px;
+	background-color: #F0F0F0;
+	border: 1px solid #E6E6E6;
+}
+
+.info-dialog
+{
+	font-family: 'Roboto';
+	font-size: 18px;
+	font-weight: 100;
+	color: #575757;
+	text-align: center;
+	margin-top: 1em;
+    margin-bottom: 1em;
+	/*padding-top: 1em;*/
+}
+
+.info-dialog-text
+{
+	padding-top: 3em;
+	padding-bottom: 3em;
+	padding-left: 6em;
+	padding-right: 6em;
+}
+
+.reset-this * {
+    animation-delay : 0;
+    animation-direction : normal;
+    animation-duration : 0;
+    animation-fill-mode : none;
+    animation-iteration-count : 1;
+    animation-name : none;
+    animation-play-state : running;
+    animation-timing-function : ease;
+    backface-visibility : visible;
+    background : 0;
+    background-attachment : scroll;
+    background-clip : border-box;
+    background-color : transparent;
+    background-image : none;
+    background-origin : padding-box;
+    background-position : 0 0;
+    background-position-x : 0;
+    background-position-y : 0;
+    background-repeat : repeat;
+    background-size : auto auto;
+    border : 0;
+    border-style : none;
+    border-width : medium;
+    border-color : inherit;
+    border-bottom : 0;
+    border-bottom-color : inherit;
+    border-bottom-left-radius : 0;
+    border-bottom-right-radius : 0;
+    border-bottom-style : none;
+    border-bottom-width : medium;
+    border-collapse : separate;
+    border-image : none;
+    border-left : 0;
+    border-left-color : inherit;
+    border-left-style : none;
+    border-left-width : medium;
+    border-radius : 0;
+    border-right : 0;
+    border-right-color : inherit;
+    border-right-style : none;
+    border-right-width : medium;
+    border-spacing : 0;
+    border-top : 0;
+    border-top-color : inherit;
+    border-top-left-radius : 0;
+    border-top-right-radius : 0;
+    border-top-style : none;
+    border-top-width : medium;
+    bottom : auto;
+    box-shadow : none;
+    box-sizing : content-box;
+    caption-side : top;
+    clear : none;
+    clip : auto;
+    color : inherit;
+    columns : auto;
+    column-count : auto;
+    column-fill : balance;
+    column-gap : normal;
+    column-rule : medium none currentColor;
+    column-rule-color : currentColor;
+    column-rule-style : none;
+    column-rule-width : none;
+    column-span : 1;
+    column-width : auto;
+    content : normal;
+    counter-increment : none;
+    counter-reset : none;
+    cursor : auto;
+    direction : ltr;
+    display : inline;
+    empty-cells : show;
+    float : none;
+    font : normal;
+    font-family : inherit;
+    font-size : medium;
+    font-style : normal;
+    font-variant : normal;
+    font-weight : normal;
+    height : auto;
+    hyphens : none;
+    left : auto;
+    letter-spacing : normal;
+    line-height : normal;
+    list-style : none;
+    list-style-image : none;
+    list-style-position : outside;
+    list-style-type : disc;
+    margin : 0;
+    margin-bottom : 0;
+    margin-left : 0;
+    margin-right : 0;
+    margin-top : 0;
+    max-height : none;
+    max-width : none;
+    min-height : 0;
+    min-width : 0;
+    opacity : 1;
+    orphans : 0;
+    outline : 0;
+    outline-color : invert;
+    outline-style : none;
+    outline-width : medium;
+    overflow : visible;
+    overflow-x : visible;
+    overflow-y : visible;
+    padding : 0;
+    padding-bottom : 0;
+    padding-left : 0;
+    padding-right : 0;
+    padding-top : 0;
+    page-break-after : auto;
+    page-break-before : auto;
+    page-break-inside : auto;
+    perspective : none;
+    perspective-origin : 50% 50%;
+    position : static;
+    /* May need to alter quotes for different locales (e.g fr) */
+    quotes : '\201C' '\201D' '\2018' '\2019';
+    right : auto;
+    tab-size : 8;
+    table-layout : auto;
+    text-align : inherit;
+    text-align-last : auto;
+    text-decoration : none;
+    text-decoration-color : inherit;
+    text-decoration-line : none;
+    text-decoration-style : solid;
+    text-indent : 0;
+    text-shadow : none;
+    text-transform : none;
+    top : auto;
+    transform : none;
+    transform-style : flat;
+    transition : none;
+    transition-delay : 0s;
+    transition-duration : 0s;
+    transition-property : none;
+    transition-timing-function : ease;
+    unicode-bidi : normal;
+    vertical-align : baseline;
+    visibility : visible;
+    white-space : normal;
+    widows : 0;
+    /*width : auto;*/
+    /*word-spacing : normal;*/
+/*    z-index : auto;*/
+}
+
+
+.elixir_badge{
+    margin-right: 1em;
+}
+
+
+
+.search-results-container {
+    margin: auto;
+}
+
+@media (min-width: 100px) {
+    .search-results-container {
+        width: 95%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .search-results-container {
+        width: 90%;
+    }
+}
+
+a.edit-link{
+    position: absolute;
+    left: 91%;
+    top: 6px;
+    font-weight: bold;
+}
+
+p.community-description{
+    text-align: justify;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+a.biolib_logo{
+    margin-right: 20px;
+    display: inline-block; 
+    margin-bottom: 20px;
+}
+
+a.biolib_pill{
+    color: #FFF;
+    position: relative;
+    top: 4px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    text-decoration: none;
+    font-size: 14px;    
+    display: inline-block;
+}
+
+span.biolib_label, span.biolib_value{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+span.biolib_label{
+    background-color: #60b0b1;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+span.biolib_value{
+    background-color: #275a78;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+span.biolib_value > i.fa{
+    font-size: 1em;
+    position: relative;
+    top: 1px;
+}
+
+@media (max-width: 768px) {
+    a.biolib_logo{
+        display: block;
+    }
+}
+
+div.link-element{
+    border-left-color: #524656;
+}
+div.documentation-element{
+    border-left-color: #EB7B59;
+}
+
+.pill-tag-link-element{
+    color: white;
+    background-color: #524656;
+    font-size:12px !important;
+    display: inline-block;
+}
+
+.pill-tag-covid-element{
+    color: white;
+    background-color: #BA1E4A;
+    display: inline-block;
+}
+
+a.covid-tag-link{
+    color: #BA1E4A;
+}
+
+.pill-tag-covid-element:hover {
+    color: lightblue;
+}
+.pill-tag-documentation-element{
+    color: white;
+    background-color: #EB7B59;
+    font-size:12px !important;
+    display: inline-block;
+}
+
+a.link-element, a.documentation-element{
+    font-size: 100%;
+    display: block;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,91 @@
+.about-section-container 
+{	
+	border-left: 5px solid #EF7500;
+	padding-left: 15px;
+	margin-top: 50px;
+	padding-bottom: 5px;
+}
+
+.about-section-title 
+{	
+	color: #4A4A4A;
+	font-family: 'Roboto';
+	font-size: 24px;
+	font-weight: 100;
+}
+
+.about-section-text 
+{	
+	color: #4A4A4A;
+	font-family: 'Roboto';
+	font-size: 15px;
+	font-weight: 100;
+	text-align: justify;
+}
+
+.about-contact-container 
+{	
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.about-contact-container-item
+{
+	flex-grow: 1;
+	min-width: 16%;
+}
+
+.about-contact 
+{	
+	color: #4A4A4A;
+	font-family: 'Roboto';
+	text-align: center;
+	margin-bottom: 15px;
+}
+
+.about-contact-initials 
+{	
+	margin: 0 auto;
+	font-size: 36px;
+	font-weight: 100;
+	height: 86px;
+	width:  86px;
+	border: 1px solid #4A4A4A;
+	border-radius: 43px;
+	padding-top: 15px;
+	margin-bottom: 10px;
+}
+
+.about-contact-image 
+{	
+	max-height: 56px;
+	max-width: 56px;
+}
+
+.about-contact-name 
+{	
+	font-size: 16px;
+	font-weight:400;
+}
+
+.about-contact-role 
+{	
+	font-size: 14px;
+	font-weight: 100;
+}
+
+
+
+/* New changes to about page */
+div .about-container{
+	background-color: #FFF !important;
+
+}
+.about-container h2{
+	margin-bottom: 60px;
+}
+
+.about-section{
+	margin-bottom: 45px;
+	margin-top: 45px;
+}

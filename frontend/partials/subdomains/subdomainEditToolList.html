@@ -1,0 +1,88 @@
+<span class="content-page-input-title-label">Search for resources</span>
+<div class="panel panel-default">
+	<div class="panel-body">
+		<!-- Search bar -->
+		<div class="content-page-element-inline-spacing">
+			<div class="input-group content-page-element-inline-spacing">
+				<input ng-model="search.searchString" type="text" class="form-control content-page-input-field" placeholder="Search for tools">
+				<span class="input-group-btn">
+					<button class="btn btn-default" ng-show="search.searchResults.length" ng-click="clearButtonPressed()"><i class="fa fa-times-circle" aria-hidden="true"></i></button>
+					<button class="btn btn-default" ng-click="searchButtonPressed()">Search ›</button>
+				</span>
+			</div>
+			<div class="btn-group btn-group-sm btn-group-justified edit-subdomain-toggle">
+				<label class="btn btn-default edit-subdomain-toggle-button edit-subdomain-toggle-button-first" ng-model="search.searchOption" uib-btn-radio="'name'">Name</label>
+				<label class="btn btn-default edit-subdomain-toggle-button edit-subdomain-toggle-button-middle" ng-model="search.searchOption" uib-btn-radio="'biotoolsID'">Identifier</label>
+				<label class="btn btn-default edit-subdomain-toggle-button edit-subdomain-toggle-button-middle" ng-model="search.searchOption" uib-btn-radio="'collectionId'">Collection</label>
+				<label class="btn btn-default edit-subdomain-toggle-button edit-subdomain-toggle-button-last" ng-model="search.searchOption" uib-btn-radio="'credit'">Credit</label>
+			</div>
+		</div>
+		<div class="content-page-element-spacing-top" ng-if="search.loadingSearchResults || search.searchResults.length || search.noResults">
+			<div ng-if="search.loadingSearchResults" small-spinner>
+			</div>
+			<div ng-if="!search.loadingSearchResults">
+				<!-- Search results table -->
+				<table class="table table-sm table-hover" ng-show="search.searchResults.length">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Version</th>
+							<th>Resource created</th>
+							<th>Last updated</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="entry in search.searchResults | limitTo: toolsPerPageCount : (toolsPerPageCount * (search.currentPage - 1)) track by $index ">
+							<td><a ui-sref="tool({id: entry.biotoolsID})">{{ entry.name }} ›</a></td>
+							<td>{{ entry.version }}</td>
+							<td><span ng-bind="entry.additionDate | timeAgo:'hh:mm, dd MMM yyyy'"></span></td>
+							<td><span ng-show="entry.lastUpdate != entry.additionDate" ng-bind="entry.lastUpdate | timeAgo:'hh:mm, dd MMM yyyy'"></span><span ng-show="entry.lastUpdate == entry.additionDate">&ndash;</span></td>
+							<td>
+								<button ng-if="!toolInSubdomain(entry.biotoolsID, entry.versionId)" class="btn btn-xs btn-default content-page-control" ng-click="addToSubdomain((toolsPerPageCount * (search.currentPage - 1)) + $index)">Add to subdomain ›</button>
+								<span ng-if="toolInSubdomain(entry.biotoolsID, entry.versionId)" ><i class="fa fa-check-square-o" aria-hidden="true"></i> Added</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<!-- Pagination control -->
+				<div ng-show="search.searchResults.length" class="edit-subdomain form-group">
+					<ul uib-pagination total-items="search.totalPages" ng-model="search.currentPage" max-size="7"></ul>
+					<button class="btn btn-default content-page-control pull-right" ng-click="addAllToSubdomain()" style="vertical-align: top;">Add all entries ›</button>
+				</div>
+				<!-- No results found -->
+				<div ng-show="search.noResults" class="content-page-element-spacing-top" style="text-align: center;">No results found matching the criteria</div>
+			</div>
+		</div>
+	</div>
+</div>
+<span class="content-page-input-title-label">Resources included in subdomain</span>
+<div class="panel panel-default">
+	<div class="panel-body">
+		<!-- No resources added yet -->
+		<div ng-if="subdomain.toolList.length == 0" class="content-page-element-spacing-top content-page-element-spacing" style="text-align: center;">No resources added yet</div>
+		<!-- Resources in subdomain -->
+		<table class="table table-sm table-hover" ng-if="subdomain.toolList.length != 0">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Version</th>
+					<th style="width: 120px;">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="entry in subdomain.toolList | limitTo: toolsPerPageCount : (toolsPerPageCount * (subdomain.currentPage - 1)) track by $index">
+					<td><a ui-sref="tool({id: entry.biotoolsID})">{{ entry.name }} ›</a></td>
+					<td>{{ entry.version }}</td>
+					<td>
+						<button class="btn btn-xs btn-default" ng-click="removeFromSubdomain((toolsPerPageCount * (subdomain.currentPage - 1)) + $index)">Remove from subdomain ›</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<!-- Pagination control -->
+		<div ng-show="subdomain.toolList.length" class="edit-subdomain form-group">
+			<ul uib-pagination total-items="subdomain.totalPages" ng-model="subdomain.currentPage" max-size="7"></ul>
+		</div>
+	</div>
+</div>

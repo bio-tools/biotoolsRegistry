@@ -1,0 +1,55 @@
+<br>
+<div class="panel panel-info">
+					<div class="panel-heading" style="position: relative;"><label align="justify">Details of a relationship this tool shares with other tools registered in bio.tools.
+					<br>See the <a target="_blank" ng-href="https://biotools.readthedocs.io/en/latest/curators_guide.html#relation-group">Curation Guidelines <i class="fa fa-external-link"></i></a>.</label>
+					</div>
+				</div>
+<form name="form.relationsForm" class="form-horizontal" novalidate autocomplete="off">
+	<div class="form-group">
+		<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
+			<!-- link -->
+			<div class="panel panel-default" ng-repeat="relation in software.relation track by $index" ng-class="{'no-margin-bottom': $last};">
+				<ng-form name="relationsDetailForm">
+					<div class="panel-body" style="position: relative;">
+						<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('relation', software, $index)"></i>
+						<div>
+							
+							<!-- Relation type -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.relation[$index].type}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.relationType.description}}">Relation type <a target="_blank" href="https://biotools.readthedocs.io/en/latest/curators_guide.html#type-relation"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+								<span style="color:#ff0000;position: absolute; right: 5px;"><b>*</b></span>
+								</label>
+								<div class="col-sm-9">
+									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in relationTypeOptions" ng-model="software.relation[$index].type" name="type" validate-edit-resource-field index={{$index}}>
+									</select>
+									<label class="help-block" ng-repeat="error in relationsDetailForm.type.errorMessages" bo-text="error"></label>
+								</div>
+								<label class="help-block" ng-repeat="error in relationsDetailForm.relation[$index].errorMessages" bo-text="error"></label>
+							</div>
+
+							<!-- biotoolsID -->
+							<div class="form-group" style="margin-top:8px;" ng-class="{'has-error': registrationErrorPayload.relation[$index].biotoolsID}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.relationBiotoolsID.description}}">biotoolsID <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#url-link"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+								<span style="color:#ff0000;position: absolute; right: 5px;"><b>*</b></span>
+								</label>
+								<div class="col-sm-9 autocomplete-container">
+									<input ng-model="software.relation[$index].biotoolsID" type="text" class="form-control" placeholder="biotoolsID" name="biotoolsID" validate-edit-resource-field index={{$index}}
+									typeahead="biotoolsID for biotoolsID in loadBiotoolsIDs($viewValue)" typeahead-min-length="2">
+									<label class="help-block" ng-repeat="error in relationsDetailForm.biotoolsID.errorMessages" bo-text="error"></label>
+								</div>
+							</div>							
+
+						</div>
+					</div>
+					<div ng-class="{'has-error': true};">
+						<label class="help-block" style="margin-left: 20px;" ng-repeat="error in relationsForm.errorMessages" bo-text="error"></label>
+					</div>
+				</ng-form>
+			</div>
+			<!-- Add relation -->
+			<div class="form-group" style="padding-top:7px;">
+				<a href="" ng-show="!meta.function.visibility" ng-click="addButtonClick('relation', software, true, true)">Add relation</a>
+			</div>
+		</div>
+	</div>
+</form>

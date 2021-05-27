@@ -1,0 +1,109 @@
+<br>
+<div class="panel panel-info">
+					<div class="panel-heading" style="position: relative;"><label align="justify">A publication about the tool.
+					<br>We recommend you specify at least the primary publication, i.e. the one that should be cited when the tool is used. 
+					Use "Add publication" for each individual publication and specify one or more of DOI, PMID and PMCID (ideally the DOI).
+					See the <a target="_blank" ng-href="http://biotools.readthedocs.io/en/latest/curators_guide.html#publication-group">Curation Guidelines <i class="fa fa-external-link"></i></a>.</label>
+					</div>
+				</div>
+<form name="form.publicationsForm" class="form-horizontal" novalidate>
+	<div class="form-group">
+		<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
+			<!-- Publications -->
+			<div class="panel panel-default" ng-repeat="publication in software.publication track by $index" ng-class="{'no-margin-bottom': $last};">
+				<div class="panel-heading" style="position: relative;">
+						<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('publication', software, $index)"></i>
+						<label class="control-label">Details for a single publication</label>
+					</div>
+				<ng-form name="publicationDetailForm">
+					
+					<div class="panel-body" style="position: relative;">
+						<div>
+
+							<!-- DOI ID -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].doi}">
+								<label class="col-sm-4 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.publicationDOI.description}}">Digital Object ID <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#digital-object-id"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+								<div class="col-sm-8">
+									<input ng-model="software.publication[$index].doi" type="text" class="form-control" placeholder="e.g. 10.1093/nar/gkv1116" name="doi" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in publicationDetailForm.doi.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+
+							<!-- PubMed ID -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].pmid}">
+								<label class="col-sm-4 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.publicationPMID.description}}">PubMed ID <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#pubmed-id"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+								<div class="col-sm-8">
+									<input ng-model="software.publication[$index].pmid" type="text" class="form-control" placeholder="e.g. 26538599" name="pmid" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in publicationDetailForm.pmid.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+
+							<!-- PubMed Central ID -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].pmcid}">
+								<label class="col-sm-4 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.publicationPMCID.description}}">PubMed Central ID <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#pubmed-central-id"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+								<div class="col-sm-8">
+									<input ng-model="software.publication[$index].pmcid" type="text" class="form-control" placeholder="e.g. PMC4702812" name="pmcid" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in publicationDetailForm.pmcid.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+
+							<!-- New publication type -->
+							<div class="form-group">
+								<label class="col-sm-4 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.publicationType.description}}">Publication type <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#publication-type"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+								</label>
+								<div class="col-sm-8" ng-init="entryIndex = $index">
+									<div class="form-group" ng-repeat="type in software.publication[entryIndex].type track by $index" ng-init="typeIndex = $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.publication[entryIndex].type[typeIndex][0]};">
+										
+											<div class="input-group">
+												<select class="form-control select-btn-group" ng-options="item.value as item.text for item in publicationTypeOptions" ng-model="software.publication[entryIndex].type[typeIndex]">
+												</select>
+												<span class="input-group-btn">
+													<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('type', software.publication[entryIndex], typeIndex)"><i class="fa fa-times remove-icon-button"></i> </button>
+												</span>
+											</div>
+											<label class="help-block" ng-repeat="error in registrationErrorPayload.publication[entryIndex].type[typeIndex]" bo-text="error"></label>
+									</div>
+									<label class="help-block" ng-repeat="error in publicationDetailForm.publication[entryIndex]" bo-text="error"></label>
+									
+									<div class="form-group" style="padding-top:7px;">
+										<a href="" ng-click="addButtonClick('type', software.publication[entryIndex], true, false);">Add publication type</a>
+									</div>
+									<div ng-class="{'has-error': true};" ng-show="registrationErrorPayload.publication[entryIndex].type[0]=='This field is required.'">
+										<label class="help-block" ng-repeat="error in registrationErrorPayload.publication[entryIndex].type" bo-text="error"></label>
+									</div>
+
+								</div>
+							</div>
+
+							<!-- Publication Version -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].version}">
+								<label class="col-sm-4 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.publicationVersion.description}}">Version <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#version-publication"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+								<div class="col-sm-8">
+									<input ng-model="software.publication[$index].version" type="text" class="form-control" placeholder="e.g. 1.1, beta01, 2.0 - 2.7" name="version" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in publicationDetailForm.version.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+
+							<!--  Note	 -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].note}">
+								<label class="col-sm-4 control-label"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.publicationNote.description}}">Note <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#note-publication"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+								<div class="col-sm-8">
+									<textarea ng-model="software.publication[$index].note" name="note" class="form-control" rows="3" placeholder="Note about the publication" validate-edit-resource-field index={{$index}}></textarea>
+									<label class="help-block" ng-repeat="error in publicationDetailForm.note.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</ng-form>	
+			</div>
+			<!-- test more to make sure it works well -->
+			<div ng-class="{'has-error': true};">
+				<label class="help-block" style="margin-left: 20px;" ng-repeat="error in registrationErrorPayload.publication" bo-text="error.general_errors"></label>
+			</div>
+			<!-- Add a publication -->
+			<div class="form-group" style="padding-top:7px;">
+				<a href="" ng-show="!meta.function.visibility" ng-click="addButtonClick('publication', software, true, true)">Add publication</a>
+			</div>
+		</div>
+	</div>
+</form>

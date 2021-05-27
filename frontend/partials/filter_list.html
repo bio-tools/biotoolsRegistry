@@ -1,0 +1,29 @@
+<div ng-controller="filter_list_controller">
+	<div class="module">
+		<div class="module-head"><h3>Filters</h3></div>
+		<div class="module-body" style="padding:0px;">
+			<div class="form-inline clearfix pagination-centered" style="padding:10px">
+				<button style="margin-right:3px" class="btn" ng-click="addFilter(1)">Add</button>
+				<!-- <button class="btn" ng-click="addFilter(5)">Add 5</button> -->
+			</div>
+
+			<table class="table" style="margin-bottom:0px;">
+			    <tbody>
+					<tr ng-repeat="filter in user_filters">
+				    	<td style="width:100%;">
+				    		<div style="float:right;margin-left:10px;">
+								<button class="btn" ng-click="removeFilter($index)"><i class="icon-remove"></i></button>
+							</div>
+				    		<div style="overflow:hidden;">
+					    		<select style="margin-bottom:0px;width:100%;" ng-model="filter.name" ng-options="f.value as f.text for f in columns">
+									<option value="">Choose Filter</option>
+					    		</select>
+				    		</div>
+				    		<input style="overflow:hidden;margin-bottom:0px;margin-top:10px" ng-show="filter.name!=null" filter-blur="" ng-model='filter.value' type='text' value="" placeholder="Enter filter criteria">
+				    	</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,20 @@
+<!-- Divider line -->
+<div ng-controller="LoginMangerController as loginCtrl" class="pull-right default-controls-container">
+	<a ng-if="CheckUserEditingRights.canEdit(software)" ui-sref="tool.edit({id:software.biotoolsID})">
+		<button class="btn btn-default default-controls-button">Update this record ›</button>
+	</a>
+	<a ng-if="!CheckUserEditingRights.canEdit(software)">
+		<button ng-if="User.isLoggedIn()" class="btn btn-default default-controls-button" ng-click="requestEditing(software.biotoolsID)">Request editing rights ›</button>
+		<button ng-if="!User.isLoggedIn()" class="btn btn-default default-controls-button" ng-click="loginCtrl.openLoginModal()">Request editing rights ›</button>
+	</a>
+	<a ng-if="!CheckUserEditingRights.isOwner(software)">
+		<button ng-if="User.isLoggedIn()" class="btn btn-default default-controls-button" ng-click="requestOwnership(software.biotoolsID)">Request ownership ›</button>
+		<button ng-if="!User.isLoggedIn()" class="btn btn-default default-controls-button" ng-click="loginCtrl.openLoginModal()">Request ownership ›</button>
+	</a>
+	<div style="margin-top: 20px;">
+		<div ng-if="ownershipRequestedSuccess == true" uib-alert type="success">Ownership rights have been requested. You can view all your requests <a ui-sref="requests">here</a>.</div>
+		<div ng-if="editingRequestedSuccess == true" uib-alert type="success">Editing rights have been requested. You can view all your requests <a ui-sref="requests">here</a>.</div>
+		<div ng-if="ownershipRequestedSuccess == false" uib-alert type="danger">Failed to request ownership rights for this tool. Check your internet connection and try again.</div>
+		<div ng-if="editingRequestedSuccess == false" uib-alert type="danger">Failed to request editing rights for this tool. Check your internet connection and try again.</div>
+	</div>
+</div>

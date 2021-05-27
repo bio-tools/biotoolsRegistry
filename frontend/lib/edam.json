@@ -1,0 +1,2065 @@
+[
+				{
+					"text": "Topic",
+					"data": {
+						"id": "http://edamontology.org/topic_0003"
+					},
+					"children": [
+					{
+						"text": "Nucleic acid analysis",
+						"data": {
+							"id": "http://edamontology.org/topic_0077"
+						},
+						"children": [
+						{
+							"text": "Nucleic acid structure analysis",
+							"data": {
+								"id": "http://edamontology.org/topic_0097"
+							},
+							"children": [
+							{
+								"text": "Nucleic acid structure prediction",
+								"data": {
+									"id": "http://edamontology.org/topic_0173"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Nucleic acid sequence analysis",
+							"data": {
+								"id": "http://edamontology.org/topic_0640"
+							},
+							"children": [
+							{
+								"text": "Nucleic acid feature detection",
+								"data": {
+									"id": "http://edamontology.org/topic_3073"
+								},
+								"children": [
+								{
+									"text": "Gene finding",
+									"data": {
+										"id": "http://edamontology.org/topic_0109"
+									},
+									"children": []
+								},
+								{
+									"text": "Transcription factors and regulatory sites",
+									"data": {
+										"id": "http://edamontology.org/topic_0749"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Sequencing",
+								"data": {
+									"id": "http://edamontology.org/topic_3168"
+								},
+								"children": [
+								{
+									"text": "ChIP-seq",
+									"data": {
+										"id": "http://edamontology.org/topic_3169"
+									},
+									"children": []
+								},
+								{
+									"text": "DNA-Seq",
+									"data": {
+										"id": "http://edamontology.org/topic_3177"
+									},
+									"children": []
+								},
+								{
+									"text": "ChIP-on-chip",
+									"data": {
+										"id": "http://edamontology.org/topic_3179"
+									},
+									"children": []
+								},
+								{
+									"text": "Sequence assembly",
+									"data": {
+										"id": "http://edamontology.org/topic_0196"
+									},
+									"children": []
+								},
+								{
+									"text": "RNA-Seq",
+									"data": {
+										"id": "http://edamontology.org/topic_3170"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Nucleic acid thermodynamics",
+								"data": {
+									"id": "http://edamontology.org/topic_0094"
+								},
+								"children": []
+							},
+							{
+								"text": "Nucleic acid restriction",
+								"data": {
+									"id": "http://edamontology.org/topic_0100"
+								},
+								"children": []
+							},
+							{
+								"text": "Mapping",
+								"data": {
+									"id": "http://edamontology.org/topic_0102"
+								},
+								"children": [
+								{
+									"text": "Genetic mapping and linkage",
+									"data": {
+										"id": "http://edamontology.org/topic_0796"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Translation",
+								"data": {
+									"id": "http://edamontology.org/topic_0108"
+								},
+								"children": []
+							},
+							{
+								"text": "Transcription",
+								"data": {
+									"id": "http://edamontology.org/topic_0110"
+								},
+								"children": [
+								{
+									"text": "Transcription factors and regulatory sites",
+									"data": {
+										"id": "http://edamontology.org/topic_0749"
+									},
+									"children": []
+								},
+								{
+									"text": "Codon usage analysis",
+									"data": {
+										"id": "http://edamontology.org/topic_0107"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Genetic variation",
+								"data": {
+									"id": "http://edamontology.org/topic_0199"
+								},
+								"children": [
+								{
+									"text": "SNPs",
+									"data": {
+										"id": "http://edamontology.org/topic_2277"
+									},
+									"children": []
+								},
+								{
+									"text": "Structural variation",
+									"data": {
+										"id": "http://edamontology.org/topic_3175"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Nucleic acid sequence alignment",
+								"data": {
+									"id": "http://edamontology.org/topic_0740"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "DNA",
+							"data": {
+								"id": "http://edamontology.org/topic_0654"
+							},
+							"children": [
+							{
+								"text": "DNA methylation",
+								"data": {
+									"id": "http://edamontology.org/topic_3171"
+								},
+								"children": []
+							},
+							{
+								"text": "DNA packaging",
+								"data": {
+									"id": "http://edamontology.org/topic_3176"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Nucleic acid classification",
+							"data": {
+								"id": "http://edamontology.org/topic_0722"
+							},
+							"children": []
+						},
+						{
+							"text": "Nucleic acid design",
+							"data": {
+								"id": "http://edamontology.org/topic_2953"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Protein analysis",
+						"data": {
+							"id": "http://edamontology.org/topic_0078"
+						},
+						"children": [
+						{
+							"text": "Protein classification",
+							"data": {
+								"id": "http://edamontology.org/topic_0595"
+							},
+							"children": []
+						},
+						{
+							"text": "Protein sequence analysis",
+							"data": {
+								"id": "http://edamontology.org/topic_0639"
+							},
+							"children": [
+							{
+								"text": "Protein feature detection",
+								"data": {
+									"id": "http://edamontology.org/topic_3074"
+								},
+								"children": []
+							},
+							{
+								"text": "Protein properties",
+								"data": {
+									"id": "http://edamontology.org/topic_0123"
+								},
+								"children": [
+								{
+									"text": "Protein hydropathy",
+									"data": {
+										"id": "http://edamontology.org/topic_0137"
+									},
+									"children": []
+								},
+								{
+									"text": "Protein modifications",
+									"data": {
+										"id": "http://edamontology.org/topic_0601"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Protein cleavage sites and proteolysis",
+								"data": {
+									"id": "http://edamontology.org/topic_0141"
+								},
+								"children": []
+							},
+							{
+								"text": "Protein sequence alignment",
+								"data": {
+									"id": "http://edamontology.org/topic_0741"
+								},
+								"children": []
+							},
+							{
+								"text": "Protein and peptide identification",
+								"data": {
+									"id": "http://edamontology.org/topic_0767"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Protein function analysis",
+							"data": {
+								"id": "http://edamontology.org/topic_1775"
+							},
+							"children": [
+							{
+								"text": "Protein function prediction",
+								"data": {
+									"id": "http://edamontology.org/topic_2276"
+								},
+								"children": [
+								{
+									"text": "Protein targeting and localization",
+									"data": {
+										"id": "http://edamontology.org/topic_0140"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Protein interactions",
+								"data": {
+									"id": "http://edamontology.org/topic_0128"
+								},
+								"children": [
+								{
+									"text": "Protein-protein interactions",
+									"data": {
+										"id": "http://edamontology.org/topic_0147"
+									},
+									"children": [
+									{
+										"text": "Protein interaction networks",
+										"data": {
+											"id": "http://edamontology.org/topic_3044"
+										},
+										"children": []
+									}
+									]
+								},
+								{
+									"text": "Protein-ligand interactions",
+									"data": {
+										"id": "http://edamontology.org/topic_0148"
+									},
+									"children": []
+								},
+								{
+									"text": "Protein-nucleic acid interactions",
+									"data": {
+										"id": "http://edamontology.org/topic_0149"
+									},
+									"children": []
+								},
+								{
+									"text": "ChIP-seq",
+									"data": {
+										"id": "http://edamontology.org/topic_3169"
+									},
+									"children": []
+								},
+								{
+									"text": "ChIP-on-chip",
+									"data": {
+										"id": "http://edamontology.org/topic_3179"
+									},
+									"children": []
+								}
+								]
+							}
+							]
+						},
+						{
+							"text": "Protein textbases",
+							"data": {
+								"id": "http://edamontology.org/topic_2225"
+							},
+							"children": [
+							{
+								"text": "Protein structure analysis",
+								"data": {
+									"id": "http://edamontology.org/topic_2814"
+								},
+								"children": [
+								{
+									"text": "Protein structure alignment",
+									"data": {
+										"id": "http://edamontology.org/topic_2826"
+									},
+									"children": []
+								},
+								{
+									"text": "Protein folding and stability",
+									"data": {
+										"id": "http://edamontology.org/topic_0130"
+									},
+									"children": []
+								},
+								{
+									"text": "Protein residue interaction analysis",
+									"data": {
+										"id": "http://edamontology.org/topic_0144"
+									},
+									"children": []
+								},
+								{
+									"text": "Protein structure prediction",
+									"data": {
+										"id": "http://edamontology.org/topic_0172"
+									},
+									"children": [
+									{
+										"text": "Molecular modelling",
+										"data": {
+											"id": "http://edamontology.org/topic_2275"
+										},
+										"children": []
+									}
+									]
+								},
+								{
+									"text": "Protein secondary structure",
+									"data": {
+										"id": "http://edamontology.org/topic_0694"
+									},
+									"children": [
+									{
+										"text": "Protein secondary structure prediction",
+										"data": {
+											"id": "http://edamontology.org/topic_0178"
+										},
+										"children": []
+									}
+									]
+								},
+								{
+									"text": "Protein tertiary structure",
+									"data": {
+										"id": "http://edamontology.org/topic_0698"
+									},
+									"children": [
+									{
+										"text": "Protein domains and folds",
+										"data": {
+											"id": "http://edamontology.org/topic_0736"
+										},
+										"children": []
+									},
+									{
+										"text": "Protein structural motifs and surfaces",
+										"data": {
+											"id": "http://edamontology.org/topic_0166"
+										},
+										"children": []
+									},
+									{
+										"text": "Protein tertiary structure prediction",
+										"data": {
+											"id": "http://edamontology.org/topic_0179"
+										},
+										"children": []
+									}
+									]
+								}
+								]
+							},
+							{
+								"text": "Protein sequences",
+								"data": {
+									"id": "http://edamontology.org/topic_3043"
+								},
+								"children": [
+								{
+									"text": "Protein sites and features",
+									"data": {
+										"id": "http://edamontology.org/topic_0748"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Protein targeting and localization",
+								"data": {
+									"id": "http://edamontology.org/topic_0140"
+								},
+								"children": []
+							},
+							{
+								"text": "Specific protein resources",
+								"data": {
+									"id": "http://edamontology.org/topic_0635"
+								},
+								"children": [
+								{
+									"text": "Transcription factors and regulatory sites",
+									"data": {
+										"id": "http://edamontology.org/topic_0749"
+									},
+									"children": []
+								},
+								{
+									"text": "Membrane proteins",
+									"data": {
+										"id": "http://edamontology.org/topic_0820"
+									},
+									"children": []
+								},
+								{
+									"text": "Enzymes and reactions",
+									"data": {
+										"id": "http://edamontology.org/topic_0821"
+									},
+									"children": [
+									{
+										"text": "Nucleic acid restriction",
+										"data": {
+											"id": "http://edamontology.org/topic_0100"
+										},
+										"children": []
+									}
+									]
+								},
+								{
+									"text": "Lipoproteins",
+									"data": {
+										"id": "http://edamontology.org/topic_2232"
+									},
+									"children": []
+								},
+								{
+									"text": "Gene and protein resources",
+									"data": {
+										"id": "http://edamontology.org/topic_3078"
+									},
+									"children": [
+									{
+										"text": "Disease genes and proteins",
+										"data": {
+											"id": "http://edamontology.org/topic_2813"
+										},
+										"children": []
+									}
+									]
+								}
+								]
+							},
+							{
+								"text": "Protein families",
+								"data": {
+									"id": "http://edamontology.org/topic_0724"
+								},
+								"children": [
+								{
+									"text": "Protein domains and folds",
+									"data": {
+										"id": "http://edamontology.org/topic_0736"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Protein interactions",
+								"data": {
+									"id": "http://edamontology.org/topic_0128"
+								},
+								"children": []
+							},
+							{
+								"text": "Protein modifications",
+								"data": {
+									"id": "http://edamontology.org/topic_0601"
+								},
+								"children": []
+							},
+							{
+								"text": "Protein and peptide identification",
+								"data": {
+									"id": "http://edamontology.org/topic_0767"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Protein structure analysis",
+							"data": {
+								"id": "http://edamontology.org/topic_2814"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Sequence analysis",
+						"data": {
+							"id": "http://edamontology.org/topic_0080"
+						},
+						"children": [
+						{
+							"text": "Sequence composition analysis",
+							"data": {
+								"id": "http://edamontology.org/topic_0157"
+							},
+							"children": [
+							{
+								"text": "Repeat sequences",
+								"data": {
+									"id": "http://edamontology.org/topic_0641"
+								},
+								"children": []
+							},
+							{
+								"text": "Low complexity sequences",
+								"data": {
+									"id": "http://edamontology.org/topic_0642"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Sequence comparison",
+							"data": {
+								"id": "http://edamontology.org/topic_0159"
+							},
+							"children": [
+							{
+								"text": "Sequence clustering",
+								"data": {
+									"id": "http://edamontology.org/topic_0164"
+								},
+								"children": []
+							},
+							{
+								"text": "Sequence alignment",
+								"data": {
+									"id": "http://edamontology.org/topic_0182"
+								},
+								"children": [
+								{
+									"text": "Nucleic acid sequence alignment",
+									"data": {
+										"id": "http://edamontology.org/topic_0740"
+									},
+									"children": []
+								},
+								{
+									"text": "Protein sequence alignment",
+									"data": {
+										"id": "http://edamontology.org/topic_0741"
+									},
+									"children": []
+								},
+								{
+									"text": "RNA-Seq alignment",
+									"data": {
+										"id": "http://edamontology.org/topic_3178"
+									},
+									"children": []
+								}
+								]
+							}
+							]
+						},
+						{
+							"text": "Sequence classification",
+							"data": {
+								"id": "http://edamontology.org/topic_0594"
+							},
+							"children": [
+							{
+								"text": "Sequence motifs",
+								"data": {
+									"id": "http://edamontology.org/topic_0158"
+								},
+								"children": []
+							},
+							{
+								"text": "Sequence profiles and HMMs",
+								"data": {
+									"id": "http://edamontology.org/topic_0188"
+								},
+								"children": []
+							},
+							{
+								"text": "Protein classification",
+								"data": {
+									"id": "http://edamontology.org/topic_0595"
+								},
+								"children": []
+							},
+							{
+								"text": "Nucleic acid classification",
+								"data": {
+									"id": "http://edamontology.org/topic_0722"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Primer or probe design",
+							"data": {
+								"id": "http://edamontology.org/topic_3032"
+							},
+							"children": []
+						},
+						{
+							"text": "Sequence textbases",
+							"data": {
+								"id": "http://edamontology.org/topic_3041"
+							},
+							"children": [
+							{
+								"text": "Nucleic acid sequences",
+								"data": {
+									"id": "http://edamontology.org/topic_3042"
+								},
+								"children": [
+								{
+									"text": "RNA",
+									"data": {
+										"id": "http://edamontology.org/topic_0099"
+									},
+									"children": [
+									{
+										"text": "mRNA, EST or cDNA textbase",
+										"data": {
+											"id": "http://edamontology.org/topic_0655"
+										},
+										"children": []
+									},
+									{
+										"text": "Functional and non-coding RNA",
+										"data": {
+											"id": "http://edamontology.org/topic_0659"
+										},
+										"children": [
+										{
+											"text": "rRNA",
+											"data": {
+												"id": "http://edamontology.org/topic_0660"
+											},
+											"children": []
+										},
+										{
+											"text": "tRNA",
+											"data": {
+												"id": "http://edamontology.org/topic_0663"
+											},
+											"children": []
+										},
+										{
+											"text": "Regulatory RNA",
+											"data": {
+												"id": "http://edamontology.org/topic_3060"
+											},
+											"children": []
+										}
+										]
+									}
+									]
+								},
+								{
+									"text": "DNA",
+									"data": {
+										"id": "http://edamontology.org/topic_0654"
+									},
+									"children": []
+								},
+								{
+									"text": "Nucleic acid sites and features",
+									"data": {
+										"id": "http://edamontology.org/topic_0747"
+									},
+									"children": [
+									{
+										"text": "Transcription factors and regulatory sites",
+										"data": {
+											"id": "http://edamontology.org/topic_0749"
+										},
+										"children": []
+									}
+									]
+								}
+								]
+							},
+							{
+								"text": "Sequence clusters and classification",
+								"data": {
+									"id": "http://edamontology.org/topic_3052"
+								},
+								"children": [
+								{
+									"text": "Genes, gene family or system",
+									"data": {
+										"id": "http://edamontology.org/topic_0623"
+									},
+									"children": [
+									{
+										"text": "Gene and protein resources",
+										"data": {
+											"id": "http://edamontology.org/topic_3078"
+										},
+										"children": [
+										{
+											"text": "Organelle genes and proteins",
+											"data": {
+												"id": "http://edamontology.org/topic_0616"
+											},
+											"children": [
+											{
+												"text": "Ribosomal genes and proteins",
+												"data": {
+													"id": "http://edamontology.org/topic_0617"
+												},
+												"children": []
+											},
+											{
+												"text": "Mitochondrial genes and proteins",
+												"data": {
+													"id": "http://edamontology.org/topic_0779"
+												},
+												"children": []
+											}
+											]
+										},
+										{
+											"text": "Immunity genes, immunoproteins and antigens",
+											"data": {
+												"id": "http://edamontology.org/topic_2830"
+											},
+											"children": []
+										}
+										]
+									}
+									]
+								},
+								{
+									"text": "Protein families",
+									"data": {
+										"id": "http://edamontology.org/topic_0724"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Sequence sites and features",
+								"data": {
+									"id": "http://edamontology.org/topic_0160"
+								},
+								"children": [
+								{
+									"text": "Nucleic acid sites and features",
+									"data": {
+										"id": "http://edamontology.org/topic_0747"
+									},
+									"children": [
+									{
+										"text": "Gene structure and RNA splicing",
+										"data": {
+											"id": "http://edamontology.org/topic_0114"
+										},
+										"children": []
+									}
+									]
+								},
+								{
+									"text": "Protein sites and features",
+									"data": {
+										"id": "http://edamontology.org/topic_0748"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Sequence alignment",
+								"data": {
+									"id": "http://edamontology.org/topic_0182"
+								},
+								"children": []
+							},
+							{
+								"text": "Repeat sequences",
+								"data": {
+									"id": "http://edamontology.org/topic_0641"
+								},
+								"children": []
+							},
+							{
+								"text": "Low complexity sequences",
+								"data": {
+									"id": "http://edamontology.org/topic_0642"
+								},
+								"children": []
+							},
+							{
+								"text": "Protein sequences",
+								"data": {
+									"id": "http://edamontology.org/topic_3043"
+								},
+								"children": []
+							},
+							{
+								"text": "Genetic variation",
+								"data": {
+									"id": "http://edamontology.org/topic_0199"
+								},
+								"children": []
+							},
+							{
+								"text": "Probes and primers",
+								"data": {
+									"id": "http://edamontology.org/topic_0632"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Sequence feature detection",
+							"data": {
+								"id": "http://edamontology.org/topic_3072"
+							},
+							"children": [
+							{
+								"text": "Nucleic acid feature detection",
+								"data": {
+									"id": "http://edamontology.org/topic_3073"
+								},
+								"children": []
+							},
+							{
+								"text": "Protein feature detection",
+								"data": {
+									"id": "http://edamontology.org/topic_3074"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Protein sequence analysis",
+							"data": {
+								"id": "http://edamontology.org/topic_0639"
+							},
+							"children": []
+						},
+						{
+							"text": "Nucleic acid sequence analysis",
+							"data": {
+								"id": "http://edamontology.org/topic_0640"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Structure analysis",
+						"data": {
+							"id": "http://edamontology.org/topic_0081"
+						},
+						"children": [
+						{
+							"text": "Structure prediction",
+							"data": {
+								"id": "http://edamontology.org/topic_0082"
+							},
+							"children": [
+							{
+								"text": "Protein structure prediction",
+								"data": {
+									"id": "http://edamontology.org/topic_0172"
+								},
+								"children": [
+								{
+									"text": "Protein secondary structure prediction",
+									"data": {
+										"id": "http://edamontology.org/topic_0178"
+									},
+									"children": []
+								},
+								{
+									"text": "Protein tertiary structure prediction",
+									"data": {
+										"id": "http://edamontology.org/topic_0179"
+									},
+									"children": []
+								},
+								{
+									"text": "Protein fold recognition",
+									"data": {
+										"id": "http://edamontology.org/topic_0180"
+									},
+									"children": [
+									{
+										"text": "Threading",
+										"data": {
+											"id": "http://edamontology.org/topic_0184"
+										},
+										"children": []
+									}
+									]
+								},
+								{
+									"text": "Protein design",
+									"data": {
+										"id": "http://edamontology.org/topic_0150"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Nucleic acid structure prediction",
+								"data": {
+									"id": "http://edamontology.org/topic_0173"
+								},
+								"children": []
+							},
+							{
+								"text": "Ab initio structure prediction",
+								"data": {
+									"id": "http://edamontology.org/topic_0174"
+								},
+								"children": []
+							},
+							{
+								"text": "Molecular modelling",
+								"data": {
+									"id": "http://edamontology.org/topic_2275"
+								},
+								"children": [
+								{
+									"text": "Homology modelling",
+									"data": {
+										"id": "http://edamontology.org/topic_0175"
+									},
+									"children": []
+								},
+								{
+									"text": "Molecular dynamics",
+									"data": {
+										"id": "http://edamontology.org/topic_0176"
+									},
+									"children": []
+								},
+								{
+									"text": "Molecular docking",
+									"data": {
+										"id": "http://edamontology.org/topic_0177"
+									},
+									"children": []
+								}
+								]
+							}
+							]
+						},
+						{
+							"text": "Structure comparison",
+							"data": {
+								"id": "http://edamontology.org/topic_1770"
+							},
+							"children": [
+							{
+								"text": "Structural clustering",
+								"data": {
+									"id": "http://edamontology.org/topic_2844"
+								},
+								"children": []
+							},
+							{
+								"text": "Structural (3D) profiles",
+								"data": {
+									"id": "http://edamontology.org/topic_0167"
+								},
+								"children": []
+							},
+							{
+								"text": "Structure alignment",
+								"data": {
+									"id": "http://edamontology.org/topic_0183"
+								},
+								"children": [
+								{
+									"text": "RNA structure and alignment",
+									"data": {
+										"id": "http://edamontology.org/topic_0697"
+									},
+									"children": []
+								},
+								{
+									"text": "Protein structure alignment",
+									"data": {
+										"id": "http://edamontology.org/topic_2826"
+									},
+									"children": []
+								}
+								]
+							}
+							]
+						},
+						{
+							"text": "Structure determination",
+							"data": {
+								"id": "http://edamontology.org/topic_2226"
+							},
+							"children": [
+							{
+								"text": "Structural genomics",
+								"data": {
+									"id": "http://edamontology.org/topic_0122"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Structure textbases",
+							"data": {
+								"id": "http://edamontology.org/topic_3038"
+							},
+							"children": [
+							{
+								"text": "Nucleic acid structure",
+								"data": {
+									"id": "http://edamontology.org/topic_3039"
+								},
+								"children": []
+							},
+							{
+								"text": "Carbohydrates",
+								"data": {
+									"id": "http://edamontology.org/topic_0152"
+								},
+								"children": []
+							},
+							{
+								"text": "Lipids",
+								"data": {
+									"id": "http://edamontology.org/topic_0153"
+								},
+								"children": []
+							},
+							{
+								"text": "Small molecules",
+								"data": {
+									"id": "http://edamontology.org/topic_0154"
+								},
+								"children": [
+								{
+									"text": "Peptides and amino acids",
+									"data": {
+										"id": "http://edamontology.org/topic_0613"
+									},
+									"children": []
+								},
+								{
+									"text": "Drugs and targets",
+									"data": {
+										"id": "http://edamontology.org/topic_0620"
+									},
+									"children": []
+								},
+								{
+									"text": "Toxins and targets",
+									"data": {
+										"id": "http://edamontology.org/topic_2661"
+									},
+									"children": []
+								},
+								{
+									"text": "Metabolites",
+									"data": {
+										"id": "http://edamontology.org/topic_0079"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Structure alignment",
+								"data": {
+									"id": "http://edamontology.org/topic_0183"
+								},
+								"children": []
+							},
+							{
+								"text": "Protein structure analysis",
+								"data": {
+									"id": "http://edamontology.org/topic_2814"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Nucleic acid structure analysis",
+							"data": {
+								"id": "http://edamontology.org/topic_0097"
+							},
+							"children": []
+						},
+						{
+							"text": "Protein structure analysis",
+							"data": {
+								"id": "http://edamontology.org/topic_2814"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Phylogenetics",
+						"data": {
+							"id": "http://edamontology.org/topic_0084"
+						},
+						"children": [
+						{
+							"text": "Phylogeny reconstruction",
+							"data": {
+								"id": "http://edamontology.org/topic_0191"
+							},
+							"children": []
+						},
+						{
+							"text": "Phylogenomics",
+							"data": {
+								"id": "http://edamontology.org/topic_0194"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Data handling",
+						"data": {
+							"id": "http://edamontology.org/topic_0091"
+						},
+						"children": [
+						{
+							"text": "Data visualisation",
+							"data": {
+								"id": "http://edamontology.org/topic_0092"
+							},
+							"children": []
+						},
+						{
+							"text": "Data processing and validation",
+							"data": {
+								"id": "http://edamontology.org/topic_0220"
+							},
+							"children": []
+						},
+						{
+							"text": "Biostatistics",
+							"data": {
+								"id": "http://edamontology.org/topic_2269"
+							},
+							"children": []
+						},
+						{
+							"text": "Data acquisition and deposition",
+							"data": {
+								"id": "http://edamontology.org/topic_3077"
+							},
+							"children": []
+						},
+						{
+							"text": "Data search and retrieval",
+							"data": {
+								"id": "http://edamontology.org/topic_0090"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Proteomics",
+						"data": {
+							"id": "http://edamontology.org/topic_0121"
+						},
+						"children": [
+						{
+							"text": "Genome, proteome and model organisms",
+							"data": {
+								"id": "http://edamontology.org/topic_0621"
+							},
+							"children": [
+							{
+								"text": "Viruses",
+								"data": {
+									"id": "http://edamontology.org/topic_0781"
+								},
+								"children": []
+							},
+							{
+								"text": "Pathogens",
+								"data": {
+									"id": "http://edamontology.org/topic_0783"
+								},
+								"children": []
+							},
+							{
+								"text": "Prokaryotes and archae",
+								"data": {
+									"id": "http://edamontology.org/topic_1811"
+								},
+								"children": []
+							},
+							{
+								"text": "Eukaryotes",
+								"data": {
+									"id": "http://edamontology.org/topic_2818"
+								},
+								"children": [
+								{
+									"text": "Invertebrates",
+									"data": {
+										"id": "http://edamontology.org/topic_2819"
+									},
+									"children": [
+									{
+										"text": "Flies",
+										"data": {
+											"id": "http://edamontology.org/topic_0211"
+										},
+										"children": []
+									},
+									{
+										"text": "Worms",
+										"data": {
+											"id": "http://edamontology.org/topic_0215"
+										},
+										"children": []
+									}
+									]
+								},
+								{
+									"text": "Vertebrates",
+									"data": {
+										"id": "http://edamontology.org/topic_2820"
+									},
+									"children": [
+									{
+										"text": "Mammals",
+										"data": {
+											"id": "http://edamontology.org/topic_3048"
+										},
+										"children": [
+										{
+											"text": "Mice or rats",
+											"data": {
+												"id": "http://edamontology.org/topic_0213"
+											},
+											"children": []
+										},
+										{
+											"text": "Humans",
+											"data": {
+												"id": "http://edamontology.org/topic_2815"
+											},
+											"children": []
+										}
+										]
+									},
+									{
+										"text": "Fish",
+										"data": {
+											"id": "http://edamontology.org/topic_0210"
+										},
+										"children": []
+									}
+									]
+								},
+								{
+									"text": "Unicellular eukaryotes",
+									"data": {
+										"id": "http://edamontology.org/topic_2821"
+									},
+									"children": []
+								},
+								{
+									"text": "Plants",
+									"data": {
+										"id": "http://edamontology.org/topic_0780"
+									},
+									"children": [
+									{
+										"text": "Arabidopsis",
+										"data": {
+											"id": "http://edamontology.org/topic_0786"
+										},
+										"children": []
+									},
+									{
+										"text": "Rice",
+										"data": {
+											"id": "http://edamontology.org/topic_0787"
+										},
+										"children": []
+									}
+									]
+								},
+								{
+									"text": "Fungi",
+									"data": {
+										"id": "http://edamontology.org/topic_0782"
+									},
+									"children": [
+									{
+										"text": "Yeast",
+										"data": {
+											"id": "http://edamontology.org/topic_2817"
+										},
+										"children": []
+									}
+									]
+								}
+								]
+							}
+							]
+						},
+						{
+							"text": "Protein and peptide identification",
+							"data": {
+								"id": "http://edamontology.org/topic_0767"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Transcriptomics",
+						"data": {
+							"id": "http://edamontology.org/topic_0203"
+						},
+						"children": [
+						{
+							"text": "RNA-Seq",
+							"data": {
+								"id": "http://edamontology.org/topic_3170"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Ecoinformatics",
+						"data": {
+							"id": "http://edamontology.org/topic_0610"
+						},
+						"children": [
+						{
+							"text": "Biodiversity",
+							"data": {
+								"id": "http://edamontology.org/topic_3050"
+							},
+							"children": []
+						},
+						{
+							"text": "Metagenomics",
+							"data": {
+								"id": "http://edamontology.org/topic_3174"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Genomics",
+						"data": {
+							"id": "http://edamontology.org/topic_0622"
+						},
+						"children": [
+						{
+							"text": "Comparative genomics",
+							"data": {
+								"id": "http://edamontology.org/topic_0797"
+							},
+							"children": []
+						},
+						{
+							"text": "Epigenomics",
+							"data": {
+								"id": "http://edamontology.org/topic_3173"
+							},
+							"children": []
+						},
+						{
+							"text": "Functional genomics",
+							"data": {
+								"id": "http://edamontology.org/topic_0085"
+							},
+							"children": []
+						},
+						{
+							"text": "Structural genomics",
+							"data": {
+								"id": "http://edamontology.org/topic_0122"
+							},
+							"children": []
+						},
+						{
+							"text": "Phylogenomics",
+							"data": {
+								"id": "http://edamontology.org/topic_0194"
+							},
+							"children": []
+						},
+						{
+							"text": "Genome, proteome and model organisms",
+							"data": {
+								"id": "http://edamontology.org/topic_0621"
+							},
+							"children": []
+						},
+						{
+							"text": "Metagenomics",
+							"data": {
+								"id": "http://edamontology.org/topic_3174"
+							},
+							"children": []
+						},
+						{
+							"text": "Pharmacogenomics",
+							"data": {
+								"id": "http://edamontology.org/topic_0208"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Immunoinformatics",
+						"data": {
+							"id": "http://edamontology.org/topic_0804"
+						},
+						"children": [
+						{
+							"text": "Immunity genes, immunoproteins and antigens",
+							"data": {
+								"id": "http://edamontology.org/topic_2830"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Chemoinformatics",
+						"data": {
+							"id": "http://edamontology.org/topic_2258"
+						},
+						"children": [
+						{
+							"text": "Toxicoinformatics",
+							"data": {
+								"id": "http://edamontology.org/topic_2840"
+							},
+							"children": [
+							{
+								"text": "Toxins and targets",
+								"data": {
+									"id": "http://edamontology.org/topic_2661"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Pharmacoinformatics",
+							"data": {
+								"id": "http://edamontology.org/topic_0202"
+							},
+							"children": [
+							{
+								"text": "Pharmacogenomics",
+								"data": {
+									"id": "http://edamontology.org/topic_0208"
+								},
+								"children": []
+							},
+							{
+								"text": "Drug design",
+								"data": {
+									"id": "http://edamontology.org/topic_0209"
+								},
+								"children": []
+							},
+							{
+								"text": "Drugs and targets",
+								"data": {
+									"id": "http://edamontology.org/topic_0620"
+								},
+								"children": []
+							}
+							]
+						}
+						]
+					},
+					{
+						"text": "Systems biology",
+						"data": {
+							"id": "http://edamontology.org/topic_2259"
+						},
+						"children": [
+						{
+							"text": "Biological system modelling",
+							"data": {
+								"id": "http://edamontology.org/topic_3075"
+							},
+							"children": []
+						},
+						{
+							"text": "Pathways, networks and models",
+							"data": {
+								"id": "http://edamontology.org/topic_0602"
+							},
+							"children": [
+							{
+								"text": "Metabolic pathways",
+								"data": {
+									"id": "http://edamontology.org/topic_0753"
+								},
+								"children": []
+							},
+							{
+								"text": "Signaling pathways",
+								"data": {
+									"id": "http://edamontology.org/topic_0754"
+								},
+								"children": []
+							},
+							{
+								"text": "Biological models",
+								"data": {
+									"id": "http://edamontology.org/topic_0771"
+								},
+								"children": []
+							},
+							{
+								"text": "Gene regulatory networks",
+								"data": {
+									"id": "http://edamontology.org/topic_2846"
+								},
+								"children": []
+							},
+							{
+								"text": "Protein interaction networks",
+								"data": {
+									"id": "http://edamontology.org/topic_3044"
+								},
+								"children": []
+							}
+							]
+						}
+						]
+					},
+					{
+						"text": "Ontologies, nomenclature and classification",
+						"data": {
+							"id": "http://edamontology.org/topic_2829"
+						},
+						"children": [
+						{
+							"text": "Ontology",
+							"data": {
+								"id": "http://edamontology.org/topic_0089"
+							},
+							"children": []
+						},
+						{
+							"text": "Annotation",
+							"data": {
+								"id": "http://edamontology.org/topic_0219"
+							},
+							"children": []
+						},
+						{
+							"text": "Taxonomy",
+							"data": {
+								"id": "http://edamontology.org/topic_0637"
+							},
+							"children": []
+						},
+						{
+							"text": "Nomenclature",
+							"data": {
+								"id": "http://edamontology.org/topic_2811"
+							},
+							"children": []
+						},
+						{
+							"text": "Protein classification",
+							"data": {
+								"id": "http://edamontology.org/topic_0595"
+							},
+							"children": []
+						},
+						{
+							"text": "Nucleic acid classification",
+							"data": {
+								"id": "http://edamontology.org/topic_0722"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Genetics",
+						"data": {
+							"id": "http://edamontology.org/topic_3053"
+						},
+						"children": [
+						{
+							"text": "Quantitative genetics",
+							"data": {
+								"id": "http://edamontology.org/topic_3055"
+							},
+							"children": []
+						},
+						{
+							"text": "Population genetics",
+							"data": {
+								"id": "http://edamontology.org/topic_3056"
+							},
+							"children": []
+						},
+						{
+							"text": "Gene resources",
+							"data": {
+								"id": "http://edamontology.org/topic_2816"
+							},
+							"children": [
+							{
+								"text": "Genetic organisation",
+								"data": {
+									"id": "http://edamontology.org/topic_3062"
+								},
+								"children": [
+								{
+									"text": "Chromosomes",
+									"data": {
+										"id": "http://edamontology.org/topic_0624"
+									},
+									"children": [
+									{
+										"text": "Structural variation",
+										"data": {
+											"id": "http://edamontology.org/topic_3175"
+										},
+										"children": []
+									},
+									{
+										"text": "DNA packaging",
+										"data": {
+											"id": "http://edamontology.org/topic_3176"
+										},
+										"children": []
+									}
+									]
+								},
+								{
+									"text": "Transcription factors and regulatory sites",
+									"data": {
+										"id": "http://edamontology.org/topic_0749"
+									},
+									"children": []
+								},
+								{
+									"text": "Mobile genetic elements",
+									"data": {
+										"id": "http://edamontology.org/topic_0798"
+									},
+									"children": []
+								},
+								{
+									"text": "Gene structure and RNA splicing",
+									"data": {
+										"id": "http://edamontology.org/topic_0114"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Transcriptomics",
+								"data": {
+									"id": "http://edamontology.org/topic_0203"
+								},
+								"children": []
+							},
+							{
+								"text": "Gene regulation",
+								"data": {
+									"id": "http://edamontology.org/topic_0204"
+								},
+								"children": [
+								{
+									"text": "Transcription factors and regulatory sites",
+									"data": {
+										"id": "http://edamontology.org/topic_0749"
+									},
+									"children": []
+								},
+								{
+									"text": "Gene regulatory networks",
+									"data": {
+										"id": "http://edamontology.org/topic_2846"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Genes, gene family or system",
+								"data": {
+									"id": "http://edamontology.org/topic_0623"
+								},
+								"children": []
+							},
+							{
+								"text": "Genotype and phenotype",
+								"data": {
+									"id": "http://edamontology.org/topic_0625"
+								},
+								"children": [
+								{
+									"text": "Disease resources",
+									"data": {
+										"id": "http://edamontology.org/topic_0634"
+									},
+									"children": [
+									{
+										"text": "Cancer",
+										"data": {
+											"id": "http://edamontology.org/topic_2640"
+										},
+										"children": []
+									},
+									{
+										"text": "Disease genes and proteins",
+										"data": {
+											"id": "http://edamontology.org/topic_2813"
+										},
+										"children": []
+									}
+									]
+								},
+								{
+									"text": "Genetic variation",
+									"data": {
+										"id": "http://edamontology.org/topic_0199"
+									},
+									"children": []
+								},
+								{
+									"text": "Genome, proteome and model organisms",
+									"data": {
+										"id": "http://edamontology.org/topic_0621"
+									},
+									"children": []
+								}
+								]
+							}
+							]
+						}
+						]
+					},
+					{
+						"text": "Literature and reference",
+						"data": {
+							"id": "http://edamontology.org/topic_3068"
+						},
+						"children": [
+						{
+							"text": "Literature analysis",
+							"data": {
+								"id": "http://edamontology.org/topic_0217"
+							},
+							"children": [
+							{
+								"text": "Text mining",
+								"data": {
+									"id": "http://edamontology.org/topic_0218"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Literature text resources",
+							"data": {
+								"id": "http://edamontology.org/topic_0606"
+							},
+							"children": [
+							{
+								"text": "Molecular biology reference",
+								"data": {
+									"id": "http://edamontology.org/topic_3047"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Documentation and help",
+							"data": {
+								"id": "http://edamontology.org/topic_3061"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Biological text resources",
+						"data": {
+							"id": "http://edamontology.org/topic_3071"
+						},
+						"children": [
+						{
+							"text": "Laboratory resources",
+							"data": {
+								"id": "http://edamontology.org/topic_0607"
+							},
+							"children": [
+							{
+								"text": "Cell culture resources",
+								"data": {
+									"id": "http://edamontology.org/topic_0608"
+								},
+								"children": []
+							},
+							{
+								"text": "Probes and primers",
+								"data": {
+									"id": "http://edamontology.org/topic_0632"
+								},
+								"children": []
+							},
+							{
+								"text": "Medical informatics resources",
+								"data": {
+									"id": "http://edamontology.org/topic_3063"
+								},
+								"children": []
+							},
+							{
+								"text": "Microarrays",
+								"data": {
+									"id": "http://edamontology.org/topic_0200"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Protein textbases",
+							"data": {
+								"id": "http://edamontology.org/topic_2225"
+							},
+							"children": []
+						},
+						{
+							"text": "Structure textbases",
+							"data": {
+								"id": "http://edamontology.org/topic_3038"
+							},
+							"children": []
+						},
+						{
+							"text": "Sequence textbases",
+							"data": {
+								"id": "http://edamontology.org/topic_3041"
+							},
+							"children": []
+						},
+						{
+							"text": "Biological science resources",
+							"data": {
+								"id": "http://edamontology.org/topic_3070"
+							},
+							"children": [
+							{
+								"text": "Cell biology resources",
+								"data": {
+									"id": "http://edamontology.org/topic_2229"
+								},
+								"children": []
+							},
+							{
+								"text": "Developmental biology resources",
+								"data": {
+									"id": "http://edamontology.org/topic_3064"
+								},
+								"children": [
+								{
+									"text": "Embryology resources",
+									"data": {
+										"id": "http://edamontology.org/topic_3065"
+									},
+									"children": []
+								}
+								]
+							},
+							{
+								"text": "Anatomy resources",
+								"data": {
+									"id": "http://edamontology.org/topic_3067"
+								},
+								"children": []
+							}
+							]
+						},
+						{
+							"text": "Pathways, networks and models",
+							"data": {
+								"id": "http://edamontology.org/topic_0602"
+							},
+							"children": []
+						},
+						{
+							"text": "Literature text resources",
+							"data": {
+								"id": "http://edamontology.org/topic_0606"
+							},
+							"children": []
+						},
+						{
+							"text": "Gene resources",
+							"data": {
+								"id": "http://edamontology.org/topic_2816"
+							},
+							"children": []
+						}
+						]
+					},
+					{
+						"text": "Metabolomics",
+						"data": {
+							"id": "http://edamontology.org/topic_3172"
+						},
+						"children": [
+						{
+							"text": "Metabolites",
+							"data": {
+								"id": "http://edamontology.org/topic_0079"
+							},
+							"children": []
+						},
+						{
+							"text": "Metabolic pathways",
+							"data": {
+								"id": "http://edamontology.org/topic_0753"
+							},
+							"children": []
+						}
+						]
+					}
+					]
+				}
+				]

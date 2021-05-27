@@ -1,0 +1,63 @@
+<br>
+<form name="form.contactForm" class="form-horizontal" novalidate>
+	<div class="form-group">
+		<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
+			<!-- CONTACT -->
+			<div uib-collapse="meta.function.visibility">
+				<div class="panel panel-default" ng-repeat="contact in software.contact track by $index" style="background-color: #fff;" ng-class="{'no-margin-bottom': $last};">
+					<ng-form name="contactForm">
+						<div class="panel-body" style="position: relative;">
+							<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('contact', software, $index)"></i>
+							<div>
+								<!-- Email -->
+								<div class="form-group" style="margin-top:7px;margin-bottom:0px;" ng-class="{'has-error': registrationErrorPayload.contact[$index].email}">
+									<label class="col-sm-3 control-label" style="position: relative;"><span>Email</span><span style="color:#ff0000;position: absolute; right: 5px;"><b>*</b></span></label>
+									<div class="col-sm-9">
+										<input ng-model="software.contact[$index].email" type="text" class="form-control" placeholder="Email" name="email" validate-edit-resource-field index={{$index}}>
+										<label class="help-block" ng-repeat="error in contactForm.email.errorMessages" bo-text="error"></label>
+									</div>
+								</div>
+								<!-- 'Or' divider -->
+								<div class="form-group or-label or-label-xs">
+									<label class="col-sm-3 control-label" style="position: relative;color:#ff0000;"><small><b>OR</b></small></label>
+								</div>
+								<!-- URL -->
+								<div class="form-group" ng-class="{'has-error': registrationErrorPayload.contact[$index].url}">
+									<label class="col-sm-3 control-label" style="position: relative;"><span>URL</span><span style="color:#ff0000;position: absolute; right: 5px;"><b>*</b></span></label>
+									<div class="col-sm-9">
+										<input ng-model="software.contact[$index].url" type="text" class="form-control" placeholder="URL of contact" name="url" validate-edit-resource-field index={{$index}}>
+										<label class="help-block" ng-repeat="error in contactForm.url.errorMessages" bo-text="error"></label>
+									</div>
+								</div>
+							</div>
+							<!-- Name -->
+							<div class="form-group" style="margin-top:8px;" ng-class="{'has-error': registrationErrorPayload.contact[$index].name}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>Name</span></label>
+								<div class="col-sm-9">
+									<input ng-model="software.contact[$index].name" type="text" class="form-control" placeholder="Name" name="name" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in contactForm.name.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+							<!-- Phone -->
+							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.contact[$index].tel}">
+								<label class="col-sm-3 control-label" style="position: relative;"><span>Telephone number</span></label>
+								<div class="col-sm-9">
+									<input ng-model="software.contact[$index].tel" type="text" class="form-control" placeholder="Telephone number" name="phone" validate-edit-resource-field index={{$index}}>
+									<label class="help-block" ng-repeat="error in contactForm.phone.errorMessages" bo-text="error"></label>
+								</div>
+							</div>
+						</div>
+						<div ng-class="{'has-error': true};">
+							<label class="help-block" style="margin-left: 20px;" ng-repeat="error in contactForm.errorMessages" bo-text="error"></label>
+						</div>
+					</ng-form>
+				</div>
+			</div>
+			<!-- Add | Hide contacts -->
+			<div class="form-group" style="padding-top:7px;">
+				<a href="" ng-show="!meta.function.visibility" ng-click="addButtonClick('contact', software, true, true)">Add contact</a>
+				<span ng-show="meta.function.visibility">{{ software.contact.length }} contact<span ng-show="software.contact.length > 1">s</span></span> <span ng-show="!meta.function.visibility && software.contact">| </span><a href="" ng-click="meta.function.visibility = !meta.function.visibility"><span ng-show="meta.function.visibility">Show</span><span ng-show="!meta.function.visibility && software.contact">Hide contacts</span></a>
+			</div>
+		</div>
+	</div>
+</form>

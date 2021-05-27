@@ -1,0 +1,550 @@
+html, body {
+	height: 100%;
+	padding-bottom: -40px;
+	/* The html and body elements cannot have any padding or margin. */
+}
+
+body {
+	padding-top: 20px;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
+	word-wrap: break-word;
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	/* Negative indent footer by it's height */
+	margin: 0 auto -60px;
+}
+
+/* Set the fixed height of the footer here */
+#push,
+#footer {
+	height: 60px;
+}
+#footer {
+	background-color: #f5f5f5;
+}
+/* Lastly, apply responsive CSS fixes as necessary */
+/*@media (max-width: 767px) {*/
+	/*#footer {*/
+		/*margin-left: -20px;*/
+		/*margin-right: -20px;*/
+		/*padding-left: 20px;*/
+		/*padding-right: 20px;*/
+		/*}*/
+		/*}*/
+		#wrap > .container-fluid {
+			padding-top: 60px;
+		}
+	 .credit {
+			margin: 20px 0;
+		}
+		code {
+			font-size: 80%;
+		}
+
+		/* Show a blue border while an input has focus, make sure it overrides everything else */
+		/* Overriding Twitter Bootstrap cuz I don't agree we need to alarm the user while they're typing */
+		input:focus {
+			color: black !important;
+			border-color: rgba(82, 168, 236, 0.8) !important;
+			-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
+			-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
+			box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
+		}
+
+		.gridStyle {
+			/*border: 1px solid rgb(212,212,212);*/
+			height: 300px;
+		}
+
+		.icon-cog {
+			color: #d4d4d4;
+		}
+
+		.ontology-name, .ontology-collapse {
+			-webkit-user-select: none; /* Chrome/Safari */
+			-moz-user-select: none; /* Firefox */
+			-ms-user-select: none; /* IE10+ */
+			user-select: none;
+			-khtml-user-select: none;
+			cursor: pointer;
+			cursor: hand;
+		}
+
+		.ontologyselected {
+			background-color:#DDDDDD;
+			border-radius:2px;
+		}
+
+		.ontology-hover:hover {
+			background-color:#DDDDDD;
+			border-radius:2px;
+		}
+
+		.typeahead.dropdown-menu {
+			z-index: 100001;
+		}
+
+		.modal-body {
+			overflow-y: visible
+		}
+
+		.typeahead {
+			max-height: 200px !important;
+			overflow-y: auto  !important;
+			overflow-x: hidden  !important;
+			padding-right: 20px  !important;
+		}
+
+		.innerAttribute .form-horizontal .control-label {
+			float: left;
+			/*width: 220px;*/
+			width: 160px;
+			padding-top: 5px;
+			text-align: right;
+		}
+
+		.innerAttribute .form-horizontal .controls {
+			*display: inline-block;
+			*padding-left: 20px;
+			/*margin-left: 240px;*/
+			margin-left: 180px;
+			*margin-left: 0;
+		}
+
+		.form-control-feedback-no-label {
+			top:0px !important;
+		}
+
+		.main {
+			padding: 20px;
+		}
+		@media (min-width: 768px) {
+			.main {
+				padding-right: 40px;
+				padding-left: 40px;
+			}
+		}
+		.main .page-header {
+			margin-top: 0;
+		}
+		.navbar {
+			/*max-height: 50px;*/
+			overflow:visible;
+			font-family: 'Open Sans', sans-serif;
+			font-weight: 400;
+		}
+
+		.btn-flat {
+			padding-bottom: 2px;
+			padding-top: 2px;
+		}
+
+		.form-horizontal .form-group {
+			margin-right:0px;
+			margin-left:0px;
+		}
+
+		.img-holder {
+			height:50px;
+			overflow:visible;
+		}
+
+		a.disabled {
+			pointer-events: none;
+			cursor: default;
+		}
+
+		.panel-main {
+			border: 0 !important;
+			-webkit-box-shadow: 0 0px 0px rgba(0, 0, 0, 1);
+			box-shadow: 0 0px 0px rgba(0, 0, 0, 1);
+		}
+
+		.table > thead > tr > th, .table > thead > tr > td {
+			border: 0;
+		}
+
+		.badge:hover {
+			color: #a94442;
+			background-color: #f2dede;
+			border-color: #ebccd1;
+		}
+
+		.jstree-read-only .jstree-anchor{
+			pointer-events: none;
+			cursor: default;
+		}
+
+		.form-horizontal .has-feedback .form-control-feedback {
+			top: 0;
+			right: 0px;
+		}
+
+		.vcenter {
+			display: inline-block;
+			vertical-align: middle;
+			float: none;
+		}
+
+		.table_resize_handle {
+			background-color: #ddd;
+			z-index:1000;
+			width:3px;
+			position: absolute;
+			top:0px;
+			right: -2px;
+			height:100%;
+			cursor: col-resize;
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		ul, menu, dir {
+			-webkit-padding-start: 30px;
+		}
+
+		.attribute-info-panel {
+			margin-top:40px;
+		}
+
+		.resource-panel {
+			font-size:85%;
+			background-color: #fbfbfb;
+		}
+
+		label {
+			font-weight: 400;
+		}
+
+		.remove-icon {
+			position: absolute;
+			top: 8px;
+			right:8px;
+			/*font-size:125%;*/
+		}
+
+		.remove-icon-button {
+			font-size:120%;
+		}
+
+		.highlight-icon:hover {
+			text-shadow: 0px 0px 4px #222222;
+			cursor: pointer;
+		}
+
+		.no-margin-bottom {
+			margin-bottom: 0px;
+		}
+
+		.panel-inner {
+			border-top-right-radius: 0px;
+			border-bottom-right-radius: 0px;
+			margin-right:-16px;
+			background-color: #f3f3f3;
+		}
+
+		.panel-ontology {
+			border-top-right-radius: 0px;
+			border-top-left-radius: 0px;
+			border-top-width: 0px;
+			margin-bottom:0px;
+			background-color: #f3f3f3;
+			margin-right:1px;
+		}
+
+		.input-ontology {
+			border-bottom-left-radius: 0px;
+			border-bottom-right-radius: 0px;
+		}
+
+		.input-ontology-btn {
+			border-bottom-right-radius: 0px;
+		}
+
+		.input-filter {
+			width: auto;
+		}
+
+		.btn-ontology {
+			border-bottom-width: 0px;
+			border-left-width: 0px;
+			border-right-width: 0px;
+			border-radius: 0px;
+			border-color:#ddd;
+		}
+
+		.btn-filter {
+			border-bottom-width: 0px;
+			border-bottom-left-radius: 0px;
+			border-bottom-right-radius: 0px;
+		}
+
+		.btn-filter-closed {
+			border-bottom-width: 1px;
+			border-bottom-left-radius: 3px;
+			border-bottom-right-radius: 3px;
+		}
+
+		.nav-pills>li>a {
+			border-radius: 0px;
+		}
+		.nav-pills>li:last-child>a {
+			border-bottom-left-radius: 4px;
+			border-bottom-right-radius: 4px;
+		}
+
+		.btn-ontology-closed {
+			border-top-width: 0px;
+		}
+
+		.input-group > .input-group-btn:last-child > .select-btn-group {
+			-webkit-appearance:none;
+			-moz-appearance:none;
+			border-top-right-radius: 10px;
+			border-bottom-right-radius: 10px;
+		}
+
+		.input-group > .input-group-btn:first-child > .select-btn-group {
+			-webkit-appearance:none;
+			-moz-appearance:none;
+			border-top-left-radius: 10px;
+			border-bottom-left-radius: 10px;
+		}
+
+		tab-heading {
+			margin-bottom:20px;
+			font-weight: 400;
+		}
+
+		.label-primary-orange {
+			background-color: #F07603;
+		}
+
+
+		.label-primary-red {
+			background-color: #ff0040;
+		}
+
+		.row-eq-height {
+			display: -webkit-box;
+			display: -webkit-flex;
+			display: -ms-flexbox;
+			display: flex;
+		}
+
+		.flex-vertical {
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+
+			-ms-flex-align: center;
+			-webkit-align-items: center;
+			-webkit-box-align: center;
+
+			align-items: center;
+		}
+
+		.btn-slim {
+			border-top: 0px;
+			border-bottom: 0px;
+			padding-top: 0px;
+			padding-bottom: 0px;
+		}
+
+		.select-btn-group {
+			-webkit-appearance:none;
+			-moz-appearance:none;
+			background-position:right 50%;
+			background-repeat:no-repeat;
+			background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=);
+			padding: .5em;
+			padding-right:1.5em;
+		}
+
+		.inside-full-height {
+	/*
+	// if you want to give content full height give him height: 100%;
+	// with content full height you can't apply margins to the content
+	// content full height does not work in ie http://stackoverflow.com/questions/27384433/ie-display-table-cell-child-ignores-height-100
+	*/
+	height: 100%;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.icon-spacing {
+	margin-bottom:10px;
+}
+
+.panel-link {
+	color: #333;
+	background-color: #f5f5f5;
+	border-color: #ddd;
+}
+
+.no-side-padding {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.or-label {
+	margin:0px 0px 3px 0px;
+}
+
+ul.abn-tree li.abn-tree-row a {
+	padding: 0px 10px !important;
+}
+
+.highlightedTerm {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #FFD699;
+	background-color: #ffedd1;
+	border-radius: 2px;
+}
+
+.pagination-top {
+	margin: 0 0 0 0px;
+}
+
+/* fix to the bug with tooltips blocking elements underneath them */
+._720kb-tooltip {
+	pointer-events: none;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
+
+/* fix to a small blue border around the 'Search' placeholder in the searchbar */
+tags-input input:focus {
+	color: inherit!important;
+	border-color: inherit!important;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0),0 0 8px white!important;
+	-moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0),0 0 8px white!important;
+	box-shadow: inset 0 1px 1px rgba(0,0,0,0),0 0 8px white!important
+}
+
+tags-input .autocomplete .filter-list {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.filter-item{
+	font-size: 14px;
+}
+
+tags-input .autocomplete .filter-list .filter-item {
+	margin: 2px;
+	padding: 0 5px;
+	display: inline-block;
+	cursor: pointer;
+	cursor: hand;
+}
+tags-input .autocomplete .suggestion-list {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	max-height: 280px;
+	overflow-y: auto;
+	position: relative;
+}
+tags-input .autocomplete .filter-list > .selected {
+	text-decoration: underline;
+}
+
+.hr-slim {
+	margin-top: 5px !important;
+	margin-bottom: 0px !important;
+}
+
+.tool-edit-tab-error {
+	color: #963133;
+	text-decoration: underline;
+}
+
+@media (min-width: 768px) {
+	.container {
+		width: 735px;
+	}
+}
+@media (min-width: 992px) {
+	.container {
+		width: 970px;
+	}
+}
+@media (min-width: 1200px) {
+	.container {
+		width: 90%;
+	}
+}
+
+@media (max-width: 768px) {
+
+	.or-label-xs {
+		margin-top:8px !important;
+	}
+	.align-xs {
+		text-align: left !important;
+	}
+	.pull-left-xs {
+		float: left !important;
+	}
+	.container {
+		padding:0;
+		margin:0;
+	}
+
+	body {
+		padding-left:0;
+		padding-right:0;
+	}
+
+	.navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top {
+		margin-left: 0;
+		margin-right: 0;
+		margin-bottom:0;
+	}
+}
+
+.navbar-xs { min-height:28px; height: 28px; }
+.navbar-xs .navbar-brand{ padding: 0px 12px;font-size: 16px;line-height: 28px; }
+.navbar-xs .navbar-nav > li > a {  padding-top: 0px; padding-bottom: 0px; line-height: 28px; }
+
+/* Have to set height explicity on ui-view 
+to prevent collapsing during animation*/
+[ui-view].ng-enter {
+	-webkit-transition:opacity 0.5s ease-out;
+	-moz-transition:opacity 0.5s ease-out;
+	-o-transition:opacity 0.5s ease-out;
+	transition:opacity 0.5s ease-out;
+}
+
+
+[ui-view].ng-enter {
+	opacity: 0;
+}
+
+[ui-view].ng-enter-active {
+	opacity: 1;
+}
+
+[ui-view].ng-leave {
+	opacity: 0; 
+}
+
+[ui-view].ng-leave-active {
+	opacity: 0;
+}
+

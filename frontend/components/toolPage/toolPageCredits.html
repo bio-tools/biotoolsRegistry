@@ -1,0 +1,22 @@
+<!-- Divider line -->
+<div class="tool-page-diver-label">
+	<span>Credits & Support</span>
+</div>
+<!-- Credit cards :) -->
+<div class="row tool-page-row">
+	<div ng-repeat="credit in software.credit">
+		<div tool-page-credit-callout
+		name="credit.name"
+		url="credit.url"
+		email="credit.email"
+		orcidId="credit.orcidid"
+		gridId="credit.gridid"
+		rorId="credit.rorid"
+		fundrefId="credit.fundrefid"
+		typeEntity="credit.typeEntity"
+		typeRole="credit.typeRole"
+		comment="{{credit.note}}"
+		color="#87244C"
+		toshow = "{{(credit.note != null && credit.note.length > 0).toString()}}"></div>
+	</div>
+</div>

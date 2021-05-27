@@ -1,0 +1,4 @@
+<span class="details-bar-text">Display as</span>
+<span ng-repeat="option in DisplayModeSelector.list">
+	<button class="btn btn-default details-bar-button-background" ng-class="{active : DisplayModeSelector.mode === option}" ng-click="DisplayModeSelector.mode = option; modeChanged();">{{ option.text }}</button>
+</span>

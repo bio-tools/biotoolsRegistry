@@ -1,0 +1,15 @@
+<div class="ui-grid-cell-contents ui-grid-cell-link" bindonce ng-controller="ToolGridCellController" ng-init="init(col.colDef.name, grid.renderContainers.body.visibleRowCache.indexOf(row))" tooltip="{{::COL_FIELD}}" tooltip-placement="right" tooltip-append-to-body="true" tooltip-enable="RowHeight() > DefaultRowHeight()" tooltip-class="grid-tooltip">
+	<div ng-if="RowHeight() > DefaultRowHeight()">
+		<div class="ui-grid-read-more-button" ng-style="CellStyle()"><a ui-sref="tool({id: row.entity.biotoolsID, version: row.entity.versionId})">Read More ›</a></div>
+	</div>
+	<div ng-if="COL_FIELD.length == 0">-</div>
+	<div ng-if="COL_FIELD.length != 0" id="{{::RowIdentifier()}}">
+		<ul style="list-style-type:circle" ng-repeat="element in COL_FIELD" class="grid">
+			<li>
+				<div ng-if="element.name != null"><strong><span bo-html="element.name | highlight:grid.appScope.Highlighting.terms"></span></strong>
+				<span ng-if="element.version != null"><small><span bo-html="element.version | highlight:grid.appScope.Highlighting.terms"></span></small></span></div>
+				<div ng-if="element.homepage != null"><stylized_link><a bo-href="element.homepage" bo-title="element.homepage"><small><span bo-html="element.homepage | highlight:grid.appScope.Highlighting.terms"></span></small></a></stylized_link></span></div>
+			</li>
+		</ul>
+	</div>
+</div>

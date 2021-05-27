@@ -1,0 +1,18 @@
+<div class="ui-grid-cell-contents" bindonce ng-controller="ToolGridCellController" ng-init="init(col.colDef.name, grid.renderContainers.body.visibleRowCache.indexOf(row))" tooltip="{{::COL_FIELD}}" tooltip-placement="right" tooltip-append-to-body="true" tooltip-enable="RowHeight() > DefaultRowHeight()" tooltip-class="grid-tooltip">
+	<div ng-if="RowHeight() > DefaultRowHeight()">
+		<div class="ui-grid-read-more-button" ng-style="CellStyle()"><a ui-sref="tool({id: row.entity.biotoolsID, version: row.entity.versionId})">Read More ›</a></div>
+	</div>
+	<div ng-show="COL_FIELD == null || COL_FIELD.length == 0">-</div>
+	<div id="{{::RowIdentifier()}}">
+		<ul ng-if="COL_FIELD != null && COL_FIELD.count != 0" style="list-style-type:circle">
+			<li ng-repeat="publication in COL_FIELD">
+				{{publication.type}}
+				<span ng-if="publication.metadata.date">({{::publication.metadata.date| date:'yyyy'}})</span>
+				<span ng-if="publication.metadata.citationCount">(cited {{::publication.metadata.citationCount}} times)</span>
+				<slink ng-if="publication.pmcid" insert-publication-link-icon publication="publication.pmcid"></slink>
+				<slink ng-if="publication.pmid" insert-publication-link-icon publication="publication.pmid"></slink>
+				<slink ng-if="publication.doi" insert-publication-link-icon publication="publication.doi"></slink>
+			</li>
+		</ul>
+	</div>
+</div>

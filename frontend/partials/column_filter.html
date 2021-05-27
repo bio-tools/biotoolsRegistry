@@ -1,0 +1,17 @@
+<div ng-controller="column_filter_controller">
+	<div class="module" style="margin-bottom:20px;">
+		<div class="module-head"><h3>Columns</h3></div>
+		<div class="module-body">
+			<div class="btn-group">
+		        <button type="button" class="btn" ng-model="chosen_visibility" uib-btn-radio="'bio'" value="bio">Biologist</button>
+		        <button type="button" class="btn" ng-model="chosen_visibility" uib-btn-radio="'dev'" value="bio">Developer</button>
+		        <button type="button" class="btn" ng-model="chosen_visibility" uib-btn-radio="'cust'" value="bio">Custom</button>
+		    </div><br><br>
+			<div class="form-inline clearfix">
+				<div class="pull-left" style="margin:0px 5px 0px 5px;" ng-repeat="column in model">
+					{{ column.text }} <input style="margin-top:-1px" type="checkbox" ng-model="column.visible" ng-disabled="chosen_visibility != 'cust'">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

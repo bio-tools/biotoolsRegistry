@@ -1,0 +1,45 @@
+{
+  "name": "elixir",
+  "authors": [
+    "Emil Rydza <ekry@dtu.dk>"
+  ],
+  "description": "ELIXIR registry frontend",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "bio.tools",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.7",
+    "angular-bootstrap": "~0.14.3",
+    "lodash": "=4.11.1",
+    "angular-tooltips": "~0.1.25",
+    "angular-timeago": "~0.2.4",
+    "angular-tree-control": "~0.2.22",
+    "bootstrap": "=3.3.5",
+    "angular-cookies": "~1.4.7",
+    "angular-route": "~1.4.7",
+    "angular-sanitize": "~1.4.7",
+    "angular-animate": "~1.4.7",
+    "angular-ui-router": "~0.2.15",
+    "font-awesome": "fontawesome#~4.7.0",
+    "angular-resource": "~1.5.2",
+    "angular-bindonce": "~0.3.3",
+    "angular-ui-grid": "^3.0.0",
+    "angular-chart.js": "1.0.3",
+    "moment": "2.15.2",
+    "ngMeta": "^1.0.0",
+    "angucomplete-alt": "^2.5.0",
+    "fuse.js": "^2.5.0"
+  },
+  "resolutions": {
+    "angular": "~1.4.7"
+  }
+}

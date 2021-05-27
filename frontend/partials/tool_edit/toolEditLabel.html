@@ -1,0 +1,323 @@
+<br>
+<div class="panel panel-info">
+	<div class="panel-heading" style="position: relative;"><label align="justify">Miscellaneous scientific, technical and administrative details of the tool, expressed in terms from controlled vocabularies. 
+		<br>We recommend you specify at least the tool type, license, and one or more topics. See the <a target="_blank" ng-href="http://biotools.readthedocs.io/en/latest/curators_guide.html#labels-group">Curation Guidelines <i class="fa fa-external-link"></i></a>.</label>
+	</div>
+</div>
+<form name="form.labelForm" class="form-horizontal" novalidate  autocomplete="off">
+	<div class="form-group">
+		<div class="col-xs-12 col-sm-12 col-md-9 col-md-offset-1 no-side-padding">
+			<!-- Tag with COVID-19 -->
+			<div class="form-group">
+				<label class="control-label col-sm-3" style="position: relative;">
+					<span tooltips tooltip-side="right" tooltip-content="Tag tool as COVID-19">Tag as COVID-19 <a target="_blank" ng-href="/t?domain=covid-19"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+				</label>
+				<div class="col-sm-9">
+					<div style="padding-top:7px;" ng-if="!Covid.hasCovid(software.collectionID)">
+						<a class="covid-tag-link" href="" ng-click="software.collectionID=Covid.addCovid(software.collectionID)">Click to tag tool as COVID-19</a>
+					</div>
+					<div ng-if="Covid.hasCovid(software.collectionID)">
+						<h5>
+							Tool is tagged as <span style="color: #BA1E4A">COVID-19</span>. See all <a target="_blank" ng-href="/t?domain=covid-19">COVID-19</a> tools.
+						</h5>
+						<a class="covid-tag-link" href="" ng-click="software.collectionID=Covid.removeCovid(software.collectionID)">Click to remove COVID-19 tag</a>
+					</div>
+				</div>
+			</div>
+			<!-- 	Tool Type	 -->
+			<div class="form-group no-margin-bottom">
+				<label class="control-label col-sm-3" style="position: relative;">
+					<span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.toolType.description}}">Tool type <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#tool-type"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+				</label>
+				<div class="col-sm-9">
+					<div class="form-group" ng-repeat="toolType in software.toolType track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.toolType[$index][0]};">
+						<ng-form name="resourceTypeForm">
+							<div class="input-group">
+								<select class="form-control select-btn-group" ng-options="item.value as item.text for item in toolTypeOptions" ng-model="software.toolType[$index]" name="toolType" validate-edit-resource-field index={{$index}}>
+								</select>
+								<span class="input-group-btn">
+									<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('toolType', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+								</span>
+							</div>
+							<label class="help-block" ng-repeat="error in resourceTypeForm.toolType.errorMessages" bo-text="error"></label>
+						</ng-form>
+					</div>
+					<label class="help-block" ng-if="isString(error)" ng-repeat="error in registrationErrorPayload.toolType" bo-text="error"></label>
+					<div class="form-group" style="padding-top:7px;">
+						<a href="" ng-click="addButtonClick('toolType', software, true, false);">Add Tool type</a>
+					</div>
+				</div>
+			</div>
+			<!-- Topic -->
+			<div class="form-group no-margin-bottom">
+				<label class="control-label col-sm-3">
+					<span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.topic.description}}">Topic
+						<a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#topic"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+					</label>
+					<div class="col-sm-9">
+						<div class="form-group" ng-repeat="topic in software.topic track by $index" ng-init="topicIndex = $index" ng-class="{'no-margin-bottom': $last};">
+							<div class="input-group">
+								<input type="text" ng-model="software.topic[$index].term" class="form-control input-ontology" placeholder="Topic" disabled="disabled" name="topic" validate-edit-resource-field index={{$index}}></input>
+								<span class="input-group-btn">
+									<button class="btn" type="button" ng-click="software.topic[$index].term = 'Topic'; meta.topic[topicIndex].selected = undefined; meta.topic[topicIndex].visibility = true;" tooltips tooltip-side="right" tooltip-content="If you can't find the topics you are looking for, please specify them in the 'Description' field in the previous tab ('Summary') instead." ng-class="{'btn-primary': software.topic[$index].term == 'Topic', 'btn-default': software.topic[$index].term != 'Topic'}">I don't know</button>
+									<button class="btn btn-default highlight-icon input-ontology-btn" type="button" ng-click="removeButtonClick('topic', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+								</span>
+							</div>
+							<div class="panel panel-default panel-ontology">
+								<div class="panel-body" style="padding:0px;">
+									<div uib-collapse="meta.topic[topicIndex].visibility">
+										<div class="form-group" style="margin:5px;">
+											<input type="text" ng-model="meta.topic[topicIndex].predicate" class="form-control input-sm"  placeholder="Filter"></input>
+										</div>
+										<div treecontrol class="tree-light"
+										tree-model="EDAM_topic"
+										options="treeOptions"
+										order-by="orderby"
+										reverse-order="false"
+										on-selection="ontologyOnSelect(software.topic, topicIndex, node);"
+										selected-node="meta.topic[topicIndex].selected"
+										filter-expression="meta.topic[topicIndex].predicate">{{node.text}}
+									</div>
+								</div>
+								<button type="button" class="btn btn-default btn-xs btn-block btn-ontology" ng-class="{'btn-ontology-closed': meta.topic[topicIndex].visibility}" ng-click="meta.topic[topicIndex].visibility = !meta.topic[topicIndex].visibility"><i class="fa" ng-class="{'fa-chevron-up':!meta.topic[topicIndex].visibility, 'fa-chevron-down':meta.topic[topicIndex].visibility}"></i></button>
+							</div>
+						</div>
+						<label class="help-block" ng-repeat="error in form.topicForm.topic.errorMessages" bo-text="error"></label>
+						<div ng-class="{'has-error': true};">
+							<label class="help-block" ng-repeat="error in registrationErrorPayload.topic[$index]" bo-text="error"></label>
+						</div>
+					</div>
+					<div class="form-group" style="padding-top:7px;">
+						<a href="" ng-click="addButtonClick('topic', software, true, true)">Add topic</a>
+					</div>
+				</div>
+				<!-- Operating system -->
+				<div class="form-group no-margin-bottom">
+					<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.operatingSystem.description}}">Operating system <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#operating-system"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+					</label>
+					<div class="col-sm-9">
+						<div class="form-group" ng-repeat="operatingSystem in software.operatingSystem track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.operatingSystem[$index][0]};">
+							<ng-form name="platformForm">
+								<div class="input-group">
+									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in platformOptions" ng-model="software.operatingSystem[$index]" name="operatingSystem" validate-edit-resource-field index={{$index}}>
+									</select>
+									<span class="input-group-btn">
+										<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('operatingSystem', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+									</span>
+								</div>
+								<label class="help-block" ng-repeat="error in platformForm.operatingSystem.errorMessages" bo-text="error"></label>
+							</ng-form>
+						</div>
+						<div class="form-group" style="padding-top:7px;">
+							<a href="" ng-click="addButtonClick('operatingSystem', software, true, false);">Add operating system</a>
+						</div>
+					</div>
+				</div>
+				<!-- Language -->
+				<div class="form-group no-margin-bottom">
+					<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.language.description}}">Language <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#programming-language"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+					<div class="col-sm-9">
+						<div class="form-group" ng-repeat="language in software.language track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.language[$index][0]};">
+							<ng-form name="languageForm">
+								<div class="input-group">
+									<select class="form-control select-btn-group" name="language" ng-options="item.value as item.text for item in languageOptions" ng-model="software.language[$index]" validate-edit-resource-field index={{$index}}>
+									</select>
+									<span class="input-group-btn">
+										<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('language', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+									</span>
+								</div>
+								<label class="help-block" ng-repeat="error in languageForm.language.errorMessages" bo-text="error"></label>
+							</ng-form>
+						</div>
+						<div class="form-group" style="padding-top:7px;">
+							<a href="" ng-click="addButtonClick('language', software, true, false);">Add language</a>
+						</div>
+					</div>
+				</div>
+				<!-- Maturity -->
+				<div class="form-group" ng-class="{'has-error': form.labelForm.maturity.errorMessages[0]};">
+					<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.maturity.description}}">Maturity <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#maturity"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+					<div class="col-sm-9">
+						<select class="form-control select-btn-group" ng-options="item.value as item.text for item in maturityOptions" name="maturity" ng-model="software.maturity" validate-edit-resource-field>
+						</select>
+						<label class="help-block" ng-repeat="error in form.labelForm.maturity.errorMessages" bo-text="error"></label>
+					</div>
+				</div>
+				<!-- License  -->
+				<div class="form-group" ng-class="{'has-error': form.labelForm.license.errorMessages[0]};">
+					<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.license.description}}">License <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#license"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+					<div class="col-sm-9">
+						<select class="form-control select-btn-group" ng-options="item.value as item.text for item in licenseOptions" ng-model="software.license" name="license" validate-edit-resource-field>
+						</select>
+						<label class="help-block" ng-repeat="error in form.labelForm.license.errorMessages" bo-text="error"></label>
+					</div>
+				</div>
+				<!-- Cost -->
+				<div class="form-group" ng-class="{'has-error': form.labelForm.cost.errorMessages[0]};">
+					<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.cost.description}}">Cost <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#cost"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+					<div class="col-sm-9">
+						<select class="form-control select-btn-group" ng-options="item.value as item.text for item in costOptions" ng-model="software.cost" name="cost" validate-edit-resource-field>
+						</select>
+						<label class="help-block" ng-repeat="error in form.labelForm.cost.errorMessages" bo-text="error"></label>
+					</div>
+				</div>
+				<!-- Collection -->
+				<div class="form-group no-margin-bottom">
+					<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.collectionID.description}}">Collection <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#collection"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+					<div class="col-sm-9">
+						<div class="form-group" ng-repeat="collection in software.collectionID track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.collectionID[$index][0]};">
+							<ng-form name="collectionForm">
+								<div class="input-group">
+									<input class="form-control" name="collection" ng-model="software.collectionID[$index]" validate-edit-resource-field index={{$index}}
+									typeahead="collectionID for collectionID in loadCollectionIDs($viewValue)" typeahead-min-length="2">
+								</input>
+								<span class="input-group-btn">
+									<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('collectionID', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+								</span>
+							</div>
+							<label class="help-block" ng-repeat="error in collectionForm.collection.errorMessages" bo-text="error"></label>
+						</ng-form>
+					</div>
+					<div class="form-group" style="padding-top:7px;">
+						<a href="" ng-click="addButtonClick('collectionID', software, true, false);">Add collection</a>
+					</div>
+				</div>
+				<!-- New Accessibility -->
+				<div class="form-group" ng-class="{'has-error': form.labelForm.accessibility.errorMessages[0]};">
+					<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.accessibility.description}}">Accessibility <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#accessibility"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+					<div class="col-sm-9">
+						<select class="form-control select-btn-group" ng-options="item.value as item.text for item in accessibilityOptions" ng-model="software.accessibility" name="accessibility" validate-edit-resource-field>
+						</select>
+						<label class="help-block" ng-repeat="error in form.labelForm.accessibility.errorMessages" bo-text="error"></label>
+					</div>
+				</div>
+				<!-- Elixir Platform -->
+				<div class="form-group no-margin-bottom">
+					<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.elixirPlatform.description}}">ELIXIR Platform <a target="_blank" href="https://biotools.readthedocs.io/en/latest/curators_guide.html#elixir-platform"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+					</label>
+					<div class="col-sm-9">
+						<div class="form-group" ng-repeat="elixirPlatform in software.elixirPlatform track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.elixirPlatform[$index][0]};">
+							<ng-form name="elixirPlatformForm">
+								<div class="input-group">
+									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in elixirPlatformOptions" ng-model="software.elixirPlatform[$index]" name="elixirPlatform" validate-edit-resource-field index={{$index}}>
+									</select>
+									<span class="input-group-btn">
+										<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('elixirPlatform', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+									</span>
+								</div>
+								<label class="help-block" ng-repeat="error in elixirPlatformForm.elixirPlatform.errorMessages" bo-text="error"></label>
+							</ng-form>
+						</div>
+						<div class="form-group" style="padding-top:7px;">
+							<a href="" ng-click="addButtonClick('elixirPlatform', software, true, false);">Add ELIXIR platform</a>
+						</div>
+					</div>
+				</div>
+				<!-- Elixir Node -->
+				<div class="form-group no-margin-bottom">
+					<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.elixirNode.description}}">ELIXIR Node <a target="_blank" href="https://biotools.readthedocs.io/en/latest/curators_guide.html#elixir-node"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+					</label>
+					<div class="col-sm-9">
+						<div class="form-group" ng-repeat="elixirNode in software.elixirNode track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.elixirNode[$index][0]};">
+							<ng-form name="elixirNodeForm">
+								<div class="input-group">
+									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in elixirNodeOptions" ng-model="software.elixirNode[$index]" name="elixirNode" validate-edit-resource-field index={{$index}}>
+									</select>
+									<span class="input-group-btn">
+										<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('elixirNode', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+									</span>
+								</div>
+								<label class="help-block" ng-repeat="error in elixirNodeForm.elixirNode.errorMessages" bo-text="error"></label>
+							</ng-form>
+						</div>
+						<div class="form-group" style="padding-top:7px;">
+							<a href="" ng-click="addButtonClick('elixirNode', software, true, false);">Add ELIXIR Node</a>
+						</div>
+					</div>
+				</div>
+				<!-- ELIXIR community -->
+				<div class="form-group no-margin-bottom">
+					<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.elixirCommunity.description}}">ELIXIR Community <a target="_blank" href="https://biotools.readthedocs.io/en/latest/curators_guide.html#elixir-community"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+					</label>
+					<div class="col-sm-9">
+						<div class="form-group" ng-repeat="elixirCommunity in software.elixirCommunity track by $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.elixirCommunity[$index][0]};">
+							<ng-form name="elixirCommunityForm">
+								<div class="input-group">
+									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in elixirCommunityOptions" ng-model="software.elixirCommunity[$index]" name="elixirCommunity" validate-edit-resource-field index={{$index}}>
+									</select>
+									<span class="input-group-btn">
+										<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('elixirCommunity', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>
+									</span>
+								</div>
+								<label class="help-block" ng-repeat="error in elixirCommunityForm.elixirCommunity.errorMessages" bo-text="error"></label>
+							</ng-form>
+						</div>
+						<div class="form-group" style="padding-top:7px;">
+							<a href="" ng-click="addButtonClick('elixirCommunity', software, true, false);">Add ELIXIR Community</a>
+						</div>
+					</div>
+				</div>
+				<!-- Tool Confidence -->
+				<div class="form-group" ng-class="{'has-error': form.labelForm.confidence.errorMessages[0]};">
+					<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.confidence.description}}">Tool Confidence score <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#confidence"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+					<div class="col-sm-9">
+						<select class="form-control select-btn-group" ng-options="item.value as item.text for item in confidenceOptions" ng-model="software.confidence_flag" name="confidence" validate-edit-resource-field>
+						</select>
+						<label class="help-block" ng-repeat="error in form.labelForm.confidence.errorMessages" bo-text="error"></label>
+					</div>
+				</div>
+				<!-- Other id -->
+				<div class="form-group no-margin-bottom">
+					<form name="form.otherIdForm" class="form-horizontal" novalidate>
+						<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.otherID.description}}">Other ID <a target="_blank" href="https://biotools.readthedocs.io/en/latest/curators_guide.html#other-ids"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+						</label>
+						<div class="col-sm-9">
+							<div class="panel panel-default" ng-repeat="link in software.otherID track by $index" ng-class="{'no-margin-bottom': $last};">
+								<ng-form name="otherIdDetailForm">
+									<div class="panel-body" style="position: relative;">
+										<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('otherID', software, $index)"></i>
+										<div>
+											<!-- Value -->
+											<div class="form-group" style="margin-top:8px;" ng-class="{'has-error': registrationErrorPayload.otherID[$index].value}">
+												<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.otherIDValue.description}}">Value <a target="_blank" href="https://biotools.readthedocs.io/en/latest/curators_guide.html#value"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+												<div class="col-sm-9">
+													<input ng-model="software.otherID[$index].value" type="text" class="form-control" name="value" validate-edit-resource-field index={{$index}}>
+													<label class="help-block" ng-repeat="error in otherIdDetailForm.value.errorMessages" bo-text="error"></label>
+												</div>
+											</div>
+											<!-- Other ID type -->
+											<div class="form-group" ng-class="{'has-error': registrationErrorPayload.otherID[$index].type}">
+												<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.otherIDType.description}}">Type <a target="_blank" href="https://biotools.readthedocs.io/en/latest/curators_guide.html#type-otherid"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
+												</label>
+												<div class="col-sm-9">
+													<select class="form-control select-btn-group" ng-options="item.value as item.text for item in otherIdTypeOptions" ng-model="software.otherID[$index].type" name="type" validate-edit-resource-field index={{$index}}>
+													</select>
+													<label class="help-block" ng-repeat="error in otherIdDetailForm.type.errorMessages" bo-text="error"></label>
+												</div>
+											</div>
+											<!-- Version -->
+											<div class="form-group" style="margin-top:8px;" ng-class="{'has-error': registrationErrorPayload.otherID[$index].version}">
+												<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.otherIDVersion.description}}">Version <a target="_blank" href="https://biotools.readthedocs.io/en/latest/curators_guide.html#version-otherid"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+												<div class="col-sm-9">
+													<input ng-model="software.otherID[$index].version" type="text" class="form-control" name="version" validate-edit-resource-field index={{$index}}>
+													<label class="help-block" ng-repeat="error in otherIdDetailForm.version.errorMessages" bo-text="error"></label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div ng-class="{'has-error': true};">
+										<label class="help-block" style="margin-left: 20px;" ng-repeat="error in otherIdForm.errorMessages" bo-text="error"></label>
+									</div>
+								</ng-form>
+							</div>
+							<!-- Add links -->
+							<div class="form-group" style="padding-top:7px;">
+								<a href="" ng-show="!meta.function.visibility" ng-click="addButtonClick('otherID', software, true, true)">Add other ID info</a>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</form>

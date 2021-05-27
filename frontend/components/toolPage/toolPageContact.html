@@ -1,0 +1,15 @@
+<!-- Divider line -->
+<div class="tool-page-diver-label">
+	<span>Contacts</span>
+</div>
+<!-- Documentation cards -->
+<div class="row tool-page-row">
+	<div ng-repeat="contact in software.contact">
+		<div tool-page-contact-callout
+		name="contact.name" 
+		phone="contact.tel" 
+		email="contact.email" 
+		url="contact.url"
+		color="#0B486B"></div>
+	</div>
+</div>

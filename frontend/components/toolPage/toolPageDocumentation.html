@@ -1,0 +1,18 @@
+<!-- Divider line -->
+<div class="tool-page-diver-label">
+	<span>Documentation</span>
+</div>
+<!-- Documentation cards -->
+<div class="row tool-page-row">
+	<div ng-repeat="documentation in software.documentation">
+		<div tool-page-new-link-callout 
+			url="documentation.url" 
+			types="documentation.type "
+			note="documentation.note"
+			color="#EB7B59" 
+			cssclass="documentation-element"
+			hovertext="Documentation type"
+			toshow = "{{(documentation.note != null && documentation.note.length > 0).toString()}}">
+		</div>
+	</div>
+</div>

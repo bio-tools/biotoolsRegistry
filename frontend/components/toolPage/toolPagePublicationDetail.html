@@ -1,0 +1,19 @@
+<!-- Divider line -->
+<div class="tool-page-diver-label">
+	<span>Publication details</span>
+</div>
+<div ng-repeat="publication in software.publication">
+	<div>
+		<div class="row">
+				<div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+					<span data-badge-type='donut' class='altmetric-embed pull-left' data-badge-popover='right' data-hide-no-mentions="true" data-doi='{{publication.doi}}' data-pmid='{{ publication.pmid }}'></span>
+					<span class="__dimensions_badge_embed__ pull-left" data-doi="{{publication.doi}}" data-pmid=
+					"{{publication.pmid}}" data-legend="hover-right" data-style="small_circle" style="margin-left: 16px;"></span>
+				</div>
+				<div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+					<div publication-detail-callout publication="publication"></div>
+				</div>
+		</div>
+		<br>
+	</div>
+</div>

@@ -1,0 +1,307 @@
+<div ui-view>
+	<div class="container">
+		<div class="spinner" ng-if="!software.name" style="text-align:center;"><i class="fa fa-spinner fa-5x fa-spin icon-cog" style="margin:40px;display:inline-block;"></i></div>
+		<div ng-if="software.name">
+			<div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1" style="margin-bottom:10px;">
+				<div id="summary">
+					<div class="row">
+						<div class="col-xs-12 col-sm-8 col-md-9">
+							<div class="row">
+								<h1>{{ software.name }} <small ng-show="software.version != '1'">v.{{ software.version }}</small> <a ng-show="software.docs.docsDownload" href="{{ software.docs.docsDownload }}"><button class="btn btn-primary btn-xs btn-slim">Download</button></a> <a ng-if="user_service.get_affiliation() == software.affiliation" ui-sref="edit.affiliation.name.version({affiliation: software.affiliation, name: software.name, version: software.version})"><button class="btn btn-primary btn-xs btn-slim">Edit this record</button></a></h1>
+								<p ng-show="software.homepage"><a href="{{ software.homepage }}" target="_blank">{{ software.homepage }}</a></p>
+								<p style="margin-bottom:0px;" ng-show="software.description">{{ software.description }}</p>
+								<p><ul class="list-inline">
+									 <li ng-repeat="topic in software.topic" style="margin-right:5px;"><a class="badge" href="{{ topic.uri }}" target="_blank">{{ topic.term }}</a></li>
+								</ul></p>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-4 col-md-3 align-xs" style="text-align:right;margin-top:20px;">
+							<div class="row">
+								<div class="form-group" style="margin-bottom: 3px;">
+									<span class="label label-primary-orange">{{ software.cost }}</span>
+								</div>
+								<div class="form-group" style="margin-bottom: 3px;">
+									<span class="label label-primary">{{ software.license }}</span>
+								</div>
+								<div class="form-group" style="margin-bottom: 3px;">
+									<span class="label label-default">{{ software.maturity }}</span>
+								</div>
+								<div style="color:#5cb85c;margin-top:10px;">
+									<span ng-if="software.interface.length > 0">
+										<span ng-repeat="interface in software.interface" class="pull-right pull-left-xs" style="margin-left:10px;">
+											<!-- NEW_ENUMS -->
+											<i style="font-size:150%;" class="fa fa-3x fa-terminal" ng-show="interface.interfaceType == 'Command line'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-globe" ng-show="interface.interfaceType == 'Web UI'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-desktop" ng-show="interface.interfaceType == 'Desktop GUI'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-envelope-o" ng-show="interface.interfaceType == 'SOAP WS'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-link" ng-show="interface.interfaceType == 'HTTP WS'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-magnet" ng-show="interface.interfaceType == 'API'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-puzzle-piece" ng-show="interface.interfaceType == 'QL'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<!-- OLD_ENUMS -->
+											<!-- <i style="font-size:150%;" class="fa fa-3x fa-terminal" ng-show="interface.interfaceType == 'Command line'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-desktop" ng-show="interface.interfaceType == 'Desktop GUI'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-terminal" ng-show="interface.interfaceType == 'SOAP WS'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-terminal" ng-show="interface.interfaceType == 'REST API'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-cube" ng-show="interface.interfaceType == 'Web UI'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-terminal" ng-show="interface.interfaceType == 'URL'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-terminal" ng-show="interface.interfaceType == 'API'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-terminal" ng-show="interface.interfaceType == 'SQL'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-terminal" ng-show="interface.interfaceType == 'SPARQL'" tooltips tooltip-content="Interface: {{ interface.interfaceType }}" tooltip-side="top"></i> -->
+										</span>
+									</span>
+									<span style="color:#337ab7;" ng-if="software.platform.length > 0">
+										<span ng-repeat="platform in software.platform track by $index" class="pull-right pull-left-xs" style="margin-left:10px;">
+											<i style="font-size:150%;" class="fa fa-3x fa-apple" ng-show="platform == 'Mac'" tooltips tooltip-side="top" tooltip-content="Platform: {{ platform }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-linux" ng-show="platform == 'Linux'" tooltips tooltip-side="top" tooltip-content="Platform: {{ platform }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-windows" ng-show="platform == 'Windows'" tooltips tooltip-side="top" tooltip-content="Platform: {{ platform }}"></i>
+											<!-- OLD_ENUMS -->
+											<!-- <i style="font-size:150%;" class="fa fa-3x fa-linux" ng-show="platform == 'Unix'" tooltips tooltip-side="top" tooltip-content="Platform: {{ platform }}"></i> -->
+										</span>
+									</span>
+									<span style="color:#F07603;" ng-if="software.resourceType.length > 0">
+										<span ng-repeat="resourceType in software.resourceType track by $index" class="pull-right pull-left-xs" style="margin-left:10px;">
+											<!-- NEW_ENUMS -->
+											<i style="font-size:150%;" class="fa fa-3x fa-database" ng-show="resourceType == 'Database'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-wrench" ng-show="resourceType == 'Tool'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-server" ng-show="resourceType == 'Service'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-code-fork" ng-show="resourceType == 'Workflow'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-cogs" ng-show="resourceType == 'Platform'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-briefcase" ng-show="resourceType == 'Container'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-files-o" ng-show="resourceType == 'Library'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<!-- OLD_ENUMS -->
+											<!-- <i style="font-size:150%;" class="fa fa-3x fa-database" ng-show="resourceType == 'Dataset'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-database" ng-show="resourceType == 'Database'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-cloud" ng-show="resourceType == 'Framework'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-legal" ng-show="resourceType == 'Library'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-key" ng-show="resourceType == 'Other'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-inbox" ng-show="resourceType == 'Suite'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-money" ng-show="resourceType == 'Widget'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-music" ng-show="resourceType == 'Virtual machine'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-wrench" ng-show="resourceType == 'Tool'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-wrench" ng-show="resourceType == 'Tool (query and retrieval)'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-wrench" ng-show="resourceType == 'Tool (analysis)'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-wrench" ng-show="resourceType == 'Tool (deposition)'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-wrench" ng-show="resourceType == 'Tool (visualiser)'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-wrench" ng-show="resourceType == 'Tool (utility)'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i>
+											<i style="font-size:150%;" class="fa fa-3x fa-eraser" ng-show="resourceType == 'Workflow'" tooltips tooltip-side="top" tooltip-content="Resource Type: {{ resourceType }}"></i> -->
+										</span>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>				
+				</div>
+				<div id="function" class="attribute-info-panel">
+					<p ng-if="!software.function">No information</p>
+					<!-- DESKTOP -->
+					<div style="margin-bottom:30px;" class="row hidden-xs" ng-repeat="function in software.function">
+						<div class="col-md-12">
+							<div class="row flex-vertical">
+								<div class="col-sm-4 col-md-4 col-lg-4">
+									<div class="row flex-vertical" ng-repeat="input in function.input" style="margin:0px;">
+										<div class="col-sm-10 col-md-10 text-center">
+											<h5 class="function-image-element" style="padding-top:5px;padding-bottom:5px;margin:0px;"><a href="{{ input.dataType.uri }}">{{ input.dataType.term }}</a><span ng-show="input.dataFormat.length > 0"><br>(<span ng-repeat="dataFormat in input.dataFormat"><a href="{{ dataFormat.uri }}">{{ dataFormat.term }}</a><span ng-show="!$last">, </span></span>)</span> <i class="fa fa-info-circle hidden-xs hidden-sm" ng-show="input.dataDescription" tooltips tooltip-side="top" tooltip-content="{{ input.dataDescription }}"></i></h5>
+											<div style="margin-bottom:5px;" ng-show="!$last"></div>
+										</div>
+										<div class="col-sm-2 col-md-2 text-center">
+											<div class="row">
+												<i class="fa fa-2x fa-long-arrow-right"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-4 col-md-4 col-lg-4 text-center function-image-element" style="align-self:stretch;display:flex;justify-content: center;flex-direction: column;text-align: center;">
+									<ul class="list-unstyled" style="margin-bottom:0px;">
+										<li ng-repeat="functionName in function.functionName"><h5><a href="{{ functionName.uri }}">{{ functionName.term }}</a> <i class="fa fa-info-circle hidden-xs hidden-sm" ng-show="function.functionDescription" tooltips tooltip-side="top" tooltip-content="{{ function.functionDescription }}"></i></h5></li>
+									</ul>
+								</div>
+								<div class="col-sm-4 col-md-4 col-lg-4 text-center">
+									<div class="row flex-vertical" ng-repeat="output in function.output" style="margin:0px;">
+										<div class="col-sm-2 col-md-2">
+											<div class="row">
+												<i class="fa fa-2x fa-long-arrow-right"></i>
+											</div>
+										</div>
+										<div class="col-sm-10 col-md-10">
+											<h5 class="function-image-element" style="padding-top:5px;padding-bottom:5px;margin:0px;"><a href="{{ output.dataType.uri }}">{{ output.dataType.term }}</a><span ng-show="output.dataFormat.length > 0"><br>(<span ng-repeat="dataFormat in output.dataFormat"><a href="{{ dataFormat.uri }}">{{ dataFormat.term }}</a><span ng-show="!$last">, </span></span>)</span> <i class="fa fa-info-circle hidden-xs hidden-sm" ng-show="output.dataDescription" tooltips tooltip-side="top" tooltip-content="{{ output.dataDescription }}"></i></h5>
+											<div style="margin-bottom:5px;" ng-show="!$last"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- MOBILE -->
+					<div style="margin-bottom:30px;" class="row visible-xs-block" ng-repeat="function in software.function">
+						<div class="col-xs-12 col-sm-4 col-md-4 text-left vcenter" style="margin-bottom:10px;">
+							<div class="row" ng-repeat="input in function.input">
+								<div class="col-xs-8 col-md-11 vcenter text-center">
+									<h5 class="function-image-element" style="padding:5px 10px 5px 10px;margin:0px;"><a href="{{ input.dataType.uri }}">{{ input.dataType.term }}</a><span ng-show="input.dataFormat.length > 0"><br>(<span ng-repeat="dataFormat in input.dataFormat"><a href="{{ dataFormat.uri }}">{{ dataFormat.term }}</a><span ng-show="!$last">, </span></span>)</span></h5>
+									<div style="margin-bottom:5px;" ng-show="!$last"></div>
+								</div>
+								<div class="col-xs-2 col-md-1 vcenter">
+									<div class="row">
+										<i class="fa fa-2x fa-long-arrow-right" ></i>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-4 col-md-4 text-center vcenter function-image-element" style="margin-bottom:10px;">
+							<ul class="list-unstyled">
+								<li ng-repeat="functionName in function.functionName"><h5><a href="{{ functionName.uri }}">{{ functionName.term }}</a></h5></li>
+							</ul>
+						</div>
+						<div class="col-xs-12 col-sm-4 col-md-4 text-right vcenter">
+							<div class="row" ng-repeat="output in function.output">
+								<div class="col-xs-2 col-md-1 vcenter">
+									<div class="row">
+										<i class="fa fa-2x fa-long-arrow-right" ></i>
+									</div>
+								</div>
+								<div class="col-xs-8 col-md-11 vcenter text-center">
+									<h5 class="function-image-element" style="padding:5px 10px 5px 10px;margin:0px;"><a href="{{ output.dataType.uri }}">{{ output.dataType.term }}</a><span ng-show="output.dataFormat.length > 0"><br>(<span ng-repeat="dataFormat in output.dataFormat"><a href="{{ dataFormat.uri }}">{{ dataFormat.term }}</a><span ng-show="!$last">, </span></span>)</span></h5>
+									<div style="margin-bottom:5px;" ng-show="!$last"></div>
+								</div>
+							</div>
+						</div>
+						<hr ng-show="!$last">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div id="documentation" class="attribute-info-panel">
+							<h4>DOCUMENTATION</h4>
+							<p ng-if="!software.docs.docsHome && !software.docs.docsTermsOfUse && !software.docs.docsDownload && !software.docs.docsCitationInstructions">No information</p>
+							<p ng-if="software.docs.docsHome"><a href="{{ software.docs.docsHome }}">Read the docs</a></p>
+							<p ng-if="software.docs.docsTermsOfUse"><a href="{{ software.docs.docsTermsOfUse }}">Terms of use</a></p>
+							<p ng-if="software.docs.docsCitationInstructions"><a href="{{ software.docs.docsCitationInstructions }}">Citation instructions</a></p>
+							<p ng-if="software.docs.docsDownloadSource"><a href="{{ software.docs.docsDownloadSource }}">Download source</a></p>
+							<p ng-if="software.docs.docsDownloadBinaries"><a href="{{ software.docs.docsDownloadBinaries }}">Download binaries</a></p>
+							<p ng-if="software.docs.docsGithub"><a href="{{ software.docs.docsGithub }}">Github page</a></p>
+
+							<!-- <p ng-if="software.docs.docsDownload"><a class="btn btn-default btn-sm" href="{{ software.docs.docsDownload }}">Download</a></p> -->
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div id="publications" class="attribute-info-panel">
+							<h4>PUBLICATIONS</h4>
+							<p ng-if="!software.publications || software.publications.publicationsPrimaryID == 'None'">No information</p>
+							<ul ng-if="software.publications && software.publications.publicationsPrimaryID != 'None'">
+								<li><div insert-publication-link publication="software.publications.publicationsPrimaryID"></div></li></li>
+								<li ng-repeat="publication in software.publications.publicationsOtherID"><div insert-publication-link publication="publication"></div></li></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div id="contact" class="attribute-info-panel">
+							<h4>CONTACT</h4>
+							<p ng-if="!software.contact">No information</p>
+							<div  ng-if="software.contact">
+								<ul  ng-repeat="contact in software.contact">
+									<li>
+										<p class="list-group-item-heading" ng-show="contact.contactName || (contact.contactEmail && !contact.contactRole)"><a href="mailto:{{ contact.contactEmail }}"><span ng-show="!contact.contactName">Email</span>{{ contact.contactName }}</a></p>
+										<p class="list-group-item-text" ng-show="contact.contactURL"><a href="{{ contact.contactURL }}">{{ contact.contactURL }}</a></p>
+										<p class="list-group-item-text" ng-show="contact.contactTel">{{ contact.contactTel }}</p>
+										<p class="list-group-item-text" ng-show="contact.contactRole"><a href="mailto:{{ contact.contactEmail }}" ng-show="!contact.contactName && contact.contactEmail"><i><span ng-repeat="role in contact.contactRole">{{ role }}<span ng-show="!$last">, </span></span></i></a><i ng-show="contact.contactName || !contact.contactEmail"><span ng-repeat="role in contact.contactRole">{{ role }}<span ng-show="!$last">, </span></span></i></p>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div id="credits" class="attribute-info-panel">
+							<h4>CREDITS</h4>
+								<p ng-if="!software.credits">No information</p>
+								<h5 ng-show="software.credits.creditsDeveloper">Developer</h5>
+								<ul ng-show="software.credits.creditsDeveloper">
+									<li ng-repeat="credit in software.credits.creditsDeveloper">{{ credit }}</li>
+								</ul>
+								<h5 ng-show="software.credits.creditsContributor">Contributor</h5>
+								<ul ng-show="software.credits.creditsContributor">
+									<li ng-repeat="credit in software.credits.creditsContributor">{{ credit }}</li>
+								</ul>
+								<h5 ng-show="software.credits.creditsInstitution">Institution</h5>
+								<ul ng-show="software.credits.creditsInstitution">
+									<li ng-repeat="credit in software.credits.creditsInstitution">{{ credit }}</li>
+								</ul>
+								<h5 ng-show="software.credits.creditsInfrastructure">Infrastructure</h5>
+								<ul ng-show="software.credits.creditsInfrastructure">
+									<li ng-repeat="credit in software.credits.creditsInfrastructure">{{ credit }}</li>
+								</ul>
+								<h5 ng-show="software.credits.creditsFunding">Funding</h5>
+								<ul ng-show="software.credits.creditsFunding">
+									<li ng-repeat="credit in software.credits.creditsFunding">{{ credit }}</li>
+								</ul>
+						</div>
+					</div>
+				</div>
+				<div id="supplementary" class="attribute-info-panel">
+					<h4>SUPPLEMENTARY</h4>
+					<div class="row">
+						<div class="col-md-12" ng-if="!software.sourceRegistry && !software.canonicalID && !software.mirror && !software.elixirInfo && !software.uses && !software.collection">
+							<p>No information</p>
+						</div>
+						<div class="col-md-3" ng-show="software.sourceRegistry">
+							<h5><a href="{{ software.sourceRegistry }}">Source registry</a></h5>
+						</div>
+						<div class="col-md-3" ng-show="software.canonicalID">
+							<h5>Canonical ID:</h5>
+							<p>{{ software.canonicalID }}</p>
+						</div>
+						<div class="col-md-3" ng-show="software.mirror.length > 0">
+							<h5>Mirror<span ng-show="software.mirror.length > 1">(s)</span>:</h5>
+							<ul>
+								 <li ng-repeat="mirror in software.mirror"><a href="{{ mirror }}">{{ mirror }}</a></li>
+							</ul>
+						</div>
+						<div class="col-md-3" ng-show="software.elixirInfo">
+							<h5>ELIXIR Info:</h5>
+							<p>{{ software.elixirInfo.elixirStatus }}</p>
+							<p>Node: {{ software.elixirInfo.elixirNode }}</p>
+						</div>
+						<div class="col-md-3" ng-show="software.language.length > 0">
+							<h5>Language<span ng-show="software.language.length > 1">(s)</span>:</h5>
+							<ul>
+								 <li ng-repeat="language in software.language">{{ language }}</li>
+							</ul>
+						</div>
+						<div class="col-md-3" ng-show="software.collection.length > 0">
+							<h5>Collection<span ng-show="software.collection.length > 1">(s)</span>:</h5>
+							<ul>
+								<li ng-repeat="collection in software.collection">{{ collection }}</li>
+							</ul>
+						</div>
+						<div class="col-md-6" ng-show="software.uses.length > 0">
+							<h5>Uses:</h5>
+							<ul>
+								 <li ng-repeat="uses in software.uses">{{ uses.usesName }} <small ng-show="uses.usesVersion">v.{{ uses.usesVersion }}</small><br>{{ uses.usesHomepage }}</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div id="json" class="attribute-info-panel">
+					<h4>GET THIS RECORD</h4>
+					<div class="row">
+						<div class="col-md-12">
+							<button class="btn btn-primary btn-xs hidden-xs" ng-click="collapseJSON = !collapseJSON"><span ng-show="collapseJSON">Hide JSON</span><span ng-show="!collapseJSON">Show JSON</span></button>
+							<button class="btn btn-primary btn-sm visible-xs" ng-click="collapseJSON = !collapseJSON"><span ng-show="collapseJSON">Hide JSON</span><span ng-show="!collapseJSON">Show JSON</span></button>
+							<a href="javascript:void(0)" class="btn btn-default btn-xs hidden-xs" ng-click="downloadTool(false)" style="margin-left:10px;">Download JSON</a>
+							<a href="javascript:void(0)" class="btn btn-default btn-xs hidden-xs" ng-click="downloadTool(true)" style="margin-left:10px;">Download pretty JSON</a>
+							
+							<div class="clearfix"></div>
+							<div class="row" uib-collapse="!collapseJSON" style="margin-top:10px;">
+								<div class="col-md-12">
+									<pre>{{ software | json }}</pre>
+									<a href="javascript:void(0)" class="btn btn-default btn-sm pull-right" ng-click="downloadTool(true)" style="margin-left:10px;">Download pretty JSON</a>
+									<a href="javascript:void(0)" class="btn btn-default btn-sm pull-right" ng-click="downloadTool(false)">Download JSON</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

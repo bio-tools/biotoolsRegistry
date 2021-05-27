@@ -1,0 +1,762 @@
+[
+	{
+		"blockName": "Basic and mandatory information",
+		"expanded": true,
+		"fields": [
+			{
+				"attrName": "name",
+				"text": "Name",
+				"type": "text",
+				"maxlength": "50",
+				"pattern": "^[A-Za-z0-9:;,._-]+$",
+				"characters": "letters digits . , - _ : ;",
+				"required": true,
+				"description": "Resource name",
+				"group": "Admin"
+			},
+			{
+				"attrName": "version",
+				"text": "Version",
+				"type": "text",
+				"description": "Resource version",
+				"group": "Admin"
+			},
+			{
+				"attrName": "description",
+				"text": "Description",
+				"type": "text",
+				"required": true,
+				"description": "Short description of the resource in free text",
+				"width": "30%",
+				"group": "Science"
+			},
+			{
+				"attrName": "function",
+				"text": "Function",
+				"type": "complex",
+				"required": true,
+				"width":"30%",
+				"multipleVal": "true",
+				"description": "Scientific function of the resource (preferably EDAM term)",
+				"group": "Science",
+				"fields": [
+					{
+						"attrName": "functionDescription",
+						"text": "Function description",
+						"type": "text",
+						"description": "Short description of the function in free text",
+						"group": "Science"
+					},
+					{
+						"attrName": "functionHandle",
+						"text": "Function handle",
+						"type": "text",
+						"description": "One of WSDL operation name (SOAP services), URL scheme (REST services) or option/flag (command-line)",
+						"group": "Usage"
+					},
+					{
+						"attrName": "functionName",
+						"text": "Function name",
+						"type": "ontology",
+						"ontologyType": "EDAM_operation",
+						"required": "true",
+						"multipleVal": "true",
+						"description": "Name of the function (preferably EDAM operation)",
+						"group": "Science"
+					},
+					{
+						"attrName": "input",
+						"text": "Input",
+						"type": "complex",
+						"description": "Input specification (EDAM terms)",
+						"multipleVal": "true",
+						"group": "Science",
+						"fields": [
+							{
+								"attrName": "dataType",
+								"text": "Data type",
+								"type": "ontology",
+								"ontologyType": "EDAM_data",
+								"required": "true",
+								"description": "Type of data (preferably EDAM term)",
+								"group": "Science"
+							},
+							{
+								"attrName": "dataFormat",
+								"text": "Data format",
+								"type": "ontology",
+								"ontologyType": "EDAM_format",
+								"multipleVal": "true",
+								"description": "Allowed format(s) of the data (preferably EDAM terms)",
+								"group": "Science"
+							},
+							{
+								"attrName": "dataHandle",
+								"text": "Data handle",
+								"type": "text",
+								"description": "Parameter identifier, e.g. command-line flag, parameter name etc.",
+								"group": "Science"
+							},
+							{
+								"attrName": "dataDescription",
+								"text": "Data description",
+								"type": "text",
+								"description": "Concise textual description of the data.",
+								"group": "Science"
+							}
+						]
+					},
+					{
+						"attrName": "output",
+						"text": "Output",
+						"type": "complex",
+						"description": "Output specification (EDAM terms)",
+						"multipleVal": "true",
+						"group": "Science",
+						"fields": [
+							{
+								"attrName": "dataType",
+								"text": "Data type",
+								"type": "ontology",
+								"ontologyType": "EDAM_data",
+								"required": "true",
+								"description": "Type of data (preferably EDAM term)",
+								"group": "Science"
+							},
+							{
+								"attrName": "dataFormat",
+								"text": "Data format",
+								"type": "ontology",
+								"ontologyType": "EDAM_format",
+								"multipleVal": "true",
+								"description": "Allowed format(s) of the data (preferably EDAM terms)",
+								"group": "Science"
+							},
+							{
+								"attrName": "dataHandle",
+								"text": "Data handle",
+								"type": "text",
+								"description": "Parameter identifier, e.g. command-line flag, parameter name etc.",
+								"group": "Science"
+							},
+							{
+								"attrName": "dataDescription",
+								"text": "Data description",
+								"type": "text",
+								"description": "Concise textual description of the data.",
+								"group": "Science"
+							}
+						]
+					}
+				]
+			},
+			{
+				"attrName": "topic",
+				"text": "Topic",
+				"type": "ontology",
+				"ontologyType": "EDAM_topic",
+				"required": true,
+				"multipleVal": "true",
+				"description": "General scientific domain of the resource (preferably EDAM term)",
+				"group": "Science"
+			},
+			{
+				"attrName": "homepage",
+				"text": "Homepage URL",
+				"type": "url",
+				"required": "true",
+				"description": "Resource homepage (URL)",
+				"group": "Admin"
+			},
+			{
+				"attrName": "contact",
+				"text": "Contact",
+				"type": "complex",
+				"description": "Primary points of contact, e.g. helpdesk or an individual",
+				"required": "true",
+				"multipleVal": "true",
+				"group": "Admin",
+				"fields": [
+					{
+						"attrName": "contactName",
+						"text": "Name",
+						"type": "text",
+						"description": "Name of contact",
+						"group": "Admin"
+					},
+					{
+						"attrName": "contactEmail",
+						"text": "E-mail",
+						"type": "email",
+						"description": "Email address of contact",
+						"required": "true",
+						"group": "Admin"
+					},
+					{
+						"attrName": "contactURL",
+						"text": "URL",
+						"type": "url",
+						"description": "URL of contact",
+						"group": "Admin"
+					},
+					{
+						"attrName": "contactTel",
+						"text": "Telephone number",
+						"type": "number",
+						"description": "Telephone number of contact",
+						"group": "Admin"
+					},
+					{
+						"attrName": "contactRole",
+						"text": "Role of contact",
+						"type": "enum",
+						"multipleVal": "true",
+						"options": [
+							{
+								"option": "General"
+							},
+							{
+								"option": "Developer"
+							},
+							{
+								"option": "Technical"
+							},
+							{
+								"option": "Scientific"
+							},
+							{
+								"option": "Helpdesk"
+							}
+						],
+						"description": "",
+						"group": "Admin"
+					}
+				]
+			},
+			{
+				"attrName": "resourceType",
+				"text": "Resource type",
+				"type": "enum",
+				"required": "true",
+				"multipleVal": "true",
+				"description": "Basic resource type: Tool (query and retrieval), Tool (analysis), Tool (deposition), Tool (visualiser), Tool (utility), Database, Framework, Library, Suite, Widget, Virtual machine or Other",
+				"options": [
+					{"option": "Dataset"},
+					{"option": "Database"},
+					{"option": "Framework"},
+					{"option": "Library"},
+					{"option": "Other"},
+					{"option": "Suite"},
+					{"option": "Widget"},
+					{"option": "Virtual machine"},
+					{"option": "Tool"},
+					{"option": "Tool (query and retrieval)"},
+					{"option": "Tool (analysis)"},
+					{"option": "Tool (deposition)"},
+					{"option": "Tool (visualiser)"},
+					{"option": "Tool (utility)"},
+					{"option": "Workflow"}
+				],
+				"group": "Usage"
+			},
+			{
+				"attrName": "interface",
+				"text": "Interface",
+				"type": "complex",
+				"required": "false",
+				"multipleVal": "true",
+				"required": true,
+				"description": "Resource interfaces e.g. Web UI, Command line etc.",
+				"fields": [
+					{
+						"attrName": "interfaceType",
+						"text": "Interface",
+						"type": "enum",
+						"required": true,
+						"description": "Resource interface type: Command line, Desktop GUI, SOAP WS, REST API, Web UI, URL, API, SQL or SPARQL",
+						"options": [
+							{"option": "Command line"},
+							{"option": "Desktop GUI"},
+							{"option": "SOAP WS"},
+							{"option": "REST API"},
+							{"option": "Web UI"},
+							{"option": "URL"},
+							{"option": "API"},
+							{"option": "SQL"},
+							{"option": "SPARQL"}
+						],
+						"group": "Usage"
+					},
+					{
+						"attrName": "interfaceDocs",
+						"text": "Documentation",
+						"type": "url",
+						"description": "Interface documentation (URL)",
+						"group": "Usage"
+					},
+					{
+						"attrName": "interfaceSpecURL",
+						"text": "Specification URL",
+						"type": "url",
+						"description": "Link to machine-readable description of the interface (URL)",
+						"group": "Usage"
+					},
+					{
+						"attrName": "interfaceSpecFormat",
+						"text": "Specification format",
+						"type": "enum",
+						"description": "Machine-readable interface description format: WSDL, WSDL2, WADL or Swagger",
+						"options": [
+							{
+								"option": "WSDL"
+							},
+							{
+								"option": "WSDL2"
+							},
+							{
+								"option": "WADL"
+							},
+							{
+								"option": "Swagger"
+							}
+						],
+						"group": "Usage"
+					}
+				],
+				"group": "Usage"
+			},
+			{
+				"attrName": "accesibility",
+				"text": "Accesibility",
+				"type": "enum",
+				"description": "Whether resource is accessible to all or not: Public or Private",
+				"options": [
+					{"option": "Public"},
+					{"option": "Private"}
+				],
+				"group": "Usage"
+			},
+			{
+				"attrName": "publications",
+				"text": "Publications",
+				"type": "complex",
+				"required": "true",
+				"description": "Publications relevant to the resource (PMCID, PMID or DOI)",
+				"fields": [
+					{
+						"attrName": "publicationsPrimaryID",
+						"text": "ID of the primary publication",
+						"type": "text",
+						"required": "true",
+						"description": "PMCID, PMID or DOI of the primary publication",
+						"group": "Science"
+					},
+					{
+						"attrName": "publicationsOtherID",
+						"text": "ID of other publications",
+						"type": "text",
+						"description": "PMCID, PMID or DOI of other relevant publications",
+						"multipleVal": "true",
+						"group": "Science"
+					}
+				],
+				"group": "Science"
+			}
+		]
+	},
+	{
+		"blockName": "Documentation and additional information",
+		"fields": [
+			{
+				"attrName": "affiliation",
+				"text": "Affiliation",
+				"type": "text",
+				"description": "",
+				"multipleVal": "false",
+				"group": "Admin",
+				"readonly": true
+			},
+			{
+				"attrName": "collection",
+				"text": "Collection",
+				"type": "text",
+				"description": "Names of collections of which the resource is a part",
+				"multipleVal": "true",
+				"group": "Admin"
+			},
+			{
+				"attrName": "mirror",
+				"text": "Mirror",
+				"type": "url",
+				"description": "Mirror homepage (URL)",
+				"multipleVal": "true",
+				"group": "Admin"
+			},
+			{
+				"attrName": "uses",
+				"text": "Uses",
+				"type": "complex",
+				"multipleVal": "true",
+				"description": "Other resources this resource uses, e.g. as a data source, or auxillary program",
+				"fields": [
+					{
+						"attrName": "usesName",
+						"text": "Name",
+						"type": "text",
+						"required": true,
+						"description": "Name of a resource that this resource uses",
+						"group": "Science"
+					},
+					{
+						"attrName": "usesHomepage",
+						"text": "Homepage",
+						"type": "url",
+						"description": "Homepage of a resource that this resource uses",
+						"group": "Science"
+					},
+					{
+						"attrName": "usesVersion",
+						"text": "Version",
+						"type": "text",
+						"description": "Version number of a resource that this resources uses",
+						"group": "Science"
+					}
+				],
+				"group": "Admin"
+			},
+			{
+				"attrName": "sourceRegistry",
+				"text": "Source registry",
+				"type": "url",
+				"description": "Link to the registry (or other collection) from which the software was imported (URL)",
+				"group": "Admin"
+			},
+			{
+				"attrName": "canonicalID",
+				"text": "Canonical ID",
+				"type": "text",
+				"description": "Canonical Identifier (typically a URI) of the resource, if one is available",
+				"group": "Admin"
+			},
+			{
+				"attrName": "cost",
+				"text": "Cost",
+				"type": "enum",
+				"description": "Cost incurred by the resource: Free, Free with restrictions or Commercial",
+				"options": [
+					{"option":"Free"},
+					{"option":"Free with restrictions"},
+					{"option":"Commercial"}
+				],
+				"group": "Admin"
+			},
+			{
+				"attrName": "elixirInfo",
+				"text": "ELIXIR info",
+				"type": "complex",
+				"description": "Information specific to ELIXIR services",
+				"fields": [
+					{
+						"attrName": "elixirStatus",
+						"text": "ELIXIR status",
+						"type": "enum",
+						"description": "ELIXIR Core Service",
+						"options": [
+							{
+								"option": "ELIXIR Core Service"
+							},
+							{
+								"option": "ELIXIR Named Service"
+							}
+						],
+						"group": "Admin"
+					},
+					{
+						"attrName": "elixirNode",
+						"text": "ELIXIR node",
+						"type": "enum",
+						"description": "Name of one of countries participating in ELIXIR",
+						"required": true,
+						"group": "Admin",
+						"options": [
+							{"option": "Belgium"},
+							{"option": "Czech Republic"},
+							{"option": "Denmark"},
+							{"option": "EMBL-EBI"},
+							{"option": "Estonia"},
+							{"option": "Finland"},
+							{"option": "France"},
+							{"option": "Greece"},
+							{"option": "Israel"},
+							{"option": "Italy"},
+							{"option": "Netherlands"},
+							{"option": "Norway"},
+							{"option": "Portugal"},
+							{"option": "Slovenia"},
+							{"option": "Spain"},
+							{"option": "Sweden"},
+							{"option": "Switzerland"},
+							{"option": "UK"}
+						]
+					}
+				],
+				"group": "Admin"
+			},
+			{
+				"attrName": "docs",
+				"text": "Documentation",
+				"type": "complex",
+				"description": "Link to the documentation",
+				"fields": [
+					{
+						"attrName": "docsHome",
+						"text": "Main page of documentation",
+						"type": "url",
+						"description": "Link to the documentation",
+						"multipleVal": false,
+						"group": "Admin"
+					},
+					{
+						"attrName": "docsTermsOfUse",
+						"text": "Terms of Use",
+						"type": "url",
+						"description": "Link to the Terms Of Use",
+						"group": "Admin"
+					},
+					{
+						"attrName": "docsDownload",
+						"text": "Download documentation",
+						"type": "url",
+						"description": "Link to the download instructions",
+						"group": "Admin"
+					},
+					{
+						"attrName": "docsCitationInstructions",
+						"text": "Citation instructions",
+						"type": "url",
+						"description": "Link to the citation instructions",
+						"group": "Admin"
+					},
+					{
+						"attrName": "docsDownloadSource",
+						"text": "Download source",
+						"type": "url",
+						"description": "Source code downloads page (URL)",
+						"group": "Admin"
+					},
+					{
+						"attrName": "docsDownloadBinaries",
+						"text": "Download binaries",
+						"type": "url",
+						"description": "Software binaries downloads page (URL)",
+						"group": "Admin"
+					},
+					{
+						"attrName": "docsGithub",
+						"text": "Github page",
+						"type": "url",
+						"description": "Github page (URL)",
+						"group": "Admin"
+					}
+				],
+				"group": "Admin"
+			},
+			{
+				"attrName": "maturity",
+				"text": "Maturity",
+				"description": "Resource maturity: Nascent, Young, Established, Retiring or Extinct",
+				"type": "enum",
+				"options": [
+					{"option": "Nascent"},
+					{"option": "Young"},
+					{"option": "Established"},
+					{"option": "Retiring"},
+					{"option": "Extinct"}
+				],
+				"group": "Usage"
+			},
+			{
+				"attrName": "platform",
+				"text": "Platform",
+				"description": "Platforms supported by a downloadable software package: Mac, Linux, Windows or Unix",
+				"type": "enum",
+				"multipleVal": "true",
+				"options": [
+					{"option": "Mac"},
+					{"option": "Linux"},
+					{"option": "Windows"},
+					{"option": "Unix"}
+				],
+				"group": "Usage"
+			},
+			{
+				"attrName": "language",
+				"text": "Language",
+				"type": "enum",
+				"multipleVal": "true",
+				"description": "Languages (for APIs etc.) or technologies (for Web applications, applets etc.)",
+				"options": [
+					{"option":"ActionScript"},
+					{"option":"Ada"},
+					{"option":"AppleScript"},
+					{"option":"Assembly language"},
+					{"option":"C"},
+					{"option":"C#"},
+					{"option":"C++"},
+					{"option":"COBOL"},
+					{"option":"ColdFusion"},
+					{"option":"D"},
+					{"option":"Delphi"},
+					{"option":"Dylan"},
+					{"option":"Eiffel"},
+					{"option":"Forth"},
+					{"option":"Fortran"},
+					{"option":"Groovy"},
+					{"option":"Haskell"},
+					{"option":"Java"},
+					{"option":"Javascript"},
+					{"option":"LabVIEW"},
+					{"option":"Lisp"},
+					{"option":"Lua"},
+					{"option":"Maple"},
+					{"option":"Mathematica"},
+					{"option":"MATLAB language"},
+					{"option":"MLXTRAN"},
+					{"option":"NMTRAN"},
+					{"option":"Pascal"},
+					{"option":"Perl"},
+					{"option":"PHP"},
+					{"option":"Prolog"},
+					{"option":"Python"},
+					{"option":"R"},
+					{"option":"Racket"},
+					{"option":"REXX"},
+					{"option":"Ruby"},
+					{"option":"SAS"},
+					{"option":"Scala"},
+					{"option":"Scheme"},
+					{"option":"Shell"},
+					{"option":"Smalltalk"},
+					{"option":"SQL"},
+					{"option":"Turing"},
+					{"option":"Verilog"},
+					{"option":"VHDL"},
+					{"option":"Visual Basic"}
+				],
+				"group": "Usage"
+			},
+			{
+				"attrName": "license",
+				"text": "License",
+				"type": "enum",
+				"description": "Software or data usage license",
+				"options": [
+					{"option":"Apache License 2.0"},
+					{"option":"MIT License"},
+					{"option":"GNU General Public License v3"},
+					{"option":"GNU Lesser General Public License v2.1"},
+					{"option":"GNU General Public License v2"},
+					{"option":"GNU Affero General Public License v3"},
+					{"option":"BSD 3-Clause License (Revised)"},
+					{"option":"BSD 2-Clause License"},
+					{"option":"Creative Commons Attribution NonCommerical NoDerivs"},
+					{"option":"Microsoft Public License"},
+					{"option":"Mozilla Public License 2.0"},
+					{"option":"Creative Commons Attribution NoDerivs"},
+					{"option":"Eclipse Public License 1.0"},
+					{"option":"Microsoft Reciprocal License"},
+					{"option":"PHP License 3.0"},
+					{"option":"Creative Commons Attribution 3.0 Unported"},
+					{"option":"Creative Commons Attribution Share Alike"},
+					{"option":"Creative Commons Attribution NonCommercial"},
+					{"option":"Creative Commons Attribution NonCommercial ShareAlike"},
+					{"option":"Apple Public Source License 2.0"},
+					{"option":"ISC License"},
+					{"option":"IBM Public License"},
+					{"option":"GNU Free Documentation License v1.3"},
+					{"option":"Common Public Attribution License Version 1.0"},
+					{"option":"European Union Public License 1.1"},
+					{"option":"ODC Open Database License"},
+					{"option":"Simple Public License 2.0"},
+					{"option":"Creative Commons Attribution-NonCommercial 2.0 Generic"},
+					{"option":"Creative Commons CC0 1.0 Universal"},
+					{"option":"Microsoft Shared Source Community License"},
+					{"option":"Mozilla Public License 1.1"},
+					{"option":"Educational Community License Version 2.0"},
+					{"option":"Creative Commons Attribution 4.0 International"},
+					{"option":"Open Software Licence 3.0"},
+					{"option":"Common Public License 1.0"},
+					{"option":"CeCILL v2"},
+					{"option":"Adaptive Public License 1.0"},
+					{"option":"Non-Profit Open Software License 3.0"},
+					{"option":"Reciprocal Public License 1.5"},
+					{"option":"Open Public License v1.0"},
+					{"option":"ODC Public Domain Dedication and License 1.0"}
+				],
+				"group": "Usage"
+			},
+			{
+				"attrName": "credits",
+				"text": "Credits",
+				"type": "complex",
+				"description": "Entities to credit for the resource, e.g. projects or infrastructures",
+				"fields": [
+					{
+						"attrName": "creditsDeveloper",
+						"text": "Developer",
+						"type": "text",
+						"multipleVal": "true",
+						"description": "Name of person that developed the resource",
+						"group": "Admin"
+					},
+					{
+						"attrName": "creditsContributor",
+						"text": "Contributor",
+						"type": "text",
+						"multipleVal": "true",
+						"description": "Name of person contributing to the resource",
+						"group": "Admin"
+					},
+					{
+						"attrName": "creditsInstitution",
+						"text": "Institution",
+						"type": "text",
+						"multipleVal": "true",
+						"description": "Name of the institution that developed or provide the resource",
+						"group": "Admin"
+					},
+					{
+						"attrName": "creditsInfrastructure",
+						"text": "Infrastructure",
+						"type": "text",
+						"multipleVal": "true",
+						"description": "Research infrastructure in which the resource was developed or provided",
+						"group": "Admin"
+					},
+					{
+						"attrName": "creditsFunding",
+						"text": "Funding",
+						"type": "text",
+						"multipleVal": "true",
+						"description": "Details of grant funding supporting the resource",
+						"group": "Admin"
+					}
+				],
+				"group": "Admin"
+			}
+		]
+	},
+	{
+		"blockName": "Hidden, autogenerated and meta data",
+		"hidden": true,
+		"fields": [
+			{
+				"attrName": "id",
+				"text": "ID",
+				"type": "text",
+				"hidden": true,
+				"group": "Admin"
+			}
+		]
+	}
+]

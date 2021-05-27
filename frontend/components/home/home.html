@@ -1,0 +1,1060 @@
+<div ng-controller="HomeController">
+	
+	
+	
+	<div  class="jumbotron home-summary home-text" >
+		<h1>bio.tools</h1>
+		<p>Essential scientific and technical information about software tools, databases and services for bioinformatics and the life sciences.</p>
+		<div home-search ng-cloak></div>
+
+		
+
+	</div>
+
+	<div class="alert alert-warning" role="alert">
+		<h4>bio.tools COVID-19 related tools</h4>
+		<p class="description-text">
+			See the bio.tools <a ng-href="/t?domain=covid-19">https://covid-19.bio.tools</a>
+			subdomain for a list COVID-19 related tools.
+		</p>
+		<p class="description-text">
+			If you believe any tools are missing, please feel free to update the list as specified in the instructions at <a ng-href="/t?domain=covid-19">https://covid-19.bio.tools</a>.
+		</p>
+		<p class="description-text">
+			You can also browse tools by EDAM concepts from the <a href="" ng-click='navElement("virology-vaccine-design")'>Virology and vaccine design</a> section below.
+		</p>
+		
+	</div>
+
+	<div  class="jumbotron home-text">
+		<h2>What is bio.tools?</h2>
+		<p class="description-text">
+			The use of bioinformatics is ubiquitous within the life sciences.  In <em>bio.tools</em>, we are striving to provide a <span class="bolder-text">comprehensive registry</span> of software and databases, facilitating researchers from across the spectrum of biological and biomedical science to <span class="bolder-text">find</span>, <span class="bolder-text">understand</span>, <span class="bolder-text">utilise</span> and <span class="bolder-text">cite</span> the resources they need in their day-to-day work.  
+		</p>
+		<p class="description-text">
+Everything from simple command-line tools and online services, through to databases and complex, multi-functional analysis workflows is included.  Resources are described in a rigorous semantics and syntax, providing end-users with the convenience of <span class="bolder-text">concise</span>, <span class="bolder-text">consistent</span> and therefore <span class="bolder-text">comparable</span> information.  
+		</p>
+		<p class="description-text">
+Each <em>bio.tools</em> entry is assigned a human-readable, <span class="bolder-text">unique identifier</span> based on the resource name, <em>e.g.</em> <a href="/signalp" target="_blank"><span class="bolder-text">biotools:signalp</span></a>.  These identifiers provide a persistent reference to our <span class="bolder-text">"Tool Cards"</span> of essential information, as well as a means to trace resources and integrate <em>bio.tools</em> data with other resources.
+
+		</p>
+
+		<p class="description-text">
+			All the <em>bio.tools</em> data and technical components are available under <span class="bolder-text">open license</span> and we warmly welcome you to <a href="https://biotools.readthedocs.io/en/latest/what_is_biotools.html#getting-involved-a-quick-start-guide" target="_blank"><span class="bolder-text">get involved</span></a>.  <em>bio.tools</em> development is supported by <a href="https://www.elixir-europe.org/" target="_blank"><span class="bolder-text">ELIXIR</span></a> - the European infrastructure for life science information.
+
+		</p>
+
+		<div class="funding-section">
+
+			<div class="flag">
+				<span><img src="img/euflag.png" alt="European Union Flag" height="50px"></span>
+			</div>
+			<div class="fund-text">
+				<span>bio.tools is supported by ELIXIR through the <a href="http://www.elixir-europe.org/excelerate" target="_blank"> ELIXIR-EXCELERATE grant</a>, which is funded by the European Union Horizon 2020 program under grant agreement <a href="https://cordis.europa.eu/project/rcn/198519_en.html" target="_blank">676559</a>.</span>
+			
+			</div>
+		</div>
+		
+		<div class="about-summary-container">
+		<div class="row">
+			<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+				<div class=" about-summary-cell">
+				<h4>Open Data</h4>
+				<p class="description-text">
+					<em>bio.tools</em> content is freely available to all under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a> license - you are free to share and adapt the data, so long as you give credit and don’t restrict the freedom of others. 
+				</p>
+				</div>
+			</div>
+
+			<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+				<div class=" about-summary-cell">
+				<h4>Open Source</h4>
+				<p class="description-text">
+					<em>bio.tools</em> source code is freely available to all under <a href="http://www.gnu.org/licenses/gpl-3.0.html" target="_blank">GPL-3.0</a> - you are free to share and adapt our software, but you must ensure it remains free for all its users.
+
+				</p>
+				</div>
+			</div>
+
+			<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+				<div class=" about-summary-cell">
+				<h4>Built by You</h4>
+				<p class="description-text">
+					We depend on the goodwill and enthusiasm of our 1000+ (and growing!) contributors - if you develop or provide tools and online services, please <a href="/register">add</a> them after <a href="/signup">signing-up</a>.
+
+				</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			
+			<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+				<div class=" about-summary-cell">
+				<h4>Tool IDs</h4>
+				<p class="description-text">
+					All <em>bio.tools</em> entries are assigned a human-friendly unique identifier, <em>e.g.</em> <a href="/signalp" target="_blank">biotools:signalp</a>.  Once verified, a <em>bio.tools</em> ID provides a stable way to trace resources and integrate <em>bio.tools</em> data with other projects.
+				</p>
+				</div>
+			</div>
+
+			<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+				<div class=" about-summary-cell">
+				<h4>Standard Semantics</h4>
+				<p class="description-text">
+					The scientific function of <em>bio.tools</em> resources can be precisely annotated in defined terms from the <a href="http://github.com/edamontology/edamontology/" target="_blank">EDAM ontology</a>, including common topics, operations, types of data and data formats.
+				</div>
+			</div>
+
+
+			<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+				<div class=" about-summary-cell">
+				<h4>Standard Syntax</h4>
+				<p class="description-text">
+					<em>bio.tools</em> resource descriptions adhere to a rigorous syntax defined by <a href="http://github.com/bio-tools/biotoolsschema" target="_blank">biotoolsSchema</a>, which provides regular expressions, controlled vocabularies and other syntax rules for 50 key attributes.
+				</p>
+				</div>
+			</div>
+
+			
+		</div>
+
+
+		<div class="row">
+
+			<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+				<div class=" about-summary-cell">
+				<h4>Community-driven</h4>
+				<p class="description-text">
+					We rely upon <a href="https://www.elixir-europe.org/communities" target="_blank">scientific communities</a> to improve the terminology and description of resources in different domains of the life sciences - we welcome your help with this <a href="https://biotools.readthedocs.io/en/latest/editors_guide.html" target="_blank">work in progress</a>. 
+				</p>
+				</div>
+			</div>
+
+			<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+				<div class=" about-summary-cell">
+				<h4>Backed by ELIXIR </h4>
+				<p class="description-text">
+					<em>bio.tools</em> is anchored within <a href="https://www.elixir-europe.org/" target="_blank">ELIXIR</a>, the European Infrastructure for Biological Information. <em>bio.tools</em> will remain free, open and maintained in the long term.
+				</p>
+				</div>
+			</div>
+
+			<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+				<div class=" about-summary-cell">
+				<h4>Tools Platform</h4>
+				<p class="description-text">
+					<em>bio.tools</em> is an integral part of the <a href="https://www.elixir-europe.org/platforms/tools" target="_blank">ELIXIR Tools Platform</a>,
+					enabling the development, description, discovery, re-use, deployment and benchmarking of software tools and workflows.
+				</p>
+				</div>
+			</div>
+
+
+			
+		</div>
+		
+
+		<div class="row">
+			<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+				<div class=" about-summary-cell">
+				<h4>API</h4>
+				<p class="description-text">
+					Our Web API provides an easy way to access the <em>bio.tools</em> data, allowing precise or alternatively flexible queries over all fields.  Please see the <a href="https://biotools.readthedocs.io/en/latest/api_reference.html" target="_blank">API reference</a> and <a href="https://biotools.readthedocs.io/en/latest/api_usage_guide.html" target="_blank">API Usage Guide</a>.
+				</p>
+				</div>
+			</div>
+
+
+			<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+				<div class=" about-summary-cell">
+				<h4>Documentation</h4>
+				<p class="description-text">
+					Check out the docs for <a href="https://biotools.readthedocs.io/en/latest/" target="_blank">bio.tools</a>, <a href="https://biotoolsschema.readthedocs.io/en/latest/" target="_blank">biotoolsSchema</a> and the <a href="https://edamontologydocs.readthedocs.io/en/latest/" target="_blank">EDAM ontology</a> - report any problems or make suggestions via GitHub.  
+				</p>
+				</div>
+			</div>
+
+
+			<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+				<div class=" about-summary-cell">
+				<h4>Support</h4>
+				<p class="description-text">
+					Whether you are a user of <em>bio.tools</em>, a developer who wants to add their tools, or a scientist who wants integrate our data with your own; help is at hand.  Head over to <a href="http://github.com/bio-tools/biotoolsregistry/" target="_blank">GitHub</a> or <a href="mailto:registry-support@elixirmail.cbs.dtu.dk">mail us</a> directly.
+				</p>
+				</div>
+			</div>
+
+			
+		</div>
+
+		</div>
+
+
+
+
+	</div>
+	
+	<div class="jumbotron home-text">
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12 topic_browser_heading" >
+			<h2>Browse resources by popular terms</h2>	
+			<p class="description-text">
+				Explore <em>bio.tools</em> by the most popular bioinformatics concepts, or <a href="/t?page=1"><span class="bolder-text">view all tools</span></a>.</p>
+			<p class="description-text">
+			Concepts are defined in the <a href="https://github.com/edamontology/edamontology" target="_blank"><span class="bolder-text">EDAM ontology</span></a> which you can browse at <a href="https://www.ebi.ac.uk/ols/ontologies/edam/" target="_blank"><span class="bolder-text">OLS</span></a>, <a href="https://bioportal.bioontology.org/ontologies/EDAM/?p=classes&conceptid=root" target="_blank"><span class="bolder-text">BioPortal</span></a> or in the <a href="https://ifb-elixirfr.github.io/edam-browser/" target="_blank"><span class="bolder-text">EDAM Browser</span></a>. 
+			</p>
+		</div>
+	</div>
+
+	<div class="row">
+		<!-- Popular terms panel -->
+		<div class="col-lg-12 col-md-12 col-sm-12 topic_browser" >
+			
+
+	
+
+			<!-- new design panel Genetics-->
+			<div class="browse-topic panel panel-default">
+				<div class="panel-heading topic-heading " >
+					<h3>Genetics</h3>
+					<p>
+						Resources for the study of <a href="https://en.wikipedia.org/wiki/Gene" target="_blank">genes</a> and <a href="https://en.wikipedia.org/wiki/Heredity" target="_blank">heredity</a> in living organisms.
+						They provide analytical approaches for studying <a href="https://en.wikipedia.org/wiki/Gene_structure" target="_blank">gene structure</a>, <a href="https://en.wikipedia.org/wiki/Genetic_variation" target="_blank">genetic variation</a>, the <a href="https://en.wikipedia.org/wiki/Regulation_of_gene_expression" target="_blank">regulation of gene expression</a> and the relationships between organism <a href="https://en.wikipedia.org/wiki/Genotype%E2%80%93phenotype_distinction" target="_blank">genotype and phenotype</a>.
+					</p>
+
+				</div>
+
+				<div class="subtopics panel-body">
+					<div class="subtopics-list">
+						<span ng-click="topicNameClicked('Genetics')">
+						Genetics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="topicNameClicked('Gene expression')">
+						Gene expression<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="topicNameClicked('Gene regulation')">
+						Gene regulation<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Gene expression profiling')">
+						Gene expression profiling<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Transcription factors and regulatory sites')">
+						Transcription factors and regulatory sites<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Functional, regulatory and non-coding RNA')">
+						Functional, regulatory and non-coding RNA<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Genetic variation')">
+						Genetic variation<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="topicNameClicked('DNA polymorphism')">
+						DNA polymorphism<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="operationNameClicked('Genotyping')">
+						Genotyping<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="topicNameClicked('Genotype and phenotype')">
+						Genotype and phenotype<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="topicNameClicked('Population genetics')">
+						Population genetics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Gene functional annotation')">
+						Gene functional annotation<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Gene and protein families')">
+						Gene and protein families<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+												
+						<span ng-click="operationNameClicked('Gene prediction')">
+						Gene prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="operationNameClicked('Enrichment analysis')">
+						Enrichment analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Genome visualisation')">
+						Genome visualisation<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+					</div>
+
+				</div>
+			</div>
+			<!-- end panel -->
+
+
+			<!-- new design panel Proteins-->
+			<div class="browse-topic panel panel-default">
+				<div class="panel-heading topic-heading" >
+					<h3>Proteins</h3>
+					<p>
+						Resources for protein <a href="https://en.wikipedia.org/wiki/Sequence_analysis" target="_blank">sequence analysis</a>, protein <a href="https://en.wikipedia.org/wiki/Molecular_graphics" target="_blank">visualization</a>, and the <a href="https://en.wikipedia.org/wiki/Protein_structure_prediction" target="_blank">prediction</a>, <a href="https://en.wikipedia.org/wiki/Homology_modeling" target="_blank">modelling</a> and analysis of protein structure. They provide analytical approaches to interpret and explore  protein <a href="https://en.wikipedia.org/wiki/Protein_primary_structure" target="_blank">sequence</a> and  <a href="https://en.wikipedia.org/wiki/Protein_structure" target="_blank">structure</a> data, and to understand protein <a href="https://en.wikipedia.org/wiki/Protein#Cellular_functions" target="_blank">function</a> and mechanism of action.
+					</p>
+					
+				</div>
+				<div class="subtopics panel-body">
+					<div class="subtopics-list">
+						<span ng-click="operationNameClicked('Protein sequence analysis')">
+						Protein sequence analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Protein structure analysis')">
+						Protein structure analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Protein folds and structural domains')">
+						Protein folds and structural domains<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Gene and protein families')">
+						Gene and protein families<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Protein structural motifs and surfaces')">
+						Protein structural motifs and surfaces<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Protein sites, features and motifs')">
+						Protein sites, features and motifs<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Transcription factors and regulatory sites')">
+						Transcription factors and regulatory sites<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Protein interactions')">
+						Protein interactions<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="operationNameClicked('Protein modelling')">
+						Protein modelling<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="operationNameClicked('Protein fold recognition')">
+						Protein fold recognition<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="operationNameClicked('Protein structure prediction')">
+						Protein structure prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein secondary structure prediction')">
+						Protein secondary structure prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein binding site prediction')">
+						Protein binding site prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein property calculation')">
+						Protein property calculation<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein subcellular localisation prediction')">
+						Protein subcellular localisation prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Protein folding, stability and design')">
+						Protein folding, stability and design<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						
+
+					</div>
+
+				</div>
+			</div>
+			<!-- end panel -->
+
+			<!-- new design panel Nucleic acids-->
+			<div class="browse-topic panel panel-default">
+				<div class="panel-heading topic-heading" >
+					<h3>Nucleic acids</h3>
+					
+					<p>Resources for the processing and analysis of <a href="https://en.wikipedia.org/wiki/Nucleic_acid_sequence" target="_blank">nucleic acid sequence</a>, <a href="https://en.wikipedia.org/wiki/Nucleic_acid_structure" target="_blank">structural</a> and other data.
+
+					They provide analytical methods to interpret and explore nucleic acid sequence and structural data in context of <a href="https://en.wikipedia.org/wiki/Gene_structure" target="_blank">gene structure</a>, <a href="https://en.wikipedia.org/wiki/Genetic_variation" target="_blank">genetic variation</a>, and the <a href="https://en.wikipedia.org/wiki/Regulation_of_gene_expression" target="_blank">regulation of gene expression</a>.
+					</p>
+				</div>
+
+				<div class="subtopics panel-body">
+					<div class="subtopics-list">
+						<span ng-click="topicNameClicked('DNA')">
+						DNA<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('RNA')">
+						RNA<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Genetic mapping')">
+						Genetic mapping<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Read mapping')">
+						Read mapping<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Functional, regulatory and non-coding RNA')">
+						Functional, regulatory and non-coding RNA<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Methylation analysis')">
+						Methylation analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('DNA polymorphism')">
+						DNA polymorphism<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('SNP detection')">
+						SNP detection<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Nucleic acid sequence analysis')">
+						Nucleic acid sequence analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Nucleic acid sites, features and motifs')">
+						Nucleic acid sites, features and motifs<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Nucleic acid feature detection')">
+						Nucleic acid feature detection<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Transcription factor binding site prediction')">
+						Transcription factor binding site prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Transcription factors and regulatory sites')">
+						Transcription factors and regulatory sites<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Transcriptional regulatory element prediction')">
+						Transcriptional regulatory element prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Nucleic acid structure analysis')">
+						Nucleic acid structure analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						
+						<span ng-click="operationNameClicked('RNA secondary structure prediction')">
+						RNA secondary structure prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						
+					</div>
+
+				</div>
+			</div>
+			<!-- end panel -->
+
+			<!-- new design panel Sequence analysis-->
+			<div class="browse-topic panel panel-default">
+				<div class="panel-heading topic-heading" >
+					<h3>Sequence analysis</h3>
+					<p>
+						Resources for the processing and analysis of <a href="https://en.wikipedia.org/wiki/Sequence_analysis" target="_blank">molecular sequences</a> including sequence editing and visualisation, molecular sequence <a href="https://en.wikipedia.org/wiki/Sequence_database" target="_blank">databases</a>, <a href="https://en.wikipedia.org/wiki/Binding_site" target="_blank">binding sites</a>, <a href="https://en.wikipedia.org/wiki/Sequence_alignment" target="_blank">alignments</a> and <a href="https://en.wikipedia.org/wiki/Sequence_motif" target="_blank">motifs</a> in nucleic acid and protein sequences.
+
+					</p>
+				</div>
+
+				<div class="subtopics panel-body">
+					<div class="subtopics-list">
+
+						<span ng-click="topicNameClicked('Sequence sites, features and motifs')">
+						Sequence sites, features and motifs<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Sequence similarity search')">
+						Sequence similarity search<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Sequence alignment')">
+						Sequence alignment<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Sequence motif recognition')">
+						Sequence motif recognition<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Sequence annotation')">
+						Sequence annotation<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Sequence visualisation')">
+						Sequence visualisation<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Nucleic acid sequence analysis')">
+						Nucleic acid sequence analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Nucleic acid feature detection')">
+						Nucleic acid feature detection<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Transcription factors and regulatory sites')">
+						Transcription factors and regulatory sites<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein sequence analysis')">
+						Protein sequence analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein feature detection')">
+						Protein feature detection<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Sequence assembly')">
+						Sequence assembly<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Mapping')">
+						Mapping<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Genome annotation')">
+						Genome annotation<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('PCR primer design')">
+						PCR primer design<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Phylogenetics')">
+						Phylogenetics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						
+					</div>
+
+				</div>
+			</div>
+			<!-- end panel -->
+
+
+			<!-- new design panel Structure analysis-->
+			<div class="browse-topic panel panel-default">
+				<div class="panel-heading topic-heading" >
+					<h3>Structure analysis</h3>
+					
+					<p>
+						Resources for the processing and analysis of <a href="https://en.wikipedia.org/wiki/Biomolecular_structure" target="_blank">molecular structure</a> data including the <a href="https://en.wikipedia.org/wiki/Protein_structure_prediction" target="_blank">prediction</a> and <a href="https://en.wikipedia.org/wiki/Homology_modeling" target="_blank">modelling</a> of protein structure and <a href="https://en.wikipedia.org/wiki/Interactome" target="_blank">interactions</a> between <a href="https://en.wikipedia.org/wiki/Nucleic_acid_structure" target="_blank">nucleic acids</a>, <a href="https://en.wikipedia.org/wiki/Protein_structure" target="_blank">proteins</a> and <a href="https://en.wikipedia.org/wiki/Small_molecule" target="_blank">small molecules</a>.
+					</p>
+				</div>
+
+				<div class="subtopics panel-body">
+					<div class="subtopics-list">
+						<span ng-click="topicNameClicked('Structure analysis')">
+						Structure analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Molecular modelling')">
+						Molecular modelling<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Molecular docking')">
+						Molecular docking<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Molecular dynamics')">
+						Molecular dynamics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Structure prediction')">
+						Structure prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Structure visualisation')">
+						Structure visualisation<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Protein structure analysis')">
+						Protein structure analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Protein folds and structural domains')">
+						Protein folds and structural domains<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Protein structural motifs and surfaces')">
+						Protein structural motifs and surfaces<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein modelling')">
+						Protein modelling<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein model validation')">
+						Protein model validation<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein structure prediction')">
+						Protein structure prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein secondary structure prediction')">
+						Protein secondary structure prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Nucleic acid structure analysis')">
+						Nucleic acid structure analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('RNA secondary structure prediction')">
+						RNA secondary structure prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="topicNameClicked('Small molecules')">
+						Small molecules<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						
+					</div>
+
+				</div>
+			</div>
+			<!-- end panel -->
+
+			<!-- new design panel Omics-->
+			<div class="browse-topic panel panel-default">
+				<div class="panel-heading topic-heading" >
+					<h3>Omics</h3>
+					<p>Resources for the processing and analysis of the collective characterisation and quantification of pools of biological molecules that translate into the structure, function, and dynamics of an organism or organisms.</p>
+				</div>
+
+				<div class="subtopics panel-body">
+					<div class="subtopics-list">
+
+						<span ng-click="topicNameClicked('Genomics')">
+						Genomics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Functional genomics')">
+						Functional genomics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Comparative genomics')">
+						Comparative genomics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Population genomics')">
+						Population genomics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Phylogenomics')">
+						Phylogenomics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Metagenomics')">
+						Metagenomics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Transcriptomics')">
+						Transcriptomics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Epigenomics')">
+						Epigenomics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Proteomics')">
+						Proteomics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="topicNameClicked('Structural genomics')">
+						Structural genomics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Metabolomics')">
+						Metabolomics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="topicNameClicked('Pharmacogenomics')">
+						Pharmacogenomics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						
+					</div>
+
+				</div>
+			</div>
+			<!-- end panel -->
+
+			<!--virus related panel-->
+			<div class="browse-topic panel panel-default" id="virology-vaccine-design">
+				<div class="panel-heading topic-heading" >
+					<h3>Virology and vaccine design</h3>
+					<p>Resources which may be applicable to rational vaccine strategies for the design of novel immunogens capable of inducing long-term protective immunity.</p>
+				</div>
+				<div class="subtopics panel-body">
+					<div class="subtopics-list">
+						<span ng-click="topicNameClicked('Virology')">
+						Virology<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Virulence prediction')">
+						Virulence prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Virtual screening')">
+						Virtual screening<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Peptide immunogenicity prediction')">
+						Peptide immunogenicity prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Epitope mapping')">
+						Epitope mapping<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="operationNameClicked('DNA vaccine design')">
+						DNA vaccine design<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein structure prediction')">
+						Protein structure prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Side chain modelling')">
+						Side chain modelling<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="operationNameClicked('Backbone modelling')">
+						Backbone modelling<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Ligand-binding site prediction')">
+						Ligand-binding site prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Protein-ligand docking')">
+						Protein-ligand docking<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="topicNameClicked('Immunoinformatics ')">
+						Immunoinformatics <span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Subcellular localisation prediction')">
+						Subcellular localisation prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="topicNameClicked('Immunoproteins and antigens')">
+						Immunoproteins and antigens<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Transmembrane protein prediction ')">
+						Transmembrane protein prediction <span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Molecular dynamics')">
+						Molecular dynamics<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Molecular docking')">
+						Molecular docking<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Public health and epidemiology')">
+						Public health and epidemiology<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Infectious disease')">
+						Infectious disease<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Pathology')">
+						Pathology<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+					</div>
+
+				</div>
+			</div>
+			<!-- end panel -->
+
+			<!-- new design panel Other-->
+			<div class="browse-topic panel panel-default">
+				<div class="panel-heading topic-heading" >
+					<h3>Other</h3>
+					<p>Other popular concepts.</p>
+				</div>
+				<div class="subtopics panel-body">
+					<div class="subtopics-list">
+
+						<span ng-click="topicNameClicked('Sequencing')">
+						Sequencing<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Sequencing quality control')">
+						Sequencing quality control<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Sequence assembly')">
+						Sequence assembly<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Genome annotation')">
+						Genome annotation<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Systems biology')">
+						Systems biology<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Cell biology')">
+						Cell biology<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Molecular interactions, pathways and networks')">
+						Molecular interactions, pathways and networks<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="operationNameClicked('Pathway or network prediction')">
+						Pathway or network prediction<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Pathway or network visualisation')">
+						Pathway or network visualisation<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Phylogeny')">
+						Phylogeny<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Pathology')">
+						Pathology<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Oncology')">
+						Oncology<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Formatting')">
+						Formatting<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="topicNameClicked('Machine learning')">
+						Machine learning<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						<span ng-click="operationNameClicked('Image analysis')">
+						Image analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+
+						<span ng-click="operationNameClicked('Spectral analysis')">
+						Spectral analysis<span class="glyphicon glyphicon-play pull-right subtopic-arrow"></span></span>
+						
+						
+					</div>
+
+				</div>
+			</div>
+			<!-- end panel -->
+		</div>
+
+
+
+	</div>
+
+	</div>
+	
+
+	<!-- ELIXIR Country flags -->
+	<div class="row">
+		<div class="flag-container col-lg-12 col-md-12 col-sm-12">
+			<div class="logos-text">
+				<h3 class="text-center">Supported by ELIXIR Nodes</h3>
+			</div>
+
+			<div class="row">
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="https://www.elixir-europe.org/about-us/who-we-are/nodes/belgium">
+							<img class="img-responsive" src="img/countries/be.svg" alt="Belgium">
+						</a>
+						<span>Belgium</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="https://www.elixir-europe.org/about-us/who-we-are/nodes/czech-republic">
+							<img class="img-responsive" src="img/countries/cz.svg" alt="Czech Republic">
+						</a>
+						<span>Czech Republic</span>
+					</div>
+
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="https://www.elixir-europe.org/about-us/who-we-are/nodes/denmark">
+							<img class="img-responsive" src="img/countries/dk.svg" alt="Denmark">
+						</a>
+						<span>Denmark</span>
+					</div>
+
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="http://www.elixir-europe.org/about-us/who-we-are/nodes/estonia">
+							<img class="img-responsive" src="img/countries/ee.svg" alt="Estonia">
+						</a>
+						<span>Estonia</span>
+					</div>
+				
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="https://www.elixir-europe.org/about-us/who-we-are/nodes/finland">
+							<img class="img-responsive" src="img/countries/fi.svg" alt="Finland">
+						</a>
+						<span>Finland</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="https://www.elixir-europe.org/about-us/who-we-are/nodes/france">
+							<img class="img-responsive" src="img/countries/fr.svg" alt="France">
+						</a>
+						<span>France</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="https://www.elixir-europe.org/about-us/who-we-are/nodes/germany">
+							<img class="img-responsive" src="img/countries/de.svg" alt="Germany">
+						</a>
+						<span>Germany</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="https://www.elixir-europe.org/about-us/who-we-are/nodes/greece">
+							<img class="img-responsive" src="img/countries/gr.svg" alt="Greece">
+						</a>
+						<span>Greece</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="https://www.elixir-europe.org/about-us/who-we-are/nodes/hungary">
+							<img class="img-responsive" src="img/countries/hu.svg" alt="Hungary">
+						</a>
+						<span>Hungary</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="https://www.elixir-europe.org/about-us/who-we-are/nodes/ireland">
+							<img class="img-responsive" src="img/countries/ie.svg" alt="Ireland">
+						</a>
+						<span>Ireland</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="http://www.elixir-europe.org/about-us/who-we-are/nodes/israel">
+							<img class="img-responsive" src="img/countries/il.svg" alt="Israel">
+						</a>
+						<span>Israel</span>
+					</div>
+
+			
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="http://www.elixir-europe.org/about-us/who-we-are/nodes/italy">
+							<img class="img-responsive" src="img/countries/it.svg" alt="Italy">
+						</a>
+						<span>Italy</span>
+					</div>
+			</div>
+
+			<div class="row">
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="http://www.elixir-europe.org/about-us/who-we-are/nodes/luxembourg">
+							<img class="img-responsive" src="img/countries/lu.svg" alt="Luxembourg">
+						</a>
+						<span>Luxembourg</span>
+					</div>
+
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="http://www.elixir-europe.org/about-us/who-we-are/nodes/netherlands">
+							<img class="img-responsive" src="img/countries/nl.svg" alt="Netherlands">
+						</a>
+						<span>Netherlands</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="http://www.elixir-europe.org/about-us/who-we-are/nodes/norway">
+							<img class="img-responsive" src="img/countries/no.svg" alt="Norway">
+						</a>
+						<span>Norway</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="http://www.elixir-europe.org/about-us/who-we-are/nodes/slovenia">
+							<img class="img-responsive" src="img/countries/si.svg" alt="Slovenia">
+						</a>
+						<span>Slovenia</span>
+					</div>
+				
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="http://www.elixir-europe.org/about-us/who-we-are/nodes/portugal">
+							<img class="img-responsive" src="img/countries/pt.svg" alt="Portugal">
+						</a>
+						<span>Portugal</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="http://www.elixir-europe.org/about-us/who-we-are/nodes/spain">
+							<img class="img-responsive" src="img/countries/es.svg" alt="Spain">
+						</a>
+						<span>Spain</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="http://www.elixir-europe.org/about-us/who-we-are/nodes/sweden">
+							<img class="img-responsive" src="img/countries/se.svg" alt="Sweden">
+						</a>
+						<span>Sweden</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="http://www.elixir-europe.org/about-us/who-we-are/nodes/switzerland">
+							<img class="img-responsive" src="img/countries/ch.svg" alt="Switzerland">
+						</a>
+						<span>Switzerland</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="http://www.elixir-europe.org/about-us/who-we-are/nodes/uk">
+							<img class="img-responsive" src="img/countries/gb.svg" alt="United Kingdom">
+						</a>
+						<span>United Kingdom</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="https://www.elixir-europe.org/about-us/who-we-are/nodes/cyprus">
+							<img class="img-responsive" src="img/countries/cy.svg" alt="Cyprus">
+						</a>
+						<span>Cyprus</span>
+					</div>
+
+					<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+						<a href="" target="_blank" ng-href="https://www.elixir-europe.org/about-us/who-we-are/nodes/embl-ebi">
+							<img class="img-responsive" src="img/countries/embl.png" alt="EMBL">
+						</a>
+						<span>EMBL</span>
+					</div>
+					
+
+			</div>
+			
+
+			
+
+			
+
+			
+			
+		</div>	
+
+	</div>	
+
+	<!-- Institution logos -->
+
+	<div class="row logo-container">
+
+			<div class="logos-text">
+				<h3 class="text-center">Led by ELIXIR Denmark & partners</h3>
+			</div>
+
+			<div class="inner-logo-container">
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.dtu.dk/english">
+							<img class="" src="img/logos/dtu.png" alt="Technical University of Denmark"  title="Technical University of Denmark">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.ku.dk/english/">
+							<img class="img-responsive" src="img/logos/ku.png" alt="University of Copenhagen" title="University of Copenhagen">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="http://international.au.dk/">
+							<img class="img-responsive" src="img/logos/aarhus-uni.jpg" alt="Aarhus University" title="Aarhus University">
+						</a>
+					</div>
+
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.en.aau.dk/">
+							<img class="img-responsive" src="img/logos/aalborg-uni.png" alt="Aalborg University" title="Aalborg University">
+						</a>
+					</div>
+
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.sdu.dk/en">
+							<img class="img-responsive" src="img/logos/sdu2.png" alt="University of Southern Denmark" title="University of Southern Denmark">
+						</a>
+					</div>
+
+					
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.pasteur.fr/en">
+							<img class="img-responsive" src="img/logos/institut-pasteur.png" alt="Institut Pasteur" title="Institut Pasteur">
+						</a>
+					</div>
+
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.uib.no/en">
+							<img class="img-responsive" src="img/logos/bergen.jpg" alt="University of Bergen" title="University of Bergen">
+						</a>
+					</div>
+
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.bsc.es/">
+							<img class="img-responsive" src="img/logos/bsc.jpg" alt="Barcelona Supercomputing Center" title="Barcelona Supercomputing Center">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.ceitec.eu/">
+							<img class="img-responsive" src="img/logos/ceitec.jpg" alt="Central European Institute of Technology" title="Central European Institute of Technology">
+						</a>
+					</div>
+
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.ut.ee/en">
+							<img class="img-responsive" src="img/logos/tartu.png" alt="University of Tartu" title="University of Tartu">
+						</a>
+					</div>
+
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.embl.org/">
+							<img class="img-responsive" src="img/logos/embl.png" alt="EMBL-EBI" title="EMBL-EBI">
+						</a>
+					</div>
+
+					
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.sib.swiss/">
+							<img class="img-responsive" src="img/logos/sib.png" alt="SIB Swiss Institute of Bioinformatics" title="SIB Swiss Institute of Bioinformatics">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.irbbarcelona.org/en">
+							<img class="img-responsive" src="img/logos/irb.jpeg" alt="IRB Barcelona" title="Institute For Research In Biomedicine Barcelona">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="https://www.inesc-id.pt/">
+							<img class="img-responsive" src="img/logos/inesc.png" alt="INESC-ID" title=" Instituto de Engenharia de Sistemas e Computadores - Investigação e Desenvolvimento">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a href="" target="_blank" ng-href="http://www.cnrs.fr/">
+							<img class="img-responsive" src="img/logos/cnrs.png" alt="Centre national de la recherche scientifique" title="Centre national de la recherche scientifique">
+						</a>
+					</div>
+			
+		
+
+	</div>
+
+</div>
