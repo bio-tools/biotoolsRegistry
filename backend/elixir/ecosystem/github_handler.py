@@ -5,9 +5,9 @@ from github import Github
 from github import GithubException
 from github import BadCredentialsException
 from github import UnknownObjectException
-import settings as ecosystem_settings
-from biotools_handler import BioToolsData
-from ecosystem_exceptions import \
+import elixir.ecosystem.settings as ecosystem_settings
+from .biotools_handler import BioToolsData
+from .ecosystem_exceptions import \
     BioToolsException, EcosystemException, EcosystemLoginException, \
     ToolCreationException, ToolUpdateException, ToolDeleteException
 

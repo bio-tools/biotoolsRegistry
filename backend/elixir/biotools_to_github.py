@@ -7,12 +7,12 @@ from github import GithubException
 from github import BadCredentialsException
 from github import UnknownObjectException
 
-import ecosystem.settings as ecosystem_settings
-from ecosystem.ecosystem_exceptions import \
+import elixir.ecosystem.settings as ecosystem_settings
+from elixir.ecosystem.ecosystem_exceptions import \
     BioToolsException, EcosystemException, EcosystemLoginException, \
     ToolCreationException, ToolUpdateException, ToolDeleteException
-from ecosystem.biotools_handler import BioToolsData
-from ecosystem.github_handler import GithubToolHandler
+from elixir.ecosystem.biotools_handler import BioToolsData
+from elixir.ecosystem.github_handler import GithubToolHandler
 from django.core.mail import send_mail
 
 def init_ecosystem_logger():

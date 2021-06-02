@@ -297,6 +297,7 @@ RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate
 
 
 # Settings for Github Ecosystem
+# Ecosystem is off by default
 GITHUB_ECOSYSTEM_ON = getenv('GITHUB_ECOSYSTEM_ON', False, castf=bool)
 
 

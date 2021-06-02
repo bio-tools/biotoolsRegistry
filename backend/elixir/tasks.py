@@ -126,3 +126,68 @@ def notify_user(user_id):
     user = User.objects.get(pk=user_id)
     user.email_user('Here is a notification', 'You have been notified')
 
+# Background tasks
+from django.conf import settings
+from django.core.mail import send_mail
+
+@background(schedule=60)
+def notify_admins(biotoolsID, subject, message):
+    final_message = message + "\n" + 'Tool with id:' + biotoolsID + "was created"
+    send_mail(
+        subject, 
+        final_message,
+        settings.DEFAULT_FROM_EMAIL,
+        settings.ADMIN_EMAIL_LIST
+    )
+
+@background(schedule=60)
+def notify_resource_request(type, request_body):
+    send_mail(
+        "Resource " +  type + " request", 
+        request_body,
+        settings.DEFAULT_FROM_EMAIL,
+        settings.ADMIN_EMAIL_LIST
+    )
+
+# Ecosytem background tasks
+# import the ecosytem_handle_tool_operations which handles the create, update and delete ecosystem operations
+from elixir.biotools_to_github import ecosytem_handle_tool_operations
+
+@background(schedule=30)
+def create_ecosystem_tool(tool, user):
+    # We might need to clean the tool before if we don't accept "empty" properties
+
+    # Convert to string and pretty format
+    tool_json = json.dumps(
+        tool,
+        sort_keys=True,
+        indent=4,
+        separators=(',', ': ')
+    )
+    ecosytem_handle_tool_operations(user, tool_json, 'CREATE')
+    
+
+@background(schedule=30)
+def update_ecosystem_tool(tool, user):
+    # We might need to clean the tool before if we don't accept "empty" properties
+    
+    # Convert to string and pretty format
+    tool_json = json.dumps(
+        tool,
+        sort_keys=True,
+        indent=4,
+        separators=(',', ': ')
+    )
+    ecosytem_handle_tool_operations(user, tool_json, 'UPDATE')
+
+@background(schedule=30)
+def delete_ecosystem_tool(tool_id, user):
+    # Convert to string and pretty format a minimal tool JSON with only the biotoolsID
+    tool_json = json.dumps(
+        {"biotoolsID":tool_id},
+        sort_keys=True,
+        indent=4,
+        separators=(',', ': ')
+    )
+
+    ecosytem_handle_tool_operations(user, tool_json, 'DELETE')

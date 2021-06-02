@@ -20,6 +20,11 @@ from rest_framework_yaml.renderers import YAMLRenderer
 from rest_framework.parsers import JSONParser
 from rest_framework_yaml.parsers import YAMLParser
 from elixir.parsers import XMLSchemaParser
+from elixir.tasks import notify_admins
+from elixir.tasks import notify_resource_request
+from elixir.tasks import create_ecosystem_tool, update_ecosystem_tool, delete_ecosystem_tool
+import json
+from django.core.mail import send_mail
 
 es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 
@@ -129,6 +134,8 @@ class ResourceList(APIView):
 			serializer.save(owner=request.user)
 			# issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), request.user)
 			es.index(index=settings.ELASTIC_SEARCH_INDEX, doc_type='_doc', body=serializer.data)
+			notify_admins(serializer.data['biotoolsID'], 'Tool CREATE', 'A tool was created.')
+			create_ecosystem_tool(serializer.data, str(request.user))
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 		
@@ -170,6 +177,7 @@ class ResourceRequestView(APIView):
 		serializer = ResourceRequestSerializer(data=serializerData)
 		if serializer.is_valid():
 			serializer.save()
+			notify_resource_request(serializer.data['type'], json.dumps(serializer.data))
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -343,6 +351,7 @@ class ResourceDetail(APIView):
 			count = result['hits']['total']['value']
 			if count == 1:
 				es.index(index=settings.ELASTIC_SEARCH_INDEX, doc_type='_doc', body=serializer.data, id=result['hits']['hits'][0]['_id'])
+			update_ecosystem_tool(serializer.data, str(request.user))
 			return Response(serializer.data)
 		
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -370,7 +379,7 @@ class ResourceDetail(APIView):
 			count = result['hits']['total']['value']
 			if count == 1:
 				es.delete(index=settings.ELASTIC_SEARCH_INDEX, doc_type='_doc', id=result['hits']['hits'][0]['_id'])
-
+			delete_ecosystem_tool(biotoolsID, str(request.user))
 			return Response(status=status.HTTP_204_NO_CONTENT)
 		else:
 			return Response({"detail": "Only a superuser can remove a resource."}, status=status.HTTP_403_FORBIDDEN)

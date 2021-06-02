@@ -1,4 +1,4 @@
-from ecosystem_exceptions import BioToolsException
+from .ecosystem_exceptions import BioToolsException
 import json
 # We can maybe add here a delete flag
 #   Because we don't technically need the bio.tools JSON data when we delete the tool
