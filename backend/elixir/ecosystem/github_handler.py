@@ -33,13 +33,13 @@ class GithubToolHandler:
     #   with all the files
     # Later there will be individual github users for which we will
     #   have access by using social auth
-    def __init__(self, username, password):
+    def __init__(self):
         """
         Creates a central handler object from which the main GitHub operations are called. 
         """
 
         try:
-            self.__g = Github(username, password)
+            self.__g = Github(ecosystem_settings.ECO_PERSONAL_TOKEN)
             self.__username = self.__g.get_user().login
             self.__logged_in = True
             self.__repo_name = ecosystem_settings.ECO_GITHUB_REPO_NAME
@@ -50,12 +50,12 @@ class GithubToolHandler:
             self.__logged_in = False
             self.__repo_name = None
             self.__repo = None
-            raise EcosystemLoginException(username, ecosystem_settings.ECO_GITHUB_REPO_NAME, str(bce))
+            raise EcosystemLoginException(self.__username, ecosystem_settings.ECO_GITHUB_REPO_NAME, str(bce))
         except UnknownObjectException as uoe:
             self.__logged_in = False
             self.__repo_name = None
             self.__repo = None
-            raise EcosystemLoginException(username, ecosystem_settings.ECO_GITHUB_REPO_NAME, str(uoe))
+            raise EcosystemLoginException(self.__username, ecosystem_settings.ECO_GITHUB_REPO_NAME, str(uoe))
         
     def is_logged_in(self):
         return self.__logged_in

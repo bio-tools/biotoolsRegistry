@@ -4,6 +4,7 @@ frontend/node_modules/
 backend/elixirapp/deployment_settings.py
 *.DS_Store
 deployment/
+prerender/
 backend/data/edam/json/*
 !backend/data/edam/json/.gitkeep
 backend/data/edam/owl/*

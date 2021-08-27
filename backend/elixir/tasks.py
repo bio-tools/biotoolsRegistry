@@ -131,8 +131,8 @@ from django.conf import settings
 from django.core.mail import send_mail
 
 @background(schedule=60)
-def notify_admins(biotoolsID, subject, message):
-    final_message = message + "\n" + 'Tool with id:' + biotoolsID + "was created"
+def notify_admins(identifier, subject, message):
+    final_message = message + '\n' + 'ID:' + identifier
     send_mail(
         subject, 
         final_message,

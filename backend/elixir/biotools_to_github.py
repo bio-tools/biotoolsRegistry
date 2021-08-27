@@ -64,7 +64,7 @@ def handle_ecosystem_error(logger, the_exception, bt = None, log_exception = Fal
     # if we have issue posting enabled and if it's the case to post that issue
     if ecosystem_settings.ECO_POST_GITHUB_ISSUE and post_issue:
         # post the_exception as issue to GitHub
-        gth = GithubToolHandler(ecosystem_settings.ECO_GITHUB_USER, ecosystem_settings.ECO_GITHUB_PASSWORD)
+        gth = GithubToolHandler()
         gth.create_issue(bt, str(the_exception))
 
 def get_pr_link(pr_number):
@@ -101,9 +101,10 @@ def ecosytem_handle_tool_operations(biotools_user, tool, operation):
     pr = None
     try:
         # Log attempt to create/update/delete tool
-        logger.info('Starting tool {} ...'.format(operation))
+        if ecosystem_settings.ECO_LOG_ISSUE and logger: 
+            logger.info('Starting tool {} ...'.format(operation))
         bt = BioToolsData(biotools_user, tool)
-        gth = GithubToolHandler(ecosystem_settings.ECO_GITHUB_USER, ecosystem_settings.ECO_GITHUB_PASSWORD)
+        gth = GithubToolHandler()
         if operation == CREATE:
             (_, pr) = gth.create_tool(bt)
         elif operation == UPDATE:
@@ -112,12 +113,13 @@ def ecosytem_handle_tool_operations(biotools_user, tool, operation):
             (_, pr) = gth.delete_tool(bt)
 
         # Log sucessful creation
-        logger.info('Success! Tool {} PR: {} for tool with id: {} by bio.tools user: {}'.format(
-            operation,
-            get_pr_link(pr.number),
-            bt.tool_id, 
-            bt.username  
-        ))
+        if ecosystem_settings.ECO_LOG_ISSUE and logger:
+            logger.info('Success! Tool {} PR: {} for tool with id: {} by bio.tools user: {}'.format(
+                operation,
+                get_pr_link(pr.number),
+                bt.tool_id, 
+                bt.username  
+            ))
     except BioToolsException as e:
         # Log BioTools Exception
         # Send email with the issue
