@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import datetime
+import json
 # import djcelery
 
 
@@ -299,7 +300,7 @@ RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate
 # Settings for Github Ecosystem
 # Ecosystem is off by default
 GITHUB_ECOSYSTEM_ON = getenv('GITHUB_ECOSYSTEM_ON', False, castf=bool)
-
+ADMIN_EMAIL_LIST = getenv('ADMIN_EMAIL_LIST', '[]', castf=json.loads)
 
 # settings specific to deployment
 try:
