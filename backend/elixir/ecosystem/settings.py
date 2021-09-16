@@ -39,7 +39,7 @@ ECO_LOG_FILE = getenv('ECO_LOG_FILE', 'ecosystem.log')
 ECO_LOGGER_NAME = getenv('ECO_LOGGER_NAME', 'ecosystem_logger')
 ECO_POST_GITHUB_ISSUE = getenv('ECO_POST_GITHUB_ISSUE', False, castf=bool)
 ECO_SEND_EMAIL = getenv('ECO_SEND_EMAIL', False, castf=bool)
-ECO_EMAIL_RECIPIENTS = getenv('ECO_EMAIL_RECIPIENTS', '[]', castf=json.loads)
+ECO_EMAIL_RECIPIENTS = getenv('ECO_EMAIL_RECIPIENTS', [], castf=json.loads)
 
 # not set by default, needs to be set in __secret_settings__.py
 ECO_PERSONAL_TOKEN = getenv('ECO_LOGGER_NAME', '')
