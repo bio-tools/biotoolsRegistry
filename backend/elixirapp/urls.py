@@ -16,12 +16,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-	url(r'^admin/', include(admin.site.urls)),
+	#url(r'^admin/', include(admin.site.urls)),
 	# url(r'^', include('django.contrib.auth.urls')),
 	# url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	# url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
 	url(r'^rest-auth/', include('rest_auth.urls')),
-	url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
-	url(r'^accounts/', include('allauth.urls')),
+	# url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
+	#url(r'^accounts/', include('allauth.urls')),
 	url(r'^', include('elixir.urls')),
 ]

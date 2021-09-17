@@ -122,6 +122,7 @@ class ResourceList(APIView):
 						 'list': results}, status=200)
 
 	def post(self, request, format=None):
+		return Response({"detail": 'All changes are disabled because of server maintenance. Read-only allowed.'}, status=status.HTTP_403_FORBIDDEN)
 		serializer = ResourceSerializer(data=request.data, context={'request':request,"request_type":"POST"})
 
 		if serializer.is_valid():
@@ -153,6 +154,7 @@ class DisownResourceView(APIView):
 		return User.objects.get(username__iexact="admin")
  
 	def post(self, request, biotoolsID, format=None):
+		return Response({"detail": 'All changes are disabled because of server maintenance. Read-only allowed.'}, status=status.HTTP_403_FORBIDDEN)
 		resource = self.get_object(biotoolsID)
 		resource.owner = self.get_disowned_user()
 		resource.save()
@@ -166,6 +168,7 @@ class ResourceRequestView(APIView):
 	permission_classes = (IsAuthenticatedOrReadOnly,)
 
 	def put(self, request, format=None):
+		return Response({"detail": 'All changes are disabled because of server maintenance. Read-only allowed.'}, status=status.HTTP_403_FORBIDDEN)
 		serializerData = request.data
 		serializerData['username'] = request.user.username
 		serializerData['requestId'] = uuid.uuid4()
@@ -193,6 +196,7 @@ class ProcessResourceRequest(APIView):
 	permission_classes = (IsAuthenticatedOrReadOnly, CanConcludeResourceRequest)
 
 	def post(self, request, format=None):
+		return Response({"detail": 'All changes are disabled because of server maintenance. Read-only allowed.'}, status=status.HTTP_403_FORBIDDEN)
 		if not 'requestId' in request.data: 
 			return Response({"detail": "Request could not be completed. Missing parameter: 'requestId'."}, status=status.HTTP_400_BAD_REQUEST)
 		if not 'accept' in request.data: 
@@ -293,6 +297,7 @@ class ResourceDetail(APIView):
 	#use ?format=json or ?format=xml  if doing update (PUT) in the API
 	# default is ?format=api
 	def put(self, request, biotoolsID, format=None):
+		return Response({"detail": 'All changes are disabled because of server maintenance. Read-only allowed.'}, status=status.HTTP_403_FORBIDDEN)
 		resource = self.get_object(biotoolsID)
 		canEditPermissions = self.check_for_edit_permissions(request, resource)
 		isEditingPermissions = self.check_editing_permissions(request, resource)
@@ -350,6 +355,7 @@ class ResourceDetail(APIView):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 	def delete(self, request, biotoolsID, format=None):
+		return Response({"detail": 'All changes are disabled because of server maintenance. Read-only allowed.'}, status=status.HTTP_403_FORBIDDEN)
 		if request.user.is_superuser:
 			resource = self.get_object(biotoolsID)
 			# setting the visibility of the current resource to 0
@@ -406,6 +412,7 @@ class ResourceCreateValidator(APIView):
 	#should also have renderers except the browsableapi one since we don't really need it...
 
 	def post(self, request, format=None):
+		return Response({"detail": 'All changes are disabled because of server maintenance. Read-only allowed.'}, status=status.HTTP_403_FORBIDDEN)
 		# original
 		#serializer = ResourceSerializer(data=request.data)
 
@@ -435,6 +442,7 @@ class ResourceUpdateValidator(APIView):
 			raise Http404
 
 	def put(self, request, biotoolsID, format=None):
+		return Response({"detail": 'All changes are disabled because of server maintenance. Read-only allowed.'}, status=status.HTTP_403_FORBIDDEN)
 		resource = self.get_object(biotoolsID)
 		serializer = ResourceUpdateSerializer(data=request.data, context={'request':request,"request_type":"PUT"})
 		if serializer.is_valid():

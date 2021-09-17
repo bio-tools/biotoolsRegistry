@@ -12,6 +12,9 @@ angular.module('elixir_front')
 	});
 
 	$scope.disownEntry = function(entry) {
+		alert('Cannot disown right now because of server maintenance');
+		return
+
 		if (!confirm("Are you sure you want to disown this resource?")){
 			return;
 		}

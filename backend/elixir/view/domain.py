@@ -41,6 +41,7 @@ class DomainView(APIView):
 
 
 	def post(self, request, format=None):
+		return Response({"detail": 'All changes are disabled because of server maintenance. Read-only allowed.'}, status=status.HTTP_403_FORBIDDEN)
 
 		serializer = DomainSerializer(data=request.data, context={'request':request,"request_type":"POST"})
 
@@ -115,7 +116,8 @@ class DomainResourceView(APIView):
 			 		}
 			)
 
-	def put(self, request, domain=None, format=None):	
+	def put(self, request, domain=None, format=None):
+		return Response({"detail": 'All changes are disabled because of server maintenance. Read-only allowed.'}, status=status.HTTP_403_FORBIDDEN)
 		# Updating a domain creates a new domain object and the old one gets a visibility of 0
 
 		serializer = DomainUpdateSerializer(data=request.data, context={'request':request,"request_type":"PUT"})
@@ -143,6 +145,7 @@ class DomainResourceView(APIView):
 
 
 	def delete(self, request, domain, format=None):
+		return Response({"detail": 'All changes are disabled because of server maintenance. Read-only allowed.'}, status=status.HTTP_403_FORBIDDEN)
 		if not(request.user.is_superuser) and domain.strip().lower() in NOT_DELETABLE_DOMAINS:
 			return Response({"detail": "You do not have permission to delete this domain."}, status=status.HTTP_403_FORBIDDEN)
 

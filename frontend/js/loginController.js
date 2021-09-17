@@ -49,6 +49,8 @@ function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state)
 	}
 
 	vm.registerButtonPressed = function() {
+		alert('Sign-up is disabled because of server maintenance!');
+		return;
 		$uibModalInstance.close();
 		$state.go('signup');
 	}

@@ -1279,6 +1279,8 @@ angular.module('elixir_front.controllers', [])
 	});
 
 	$scope.signupButtonClick = function() {
+		alert('Sign-up is disabled because of server maintenance!');
+		return
 		$scope.loading = true;
 		$timeout(function() {
 			djangoAuth.register($scope.credentials.username, $scope.credentials.password, $scope.credentials.password, $scope.credentials.email, null)
@@ -1311,6 +1313,8 @@ angular.module('elixir_front.controllers', [])
 
 	$scope.loading = false;
 	$scope.resetButtonClick = function() {
+		alert('Password-reset is disabled because of server maintenance!');
+		return
 		$scope.error_message = '';
 		$scope.success_message = '';
 		$scope.loading = true;
@@ -1332,6 +1336,8 @@ angular.module('elixir_front.controllers', [])
 
 	$scope.loading = false;
 	$scope.resetButtonClick = function() {
+		alert('Password-reset is disabled because of server maintenance!');
+		return
 		$scope.error_message = false;
 		$scope.loading = true;
 		djangoAuth.confirmReset(uid, token, $scope.credentials.password, $scope.credentials.password)

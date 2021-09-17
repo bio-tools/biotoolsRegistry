@@ -548,3 +548,8 @@ to prevent collapsing during animation*/
 	opacity: 0;
 }
 
+
+div.maintenance{
+	font-size: 20px;
+	margin-top: 20px;
+}
