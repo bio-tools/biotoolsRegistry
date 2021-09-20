@@ -25,6 +25,7 @@ from elixir.tasks import notify_resource_request
 from elixir.tasks import create_ecosystem_tool, update_ecosystem_tool, delete_ecosystem_tool
 import json
 from django.core.mail import send_mail
+from datetime import datetime
 
 es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 
@@ -131,7 +132,12 @@ class ResourceList(APIView):
 		if serializer.is_valid():
 			if not(request.user.is_superuser) and request.data.get('confidence_flag') and request.data.get('confidence_flag') != 'tool':
 				return Response({"detail": 'Error: Only superusers can add entries with a confidence score other than \'tool\'.'}, status=status.HTTP_403_FORBIDDEN)
-			serializer.save(owner=request.user)
+			
+			right_now = datetime.now()
+
+			# there is a very small milisecond difference between additionDate now and auto_now from lastUpdate
+			# if we ever do some analysis we need to make sure we keep that in mind
+			serializer.save(owner=request.user, additionDate=right_now)
 			# issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), request.user)
 			es.index(index=settings.ELASTIC_SEARCH_INDEX, doc_type='_doc', body=serializer.data)
 			notify_admins(serializer.data['biotoolsID'], 'Tool CREATE', 'A tool was created.')
@@ -333,7 +339,13 @@ class ResourceDetail(APIView):
 			# attempt on the biotoolsID or biotoolsCURIE
 			# Note that we need throw errors here we need to throw them before
 			# makeing the old resource visibility 0 (see above)
-			serializer.save(biotoolsID=resource.biotoolsID, biotoolsCURIE=resource.biotoolsCURIE, additionDate=resource.additionDate, owner=resource.owner, was_id_validated=is_id_valid)
+			serializer.save(
+				biotoolsID=resource.biotoolsID, 
+				biotoolsCURIE=resource.biotoolsCURIE, 
+				additionDate=resource.additionDate, 
+				owner=resource.owner, 
+				was_id_validated=is_id_valid
+			)
 			# issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), str(resource.owner))
 			
 			# update the existing resource in elastic
