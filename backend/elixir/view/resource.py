@@ -140,7 +140,7 @@ class ResourceList(APIView):
 			serializer.save(owner=request.user, additionDate=right_now)
 			# issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), request.user)
 			es.index(index=settings.ELASTIC_SEARCH_INDEX, doc_type='_doc', body=serializer.data)
-			notify_admins(serializer.data['biotoolsID'], 'Tool CREATE', 'A tool was created.')
+			# notify_admins(serializer.data['biotoolsID'], 'Tool CREATE', 'A tool was created.')
 			
 			if settings.GITHUB_ECOSYSTEM_ON:
 				create_ecosystem_tool(serializer.data, str(request.user))
@@ -365,7 +365,7 @@ class ResourceDetail(APIView):
 			count = result['hits']['total']['value']
 			if count == 1:
 				es.index(index=settings.ELASTIC_SEARCH_INDEX, doc_type='_doc', body=serializer.data, id=result['hits']['hits'][0]['_id'])
-			notify_admins(serializer.data['biotoolsID'], 'Tool UPDATE', 'A tool was updated.')
+			# notify_admins(serializer.data['biotoolsID'], 'Tool UPDATE', 'A tool was updated.')
 			if settings.GITHUB_ECOSYSTEM_ON:
 				update_ecosystem_tool(serializer.data, str(request.user))
 			return Response(serializer.data)
