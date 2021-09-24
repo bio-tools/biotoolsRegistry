@@ -430,6 +430,6 @@ class Command(BaseCommand):
 
 		# this is not really correct because the there are multiple versions to a resource
 		# should probably be the same for domain resource , or just remove version and versionId
-		for domain in Domain.objects.all():
+		for domain in Domain.objects.filter(visibility=1):
 			es.index(index='domains', id=domain.name.lower(), body={'domain':domain.name, 'title': domain.title, 'sub_title': domain.sub_title, 'description': domain.description, 'resources': list(map(lambda x: {'biotoolsID': x.biotoolsID,'name': x.name}, domain.resource.all()))})
 			self.stdout.write('%s'%(domain.name))
