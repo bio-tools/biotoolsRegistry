@@ -71,8 +71,8 @@ class Command(BaseCommand):
 					)
 
 					print('Updated domain:', domain_serializer.validated_data['name'])
-					
-					updated_domains.append(domain_serializer.validated_data['name'])
+
+					updated_domains.append(f"{settings.URL_FRONT}/t?domain={domain_serializer.validated_data['name']}")
 			
 			# if there is an error with any of the domains send an email and continue with the others
 			except Exception as e:
@@ -87,7 +87,7 @@ class Command(BaseCommand):
 		# send a mail confirming all went well
 		send_mail(
 			subject= 'Updated domains on: ' + str(datetime.datetime.now().date()), 
-			message=f'Updated domains:\n' + '\n'.join(updated_domains), 
+			message= 'Updated domains:\n' + '\n'.join(updated_domains), 
 			from_email=settings.DEFAULT_FROM_EMAIL, 
 			recipient_list=settings.ADMIN_EMAIL_LIST
 		)
