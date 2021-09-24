@@ -19,9 +19,12 @@ def rdfize(json_entry):
                 "edam": "http://edamontology.org/",
                 "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
                 "sc": "http://schema.org/",
+                "dct": "http://purl.org/dc/terms/",
                 "bsc": "http://bioschemas.org/",
                 "description": "sc:description",
                 "name": "sc:name",
+                "identifier": "sc:identifier",
+                "sameAs": "sc:sameAs",
                 "homepage": "sc:url",
                 "toolType": "sc:additionalType",
                 "primaryContact": "biotools:primaryContact",
@@ -32,15 +35,16 @@ def rdfize(json_entry):
                 "hasPublication": "sc:citation",
                 "hasTopic": "sc:applicationSubCategory",
                 "hasOperation": "sc:featureList",
-                "hasInputData": "edam:has_input",
-                "hasOutputData": "edam:has_output",
+                "hasInputData": "bsc:input",
+                "hasOutputData": "bsc:output",
                 "license": "sc:license",
-                "version": "sc:version",
+                "version": "sc:softwareVersion",
                 "isAccessibleForFree": "sc:isAccessibleForFree",
                 "operatingSystem": "sc:operatingSystem",
                 "hasApiDoc": "sc:softwareHelp",
                 "hasGenDoc": "sc:softwareHelp",
                 "hasTermsOfUse": "sc:termsOfService",
+                "conformsTo": "dct:conformsTo",
             }
         }
         entry.update(ctx)
@@ -54,240 +58,265 @@ def rdfize(json_entry):
         entry["contributor"] = []
         entry["provider"] = []
         entry["funder"] = []
+        entry[
+            "conformsTo"
+        ] = "https://bioschemas.org/profiles/ComputationalTool/0.6-DRAFT"
 
-        for credit in entry["credit"]:
-            # print(credit)
+        if entry.get("credit"):
+            for credit in entry["credit"]:
+                # print(credit)
+                ## Retrieving FUNDERS
+                if "typeEntity" in credit.keys() and credit["typeEntity"]:
+                    if "Funding agency" in credit["typeEntity"]:
+                        sType = "schema:Organization"
+                        if "orcidid" in credit.keys() and credit["orcidid"] != None:
+                            if not "funder" in entry.keys():
+                                entry["funder"] = {
+                                    "@id": credit["orcidid"],
+                                    "@type": sType,
+                                }
+                            else:
+                                entry["funder"].append(
+                                    {"@id": credit["orcidid"], "@type": sType}
+                                )
+                        elif "name" in credit.keys() and credit["name"] != None:
+                            if not "funder" in entry.keys():
+                                entry["funder"] = [credit["name"]]
+                            else:
+                                entry["funder"].append(credit["name"])
 
-            ## Retrieving FUNDERS
-            if "typeEntity" in list(credit.keys()) and credit["typeEntity"]:
-                if "Funding agency" in credit["typeEntity"]:
-                    sType = "schema:Organization"
-                    if "orcidid" in list(credit.keys()) and credit["orcidid"] != None:
-                        if not "funder" in list(entry.keys()):
-                            entry["funder"] = {"@id": credit["orcidid"], "@type": sType}
+                # Retrieving CONTRIBUTORS, PROVIDERS, DEVELOPERS
+                if credit.get("typeRole"):
+                    if "Developer" in credit["typeRole"]:
+                        # print("**** DEVELOPER ****")
+                        # print(credit['name'])
+                        if "typeEntity" in credit.keys() and credit["typeEntity"]:
+                            if "Person" in credit["typeEntity"]:
+                                sType = "schema:Person"
+                            else:
+                                sType = "schema:Organization"
+                            if "orcidid" in credit.keys() and credit["orcidid"] != None:
+                                if not "author" in entry.keys():
+                                    entry["author"] = {
+                                        "@id": credit["orcidid"],
+                                        "@type": sType,
+                                    }
+                                else:
+                                    entry["author"].append(
+                                        {"@id": credit["orcidid"], "@type": sType}
+                                    )
+                            elif "name" in credit.keys() and credit["name"] != None:
+                                if not "author" in entry.keys():
+                                    entry["author"] = [credit["name"]]
+                                else:
+                                    entry["author"].append(credit["name"])
                         else:
-                            entry["funder"].append(
-                                {"@id": credit["orcidid"], "@type": sType}
+                            if "name" in credit.keys() and credit["name"] != None:
+                                if not "author" in entry.keys():
+                                    entry["author"] = [credit["name"]]
+                                else:
+                                    entry["author"].append(credit["name"])
+
+                    if "Provider" in credit["typeRole"]:
+                        # print("**** PROVIDER ****")
+                        # print(credit['name'])
+                        if "typeEntity" in credit.keys() and credit["typeEntity"]:
+                            if "Person" in credit["typeEntity"]:
+                                sType = "schema:Person"
+                            else:
+                                sType = "schema:Organization"
+
+                            if "orcidid" in credit.keys() and credit["orcidid"] != None:
+                                if not "provider" in entry.keys():
+                                    entry["provider"] = {
+                                        "@id": credit["orcidid"],
+                                        "@type": sType,
+                                    }
+                                    # if 'name' in credit.keys() and credit['name'] != None:
+                                    #    entry['author_person']['name'] = credit['name']
+                                else:
+                                    entry["provider"].append(
+                                        {"@id": credit["orcidid"], "@type": sType}
+                                    )
+                            elif "name" in credit.keys() and credit["name"] != None:
+                                if not "provider" in entry.keys():
+                                    entry["provider"] = [credit["name"]]
+                                else:
+                                    entry["provider"].append(credit["name"])
+                        else:
+                            if "name" in credit.keys() and credit["name"] != None:
+                                if not "provider" in entry.keys():
+                                    entry["provider"] = [credit["name"]]
+                                else:
+                                    entry["provider"].append(credit["name"])
+
+                    if "Contributor" in credit["typeRole"]:
+                        # print("**** CONTRIBUTOR ****")
+                        # print(credit['name'])
+
+                        if "typeEntity" in credit.keys() and credit["typeEntity"]:
+                            if "Person" in credit["typeEntity"]:
+                                sType = "schema:Person"
+                            else:
+                                sType = "schema:Organization"
+
+                            if "orcidid" in credit.keys() and credit["orcidid"] != None:
+                                if not "contributor" in entry.keys():
+                                    entry["contributor"] = {
+                                        "@id": credit["orcidid"],
+                                        "@type": sType,
+                                    }
+                                else:
+                                    entry["contributor"].append(
+                                        {"@id": credit["orcidid"], "@type": sType}
+                                    )
+                            elif "name" in credit.keys() and credit["name"] != None:
+                                if not "contributor" in entry.keys():
+                                    entry["contributor"] = [credit["name"]]
+                                else:
+                                    entry["contributor"].append(credit["name"])
+                        else:
+                            if "name" in credit.keys() and credit["name"] != None:
+                                if not "contributor" in entry.keys():
+                                    entry["contributor"] = [credit["name"]]
+                                else:
+                                    entry["contributor"].append(credit["name"])
+
+                    if "Primary contact" in credit["typeRole"]:
+                        # print("**** CONTRIBUTOR ****")
+                        # print(credit['name'])
+
+                        if "typeEntity" in credit.keys() and credit["typeEntity"]:
+                            if "Person" in credit["typeEntity"]:
+                                sType = "schema:Person"
+                            else:
+                                sType = "schema:Organization"
+
+                            if "orcidid" in credit.keys() and credit["orcidid"] != None:
+                                if not "primaryContact" in entry.keys():
+                                    entry["primaryContact"] = {
+                                        "@id": credit["orcidid"],
+                                        "@type": sType,
+                                    }
+                                else:
+                                    entry["primaryContact"].append(
+                                        {"@id": credit["orcidid"], "@type": sType}
+                                    )
+                            elif "name" in credit.keys() and credit["name"] != None:
+                                if not "primaryContact" in entry.keys():
+                                    entry["primaryContact"] = [credit["name"]]
+                                else:
+                                    entry["primaryContact"].append(credit["name"])
+                        else:
+                            if "name" in credit.keys() and credit["name"] != None:
+                                if not "primaryContact" in entry.keys():
+                                    entry["primaryContact"] = [credit["name"]]
+                                else:
+                                    entry["primaryContact"].append(credit["name"])
+
+        if entry.get("publication"):
+            for publication in entry["publication"]:
+                if publication.get("pmid"):
+                    if not "hasPublication" in entry.keys():
+                        # entry['hasPublication'] = [{"@id": 'pubmed:' + publication['pmid']}]
+                        entry["hasPublication"] = ["pubmed:" + publication["pmid"]]
+                    else:
+                        # entry['hasPublication'].append({"@id": 'pubmed:' + publication['pmid']})
+                        entry["hasPublication"].append("pubmed:" + publication["pmid"])
+                if publication.get("pmcid"):
+                    if not "hasPublication" in entry.keys():
+                        entry["hasPublication"] = ["pmcid:" + publication["pmcid"]]
+                    else:
+                        entry["hasPublication"].append("pmcid:" + publication["pmcid"])
+                if publication.get("doi"):
+                    if not ("<" in publication["doi"] or ">" in publication["doi"]):
+                        if not "hasPublication" in entry.keys():
+                            entry["hasPublication"] = [
+                                {
+                                    "@id": "https://doi.org/" + publication["doi"],
+                                    "@type": "sc:CreativeWork",
+                                }
+                            ]
+                        else:
+                            entry["hasPublication"].append(
+                                {
+                                    "@id": "https://doi.org/" + publication["doi"],
+                                    "@type": "sc:CreativeWork",
+                                }
                             )
-                    elif "name" in list(credit.keys()) and credit["name"] != None:
-                        if not "funder" in list(entry.keys()):
-                            entry["funder"] = [credit["name"]]
+
+        if entry.get("function"):
+            for item in entry["function"]:
+                if item.get("operation"):
+                    for op in item["operation"]:
+                        if not "hasOperation" in entry.keys():
+                            entry["hasOperation"] = [{"@id": op["uri"]}]
                         else:
-                            entry["funder"].append(credit["name"])
+                            entry["hasOperation"].append({"@id": op["uri"]})
 
-            # Retrieving CONTRIBUTORS, PROVIDERS, DEVELOPERS
-            if credit["typeRole"]:
-                if "Developer" in credit["typeRole"]:
-                    # print("**** DEVELOPER ****")
-                    # print(credit['name'])
-                    if "typeEntity" in list(credit.keys()) and credit["typeEntity"]:
-                        if "Person" in credit["typeEntity"]:
-                            sType = "schema:Person"
+                if item.get("input"):
+                    for input in item["input"]:
+                        input_object = {
+                            "@type": "FormalParameter",
+                            "name": input["data"]["term"],
+                            "identifier": input["data"]["uri"],
+                            "sameAs": input["data"]["uri"],
+                        }
+                        if not "hasInputData" in entry.keys():
+                            entry["hasInputData"] = [input_object]
                         else:
-                            sType = "schema:Organization"
-                        if "orcidid" in list(credit.keys()) and credit["orcidid"] != None:
-                            if not "author" in list(entry.keys()):
-                                entry["author"] = {
-                                    "@id": credit["orcidid"],
-                                    "@type": sType,
-                                }
-                            else:
-                                entry["author"].append(
-                                    {"@id": credit["orcidid"], "@type": sType}
-                                )
-                        elif "name" in list(credit.keys()) and credit["name"] != None:
-                            if not "author" in list(entry.keys()):
-                                entry["author"] = [credit["name"]]
-                            else:
-                                entry["author"].append(credit["name"])
-                    else:
-                        if "name" in list(credit.keys()) and credit["name"] != None:
-                            if not "author" in list(entry.keys()):
-                                entry["author"] = [credit["name"]]
-                            else:
-                                entry["author"].append(credit["name"])
+                            entry["hasInputData"].append(input_object)
 
-                if "Provider" in credit["typeRole"]:
-                    # print("**** PROVIDER ****")
-                    # print(credit['name'])
-                    if "typeEntity" in list(credit.keys()) and credit["typeEntity"]:
-                        if "Person" in credit["typeEntity"]:
-                            sType = "schema:Person"
+                if item.get("output"):
+                    for output in item["output"]:
+                        output_object = {
+                            "@type": "FormalParameter",
+                            "name": output["data"]["term"],
+                            "identifier": output["data"]["uri"],
+                            "sameAs": output["data"]["uri"],
+                        }
+                        if not "hasOutputData" in entry.keys():
+                            entry["hasOutputData"] = [output_object]
                         else:
-                            sType = "schema:Organization"
+                            entry["hasOutputData"].append(output_object)
 
-                        if "orcidid" in list(credit.keys()) and credit["orcidid"] != None:
-                            if not "provider" in list(entry.keys()):
-                                entry["provider"] = {
-                                    "@id": credit["orcidid"],
-                                    "@type": sType,
-                                }
-                                # if 'name' in credit.keys() and credit['name'] != None:
-                                #    entry['author_person']['name'] = credit['name']
-                            else:
-                                entry["provider"].append(
-                                    {"@id": credit["orcidid"], "@type": sType}
-                                )
-                        elif "name" in list(credit.keys()) and credit["name"] != None:
-                            if not "provider" in list(entry.keys()):
-                                entry["provider"] = [credit["name"]]
-                            else:
-                                entry["provider"].append(credit["name"])
-                    else:
-                        if "name" in list(credit.keys()) and credit["name"] != None:
-                            if not "provider" in list(entry.keys()):
-                                entry["provider"] = [credit["name"]]
-                            else:
-                                entry["provider"].append(credit["name"])
-
-                if "Contributor" in credit["typeRole"]:
-                    # print("**** CONTRIBUTOR ****")
-                    # print(credit['name'])
-
-                    if "typeEntity" in list(credit.keys()) and credit["typeEntity"]:
-                        if "Person" in credit["typeEntity"]:
-                            sType = "schema:Person"
-                        else:
-                            sType = "schema:Organization"
-
-                        if "orcidid" in list(credit.keys()) and credit["orcidid"] != None:
-                            if not "contributor" in list(entry.keys()):
-                                entry["contributor"] = {
-                                    "@id": credit["orcidid"],
-                                    "@type": sType,
-                                }
-                            else:
-                                entry["contributor"].append(
-                                    {"@id": credit["orcidid"], "@type": sType}
-                                )
-                        elif "name" in list(credit.keys()) and credit["name"] != None:
-                            if not "contributor" in list(entry.keys()):
-                                entry["contributor"] = [credit["name"]]
-                            else:
-                                entry["contributor"].append(credit["name"])
-                    else:
-                        if "name" in list(credit.keys()) and credit["name"] != None:
-                            if not "contributor" in list(entry.keys()):
-                                entry["contributor"] = [credit["name"]]
-                            else:
-                                entry["contributor"].append(credit["name"])
-
-                if "Primary contact" in credit["typeRole"]:
-                    # print("**** CONTRIBUTOR ****")
-                    # print(credit['name'])
-
-                    if "typeEntity" in list(credit.keys()) and credit["typeEntity"]:
-                        if "Person" in credit["typeEntity"]:
-                            sType = "schema:Person"
-                        else:
-                            sType = "schema:Organization"
-
-                        if "orcidid" in list(credit.keys()) and credit["orcidid"] != None:
-                            if not "primaryContact" in list(entry.keys()):
-                                entry["primaryContact"] = {
-                                    "@id": credit["orcidid"],
-                                    "@type": sType,
-                                }
-                            else:
-                                entry["primaryContact"].append(
-                                    {"@id": credit["orcidid"], "@type": sType}
-                                )
-                        elif "name" in list(credit.keys()) and credit["name"] != None:
-                            if not "primaryContact" in list(entry.keys()):
-                                entry["primaryContact"] = [credit["name"]]
-                            else:
-                                entry["primaryContact"].append(credit["name"])
-                    else:
-                        if "name" in list(credit.keys()) and credit["name"] != None:
-                            if not "primaryContact" in list(entry.keys()):
-                                entry["primaryContact"] = [credit["name"]]
-                            else:
-                                entry["primaryContact"].append(credit["name"])
-
-        for publication in entry["publication"]:
-            if publication["pmid"]:
-                if not "hasPublication" in list(entry.keys()):
-                    # entry['hasPublication'] = [{"@id": 'pubmed:' + publication['pmid']}]
-                    entry["hasPublication"] = ["pubmed:" + publication["pmid"]]
+        if entry.get("topic"):
+            for item in entry["topic"]:
+                if not "hasTopic" in entry.keys():
+                    entry["hasTopic"] = [{"@id": item["uri"]}]
                 else:
-                    # entry['hasPublication'].append({"@id": 'pubmed:' + publication['pmid']})
-                    entry["hasPublication"].append("pubmed:" + publication["pmid"])
-            if publication["pmcid"]:
-                if not "hasPublication" in list(entry.keys()):
-                    entry["hasPublication"] = ["pmcid:" + publication["pmcid"]]
-                else:
-                    entry["hasPublication"].append("pmcid:" + publication["pmcid"])
-            if publication["doi"]:
-                if not ("<" in publication["doi"] or ">" in publication["doi"]):
-                    if not "hasPublication" in list(entry.keys()):
-                        entry["hasPublication"] = [
-                            {
-                                "@id": "https://doi.org/" + publication["doi"],
-                                "@type": "sc:CreativeWork",
-                            }
-                        ]
-                    else:
-                        entry["hasPublication"].append(
-                            {
-                                "@id": "https://doi.org/" + publication["doi"],
-                                "@type": "sc:CreativeWork",
-                            }
-                        )
+                    entry["hasTopic"].append({"@id": item["uri"]})
 
-        for item in entry["function"]:
-            for op in item["operation"]:
-                if not "hasOperation" in list(entry.keys()):
-                    entry["hasOperation"] = [{"@id": op["uri"]}]
-                else:
-                    entry["hasOperation"].append({"@id": op["uri"]})
-
-            for input in item["input"]:
-                if not "hasInputData" in list(entry.keys()):
-                    entry["hasInputData"] = [{"@id": input["data"]["uri"]}]
-                else:
-                    entry["hasInputData"].append({"@id": input["data"]["uri"]})
-
-            for output in item["output"]:
-                if not "hasOutputData" in list(entry.keys()):
-                    entry["hasOutputData"] = [{"@id": output["data"]["uri"]}]
-                else:
-                    entry["hasOutputData"].append({"@id": output["data"]["uri"]})
-
-        for item in entry["topic"]:
-            if not "hasTopic" in list(entry.keys()):
-                entry["hasTopic"] = [{"@id": item["uri"]}]
-            else:
-                entry["hasTopic"].append({"@id": item["uri"]})
-
-        if entry["cost"]:
+        if entry.get("cost"):
             for item in entry["cost"]:
-                if not "isAccessibleForFree" in list(entry.keys()):
+                if not "isAccessibleForFree" in entry.keys():
                     if "Free" in entry["cost"]:
                         entry["isAccessibleForFree"] = True
                     else:
                         entry["isAccessibleForFree"] = False
 
-        for item in entry["documentation"]:
-            if "type" in list(item.keys()) and item["type"]:
-                item["url"] = item["url"].replace("|", "%7C")
-                if "API" in item["type"]:
-                    if not "hasApiDoc" in list(entry.keys()):
-                        entry["hasApiDoc"] = [{"@id": item["url"]}]
+        if entry.get("documentation"):
+            for item in entry["documentation"]:
+                if "type" in item.keys() and item["type"]:
+                    item["url"] = item["url"].replace("|", "%7C")
+                    if "API" in item["type"]:
+                        if not "hasApiDoc" in entry.keys():
+                            entry["hasApiDoc"] = [{"@id": item["url"]}]
+                        else:
+                            entry["hasApiDoc"].append({"@id": item["url"]})
+                    elif "Terms" in item["type"]:
+                        if not "hasTermsOfUse" in entry.keys():
+                            entry["hasTermsOfUse"] = [{"@id": item["url"]}]
+                        else:
+                            entry["hasTermsOfUse"].append({"@id": item["url"]})
                     else:
-                        entry["hasApiDoc"].append({"@id": item["url"]})
-                elif "Terms" in item["type"]:
-                    if not "hasTermsOfUse" in list(entry.keys()):
-                        entry["hasTermsOfUse"] = [{"@id": item["url"]}]
-                    else:
-                        entry["hasTermsOfUse"].append({"@id": item["url"]})
-                else:
-                    if not "hasGenDoc" in list(entry.keys()):
-                        entry["hasGenDoc"] = [{"@id": item["url"]}]
-                    else:
-                        entry["hasGenDoc"].append({"@id": item["url"]})
+                        if not "hasGenDoc" in entry.keys():
+                            entry["hasGenDoc"] = [{"@id": item["url"]}]
+                        else:
+                            entry["hasGenDoc"].append({"@id": item["url"]})
 
-    except KeyError as error:
-        #print(error)
-        return {}
+    except KeyError as e:
+        print(e)
+        pass
     raw_jld = json.dumps(entry, indent=4, sort_keys=True)
     return raw_jld
