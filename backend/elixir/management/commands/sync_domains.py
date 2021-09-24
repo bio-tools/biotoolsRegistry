@@ -5,6 +5,7 @@ from elixir.models import *
 from elixir.serializers import *
 from elasticsearch import Elasticsearch
 import json
+from django.core.mail import send_mail
 
 
 def process_domain(domain_object):
@@ -48,22 +49,46 @@ class Command(BaseCommand):
 		es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 
 		domains = Domain.objects.filter(visibility=1, is_private=False)
+		updated_domains = []
 		for d_obj in domains:
-			domain_serializer = process_domain(d_obj)
+			try:
+				domain_serializer = process_domain(d_obj)
+				
+				# maybe we should try except this block and if anything happens
+				#	we should revert to the old domain data (i.e. d_obj)
+
+				if domain_serializer.is_valid():
+					d_obj.visibility = 0
+					d_obj.save()
+
+					domain_serializer.save(owner=d_obj.owner)
+
+					es.index(
+						index='domains', 
+						doc_type='_doc', 
+						id=domain_serializer.validated_data['name'], 
+						body=json.loads(json.dumps(domain_serializer.data))
+					)
+
+					print('Updated domain:', domain_serializer.validated_data['name'])
+					
+					updated_domains.append(domain_serializer.validated_data['name'])
 			
-			# maybe we should try except this block and if anything happens
-			#	we should revert to the old domain data (i.e. d_obj)
-			if domain_serializer.is_valid():
-				d_obj.visibility = 0
-				d_obj.save()
-
-				domain_serializer.save(owner=d_obj.owner)
-
-				es.index(
-					index='domains', 
-					doc_type='_doc', 
-					id=domain_serializer.validated_data['name'], 
-					body=json.loads(json.dumps(domain_serializer.data))
+			# if there is an error with any of the domains send an email and continue with the others
+			except Exception as e:
+				send_mail(
+					subject=f'Problem with syncing domain: {d_obj.name}', 
+					message=f'There was a problem with domain: {settings.URL_FRONT}api/d/{d_obj.name} \nThe error is: {str(e)}--type:{str(type(e))}', 
+					from_email=settings.DEFAULT_FROM_EMAIL, 
+					recipient_list=settings.ADMIN_EMAIL_LIST
 				)
+				continue
+		
+		# send a mail confirming all went well
+		send_mail(
+			subject= 'Updated domains on: ' + str(datetime.datetime.now().date()), 
+			message=f'Updated domains:\n' + '\n'.join(updated_domains), 
+			from_email=settings.DEFAULT_FROM_EMAIL, 
+			recipient_list=settings.ADMIN_EMAIL_LIST
+		)
 
-				print('Updated domain:', domain_serializer.validated_data['name'])
