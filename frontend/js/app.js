@@ -131,8 +131,21 @@ var elixir_front = angular.module('elixir_front', [
 		templateUrl: "partials/subdomains/subdomainEdit.html",
 		data: {
 			meta: {
-				'title': 'Edit subdomain',
-				'og:title': 'Edit subdomain'
+				'title': 'Edit domain',
+				'og:title': 'Edit domain'
+			},
+			roles: ['User']
+		},
+		controller: "SubdomainController",
+		resolve: {}
+	})
+	.state('edit-domain', {
+		url: "/edit-domain/:id",
+		templateUrl: "partials/subdomains/subdomainEdit.html",
+		data: {
+			meta: {
+				'title': 'Edit domain',
+				'og:title': 'Edit domain'
 			},
 			roles: ['User']
 		},
@@ -144,8 +157,21 @@ var elixir_front = angular.module('elixir_front', [
 		templateUrl: "partials/subdomains/subdomainPage.html",
 		data: {
 			meta: {
-				'title': 'Subdomain',
-				'og:title': 'Subdomain'
+				'title': 'Domain',
+				'og:title': 'Domain'
+			},
+			roles: ['User']
+		},
+		controller: "SubdomainAdminController",
+		resolve: {}
+	})
+	.state('admin-domain', {
+		url: "/domain-manager",
+		templateUrl: "partials/subdomains/subdomainPage.html",
+		data: {
+			meta: {
+				'title': 'Domain',
+				'og:title': 'Domain'
 			},
 			roles: ['User']
 		},

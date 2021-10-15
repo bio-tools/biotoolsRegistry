@@ -36,7 +36,7 @@ angular.module('elixir_front.controllers')
 	// Initialization
 	vm.loadSubdomains()
 }])
-.controller('SubdomainController', ['$scope',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', function($scope, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms) {
+.controller('SubdomainController', ['$scope', '$state',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', function($scope, $state, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms) {
 	var vm = this;
 	$scope.ToolListOverviewConnection = ToolListOverviewConnection;
 	$scope.updating = false;
@@ -75,6 +75,14 @@ angular.module('elixir_front.controllers')
 
 	$scope.response = {};
 	$scope.response.general = '';
+
+
+	$scope.gotoDomain = function(d){
+		if (confirm('Make sure to save before leaving the page. Leave?')){
+			$state.go('subdomain', {domain: d});
+		}
+		
+	}
 
 	// Handle tool search
 	$scope.clearButtonPressed = function() {
