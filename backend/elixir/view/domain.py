@@ -86,7 +86,7 @@ class DomainResourceView(APIView):
 				}
 			}
 			result = es.search(index='domains', body=elastic_domain_query_struct)
-			count = result['hits']['total']
+			count = result['hits']['total']['value']
 			if count > 0:
 				result = [el['_source'] for el in result['hits']['hits']]
 				return Response({'count': count,
