@@ -2,16 +2,15 @@
 # https://github.com/albangaignard
 import json
 
-def rdfize(json_entry):
+
+def rdfize(entry):
     """
     Transforms a biotools json entry into RDF, and returns a JSON-LD serialization. The following fields
     are covered: contact, publication, EDAM topic, EDAM operation, EDAM inputs & outputs.
     """
-
-    entry = json_entry
+    jsonld = {}
 
     try:
-
         ctx = {
             "@context": {
                 "@base": "https://bio.tools/",
@@ -48,20 +47,23 @@ def rdfize(json_entry):
                 "conformsTo": "dct:conformsTo",
             }
         }
-        entry.update(ctx)
+        objects = []
+        graph = {"@graph": objects}
+        jsonld.update(ctx)
+        jsonld.update(graph)
 
-        entry["@id"] = str(entry["biotoolsID"])
-        # entry['@type'] = ['bsc:Tool','sc:SoftwareApplication']
-        entry["@type"] = ["sc:SoftwareApplication"]
-        entry["applicationCategory"] = "Computational science tool"
-        entry["primaryContact"] = []
-        entry["author"] = []
-        entry["contributor"] = []
-        entry["provider"] = []
-        entry["funder"] = []
-        entry[
+        tool = {}
+        tool["@id"] = str(entry["biotoolsID"])
+        tool["@type"] = ["sc:SoftwareApplication"]
+        tool["applicationCategory"] = "Computational science tool"
+        tool["primaryContact"] = []
+        tool["author"] = []
+        tool["contributor"] = []
+        tool["provider"] = []
+        tool["funder"] = []
+        tool[
             "conformsTo"
-        ] = "https://bioschemas.org/profiles/ComputationalTool/0.6-DRAFT"
+        ] = "https://bioschemas.org/profiles/ComputationalTool/1.0-RELEASE"
 
         if entry.get("credit"):
             for credit in entry["credit"]:
@@ -71,20 +73,20 @@ def rdfize(json_entry):
                     if "Funding agency" in credit["typeEntity"]:
                         sType = "schema:Organization"
                         if "orcidid" in credit.keys() and credit["orcidid"] != None:
-                            if not "funder" in entry.keys():
-                                entry["funder"] = {
+                            if not "funder" in tool.keys():
+                                tool["funder"] = {
                                     "@id": credit["orcidid"],
                                     "@type": sType,
                                 }
                             else:
-                                entry["funder"].append(
+                                tool["funder"].append(
                                     {"@id": credit["orcidid"], "@type": sType}
                                 )
                         elif "name" in credit.keys() and credit["name"] != None:
-                            if not "funder" in entry.keys():
-                                entry["funder"] = [credit["name"]]
+                            if not "funder" in tool.keys():
+                                tool["funder"] = [credit["name"]]
                             else:
-                                entry["funder"].append(credit["name"])
+                                tool["funder"].append(credit["name"])
 
                 # Retrieving CONTRIBUTORS, PROVIDERS, DEVELOPERS
                 if credit.get("typeRole"):
@@ -97,26 +99,26 @@ def rdfize(json_entry):
                             else:
                                 sType = "schema:Organization"
                             if "orcidid" in credit.keys() and credit["orcidid"] != None:
-                                if not "author" in entry.keys():
-                                    entry["author"] = {
+                                if not "author" in tool.keys():
+                                    tool["author"] = {
                                         "@id": credit["orcidid"],
                                         "@type": sType,
                                     }
                                 else:
-                                    entry["author"].append(
+                                    tool["author"].append(
                                         {"@id": credit["orcidid"], "@type": sType}
                                     )
                             elif "name" in credit.keys() and credit["name"] != None:
-                                if not "author" in entry.keys():
-                                    entry["author"] = [credit["name"]]
+                                if not "author" in tool.keys():
+                                    tool["author"] = [credit["name"]]
                                 else:
-                                    entry["author"].append(credit["name"])
+                                    tool["author"].append(credit["name"])
                         else:
                             if "name" in credit.keys() and credit["name"] != None:
-                                if not "author" in entry.keys():
-                                    entry["author"] = [credit["name"]]
+                                if not "author" in tool.keys():
+                                    tool["author"] = [credit["name"]]
                                 else:
-                                    entry["author"].append(credit["name"])
+                                    tool["author"].append(credit["name"])
 
                     if "Provider" in credit["typeRole"]:
                         # print("**** PROVIDER ****")
@@ -128,32 +130,28 @@ def rdfize(json_entry):
                                 sType = "schema:Organization"
 
                             if "orcidid" in credit.keys() and credit["orcidid"] != None:
-                                if not "provider" in entry.keys():
-                                    entry["provider"] = {
+                                if not "provider" in tool.keys():
+                                    tool["provider"] = {
                                         "@id": credit["orcidid"],
                                         "@type": sType,
                                     }
-                                    # if 'name' in credit.keys() and credit['name'] != None:
-                                    #    entry['author_person']['name'] = credit['name']
                                 else:
-                                    entry["provider"].append(
+                                    tool["provider"].append(
                                         {"@id": credit["orcidid"], "@type": sType}
                                     )
                             elif "name" in credit.keys() and credit["name"] != None:
-                                if not "provider" in entry.keys():
-                                    entry["provider"] = [credit["name"]]
+                                if not "provider" in tool.keys():
+                                    tool["provider"] = [credit["name"]]
                                 else:
-                                    entry["provider"].append(credit["name"])
+                                    tool["provider"].append(credit["name"])
                         else:
                             if "name" in credit.keys() and credit["name"] != None:
-                                if not "provider" in entry.keys():
-                                    entry["provider"] = [credit["name"]]
+                                if not "provider" in tool.keys():
+                                    tool["provider"] = [credit["name"]]
                                 else:
-                                    entry["provider"].append(credit["name"])
+                                    tool["provider"].append(credit["name"])
 
                     if "Contributor" in credit["typeRole"]:
-                        # print("**** CONTRIBUTOR ****")
-                        # print(credit['name'])
 
                         if "typeEntity" in credit.keys() and credit["typeEntity"]:
                             if "Person" in credit["typeEntity"]:
@@ -162,31 +160,28 @@ def rdfize(json_entry):
                                 sType = "schema:Organization"
 
                             if "orcidid" in credit.keys() and credit["orcidid"] != None:
-                                if not "contributor" in entry.keys():
-                                    entry["contributor"] = {
+                                if not "contributor" in tool.keys():
+                                    tool["contributor"] = {
                                         "@id": credit["orcidid"],
                                         "@type": sType,
                                     }
                                 else:
-                                    entry["contributor"].append(
+                                    tool["contributor"].append(
                                         {"@id": credit["orcidid"], "@type": sType}
                                     )
                             elif "name" in credit.keys() and credit["name"] != None:
-                                if not "contributor" in entry.keys():
-                                    entry["contributor"] = [credit["name"]]
+                                if not "contributor" in tool.keys():
+                                    tool["contributor"] = [credit["name"]]
                                 else:
-                                    entry["contributor"].append(credit["name"])
+                                    tool["contributor"].append(credit["name"])
                         else:
                             if "name" in credit.keys() and credit["name"] != None:
-                                if not "contributor" in entry.keys():
-                                    entry["contributor"] = [credit["name"]]
+                                if not "contributor" in tool.keys():
+                                    tool["contributor"] = [credit["name"]]
                                 else:
-                                    entry["contributor"].append(credit["name"])
+                                    tool["contributor"].append(credit["name"])
 
                     if "Primary contact" in credit["typeRole"]:
-                        # print("**** CONTRIBUTOR ****")
-                        # print(credit['name'])
-
                         if "typeEntity" in credit.keys() and credit["typeEntity"]:
                             if "Person" in credit["typeEntity"]:
                                 sType = "schema:Person"
@@ -194,52 +189,50 @@ def rdfize(json_entry):
                                 sType = "schema:Organization"
 
                             if "orcidid" in credit.keys() and credit["orcidid"] != None:
-                                if not "primaryContact" in entry.keys():
-                                    entry["primaryContact"] = {
+                                if not "primaryContact" in tool.keys():
+                                    tool["primaryContact"] = {
                                         "@id": credit["orcidid"],
                                         "@type": sType,
                                     }
                                 else:
-                                    entry["primaryContact"].append(
+                                    tool["primaryContact"].append(
                                         {"@id": credit["orcidid"], "@type": sType}
                                     )
                             elif "name" in credit.keys() and credit["name"] != None:
-                                if not "primaryContact" in entry.keys():
-                                    entry["primaryContact"] = [credit["name"]]
+                                if not "primaryContact" in tool.keys():
+                                    tool["primaryContact"] = [credit["name"]]
                                 else:
-                                    entry["primaryContact"].append(credit["name"])
+                                    tool["primaryContact"].append(credit["name"])
                         else:
                             if "name" in credit.keys() and credit["name"] != None:
-                                if not "primaryContact" in entry.keys():
-                                    entry["primaryContact"] = [credit["name"]]
+                                if not "primaryContact" in tool.keys():
+                                    tool["primaryContact"] = [credit["name"]]
                                 else:
-                                    entry["primaryContact"].append(credit["name"])
+                                    tool["primaryContact"].append(credit["name"])
 
         if entry.get("publication"):
             for publication in entry["publication"]:
                 if publication.get("pmid"):
-                    if not "hasPublication" in entry.keys():
-                        # entry['hasPublication'] = [{"@id": 'pubmed:' + publication['pmid']}]
-                        entry["hasPublication"] = ["pubmed:" + publication["pmid"]]
+                    if not "hasPublication" in tool.keys():
+                        tool["hasPublication"] = ["pubmed:" + publication["pmid"]]
                     else:
-                        # entry['hasPublication'].append({"@id": 'pubmed:' + publication['pmid']})
-                        entry["hasPublication"].append("pubmed:" + publication["pmid"])
+                        tool["hasPublication"].append("pubmed:" + publication["pmid"])
                 if publication.get("pmcid"):
-                    if not "hasPublication" in entry.keys():
-                        entry["hasPublication"] = ["pmcid:" + publication["pmcid"]]
+                    if not "hasPublication" in tool.keys():
+                        tool["hasPublication"] = ["pmcid:" + publication["pmcid"]]
                     else:
-                        entry["hasPublication"].append("pmcid:" + publication["pmcid"])
+                        tool["hasPublication"].append("pmcid:" + publication["pmcid"])
                 if publication.get("doi"):
                     if not ("<" in publication["doi"] or ">" in publication["doi"]):
-                        if not "hasPublication" in entry.keys():
-                            entry["hasPublication"] = [
+                        if not "hasPublication" in tool.keys():
+                            tool["hasPublication"] = [
                                 {
                                     "@id": "https://doi.org/" + publication["doi"],
                                     "@type": "sc:CreativeWork",
                                 }
                             ]
                         else:
-                            entry["hasPublication"].append(
+                            tool["hasPublication"].append(
                                 {
                                     "@id": "https://doi.org/" + publication["doi"],
                                     "@type": "sc:CreativeWork",
@@ -247,77 +240,97 @@ def rdfize(json_entry):
                             )
 
         if entry.get("function"):
+            counter_op = 0
             for item in entry["function"]:
+                counter_op += 1
                 if item.get("operation"):
                     for op in item["operation"]:
-                        if not "hasOperation" in entry.keys():
-                            entry["hasOperation"] = [{"@id": op["uri"]}]
+                        if not "hasOperation" in tool.keys():
+                            tool["hasOperation"] = [{"@id": op["uri"]}]
                         else:
-                            entry["hasOperation"].append({"@id": op["uri"]})
+                            tool["hasOperation"].append({"@id": op["uri"]})
 
                 if item.get("input"):
+                    counter_in = 0
                     for input in item["input"]:
+                        counter_in += 1
                         input_object = {
+                            "@id": tool["@id"]
+                            + "/op_"
+                            + str(counter_op)
+                            + "/in_"
+                            + str(counter_in),
                             "@type": "bsct:FormalParameter",
                             "name": input["data"]["term"],
                             "identifier": input["data"]["uri"],
                             "sameAs": input["data"]["uri"],
                         }
-                        if not "hasInputData" in entry.keys():
-                            entry["hasInputData"] = [input_object]
+                        if not "hasInputData" in tool.keys():
+                            tool["hasInputData"] = [input_object]
                         else:
-                            entry["hasInputData"].append(input_object)
+                            tool["hasInputData"].append(input_object)
 
                 if item.get("output"):
+                    counter_out = 0
                     for output in item["output"]:
+                        counter_out += 1
                         output_object = {
+                            "@id": tool["@id"]
+                            + "/op_"
+                            + str(counter_op)
+                            + "/in_"
+                            + str(counter_out),
                             "@type": "bsct:FormalParameter",
                             "name": output["data"]["term"],
                             "identifier": output["data"]["uri"],
                             "sameAs": output["data"]["uri"],
                         }
-                        if not "hasOutputData" in entry.keys():
-                            entry["hasOutputData"] = [output_object]
+                        if not "hasOutputData" in tool.keys():
+                            tool["hasOutputData"] = [output_object]
                         else:
-                            entry["hasOutputData"].append(output_object)
+                            tool["hasOutputData"].append(output_object)
 
         if entry.get("topic"):
             for item in entry["topic"]:
-                if not "hasTopic" in entry.keys():
-                    entry["hasTopic"] = [{"@id": item["uri"]}]
+                if not "hasTopic" in tool.keys():
+                    tool["hasTopic"] = [{"@id": item["uri"]}]
                 else:
-                    entry["hasTopic"].append({"@id": item["uri"]})
+                    tool["hasTopic"].append({"@id": item["uri"]})
 
         if entry.get("cost"):
             for item in entry["cost"]:
-                if not "isAccessibleForFree" in entry.keys():
+                if not "isAccessibleForFree" in tool.keys():
                     if "Free" in entry["cost"]:
-                        entry["isAccessibleForFree"] = True
+                        tool["isAccessibleForFree"] = True
                     else:
-                        entry["isAccessibleForFree"] = False
+                        tool["isAccessibleForFree"] = False
 
         if entry.get("documentation"):
             for item in entry["documentation"]:
                 if "type" in item.keys() and item["type"]:
                     item["url"] = item["url"].replace("|", "%7C")
                     if "API" in item["type"]:
-                        if not "hasApiDoc" in entry.keys():
-                            entry["hasApiDoc"] = [{"@id": item["url"]}]
+                        if not "hasApiDoc" in tool.keys():
+                            tool["hasApiDoc"] = [{"@id": item["url"]}]
                         else:
-                            entry["hasApiDoc"].append({"@id": item["url"]})
+                            tool["hasApiDoc"].append({"@id": item["url"]})
                     elif "Terms" in item["type"]:
-                        if not "hasTermsOfUse" in entry.keys():
-                            entry["hasTermsOfUse"] = [{"@id": item["url"]}]
+                        if not "hasTermsOfUse" in tool.keys():
+                            tool["hasTermsOfUse"] = [{"@id": item["url"]}]
                         else:
-                            entry["hasTermsOfUse"].append({"@id": item["url"]})
+                            tool["hasTermsOfUse"].append({"@id": item["url"]})
                     else:
-                        if not "hasGenDoc" in entry.keys():
-                            entry["hasGenDoc"] = [{"@id": item["url"]}]
+                        if not "hasGenDoc" in tool.keys():
+                            tool["hasGenDoc"] = [{"@id": item["url"]}]
                         else:
-                            entry["hasGenDoc"].append({"@id": item["url"]})
+                            tool["hasGenDoc"].append({"@id": item["url"]})
 
     except KeyError as e:
         print(e)
         pass
-    raw_jld = json.dumps(entry, indent=4, sort_keys=True)
-    return raw_jld
+
+    graph["@graph"] = tool
+    jsonld.update(graph)
+    # print(json.dumps(jsonld, indent=4, sort_keys=True))
+    # raw_jld = json.dumps(entry, indent=4, sort_keys=True)
+    return jsonld
