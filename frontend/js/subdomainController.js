@@ -52,7 +52,7 @@ angular.module('elixir_front.controllers')
 		},
 		{
 			"name":"sub_title",
-			"weight": 0.8
+			"weight": 0.7
 		},
 		{
 			"name":"tag",
