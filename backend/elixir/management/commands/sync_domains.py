@@ -23,6 +23,8 @@ def process_domain(domain_object):
 	for c in domain_data['collection']:
 		collection_objects = CollectionID.objects.filter(name=c).select_related('resource')
 		
+		print(c)
+
 		resource_list.extend([
 			OrderedDict([('name', c.resource.name), ('biotoolsID', c.resource.biotoolsID)]) 
 			for c in collection_objects if c.resource.visibility == 1

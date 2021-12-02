@@ -1,0 +1,50 @@
+<div class="domain-container">
+    <div  class="domains-summary">
+        <h3>bio.tools domains list</h3>
+        <p><em>bio.tools</em> domains provide a way to "slice" the bio.tools content into subsets of tools.</p>
+        <p>Scroll through the list of available bio.tools domains below or search for a specific domain. You can also find a domain by searching for tools.</p>
+        <p>See the domains documentation for more information.</p>
+        
+    </div>
+
+    <div class="domain-search-container">
+        <div class="form-group">
+            <label for="domain-search">Search for bio.tools domains</label>
+            <input 
+                type="text" 
+                class="form-control" 
+                id="domain-search" 
+                placeholder="Search for domains"
+                ng-change="domainSearch()"
+                ng-model="domainSearchText"
+            >
+        </div>
+    </div>
+
+    <hr style="border-top: 2px solid orange">
+
+    <div class="domain-entries">
+        <div ng-repeat="entry in filteredDomains track by $index" class="domain-entry">
+            <span class="domain-head">
+                <a ng-href="/t?domain={{entry.domain}}">{{entry.domain}}</a> <span class="domain-tool-count">( {{entry.resources.length}} tools )</span>
+            </span>
+            <h5>{{entry.title}}</h5>
+            <p>{{entry.sub_title}}</p>
+            <a 
+                ng-repeat="c in entry.collection" class="pill-tag-third-background"
+                tooltips
+                tooltip-content="Domain collection"
+                href
+                ng-click="collectionNameClicked(c)"
+                >{{c}}
+            </a>
+            <a
+                ng-repeat="t in entry.tag"
+                tooltips
+                tooltip-content="Domain tag"
+                class="pill-tag-primary-background">{{t}}
+            </a>
+        </div>
+    </div>
+    
+</div>

@@ -111,6 +111,19 @@ var elixir_front = angular.module('elixir_front', [
 		},
 		controller: "SearchResultController"
 	})
+	.state('domains', {
+		url: "/domains",
+		templateUrl: "partials/subdomains/domains.html",
+		data: {
+			meta: {
+				'title': 'Domains',
+				'description': 'bio.tools domains.'
+			},
+			roles: []
+		},
+		controller: "DomainListController",
+		resolve: {}
+	})
 	.state('register', {
 		url: "/register",
 		templateUrl: "partials/toolEdit.html",
