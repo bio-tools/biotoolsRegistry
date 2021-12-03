@@ -25,7 +25,7 @@ class DocumentationTypeSerializer(serializers.ModelSerializer):
 		return {'type': data}
 
 class DocumentationSerializer(serializers.ModelSerializer):
-	url = serializers.CharField(allow_blank=False, validators=[IsURLFTPValidator], required=True)
+	url = serializers.CharField(allow_blank=False, validators=[IsURLFTPValidator, is_blacklisted_url_validator], required=True)
 	type = DocumentationTypeSerializer(many=True, required=True, allow_empty=False)
 	note = serializers.CharField(allow_blank=True, min_length=10, max_length=1000, validators=[IsStringTypeValidator], required=False)
 

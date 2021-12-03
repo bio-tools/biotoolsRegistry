@@ -62,7 +62,7 @@ class CreditSerializer(serializers.ModelSerializer):
 	# TODO: make name validate as a token, i.e. no newline, no leading or trailing spaces, no duplicate spaces, no tabs, xml token
 	name = serializers.CharField(allow_blank=False, max_length=100, min_length=1, validators=[IsStringTypeValidator], required=False)
 	# name = CreditNameSerializer(many=True, required=True, allow_empty=False)
-	url = serializers.CharField(allow_blank=False, validators=[IsURLValidator], required=False)
+	url = serializers.CharField(allow_blank=False, validators=[IsURLValidator, is_blacklisted_url_validator], required=False)
 	email = serializers.CharField(allow_blank=False, max_length=300, validators=[IsStringTypeValidator, IsEmailValidator], required=False)
 	orcidid = serializers.CharField(allow_blank=False, validators=[IsStringTypeValidator], required=False)
 	gridid = serializers.CharField(allow_blank=False, validators=[IsStringTypeValidator], required=False)

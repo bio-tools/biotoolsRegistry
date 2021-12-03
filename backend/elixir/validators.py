@@ -2,6 +2,8 @@ from rest_framework import serializers
 from elixir.serializers import Ontology
 import re, json
 from rest_framework.validators import UniqueTogetherValidator
+from elixir.blacklisted_domains import BLACKLISTED_DOMAINS_LIST
+
 
 # this validator is a copy of UniqueTogetherValidator with one difference: it refuses when version is None
 # BE ADVISED: https://github.com/tomchristie/django-rest-framework/issues/2452
@@ -291,3 +293,9 @@ class OntologyValidator():
 			message = 'Either the URI or term is required.'
 			raise serializers.ValidationError(message)
 
+
+
+def is_blacklisted_url_validator(url):
+	for blacklisted_url in BLACKLISTED_DOMAINS_LIST:
+		if blacklisted_url.lower() in url.lower():
+			raise serializers.ValidationError('This URL domain is blacklisted. Contact help@bio.tools for more details.')

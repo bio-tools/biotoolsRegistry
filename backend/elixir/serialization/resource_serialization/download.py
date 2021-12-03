@@ -3,7 +3,7 @@ from elixir.models import *
 from elixir.validators import *
 
 class DownloadSerializer(serializers.ModelSerializer):
-	url = serializers.CharField(allow_blank=False, validators=[IsURLFTPValidator], required=True)
+	url = serializers.CharField(allow_blank=False, validators=[IsURLFTPValidator, is_blacklisted_url_validator], required=True)
 	type = serializers.CharField(allow_blank=True, max_length=300, min_length=1, required=True)
 	note = serializers.CharField(allow_blank=True, min_length=10, max_length=1000, validators=[IsStringTypeValidator], required=False)
 	version = serializers.CharField(allow_blank=True, max_length=100, min_length=1, required=False)

@@ -307,3 +307,14 @@ try:
     from elixirapp.deployment_settings import *
 except ImportError:
     print ("Could not import deployment settings")
+
+
+
+# settings for blacklisted domains
+BLACKLISTED_DOMAINS_LIST = getenv('BLACKLISTED_DOMAINS_LIST', [], castf=json.loads)
+
+# settings blacklisting
+try:
+    from elixir.blacklisted_domains import *
+except ImportError:
+    print ("Could not import deployment settings")

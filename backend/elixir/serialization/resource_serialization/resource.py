@@ -234,7 +234,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 	# name = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[IsStringTypeValidator, UniqueValidator(queryset=Resource.objects.filter(visibility=1), message="The resource ID (biotoolsID) generated from this name already exists; Use a different name.")])
 
 	name = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[IsStringTypeValidator])
-	homepage = serializers.CharField(max_length=300, min_length=1, allow_blank=False)
+	homepage = serializers.CharField(max_length=300, min_length=1, allow_blank=False, validators=[is_blacklisted_url_validator])
 
 	elixir_badge = serializers.IntegerField(read_only=True)
 	homepage_status = serializers.IntegerField(read_only=True)
