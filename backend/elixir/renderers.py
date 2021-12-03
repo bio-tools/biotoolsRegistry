@@ -118,4 +118,4 @@ class JSONLDRenderer(BaseRenderer):
         # tool_cleaned = remap(tool, visit=drop_false)
 
         jsonld = rdfize(data)
-        return jsonld
+        return json.dumps(jsonld, indent=4)
