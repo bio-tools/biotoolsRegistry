@@ -1,0 +1,84 @@
+
+.community-container {
+    background-color: #FFF !important;
+}
+
+.community-container > h1 {
+    font-size: 30px;
+}
+
+p.communities-desc{
+    margin-bottom: 10px;
+    font-size: 16px;
+    text-align: justify;
+    padding-right: 10px;
+}
+
+
+.community-content > p {
+    padding-left: 0.7em;
+}
+
+div.community-content {
+    padding: 1em 3.5em ;
+    
+}
+
+.community-name{
+    position: relative;
+    display: inline-block;
+    padding-left: 0.7em;
+    padding-right: 1.2em;
+    border-bottom: 2px solid rgb(255, 165, 0);
+    padding-bottom: 5px;
+    font-weight: bold;
+    /* margin-left: 0.1em; */
+}
+
+.community-name::before{
+    content: '';
+    position: absolute;
+    height: 3em;
+    width: 3em;
+    border: 0.5em solid rgb(255, 165, 0);
+    top: -0.12em;
+    left: -3.0em;
+    border-radius: 50%;
+    /* background: rgb(255, 165, 0); */
+}
+
+p.comm-desc{
+    font-weight: bolder;
+}
+
+section.elixir-community{
+    margin-top: 1px;
+}
+
+.comm-subdomain{
+    margin-top: 10px;
+}
+
+.community-subdomains{
+    font-style: italic;
+}
+
+.community-subdomains, .comm-subdomain, .comm-subdomain > p{
+    font-size: 16px;
+}
+
+.community-subdomains, .comm-subdomain{
+    padding-left:0.7em;
+}
+
+.comm-subdomain > a{
+    font-weight: 500;
+}
+
+.domain-title{
+    font-weight: bolder;
+}
+
+.stronger{
+    font-weight: bolder;
+}

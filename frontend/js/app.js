@@ -74,6 +74,30 @@ var elixir_front = angular.module('elixir_front', [
 		},
 		resolve: {}
 	})
+	.state('community', {
+		url: "/community",
+		templateUrl: "components/community/community.html",
+		data: {
+			meta: {
+				'title': 'Communities',
+				'description': 'bio.tools and communities'
+			},
+			roles: []
+		},
+		resolve: {}
+	})
+	.state('communities', {
+		url: "/communities",
+		templateUrl: "components/community/community.html",
+		data: {
+			meta: {
+				'title': 'Communities',
+				'description': 'bio.tools and communities'
+			},
+			roles: []
+		},
+		resolve: {}
+	})
 	.state('schema', {
 		url: "/schema",
 		templateUrl: "partials/schema.html",
