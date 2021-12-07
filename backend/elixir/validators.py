@@ -2,7 +2,7 @@ from rest_framework import serializers
 from elixir.serializers import Ontology
 import re, json
 from rest_framework.validators import UniqueTogetherValidator
-from elixir.blacklisted_domains import BLACKLISTED_DOMAINS_LIST
+from django.conf import settings
 
 
 # this validator is a copy of UniqueTogetherValidator with one difference: it refuses when version is None
@@ -296,6 +296,6 @@ class OntologyValidator():
 
 
 def is_blacklisted_url_validator(url):
-	for blacklisted_url in BLACKLISTED_DOMAINS_LIST:
+	for blacklisted_url in settings.BLACKLISTED_DOMAINS_LIST:
 		if blacklisted_url.lower() in url.lower():
 			raise serializers.ValidationError('This URL domain is blacklisted. Contact help@bio.tools for more details.')
