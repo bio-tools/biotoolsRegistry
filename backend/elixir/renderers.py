@@ -11,6 +11,7 @@ from rest_framework.renderers import BaseRenderer
 from lxml import etree as lxmletree
 from rest_framework.exceptions import ParseError
 import json
+import os
 
 
 class XMLSchemaRenderer(BaseRenderer):
@@ -30,6 +31,8 @@ class XMLSchemaRenderer(BaseRenderer):
         """
         if data is None:
             return ""
+
+        curr_dir = os.path.abspath(os.path.dirname(__file__))
 
         stream = StringIO()
 
@@ -55,12 +58,12 @@ class XMLSchemaRenderer(BaseRenderer):
         try:
             parser = lxmletree.XMLParser(ns_clean=True, recover=True, encoding="utf-8")
             dom = lxmletree.fromstring(generic_xml, parser=parser)
-            xslt1 = lxmletree.parse("./elixir/biotoolsSchema/" + xmlfile)
+            xslt1 = lxmletree.parse(curr_dir + "/biotoolsSchema/" + xmlfile)
             transform1 = lxmletree.XSLT(xslt1)
             newdom = transform1(dom)
 
             # removing empty elements
-            xslt2 = lxmletree.parse("./elixir/biotoolsSchema/removeEmptyElements.xslt")
+            xslt2 = lxmletree.parse(curr_dir + "/biotoolsSchema/removeEmptyElements.xslt")
             transform2 = lxmletree.XSLT(xslt2)
             newdom2 = transform2(newdom)
 
