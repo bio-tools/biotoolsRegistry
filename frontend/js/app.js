@@ -79,7 +79,7 @@ var elixir_front = angular.module('elixir_front', [
 		templateUrl: "components/community/community.html",
 		data: {
 			meta: {
-				'title': 'Communities',
+				'title': 'Communities in bio.tools',
 				'description': 'bio.tools and communities'
 			},
 			roles: []
@@ -140,8 +140,10 @@ var elixir_front = angular.module('elixir_front', [
 		templateUrl: "partials/subdomains/domains.html",
 		data: {
 			meta: {
-				'title': 'Domains',
-				'description': 'bio.tools domains.'
+				'title': 'bio.tools domains',
+				'description': 'Explore and search all bio.tools domains and manage your own domains.',
+				'og:title': 'bio.tools domains',
+				'og:description': 'Explore and search all bio.tools domains and manage your own domains.'
 			},
 			roles: []
 		},
