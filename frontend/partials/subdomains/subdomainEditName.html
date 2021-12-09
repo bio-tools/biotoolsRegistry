@@ -3,7 +3,7 @@
 	<div>
 		<!-- Name -->
 		<span class="content-page-input-title-label">Name / identifier</span>
-		<a href="https://biotools.readthedocs.io/" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+		<a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html#domain-name" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 		<div ng-if="subdomain.exists == false">
 			<input ng-model="subdomain.domain" name="identifier" type="text"
 				ng-change="makeSubdomainURLSafe(subdomain.domain)" class="form-control content-page-input-field"
@@ -27,7 +27,7 @@
 	<!-- Domain is_private -->
 	<div class="content-page-element-spacing-top">
 		<span class="content-page-input-title-label">Is private</span>
-		<a href="https://biotools.readthedocs.io/" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+		<a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html#private-vs-public-domains" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 		<br>
 		
 		<label class="radio-inline"><input type="radio" name="isprivate" ng-model="subdomain.is_private" ng-value="true">Yes</label>
@@ -38,7 +38,7 @@
 	<div class="content-page-element-spacing-top">
 		<!-- Title -->
 		<span class="content-page-input-title-label">Title</span>
-		<a href="https://biotools.readthedocs.io/" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+		<a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html#domain-title" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 		
 		<input ng-model="subdomain.title" name="title" type="text" class="form-control content-page-input-field"
 			placeholder="Title">
@@ -54,7 +54,7 @@
 	<div class="content-page-element-spacing-top">
 		<!-- Subtitle -->
 		<span class="content-page-input-title-label">Subtitle</span>
-		<a href="https://biotools.readthedocs.io/" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+		<a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html#domain-subtitle" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 		<input ng-model="subdomain.subtitle" name="subtitle" type="text" class="form-control content-page-input-field"
 			placeholder="Subtitle">
 			<div ng-repeat="error in errors.data.sub_title">
@@ -67,7 +67,7 @@
 	<!-- Domain tags -->
 	<div class="content-page-element-spacing-top">
 		<span class="content-page-input-title-label">Tags</span>
-		<a href="https://biotools.readthedocs.io/" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+		<a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html#domain-tags" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 	</div>
 	
 	<div class="domain-list-element" ng-repeat="tag in subdomain.tag track by $index">
@@ -92,7 +92,7 @@
 	<!-- Domain collection -->
 	<div class="content-page-element-spacing-top">
 		<span class="content-page-input-title-label">Collections</span>
-		<a href="https://biotools.readthedocs.io/" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+		<a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html#domain-collections" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 	</div>
 
 	<div class="domain-list-element" ng-repeat="collection in subdomain.collection track by $index">
@@ -128,7 +128,7 @@
 	<div class="content-page-element-spacing-top">
 		<!-- Description -->
 		<span class="content-page-input-title-label">Description</span>
-		<a href="https://biotools.readthedocs.io/" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+		<a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html#domain-description" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 		<textarea rows="4" ng-model="subdomain.description" name="description" type="text"
 			class="form-control content-page-input-field" placeholder="Description"></textarea>
 		<div class="content-page-danger-text" ng-if="errors.domain.description">
