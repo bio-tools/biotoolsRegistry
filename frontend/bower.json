@@ -36,8 +36,7 @@
     "angular-chart.js": "1.0.3",
     "moment": "2.15.2",
     "ngMeta": "^1.0.0",
-    "angucomplete-alt": "^2.5.0",
-    "fuse.js": "^2.5.0"
+    "angucomplete-alt": "^2.5.0"
   },
   "resolutions": {
     "angular": "~1.4.7"

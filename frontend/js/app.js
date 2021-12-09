@@ -74,6 +74,30 @@ var elixir_front = angular.module('elixir_front', [
 		},
 		resolve: {}
 	})
+	.state('community', {
+		url: "/community",
+		templateUrl: "components/community/community.html",
+		data: {
+			meta: {
+				'title': 'Communities in bio.tools',
+				'description': 'bio.tools and communities'
+			},
+			roles: []
+		},
+		resolve: {}
+	})
+	.state('communities', {
+		url: "/communities",
+		templateUrl: "components/community/community.html",
+		data: {
+			meta: {
+				'title': 'Communities',
+				'description': 'bio.tools and communities'
+			},
+			roles: []
+		},
+		resolve: {}
+	})
 	.state('schema', {
 		url: "/schema",
 		templateUrl: "partials/schema.html",
@@ -111,6 +135,21 @@ var elixir_front = angular.module('elixir_front', [
 		},
 		controller: "SearchResultController"
 	})
+	.state('domains', {
+		url: "/domains",
+		templateUrl: "partials/subdomains/domains.html",
+		data: {
+			meta: {
+				'title': 'bio.tools domains',
+				'description': 'Explore and search all bio.tools domains and manage your own domains.',
+				'og:title': 'bio.tools domains',
+				'og:description': 'Explore and search all bio.tools domains and manage your own domains.'
+			},
+			roles: []
+		},
+		controller: "DomainListController",
+		resolve: {}
+	})
 	.state('register', {
 		url: "/register",
 		templateUrl: "partials/toolEdit.html",
@@ -131,8 +170,21 @@ var elixir_front = angular.module('elixir_front', [
 		templateUrl: "partials/subdomains/subdomainEdit.html",
 		data: {
 			meta: {
-				'title': 'Edit subdomain',
-				'og:title': 'Edit subdomain'
+				'title': 'Edit domain',
+				'og:title': 'Edit domain'
+			},
+			roles: ['User']
+		},
+		controller: "SubdomainController",
+		resolve: {}
+	})
+	.state('edit-domain', {
+		url: "/edit-domain/:id",
+		templateUrl: "partials/subdomains/subdomainEdit.html",
+		data: {
+			meta: {
+				'title': 'Edit domain',
+				'og:title': 'Edit domain'
 			},
 			roles: ['User']
 		},
@@ -144,8 +196,21 @@ var elixir_front = angular.module('elixir_front', [
 		templateUrl: "partials/subdomains/subdomainPage.html",
 		data: {
 			meta: {
-				'title': 'Subdomain',
-				'og:title': 'Subdomain'
+				'title': 'Domain',
+				'og:title': 'Domain'
+			},
+			roles: ['User']
+		},
+		controller: "SubdomainAdminController",
+		resolve: {}
+	})
+	.state('admin-domain', {
+		url: "/domain-manager",
+		templateUrl: "partials/subdomains/subdomainPage.html",
+		data: {
+			meta: {
+				'title': 'Domain',
+				'og:title': 'Domain'
 			},
 			roles: ['User']
 		},

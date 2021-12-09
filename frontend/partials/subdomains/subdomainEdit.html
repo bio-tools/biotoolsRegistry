@@ -1,8 +1,9 @@
 <div class="row" ng-cloak>
 	<div class="col-xs-12 col-sm-10 col-md-10 col-md-offset-1 col-sm-offset-1">
 		<!-- Headers -->
-		<h3 class="content-page-header" ng-show="subdomain.exists == false">Register subdomain</h3>
-		<h3 class="content-page-header" ng-show="subdomain.exists == true">Update subdomain</h3>
+		<h3 class="content-page-header" ng-show="subdomain.exists == false">Create bio.tools domain</h3>
+		<h3 class="content-page-header" ng-show="subdomain.exists == true">Update domain</h3>
+		<h5 class="content-page-header" ng-show="subdomain.exists == true">Go to <a ng-click="gotoDomain(subdomain.domain)" href="">{{ subdomain.domain }} ›</a></h5>
 		<hr class="content-page-divider">
 		<!-- Server responses -->
 		<uib-alert ng-cloak ng-show="response.general" type="success"><i class="fa fa-info-circle" aria-hidden="true"></i> {{response.general}}</uib-alert>

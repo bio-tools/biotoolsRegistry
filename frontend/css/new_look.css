@@ -550,3 +550,73 @@ a.link-element, a.documentation-element{
     display: block;
     margin-bottom: 10px;
 }
+
+
+/* Domain list */
+
+.domain-container{
+    margin-bottom: 2em;
+    margin-left: 2em;
+    margin-right: 2em;
+    border: 1px solid #c9c6c6;
+    border-radius: 6px;
+    background-color: #FFF;
+}
+
+.domains-summary{
+    top: 20px;
+    padding: 1em 1em 1em 1em;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.domains-summary > p{
+    font-size: 16px;
+    
+}
+
+.domain-entries > div:last-of-type {
+    border-bottom: none;
+}
+
+.domain-head{
+    position: relative;
+    font-size: 16px;
+    font-weight: bolder;
+}
+
+.domain-entry {
+    padding: 1em 1em 1em 5em;
+    border-bottom: 1px solid #c9c6c6;
+}
+
+.domain-head::before{
+    content: '';
+    display:inline-block;  
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 3px;
+    border-color: orange;
+    background-color: rgba(0, 0, 0, 0);
+    position: absolute;
+    left: -2em;
+    top: 0.3rem;
+
+  }
+
+.domain-search-container {
+      width:80%;
+      margin: auto;
+      padding: 1em;
+      margin-bottom: 2em;
+      background-color:#F5F5F5;
+      border: 1px solid #c9c6c6;
+      border-radius: 5px;
+}
+
+.domain-search-container label{
+    font-size: 16px;
+}
+

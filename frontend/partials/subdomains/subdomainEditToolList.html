@@ -1,4 +1,5 @@
-<span class="content-page-input-title-label">Search for resources</span>
+<span class="content-page-input-title-label">Search for tools</span>
+<a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html#domain-resources" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 <div class="panel panel-default">
 	<div class="panel-body">
 		<!-- Search bar -->
@@ -39,7 +40,7 @@
 							<td><span ng-bind="entry.additionDate | timeAgo:'hh:mm, dd MMM yyyy'"></span></td>
 							<td><span ng-show="entry.lastUpdate != entry.additionDate" ng-bind="entry.lastUpdate | timeAgo:'hh:mm, dd MMM yyyy'"></span><span ng-show="entry.lastUpdate == entry.additionDate">&ndash;</span></td>
 							<td>
-								<button ng-if="!toolInSubdomain(entry.biotoolsID, entry.versionId)" class="btn btn-xs btn-default content-page-control" ng-click="addToSubdomain((toolsPerPageCount * (search.currentPage - 1)) + $index)">Add to subdomain ›</button>
+								<button ng-if="!toolInSubdomain(entry.biotoolsID, entry.versionId)" class="btn btn-xs btn-default content-page-control" ng-click="addToSubdomain((toolsPerPageCount * (search.currentPage - 1)) + $index)">Add to domain ›</button>
 								<span ng-if="toolInSubdomain(entry.biotoolsID, entry.versionId)" ><i class="fa fa-check-square-o" aria-hidden="true"></i> Added</span>
 							</td>
 						</tr>
@@ -48,7 +49,7 @@
 				<!-- Pagination control -->
 				<div ng-show="search.searchResults.length" class="edit-subdomain form-group">
 					<ul uib-pagination total-items="search.totalPages" ng-model="search.currentPage" max-size="7"></ul>
-					<button class="btn btn-default content-page-control pull-right" ng-click="addAllToSubdomain()" style="vertical-align: top;">Add all entries ›</button>
+					<button class="btn btn-default content-page-control pull-right" ng-click="addAllToSubdomain()" style="vertical-align: top;">Add all tools ›</button>
 				</div>
 				<!-- No results found -->
 				<div ng-show="search.noResults" class="content-page-element-spacing-top" style="text-align: center;">No results found matching the criteria</div>
@@ -56,24 +57,22 @@
 		</div>
 	</div>
 </div>
-<span class="content-page-input-title-label">Resources included in subdomain</span>
+<span class="content-page-input-title-label">Tools included in subdomain</span>
 <div class="panel panel-default">
 	<div class="panel-body">
 		<!-- No resources added yet -->
-		<div ng-if="subdomain.toolList.length == 0" class="content-page-element-spacing-top content-page-element-spacing" style="text-align: center;">No resources added yet</div>
+		<div ng-if="subdomain.toolList.length == 0" class="content-page-element-spacing-top content-page-element-spacing" style="text-align: center;">No tools added yet</div>
 		<!-- Resources in subdomain -->
 		<table class="table table-sm table-hover" ng-if="subdomain.toolList.length != 0">
 			<thead>
 				<tr>
 					<th>Name</th>
-					<th>Version</th>
 					<th style="width: 120px;">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="entry in subdomain.toolList | limitTo: toolsPerPageCount : (toolsPerPageCount * (subdomain.currentPage - 1)) track by $index">
 					<td><a ui-sref="tool({id: entry.biotoolsID})">{{ entry.name }} ›</a></td>
-					<td>{{ entry.version }}</td>
 					<td>
 						<button class="btn btn-xs btn-default" ng-click="removeFromSubdomain((toolsPerPageCount * (subdomain.currentPage - 1)) + $index)">Remove from subdomain ›</button>
 					</td>

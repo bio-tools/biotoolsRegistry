@@ -1,6 +1,6 @@
 <div class="row" ng-cloak>
 	<div class="col-xs-12 col-sm-10 col-md-10 col-md-offset-1 col-sm-offset-1">
-		<h3 class="content-page-header">Subdomains</h3>
+		<h3 class="content-page-header">Manage bio.tools domains</h3>
 		<hr class="content-page-divider">
 		<!-- Loading -->
 		<div ng-show="isLoadingSubdomains" style="margin-top: 50px;">
@@ -30,7 +30,7 @@
 									<td style="padding-left: 15px;"><a ui-sref="subdomain({domain: entry.name})">{{ entry.name }} ›</a></td>
 									<td>{{ entry.resourcesCount }}</td>
 									<td >
-										<a ui-sref="edit-subdomain({id: entry.name})">
+										<a ui-sref="edit-domain({id: entry.name})">
 											<button class="btn btn-xs btn-default content-page-control">Edit ›</button>
 										</a>
 										<button class="btn btn-xs btn-danger content-page-control" ng-click="deleteSubdomainAtIndex($index)">Delete ›</button>
@@ -40,7 +40,7 @@
 						</table>
 					</div>
 					<hr class="content-page-divider content-page-element-spacing-top">
-					<button class="btn btn-default btn-sm content-page-control pull-right" ui-sref="edit-subdomain">Add ›</button>
+					<button class="btn btn-default btn-sm content-page-control pull-right" ui-sref="edit-domain">Add ›</button>
 				</div>
 			</div>
 		</div>

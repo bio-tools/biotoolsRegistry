@@ -59,13 +59,36 @@
 }
 
 .domain-list-element{
-	display: block;
-	margin-bottom: 10px;
+	margin-bottom: 3.5rem;
 	width: 100%;
 }
 
+.collection-tools-link {
+	position: absolute;
+	top: 4rem;
+	left: 0.5rem;
+	width: 100%;
+}
+
+
 @media (min-width: 1100px) {
 	.domain-list-element{
-		width: 50%;
+		margin-bottom: 10px;
+		max-width: 40%;
 	}
+
+	.collection-tools-link {
+		left: 102%;
+		top: 0.6rem;
+		
+	}
+	
+}
+
+
+.edit-domain-text {
+	float: right;
+	padding-right: 10px;
+	padding-top: 1rem;
+	font-size: 1.2em;
 }

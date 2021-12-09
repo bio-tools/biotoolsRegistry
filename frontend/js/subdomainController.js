@@ -36,7 +36,91 @@ angular.module('elixir_front.controllers')
 	// Initialization
 	vm.loadSubdomains()
 }])
-.controller('SubdomainController', ['$scope',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', function($scope, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms) {
+.controller('DomainListController', ['$scope', 'DomainDetailConnection', '$state', function($scope, DomainDetailConnection, $state){
+	var vm = this;
+	$scope.domains = [];
+	$scope.domainSearchText = "";
+	
+	var fuseSearchKeys = [
+		{
+			"name":"domain",
+			"weight": 1
+		},
+		{
+			"name":"title",
+			"weight": 1
+		},
+		{
+			"name":"sub_title",
+			"weight": 0.7
+		},
+		{
+			"name":"tag",
+			"weight": 1
+		},
+		{
+			"name":"collection",
+			"weight": 1
+		}, 
+		{
+			"name":"description",
+			"weight": 0.5
+		},
+		{
+			"name":"resources.name",
+			"weight": 0.2
+		},
+		{
+			"name":"resources.biotoolsID",
+			"weight": 0.2
+		}
+	];
+	$scope.fuseOptions = {
+		threshold: 0.3,
+		shouldSort: true,
+		minMatchCharLength: 2,
+		// location: 0, default 0
+		tokenize: true,
+		// matchAllTokens: true,
+		keys: fuseSearchKeys
+
+	};
+
+
+	DomainDetailConnection.query({'domain':'all'}, function(response) {
+		$scope.domains = response.data;
+		$scope.domains.sort(function(a,b){
+			var d_a = a.domain.toLowerCase();
+			var d_b = b.domain.toLowerCase();
+
+			if (d_a < d_b) {
+				return -1;
+			  }
+			  if (d_a > d_b) {
+				return 1;
+			  }
+			  return 0; 
+		})
+		$scope.filteredDomains = $scope.domains;
+		$scope.fuse = new Fuse($scope.domains, $scope.fuseOptions);
+	});
+
+	$scope.collectionNameClicked = function(collectionName) {
+		$state.go('search', {'collectionID': '"'+ collectionName + '"'});
+	}
+
+	$scope.domainSearch = function(){
+		if ($scope.domainSearchText.length == 0){
+			$scope.filteredDomains = $scope.domains;
+		}
+		else {
+			$scope.filteredDomains = $scope.fuse.search($scope.domainSearchText);
+		}
+	}
+
+
+}])
+.controller('SubdomainController', ['$scope', '$state',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', function($scope, $state, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms) {
 	var vm = this;
 	$scope.ToolListOverviewConnection = ToolListOverviewConnection;
 	$scope.updating = false;
@@ -75,6 +159,14 @@ angular.module('elixir_front.controllers')
 
 	$scope.response = {};
 	$scope.response.general = '';
+
+
+	$scope.gotoDomain = function(d){
+		if (confirm('Make sure to save before leaving the page. Leave?')){
+			$state.go('subdomain', {domain: d});
+		}
+		
+	}
 
 	// Handle tool search
 	$scope.clearButtonPressed = function() {
