@@ -620,3 +620,6 @@ a.link-element, a.documentation-element{
     font-size: 16px;
 }
 
+label.domain-search-option{
+    font-size: 14px;
+}

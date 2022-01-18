@@ -41,51 +41,66 @@ angular.module('elixir_front.controllers')
 	$scope.domains = [];
 	$scope.domainSearchText = "";
 	
-	var fuseSearchKeys = [
-		{
-			"name":"domain",
-			"weight": 1
-		},
-		{
-			"name":"title",
-			"weight": 1
-		},
-		{
-			"name":"sub_title",
-			"weight": 0.7
-		},
-		{
-			"name":"tag",
-			"weight": 1
-		},
-		{
-			"name":"collection",
-			"weight": 1
-		}, 
-		{
-			"name":"description",
-			"weight": 0.5
-		},
-		{
-			"name":"resources.name",
-			"weight": 0.2
-		},
-		{
-			"name":"resources.biotoolsID",
-			"weight": 0.2
-		}
-	];
-	$scope.fuseOptions = {
-		threshold: 0.3,
-		shouldSort: true,
-		minMatchCharLength: 2,
-		// location: 0, default 0
-		tokenize: true,
-		// matchAllTokens: true,
-		keys: fuseSearchKeys
+	$scope.search_title = true;
+	$scope.search_subtitle = true;
+	$scope.search_collection = true;
+	$scope.search_tags = true;
+	$scope.search_description = false;
+	$scope.search_tools = false;
 
-	};
+	$scope.updateKeys = function(){
+		$scope.initialKeys = [
+			{
+				"name":"domain",
+				"weight": 1
+			},
+			{
+				"name":"title",
+				"weight": $scope.search_title ? 0.9 : 0
+			},
+			{
+				"name":"sub_title",
+				"weight": $scope.search_subtitle ? 0.7 : 0
+			},
+			{
+				"name":"tag",
+				"weight": $scope.search_tags ? 0.9 : 0
+			},
+			{
+				"name":"collection",
+				"weight": $scope.search_collection ? 0.9 : 0
+			}, 
+			{
+				"name":"description",
+				"weight": $scope.search_description ? 0.3 : 0
+			},
+			{
+				"name":"resources.name",
+				"weight": $scope.search_tools ? 0.2 : 0
+			},
+			{
+				"name":"resources.biotoolsID",
+				"weight": $scope.search_tools ? 0.2 : 0
+			}
+		];
+		
+		$scope.fuseSearchKeys = $scope.initialKeys.filter(function(x){
+			return x.weight > 0;
+		});
 
+		$scope.fuseOptions = {
+			threshold: 0.2,
+			shouldSort: true,
+			minMatchCharLength: 2,
+			// location: 0, default 0
+			tokenize: true,
+			// matchAllTokens: true,
+			keys: $scope.fuseSearchKeys 
+	
+		};
+	}
+
+	$scope.updateKeys();
 
 	DomainDetailConnection.query({'domain':'all'}, function(response) {
 		$scope.domains = response.data;
@@ -114,6 +129,9 @@ angular.module('elixir_front.controllers')
 			$scope.filteredDomains = $scope.domains;
 		}
 		else {
+			$scope.updateKeys();
+			$scope.fuse = new Fuse($scope.domains, $scope.fuseOptions);
+			console.log($scope.fuseOptions);
 			$scope.filteredDomains = $scope.fuse.search($scope.domainSearchText);
 		}
 	}

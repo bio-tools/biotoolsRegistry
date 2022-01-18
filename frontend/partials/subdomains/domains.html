@@ -19,6 +19,29 @@
                 ng-model="domainSearchText"
             >
         </div>
+        <label class="domain-search-option">Search domains by: </label>&nbsp;
+        <label class="checkbox-inline domain-search-option">
+            <input type="checkbox" disabled checked>Name
+          </label>
+          <label class="checkbox-inline domain-search-option">
+            <input type="checkbox" ng-model="search_title">Title
+          </label>
+          <label class="checkbox-inline domain-search-option">
+            <input type="checkbox" ng-model="search_subtitle">Subtitle
+          </label>
+          <label class="checkbox-inline domain-search-option">
+            <input type="checkbox" ng-model="search_collection">Collection
+          </label>
+          <label class="checkbox-inline domain-search-option">
+            <input type="checkbox" ng-model="search_tags">Tags
+          </label>
+          <label class="checkbox-inline domain-search-option">
+            <input type="checkbox" ng-model="search_description">Description
+          </label>
+          <label class="checkbox-inline domain-search-option">
+            <input type="checkbox"  ng-model="search_tools">Tools
+          </label>
+      
     </div>
 
     <hr style="border-top: 2px solid orange">
