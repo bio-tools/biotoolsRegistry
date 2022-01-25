@@ -9,6 +9,63 @@
     <div class="form-group">
         <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
             
+             <!-- Rare Diseases -->
+             <div class="form-group">
+                <label class="control-label col-sm-3" style="position: relative;">
+                    <span tooltips tooltip-side="right" tooltip-content="Tag tool as Rare Diseases">Rare Diseases <a
+                            target="_blank" ng-href="/t?domain=rare-diseases"><i class="fa fa-question-circle fa"
+                                aria-hidden="true"></i></a></span>
+                </label>
+                <div class="col-sm-9">
+                    <div style="padding-top:7px;" ng-if="!CommunityCollection.hasCommunityCollection(software.collectionID, 'Rare Disease')">
+                        <a class="community-tag-link" href=""
+                            ng-click="software.collectionID=CommunityCollection.addCommunityCollection(software.collectionID, 'Rare Disease')">Click to tag tool as
+                            part of Rare Diseases community</a>
+                    </div>
+                    <div ng-if="CommunityCollection.hasCommunityCollection(software.collectionID, 'Rare Disease')">
+                        <h5>
+                            Tool is tagged as part of the <span community-tag-link>Rare Diseases</span> community. View 
+                            information about the <a target="_blank" ng-href="/communities#rare-diseases">Rare Diseases community</a>.
+                        </h5>
+                        <h5>
+                            Tag tool within the below subdomains of the Rare diseases community 
+                        </h5>
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="" checked disabled><a target="_blank" ng-href="/t?domain=rare-diseases">Rare diseases registry</a></label>
+                        </div>
+                        <br>
+                        <a class="community-tag-link" href=""
+                            ng-click="software.collectionID=CommunityCollection.removeCommunityCollection(software.collectionID, 'Rare Disease')">Click to remove
+                            Rare Diseases tag</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tag with COVID-19 -->
+            <div class="form-group">
+                <label class="control-label col-sm-3" style="position: relative;">
+                    <span tooltips tooltip-side="right" tooltip-content="Tag tool as COVID-19">Tag as COVID-19 <a
+                            target="_blank" ng-href="/t?domain=covid-19"><i class="fa fa-question-circle fa"
+                                aria-hidden="true"></i></a></span>
+                </label>
+                <div class="col-sm-9">
+                    <div style="padding-top:7px;" ng-if="!Covid.hasCovid(software.collectionID)">
+                        <a class="covid-tag-link" href=""
+                            ng-click="software.collectionID=Covid.addCovid(software.collectionID)">Click to tag tool as
+                            COVID-19</a>
+                    </div>
+                    <div ng-if="Covid.hasCovid(software.collectionID)">
+                        <h5>
+                            Tool is tagged as <span style="color: #BA1E4A">COVID-19</span>. See all <a target="_blank"
+                                ng-href="/t?domain=covid-19">COVID-19</a> tools.
+                        </h5>
+                        <a class="covid-tag-link" href=""
+                            ng-click="software.collectionID=Covid.removeCovid(software.collectionID)">Click to remove
+                            COVID-19 tag</a>
+                    </div>
+                </div>
+            </div>
+
             <!--BioLib-->
             <div class="panel panel-default" ng-if="software.community.biolib">
                 <ng-form name="communityDetailForm">

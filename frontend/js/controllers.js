@@ -1064,7 +1064,7 @@ angular.module('elixir_front.controllers', [])
 
 
 }])
-.controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', 'Covid', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator, Covid) {
+.controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', 'Covid', 'CommunityCollection', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator, Covid, CommunityCollection) {
 	// inherit common controller
 	$controller('ToolEditController', {$scope: $scope});
 
@@ -1074,6 +1074,7 @@ angular.module('elixir_front.controllers', [])
 	// set the ID to not autoupdate when name is changed
 	$scope.autoUpdateId = false;
 	$scope.Covid = Covid;
+	$scope.CommunityCollection = CommunityCollection;
 	$scope.validateButtonClick = function() {
 		$timeout(function() {
 			$scope.sendResource(ToolUpdateValidator.update, $scope.validationProgress, false, 'update-validate');
@@ -1113,7 +1114,7 @@ angular.module('elixir_front.controllers', [])
 	// })
 
 }])
-.controller('ToolCreateController', ['$scope', '$controller', '$timeout', 'ToolListConnection', 'ToolCreateValidator', 'User', '$stateParams', 'Covid', function($scope, $controller, $timeout, ToolListConnection, ToolCreateValidator, User, $stateParams, Covid){
+.controller('ToolCreateController', ['$scope', '$controller', '$timeout', 'ToolListConnection', 'ToolCreateValidator', 'User', '$stateParams', 'Covid', 'CommunityCollection',function($scope, $controller, $timeout, ToolListConnection, ToolCreateValidator, User, $stateParams, Covid, CommunityCollection){
 	// inherit common controller
 	$controller('ToolEditController', {$scope: $scope});
 	$scope.orderby = 'text';
@@ -1124,6 +1125,7 @@ angular.module('elixir_front.controllers', [])
 	$scope.biotoolsIDDisabled = true;
 	$scope.editIdButtonText = 'Edit ID';
 	$scope.Covid = Covid;
+	$scope.CommunityCollection = CommunityCollection;
 	// remove or replace all URL unsafe characters and set software.id
 	$scope.makeIdURLSafe = function(value) {
 		if (typeof value != 'undefined' && $scope.biotoolsIDDisabled) {

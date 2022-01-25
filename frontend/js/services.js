@@ -834,4 +834,39 @@ angular.module('elixir_front.services', [])
 		}
 		return result;
 	}
+})
+.service('CommunityCollection', function(){
+	this.hasCommunityCollection = function(collectionList, communityCollection){
+		if (collectionList && Array.isArray(collectionList) && collectionList.length > 0){
+			return collectionList.includes(communityCollection);
+		}
+		return false;
+	}
+
+	this.addCommunityCollection = function(collectionList, communityCollection){
+		if (!this.hasCommunityCollection(collectionList, communityCollection)){
+			
+			// if the collection property is not set or is set but is not an array
+			if (!collectionList || (collectionList && !Array.isArray(collectionList))){
+				return [communityCollection];
+			}
+			if (Array.isArray(collectionList)){
+				collectionList.push(communityCollection);
+				return collectionList;
+			}
+		}
+	}
+
+	this.removeCommunityCollection = function(collectionList, communityCollection){
+		var result = [];
+		if (this.hasCommunityCollection(collectionList, communityCollection)){
+			result = collectionList.filter(function(c){
+				return c != communityCollection;
+			});
+		}
+		if (result.length == 0){
+			return undefined
+		}
+		return result;
+	}
 });
