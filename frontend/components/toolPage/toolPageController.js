@@ -5,6 +5,8 @@ angular.module('elixir_front')
 	$scope.CheckUserEditingRights = CheckUserEditingRights;
 	$scope.editingRequestedSuccess = null; 
 
+	
+
 	$scope.User = User;
 	$scope.Covid = Covid;
 	$scope.elixirCommunityIndex = {
@@ -19,6 +21,16 @@ angular.module('elixir_front')
 		"Plant Sciences": "plant-sciences",
 		"Proteomics": "proteomics",
 		"Rare Diseases": "rare-diseases"
+	}
+
+	$scope.hasRRID = function(){
+		for (var index in $scope.software.otherID) {
+			if ($scope.software.otherID[index].type.toLowerCase() == 'rrid') {
+				return true
+			}
+		}
+
+		return false;
 	}
 
 	$scope.confidenceClass = function() {

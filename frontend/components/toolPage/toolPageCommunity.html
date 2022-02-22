@@ -1,4 +1,4 @@
-<div ng-if="software.community">
+<div ng-if="software.community || software.otherID || hasRRID()">
     <div class="tool-page-diver-label" >
         <span>Communities and external partners</span>
     </div>
@@ -26,4 +26,27 @@
             <span class="biolib_label">App author</span><span class="biolib_value">{{software.community.biolib.author_name}}&nbsp;&nbsp;<i class="fa fa-external-link"></i></span>
         </a>
     </div>
+
+    <div ng-if="hasRRID()" >
+        <a class="biolib_logo"
+        ng-href="https://scicrunch.org" 
+        target="_blank"><img src="img/scicrunch.png" 
+        height="40" 
+        title="SciCrunch" 
+        alt="SciCrunch">
+        </a>
+        <a ng-repeat="otherID in software.otherID"
+             
+            class="scicrunch_pill" 
+            ng-href="https://scicrunch.org/resolver/{{otherID.value}}"
+            target="_blank"
+        >
+         <span class="scicrunch_label">RRID:</span><span class="scicrunch_value">{{otherID.value | limitTo:20:5}}&nbsp;&nbsp;<i class="fa fa-external-link"></i></span>
+        </a>
+        
+        
+      
+    </div>
+
+
 </div>

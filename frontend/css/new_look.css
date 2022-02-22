@@ -469,7 +469,7 @@ a.biolib_logo{
     margin-bottom: 20px;
 }
 
-a.biolib_pill{
+a.biolib_pill, a.scicrunch_pill{
     color: #FFF;
     position: relative;
     top: 4px;
@@ -480,7 +480,7 @@ a.biolib_pill{
     display: inline-block;
 }
 
-span.biolib_label, span.biolib_value{
+span.biolib_label, span.biolib_value, span.scicrunch_label, span.scicrunch_value{
     padding-top: 2px;
     padding-bottom: 2px;
     padding-left: 12px;
@@ -493,16 +493,29 @@ span.biolib_label{
     border-bottom-left-radius: 5px;
 }
 
+
 span.biolib_value{
     background-color: #275a78;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
 
-span.biolib_value > i.fa{
+span.biolib_value > i.fa, span.scicrunch_value > i.fa{
     font-size: 1em;
     position: relative;
     top: 1px;
+}
+
+span.scicrunch_label{
+    background-color: #0000FF;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+span.scicrunch_value{
+    background-color: #275a78;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 @media (max-width: 768px) {
