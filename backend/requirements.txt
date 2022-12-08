@@ -1,6 +1,6 @@
 asgiref==3.2.10
 boltons==20.2.1
-certifi==2020.6.20
+certifi==2022.12.7
 chardet==3.0.4
 defusedxml==0.6.0
 Django==3.1.2
