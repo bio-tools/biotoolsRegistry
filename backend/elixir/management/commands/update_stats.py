@@ -8,6 +8,6 @@ class Command(BaseCommand):
 
 	def handle(self, *args, **options):
 
-		update_tool_statistics()
-		
+		generate_missing_stats()
+
 		self.stdout.write('All done.')
