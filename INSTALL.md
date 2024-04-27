@@ -223,7 +223,7 @@ The `biotools-backend` container is based on an image which uses an Apache serve
 
 > **Remember** to run the above command whenever you want to see your code changes reflected in your local bio.tools.
 
-> Bringing the containers down and up agail will also work, but this takes significantly longer. The above command is almost instant.
+> Bringing the containers down and up again will also work, but this takes significantly longer. The above command is almost instant.
 
 Most issues with the backend code will be reflected in the browser at http://localhost:8000/api/{some_path}, e.g. [http://localhost:8000/api/tool](http://localhost:8000/api/tool) or [http://localhost:8000/api/jaspar](http://localhost:8000/api/jaspar) etc. 
 
