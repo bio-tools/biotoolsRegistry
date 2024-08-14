@@ -19,7 +19,7 @@ isodate==0.6.0
 jsonfield==3.1.0
 # old: lxml==4.5.2
 # new:
-lxml==4.6.3
+lxml==4.9.1
 mysqlclient==2.0.1
 #mysqlclient==2.0.3 is available
 oauthlib==3.1.0
