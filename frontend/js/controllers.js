@@ -804,7 +804,7 @@ angular.module('elixir_front.controllers', [])
 		{value: "Proprietary", text: "Proprietary"},
 		{value: "Other", text: "Other"},
 		{value: "Not licensed", text: "Not licensed"}
-	]
+	];
 
 	$scope.costOptions = [
 		{value: "Free of charge", text: "Free of charge"},
@@ -1062,6 +1062,9 @@ angular.module('elixir_front.controllers', [])
 		{value: "very low", text: "very low"},
 	];
 
+	$scope.removeLicense = function() {
+        delete $scope.software.license;
+    };
 
 }])
 .controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', 'Covid', 'CommunityCollection', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator, Covid, CommunityCollection) {

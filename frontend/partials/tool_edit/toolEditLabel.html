@@ -149,6 +149,9 @@
 					<div class="col-sm-9">
 						<select class="form-control select-btn-group" ng-options="item.value as item.text for item in licenseOptions" ng-model="software.license" name="license" validate-edit-resource-field>
 						</select>
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" ng-click="removeLicense()">Remove</button>
+						</span>
 						<label class="help-block" ng-repeat="error in form.labelForm.license.errorMessages" bo-text="error"></label>
 					</div>
 				</div>
