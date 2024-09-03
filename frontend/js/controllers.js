@@ -1062,9 +1062,12 @@ angular.module('elixir_front.controllers', [])
 		{value: "very low", text: "very low"},
 	];
 
-	$scope.removeLicense = function() {
-        delete $scope.software.license;
-    };
+	$scope.$watch('software.license', function(newValue) {
+        if (newValue === "") {
+            // Remove the license property if the empty option is selected
+            delete $scope.software.license;
+        }
+    });
 
 }])
 .controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', 'Covid', 'CommunityCollection', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator, Covid, CommunityCollection) {
