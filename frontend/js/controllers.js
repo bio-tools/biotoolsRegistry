@@ -858,6 +858,7 @@ angular.module('elixir_front.controllers', [])
 		{value: "Racket", text: "Racket"},
 		{value: "REXX", text: "REXX"},
 		{value: "Ruby", text: "Ruby"},
+		{value: "Rust", text: "Rust"},
 		{value: "SAS", text: "SAS"},
 		{value: "Scala", text: "Scala"},
 		{value: "Scheme", text: "Scheme"},
