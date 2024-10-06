@@ -482,6 +482,11 @@ tags-input .autocomplete .filter-list > .selected {
 	text-decoration: underline;
 }
 
+.add-data-link {
+	font-size: 12.6px;
+	font-weight: normal;
+}
+
 .tool-edit-tab-error::before {
 	content: "⚠ "
 }
