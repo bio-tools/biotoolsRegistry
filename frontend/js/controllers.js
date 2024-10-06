@@ -279,6 +279,51 @@ angular.module('elixir_front.controllers', [])
 		modalInstance.result.then(function (updatedEdam) {
 			angular.copy(updatedEdam, edam);
 		}, function () {});
+
+		return modalInstance.result;
+	}
+
+	$scope.addWithModal = function(type, edam) {
+		var pickertype = null;
+		switch (type) {
+			case 'input':
+				pickertype = 'data';
+				break;
+			case 'output':
+				pickertype = 'data';
+				break;
+			case 'format':
+				pickertype = 'format';
+				break;
+			case 'function':
+				pickertype = 'operation';
+				break;
+			default:
+				break;
+		};
+
+		var n = $scope.openModal({}, pickertype);
+		
+		n.then(function (newEdam) {
+			switch (type) {
+				case 'format':
+					$scope.addButtonClick('format', edam, true, true);
+					edam.format[edam.format.length - 1] = newEdam;
+					break;
+				case 'output':
+					$scope.addButtonClick('output', edam, true, true);
+					edam.output[edam.output.length - 1] = newEdam;
+					break;
+				case 'input':
+					$scope.addButtonClick('input', edam, true, true);
+					edam.input[edam.input.length - 1] = newEdam;
+					break;
+				case 'function':
+					$scope.addButtonClick('function', edam, true, true);
+					edam.function[edam.function.length - 1].operation = [newEdam];
+					break;
+			};
+		}, function () {});
 	}
 
 	// used terms (biotoolsID) for searching in relations
