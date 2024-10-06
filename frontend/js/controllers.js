@@ -377,7 +377,7 @@ angular.module('elixir_front.controllers', [])
 					if (edam.hasOwnProperty('input')) {
 						for (let i2 = 0; i2 < edam.input.length; i2++) {
 							const input = edam.input[i2];
-							if (dam_obj.has_input.includes(input.data.uri)) append = false;
+							if (edam_obj.has_input.includes(input.data.uri)) append = false;
 						}
 					}
 					if (append)
