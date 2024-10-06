@@ -4,6 +4,12 @@
       </div>
 
     <div class="modal-body">
+        
+        <div style="display: flex; align-items: center; margin-bottom: 1em;" ng-repeat="suggestion in vm.suggestions">
+            <p ng-if="$first" style="margin-right: 1em; margin-top: 10px;" >Suggestions:</p>
+            <button class="btn" ng-click="vm.apply_suggestion(suggestion)" >{{suggestion.term}}</button>
+        </div>
+
         <div class="panel panel-default panel-modal">
             <div class="panel-body" style="padding:0px;">
                 <div uib-collapse="vm.data.data.visibility">

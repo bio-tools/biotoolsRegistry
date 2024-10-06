@@ -248,7 +248,7 @@ angular.module('elixir_front.controllers', [])
 	}
 
 	// modals
-	$scope.openModal = function(edam, type){
+	$scope.openModal = function(edam, type, suggestions){
 		var onto = null;
 		switch (type) {
 			case 'data':
@@ -268,11 +268,12 @@ angular.module('elixir_front.controllers', [])
 		var modalInstance = $modal.open({
 			templateUrl: 'partials/tool_edit/toolEditEdamModal.html',
 			controllerAs: 'vm',
-			controller: ['$modalInstance', 'edam', 'onto', 'type', EdamModalCtrl],
+			controller: ['$modalInstance', 'edam', 'onto', 'type', 'suggestions', EdamModalCtrl],
 			resolve: {
 				edam: function () { return edam; },
 				onto: function () { return onto; },
 				type: function () { return type; },
+				suggestions: function () {return suggestions; },
 			}
 		});
 
@@ -281,6 +282,151 @@ angular.module('elixir_front.controllers', [])
 		}, function () {});
 
 		return modalInstance.result;
+	}
+
+	$scope.findObjectByUri = function(obj, targetUri) {
+		// Helper function to search recursively
+		function search(current) {
+			if (current.data && current.data.uri == targetUri) {
+				return current;
+			}
+
+			if (current.children) {
+				for (var i = 0; i < current.children.length; i++) {
+					var child = current.children[i];
+					const result = search(child, current);
+					if (result) return result;
+				}
+			}
+
+			return null;
+		}
+
+		// Iterate through the array at the root level
+		for (let item of obj) {
+			const result = search(item);
+			if (result) return result;
+		  }
+		
+		  return null;
+	}
+
+	$scope.flattenObject = function(obj) {
+		var result = [];
+		var stack = [obj];
+		
+		while (stack.length > 0) {
+			var current = stack.pop();
+			
+			for (var key in current) {
+				if (current.hasOwnProperty(key)) {
+					var value = current[key];
+					
+					if (typeof value === 'object' && value !== null) {
+						// If it's an object or array, add it to the stack
+						stack.push(value);
+					} else {
+						// If it's a primitive value, add it to the result
+						result.push(value);
+					}
+				}
+			}
+		}
+		
+		return result;
+	};	
+
+	$scope.recommend_terms = function(edam, type) {
+		// edam = currently edited operation
+		// type = input/output/format/operation
+		// console.log(edam, type, $scope);
+
+		// generate a list of all EDAM strings in `edam`
+		var edam_array = $scope.flattenObject(edam).filter((word) => typeof word == 'string' && word.includes('http://edamontology.org/'));
+
+		var onto = null;
+		switch (type) {
+			case 'format':
+				onto = $scope.EDAM_data;
+				break;
+			case 'operation':
+				// No recomendations for operations
+				return null;
+			default:
+				// If the user clicks on the input/output (data), we need to search the operations edam
+				onto = $scope.EDAM_operation;
+				break;
+		};
+
+		var suggestions = [];
+
+		for (let index = 0; index < edam_array.length; index++) {
+			const element = edam_array[index];
+			var edam_obj = $scope.findObjectByUri(onto, element);
+			if (!edam_obj) continue;
+
+			var append = true;
+
+			switch (type) { 
+				case 'operation':
+					// No recomendations for operations
+				break;
+				case 'input':
+					// Check for duplicates
+					if (!edam_obj || !edam_obj.has_input) continue;
+					if (edam.hasOwnProperty('input')) {
+						for (let i2 = 0; i2 < edam.input.length; i2++) {
+							const input = edam.input[i2];
+							if (dam_obj.has_input.includes(input.data.uri)) append = false;
+						}
+					}
+					if (append)
+						suggestions = suggestions.concat(edam_obj.has_input);
+					break;
+				case 'output':
+					if (!edam_obj || !edam_obj.has_output) continue;
+					if (edam.hasOwnProperty('output')) {
+						for (let i2 = 0; i2 < edam.output.length; i2++) {
+							const output = edam.output[i2];
+							if (edam_obj.has_output.includes(output.data.uri)) append = false;
+						}
+					}
+					if (append)
+						suggestions = suggestions.concat(edam_obj.has_output);
+					break;
+				default:
+					break;
+			}
+		}
+
+		// If the user is picking an output, search the EDAM_operation onto for
+		// the current operations and their has_output restrictions
+
+		// console.debug("suggestions:", suggestions)
+
+		// Map suggestions from an array of URIs to an array of objects with a URI and term name
+		// Just like the data the modal returns
+		for (let index = 0; index < suggestions.length; index++) {
+			const element = suggestions[index];
+
+			var onto = null
+			switch (type) {
+				case 'format':
+					onto = $scope.EDAM_format;
+					break;
+				case 'output':
+				case 'input':
+					onto = $scope.EDAM_data;
+			};
+			
+			var edam_obj = $scope.findObjectByUri(onto, element);
+
+			var new_obj = {'uri': element, 'term': edam_obj.text}
+
+			suggestions[index] = new_obj;
+		}
+
+		return suggestions
 	}
 
 	$scope.addWithModal = function(type, edam) {
@@ -302,7 +448,9 @@ angular.module('elixir_front.controllers', [])
 				break;
 		};
 
-		var n = $scope.openModal({}, pickertype);
+		var suggestions = $scope.recommend_terms(edam, type);
+
+		var n = $scope.openModal({}, pickertype, suggestions);
 		
 		n.then(function (newEdam) {
 			switch (type) {
@@ -1425,17 +1573,35 @@ angular.module('elixir_front.controllers', [])
 	}
 }]);
 
-function EdamModalCtrl($modalInstance, edam, onto, type) {
+function EdamModalCtrl($modalInstance, edam, onto, type, suggestions) {
 	var vm = this;
 	vm.data = angular.copy(edam);
 	vm.onto = onto;
 	vm.self = $modalInstance;
 	vm.type = type;
+	vm.suggestions = suggestions;
+
+	// console.debug("modal", edam, onto, type, suggestions)
 
     vm.saveData = function() {
-        // Save changes and pass updated edam object back to the parent scope
+		// User may press save and not have anything selected
+		if(angular.equals(vm.data, {})) {
+			$modalInstance.dismiss('cancel');
+			return;
+		}
+		
+		// Save changes and pass updated edam object back to the parent scope
         $modalInstance.close(vm.data);
+		// console.debug(vm.data)
     };
+
+	vm.apply_suggestion = function(suggestions) {
+		vm.data.data = {};
+		vm.data.data.term = suggestions.term;
+		vm.data.data.uri = suggestions.uri;
+
+		vm.saveData();
+	}
 
 	vm.cancel = function() {
         $modalInstance.dismiss('cancel');

@@ -482,6 +482,10 @@ tags-input .autocomplete .filter-list > .selected {
 	text-decoration: underline;
 }
 
+.tool-edit-tab-error::before {
+	content: "⚠ "
+}
+
 @media (min-width: 768px) {
 	.container {
 		width: 735px;
