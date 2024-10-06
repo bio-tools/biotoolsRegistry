@@ -268,18 +268,17 @@ angular.module('elixir_front.controllers', [])
 		var modalInstance = $modal.open({
 			templateUrl: 'partials/tool_edit/toolEditEdamModal.html',
 			controllerAs: 'vm',
-			controller: ['$modalInstance', 'edam', 'onto', EdamModalCtrl],
+			controller: ['$modalInstance', 'edam', 'onto', 'type', EdamModalCtrl],
 			resolve: {
 				edam: function () { return edam; },
 				onto: function () { return onto; },
+				type: function () { return type; },
 			}
 		});
 
 		modalInstance.result.then(function (updatedEdam) {
 			angular.copy(updatedEdam, edam);
-		}, function () {
-			console.log(false)
-		});
+		}, function () {});
 	}
 
 	// used terms (biotoolsID) for searching in relations
@@ -1381,11 +1380,12 @@ angular.module('elixir_front.controllers', [])
 	}
 }]);
 
-function EdamModalCtrl($modalInstance, edam, onto) {
+function EdamModalCtrl($modalInstance, edam, onto, type) {
 	var vm = this;
 	vm.data = angular.copy(edam);
 	vm.onto = onto;
 	vm.self = $modalInstance;
+	vm.type = type;
 
     vm.saveData = function() {
         // Save changes and pass updated edam object back to the parent scope
