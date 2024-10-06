@@ -83,7 +83,7 @@ gulp.task('bower', function() {
 	.pipe(plumber())
 	.pipe(concat('vendor.js'))
 	.pipe(rename({suffix:'.min'}))
-	//.pipe(uglify())
+	.pipe(uglify())
 	.pipe(gulp.dest('dist'));
 	
 	gulp.src([

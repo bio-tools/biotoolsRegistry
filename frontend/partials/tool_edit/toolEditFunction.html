@@ -13,13 +13,6 @@
 	</div>
 </div>
 
-<!--
-Dev TODO:
-Making errors work again
-New function makes operation not selectable - ???
-Make botx text inputs look the sameish
--->
-
 <form name="form.functionForm" class="form-horizontal" novalidate>
 	<!-- Drop down menu to hide old design. New does not work on mobile. -->
 	<details>
@@ -48,7 +41,8 @@ Make botx text inputs look the sameish
 											target="_blank"
 											href="http://biotools.readthedocs.io/en/latest/curators_guide.html#operation"><i
 												class="fa fa-question-circle fa" aria-hidden="true"></i></a></span><span
-										style="color:#ff0000;"><b> *</b></span></label>
+										style="color:#ff0000;"><b>
+											*</b></span></label>
 								<div class="form-group" ng-repeat="operation in function.operation track by $index"
 									ng-init="functionNameIndex = $index" ng-class="{'no-margin-bottom': $last};">
 									<div class="input-group">
@@ -483,29 +477,46 @@ Make botx text inputs look the sameish
 
 <hr>
 
-<div class="row hidden-xs tool-page-row" ng-repeat="function in software.function">
+<div class="row hidden-xs tool-page-row" ng-repeat="function in software.function track by $index"
+	ng-init="functionIndex = $index">
 	<br>
 	<div class="row flex-vertical">
 		<!-- Input -->
 		<div class="col-sm-4 col-md-4 col-lg-4">
-			<div class="row flex-vertical" ng-repeat="input in function.input" style="margin:0px;">
+			<div class="row flex-vertical" ng-repeat="input in function.input track by $index"
+				ng-init="inputIndex = $index" style="margin:0px;">
 				<div class="col-sm-10 col-md-10 text-center">
 					<i class="fa fa-times highlight-icon" style="position: absolute; top: 3px; right: 20px;"
 						ng-click="removeButtonClick('input', function, $index)"></i>
 
 					<h5 class="function-image-element" style="padding-top:5px; padding-bottom:5px; margin:0px;">
-						<a href="" ng-click="openModal(input, 'data')" class="tool-page-grey-text" tooltips
-							tooltip-content="Input data : click to find more tools with this input data.">{{
-							input.data.term }}</a>
+						<a href="" ng-click="openModal(input, 'data')" class="tool-page-grey-text">{{ input.data.term
+							}}</a>
+
+						<div ng-if="registrationErrorPayload.function[functionIndex].input[inputIndex].data.length > 0">
+							<label class="help-block"
+								ng-repeat="error in registrationErrorPayload.function[functionIndex].input[inputIndex].data"
+								ng-bind-html="error"></label>
+						</div>
+
 						<span style="font-weight: lighter;">
-							<br>(<span ng-repeat="format in input.format" tooltips
-								tooltip-content="Input format : click to find more tools with this input format."
-								tooltip-side="bottom">
-								<a href="" ng-click="inputFormatNameClicked(format)" class="tool-page-grey-text">{{
+							<br>(<span ng-repeat="format in input.format track by $index"
+								ng-init="dataFormatIndex = $index">
+								<a href="" tooltips tooltip-content="Click to remove"
+									ng-click="removeButtonClick('format', input, $index)" class="tool-page-grey-text">{{
 									format.term }} </a>
 								<span ng-show="input.format.length > 0">, </span>
-							</span> <a href="" ng-click="addWithModal('format', input)">Add format</a> )
+							</span> <a class="add-data-link" href="" ng-click="addWithModal('format', input)">Add
+								format</a> )
 						</span>
+						<div ng-class="{'has-error': true};">
+							<div
+								ng-repeat="(dataFormatIndex, formatErrors) in registrationErrorPayload.function[functionIndex].input[inputIndex].format">
+								<label class="help-block" ng-repeat="error in formatErrors" ng-bind-html="error">
+								</label>
+							</div>
+						</div>
+
 					</h5>
 					<div style="margin-bottom:5px;" ng-show="!$last"></div>
 				</div>
@@ -520,9 +531,10 @@ Make botx text inputs look the sameish
 			<div class="row flex-vertical" style="margin:0px;">
 				<div class="col-sm-10 col-md-10 text-center">
 
-					<h5 class="" style="padding-top:5px; padding-bottom:5px; margin:0px;">
+					<h5 style="padding-top:5px; padding-bottom:5px; margin:0px;">
 						<!-- <a href="" ng-show="!meta.function[functionIndex].input[inputIndex].visibility" ng-click="addButtonClick('input', function, true, true)">Add input</a> -->
-						<a href="" ng-show="!meta.function[functionIndex].input[inputIndex].visibility"
+						<a href="" class="add-data-link"
+							ng-show="!meta.function[functionIndex].input[inputIndex].visibility"
 							ng-click="addWithModal('input', function)">Add input</a>
 					</h5>
 				</div>
@@ -536,7 +548,6 @@ Make botx text inputs look the sameish
 				ng-click="removeButtonClick('function', software, $index)"></i>
 
 			<div class="form-group" style="text-align: left">
-				<!-- <span><i ng-show="function.note" class="fa fa-question-circle" aria-hidden="true" style="font-size: 100%; margin-left: 0.5em;" tooltips tooltip-content="{{ ::function.note }}"></i></span> -->
 				<label class="control-label" style="margin-bottom: 0px;"><span tooltips tooltip-side="right"
 						tooltip-content="{{Attribute.description.functionNote.description}}">Note <a target="_blank"
 							href="http://biotools.readthedocs.io/en/latest/curators_guide.html#note-function"><i
@@ -544,37 +555,62 @@ Make botx text inputs look the sameish
 				<textarea class="form-control" rows="2" style="font-size: 80%;resize: vertical;margin-top: 4px;"
 					ng-model="function.note" ng-model-options="{ updateOn: 'blur' }"
 					placeholder="e.g. Run MEME on DNA sequences."></textarea>
+				<div ng-class="{'has-error': true};">
+					<label class="help-block" ng-repeat="error in registrationErrorPayload.function[functionIndex].note"
+						ng-bind-html="error"></label>
+				</div>
 			</div>
 
 			<ul class="list-unstyled" style="margin-bottom:0px;">
 				<span ng-if="function.operation.length == null" class="tool-page-grey-text">{{ software.name }}</span>
-				<li ng-repeat="functionName in function.operation">
+				<li ng-repeat="functionName in function.operation track by $index" ng-init="functionNameIndex = $index">
 					<h5 style="color: #575757; font-size: 100%;">
 						<!-- <a tooltips tooltip-content="Tool operation : click to find more tools with this operation."
 							ng-if="functionName.term != 'N/A' && functionName.term != ''" href=""
 							ng-click="openModal(functionName, 'operation')" class="tool-page-grey-text">{{ functionName.term }}</a> -->
 
-						<a href="" ng-click="openModal(functionName, 'operation')" class="tool-page-grey-text">{{
+						<a href="" tooltips tooltip-content="Click to remove"
+							ng-click="removeButtonClick('operation', function, $index)" class="tool-page-grey-text">{{
 							functionName.term }}</a>
+
+						<div ng-class="{'has-error': true};">
+							<label class="help-block"
+								ng-repeat="error in registrationErrorPayload.function[functionIndex].operation[functionNameIndex]"
+								ng-bind-html="error"></label>
+						</div>
 					</h5>
 				</li>
+
+				<a href="" class="add-data-link" ng-click="addWithModal('operation', function.operation)">Add
+					operation</a>
+
+				<div ng-class="{'has-error': true};"
+					ng-show="registrationErrorPayload.function[functionIndex].operation[0]=='This field is required.'">
+					<label class="help-block"
+						ng-repeat="error in registrationErrorPayload.function[functionIndex].operation"
+						ng-bind-html="error"></label>
+				</div>
 			</ul>
 
 			<div class="form-group" style="text-align: left">
-				<!-- <textarea ng-model="software.function[$index].cmd" class="form-control" rows="2" placeholder="command, e.g. `meme sequence.s -dna`" validate-edit-resource-field></textarea> -->
 				<label class="control-label" style="margin-bottom: 0px;"><span tooltips tooltip-side="right"
 						tooltip-content="{{Attribute.description.cmd.description}}">Command <a target="_blank"
 							href="http://biotools.readthedocs.io/en/latest/curators_guide.html#command"><i
 								class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 				<textarea class="form-control fakecode" style="resize: vertical; margin-bottom: 4px;"
-					ng-model="function.cmd" class="form-control" rows="2" ng-model-options="{ updateOn: 'blur' }"
+					ng-model="function.cmd" rows="2" ng-model-options="{ updateOn: 'blur' }"
 					placeholder="e.g. `meme sequence.s -dna`"></textarea>
+				<div ng-class="{'has-error': true};">
+					<label class="help-block" ng-repeat="error in registrationErrorPayload.function[functionIndex].cmd"
+						ng-bind-html="error"></label>
+				</div>
 			</div>
 		</div>
 
 		<!-- Output -->
 		<div class="col-sm-4 col-md-4 col-lg-4 text-center">
-			<div class="row flex-vertical" ng-repeat="output in function.output" style="margin:0px;">
+			<div class="row flex-vertical" ng-repeat="output in function.output track by $index"
+				ng-init="outputIndex = $index" style="margin:0px;">
 				<div class="col-sm-2 col-md-2">
 					<div class="row">
 						<!-- Hide arrow but keep it so that the text aligns correctly -->
@@ -588,15 +624,33 @@ Make botx text inputs look the sameish
 					<h5 class="function-image-element" style="padding-top:5px;padding-bottom:5px;margin:0px;">
 						<a href="" ng-click="openModal(output, 'data')" class="tool-page-grey-text">{{ output.data.term
 							}}</a>
+
+						<div
+							ng-if="registrationErrorPayload.function[functionIndex].output[outputIndex].data.length > 0">
+							<label class="help-block"
+								ng-repeat="error in registrationErrorPayload.function[functionIndex].output[outputIndex].data"
+								ng-bind-html="error"></label>
+						</div>
+
 						<span style="font-weight: lighter;">
 							<br>(
 							<span ng-repeat="format in output.format">
-								<a href="" ng-click="openModal(format, 'format')" class="tool-page-grey-text">{{
+								<a href="" tooltips tooltip-content="Click to remove"
+									ng-click="removeButtonClick('format', output, $index)"
+									class="tool-page-grey-text">{{
 									format.term }}</a>
 								<span ng-show="output.format.length > 0">, </span>
 								<!-- </span> <a href="" ng-click="addButtonClick('format', output, true, true)">Add format</a> ) -->
-							</span> <a href="" ng-click="addWithModal('format', output)">Add format</a> )
+							</span> <a class="add-data-link" href="" ng-click="addWithModal('format', output)">Add
+								format</a> )
 						</span>
+						<div ng-class="{'has-error': true};">
+							<div
+								ng-repeat="(dataFormatIndex, formatErrors) in registrationErrorPayload.function[functionIndex].input[inputIndex].format">
+								<label class="help-block" ng-repeat="error in formatErrors" ng-bind-html="error">
+								</label>
+							</div>
+						</div>
 					</h5>
 					<div style="margin-bottom:5px;" ng-show="!$last"></div>
 				</div>
@@ -614,7 +668,8 @@ Make botx text inputs look the sameish
 
 					<h5 class="" style="padding-top:5px; padding-bottom:5px; margin:0px;">
 						<!-- <a href="" ng-show="!meta.function[functionIndex].output[outputIndex].visibility" ng-click="addButtonClick('output', function, true, true)">Add output</a> -->
-						<a href="" ng-show="!meta.function[functionIndex].output[outputIndex].visibility"
+						<a href="" class="add-data-link"
+							ng-show="!meta.function[functionIndex].output[outputIndex].visibility"
 							ng-click="addWithModal('output', function)">Add output</a>
 					</h5>
 				</div>
@@ -626,5 +681,5 @@ Make botx text inputs look the sameish
 <!-- Add function button -->
 <div class="tool-page-row col-sm-4 col-md-4 col-lg-4 text-center" style="margin-top: 5px;">
 	<!-- <a href="" ng-click="addButtonClick('function', software, true, true)">Add function</a> -->
-	<a href="" ng-click="addWithModal('function', software)">Add function</a>
+	<a href="" class="add-data-link" ng-click="addWithModal('function', software)">Add function</a>
 </div>

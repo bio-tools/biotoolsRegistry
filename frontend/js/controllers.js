@@ -444,6 +444,9 @@ angular.module('elixir_front.controllers', [])
 			case 'function':
 				pickertype = 'operation';
 				break;
+			case 'operation':
+				pickertype = 'operation';
+				break;
 			default:
 				break;
 		};
@@ -469,6 +472,10 @@ angular.module('elixir_front.controllers', [])
 				case 'function':
 					$scope.addButtonClick('function', edam, true, true);
 					edam.function[edam.function.length - 1].operation = [newEdam];
+					break;
+				case 'operation':
+					$scope.addButtonClick('function', edam, true, true);
+					edam.push(newEdam);
 					break;
 			};
 		}, function () {});
@@ -554,7 +561,9 @@ angular.module('elixir_front.controllers', [])
 	}
 
 	$scope.removeObjectClick = function(_what, _parent, _where){
-		if (confirm("Are you sure you want to remove this element?")){
+		var message = _parent[_what][_index].term ? `Are you sure you want to remove ${_parent[_what][_index].term}?` : "Are you sure you want to remove this element?"
+
+		if (confirm(message)){
 			if (_parent[_where][_what]){
 				delete _parent[_where][_what];
 			}
@@ -566,18 +575,32 @@ angular.module('elixir_front.controllers', [])
 
 	// remove attribute or list entry
 	$scope.removeButtonClick = function (_what, _parent, _index, _event) {
-		if (_parent[_what][_index] ? confirm("Are you sure you want to remove this element?") : 1) {
+		var message = _parent[_what][_index].term 
+			? `Are you sure you want to remove ${_parent[_what][_index].term}?` 
+			: "Are you sure you want to remove this element?";
+	
+		if (_parent[_what][_index] ? confirm(message) : true) {
 			// remove jstree if exists
 			if (_event) {
 				$(_event.target).closest('div').find('.jstree').jstree("destroy").remove();
 			}
+	
 			_parent[_what].splice(_index, 1);
-			// if last instance in array delete entire attribute from the software object
+	
+			// if last instance in array delete entire attribute from the parent object
 			if (_parent[_what].length == 0) {
 				delete _parent[_what];
+	
+				// If we're removing an operation and it's the last one, remove the entire function
+				if (_what === 'operation') {
+					var functionIndex = $scope.software.function.indexOf(_parent);
+					if (functionIndex > -1) {
+						$scope.software.function.splice(functionIndex, 1);
+					}
+				}
 			}
 		}
-	}
+	};	
 
 	// create connections between entries
 	$scope.errorConnections = {
