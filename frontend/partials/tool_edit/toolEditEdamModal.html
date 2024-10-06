@@ -17,31 +17,35 @@
                     <!-- Data picker -->
                     <div ng-if="vm.type == 'data'">
                         <div class="form-group" style="margin:5px;">
-                            <input type="text" ng-model="vm.data.data.predicate" class="form-control input-sm"  placeholder="Filter"></input>
+                            <input type="text" ng-model="vm.predicate" class="form-control input-sm"  placeholder="Filter"></input>
                         </div>
                         <div treecontrol class="tree-light"
+                        id = "treecontrol"
                         tree-model="vm.onto"
-                        order-by="orderby"
+                        order-by="vm.customOrder"
                         reverse-order="false"
                         options="treeOptions"
                         on-selection="vm.data.data.term = node.text; vm.data.data.uri=node.data.uri"
-                        filter-expression="vm.data.data.predicate"
-                        >{{node.text}}</div>
+                        filter-expression="vm.predicate">
+                            <span ng-class="{'suggested': vm.isSuggested(node)}">{{node.text}}</span>
+                        </div>
                     </div>
 
                     <!-- Operation and Format picker -->
                     <div ng-if="vm.type == 'operation' || vm.type == 'format'">
                         <div class="form-group" style="margin:5px;">
-                            <input type="text" ng-model="vm.data.predicate" class="form-control input-sm"  placeholder="Filter"></input>
+                            <input type="text" ng-model="vm.predicate" class="form-control input-sm"  placeholder="Filter"></input>
                         </div>
                         <div treecontrol class="tree-light"
+                        id = "treecontrol"
                         tree-model="vm.onto"
-                        order-by="orderby"
+                        order-by="vm.customOrder"
                         reverse-order="false"
                         options="treeOptions"
                         on-selection="vm.data.term = node.text; vm.data.uri=node.data.uri"
-                        filter-expression="vm.data.predicate"
-                        >{{node.text}}</div>
+                        filter-expression="vm.predicate">
+                            <span ng-class="{'suggested': vm.isSuggested(node)}">{{node.text}}</span>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -577,3 +577,7 @@ summary {
 details {
 	display: block;
 }
+
+.suggested {
+	text-decoration: underline;
+}
