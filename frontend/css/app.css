@@ -150,6 +150,10 @@ body {
 			margin-left:0px;
 		}
 
+		.form-group {
+			margin-top: 15px;
+		}
+
 		.img-holder {
 			height:50px;
 			overflow:visible;
@@ -548,3 +552,20 @@ to prevent collapsing during animation*/
 	opacity: 0;
 }
 
+.fakecode {
+	font-size: 80%;
+	/* The text color might confuse people to think that it has an error */
+	/* color: #c7254e; */
+	font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+summary {
+	cursor: pointer;
+	display: list-item;
+}
+
+details {
+	display: block;
+}

@@ -184,7 +184,7 @@ angular.module('elixir_front.controllers', [])
 		localStorage.welcome_message = false;
 	};
 }])
-.controller('ToolEditController', ['$scope', '$controller', '$state', '$stateParams', 'Ontology', 'Attribute', 'CheckUserEditingRights', 'User', '$timeout', 'UsedTerms','$q','filterFilter', function($scope, $controller, $state, $stateParams, Ontology, Attribute, CheckUserEditingRights, User, $timeout, UsedTerms, $q, filterFilter ) {
+.controller('ToolEditController', ['$scope', '$controller', '$state', '$stateParams', 'Ontology', 'Attribute', 'CheckUserEditingRights', 'User', '$timeout', 'UsedTerms','$q','$modal', function($scope, $controller, $state, $stateParams, Ontology, Attribute, CheckUserEditingRights, User, $timeout, UsedTerms, $q, $modal ) {
 
 	// reference the service
 	$scope.Attribute = Attribute;
@@ -247,6 +247,40 @@ angular.module('elixir_front.controllers', [])
 		});
 	}
 
+	// modals
+	$scope.openModal = function(edam, type){
+		var onto = null;
+		switch (type) {
+			case 'data':
+				onto = $scope.EDAM_data;
+				break;
+			case 'format':
+				onto = $scope.EDAM_format;
+				break;
+			case 'operation':
+				onto = $scope.EDAM_operation;
+				break;
+			default:
+				onto = $scope.EDAM_data;
+				break;
+		};
+
+		var modalInstance = $modal.open({
+			templateUrl: 'partials/tool_edit/toolEditEdamModal.html',
+			controllerAs: 'vm',
+			controller: ['$modalInstance', 'edam', 'onto', EdamModalCtrl],
+			resolve: {
+				edam: function () { return edam; },
+				onto: function () { return onto; },
+			}
+		});
+
+		modalInstance.result.then(function (updatedEdam) {
+			angular.copy(updatedEdam, edam);
+		}, function () {
+			console.log(false)
+		});
+	}
 
 	// used terms (biotoolsID) for searching in relations
 	function getBiotoolsIDs(){
@@ -1346,3 +1380,19 @@ angular.module('elixir_front.controllers', [])
 		});
 	}
 }]);
+
+function EdamModalCtrl($modalInstance, edam, onto) {
+	var vm = this;
+	vm.data = angular.copy(edam);
+	vm.onto = onto;
+	vm.self = $modalInstance;
+
+    vm.saveData = function() {
+        // Save changes and pass updated edam object back to the parent scope
+        $modalInstance.close(vm.data);
+    };
+
+	vm.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+}
