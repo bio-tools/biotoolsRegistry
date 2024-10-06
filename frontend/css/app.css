@@ -266,6 +266,10 @@ body {
 			margin-right:1px;
 		}
 
+		.panel-modal {
+			background-color: #f3f3f3;
+		}
+
 		.input-ontology {
 			border-bottom-left-radius: 0px;
 			border-bottom-right-radius: 0px;
