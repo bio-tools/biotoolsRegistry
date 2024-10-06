@@ -36,6 +36,11 @@
 					</h5>
 				</li>
 			</ul>
+			<span ng-if="function.cmd" style="padding-bottom: 8px;">
+				<code>
+					{{ ::function.cmd }}
+				</code>
+			</span>
 		</div>
 		<div class="col-sm-4 col-md-4 col-lg-4 text-center">
 			<div class="row flex-vertical" ng-repeat="output in function.output" style="margin:0px;">
