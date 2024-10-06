@@ -94,9 +94,9 @@ angular.module('elixir_front.controllers', [])
 		//$state.go('search', {'topic': topic.term}, {reload: true});
 		$state.transitionTo('search', {'topicID': quoteQueryStringValue(stripEdam(topic.uri))},
 		{
-    	reload: true,
-    	inherit: false,
-    	notify: true
+		reload: true,
+		inherit: false,
+		notify: true
 		});
 	}
 
@@ -104,18 +104,18 @@ angular.module('elixir_front.controllers', [])
 		//$state.go('search', {'topic': topic.term}, {reload: true});
 		$state.transitionTo('search', {'operationID': quoteQueryStringValue(stripEdam(operation.uri))},
 		{
-    	reload: true,
-    	inherit: false,
-    	notify: true
+		reload: true,
+		inherit: false,
+		notify: true
 		});
 	}
 	$scope.collectionNameClicked = function(collection) {
 		//$state.go('search', {'topic': topic.term}, {reload: true});
 		$state.transitionTo('search', {'collectionID': quoteQueryStringValue(collection)},
 		{
-    	reload: true,
-    	inherit: false,
-    	notify: true
+		reload: true,
+		inherit: false,
+		notify: true
 		});
 	}
 
@@ -1583,7 +1583,7 @@ function EdamModalCtrl($modalInstance, edam, onto, type, suggestions) {
 
 	// console.debug("modal", edam, onto, type, suggestions)
 
-    vm.saveData = function() {
+	vm.saveData = function() {
 		// User may press save and not have anything selected
 		if(angular.equals(vm.data, {})) {
 			$modalInstance.dismiss('cancel');
@@ -1591,19 +1591,40 @@ function EdamModalCtrl($modalInstance, edam, onto, type, suggestions) {
 		}
 		
 		// Save changes and pass updated edam object back to the parent scope
-        $modalInstance.close(vm.data);
-		// console.debug(vm.data)
-    };
+		$modalInstance.close(vm.data);
+	};
 
-	vm.apply_suggestion = function(suggestions) {
-		vm.data.data = {};
-		vm.data.data.term = suggestions.term;
-		vm.data.data.uri = suggestions.uri;
+	vm.apply_suggestion = function(suggestion) {
+		// let tree = document.getElementById('treecontrol');
 
-		vm.saveData();
+		vm.predicate = suggestion.term;
 	}
 
+	// Prioritize suggestions
+	vm.customOrder = function(node) {
+		if (!vm.suggestions) {
+			return node.text.toLowerCase(); // Fallback to alphabetical sorting if no suggestions
+		}
+		
+		var isSuggested = vm.suggestions.some(suggestion => suggestion.term === node.text);
+		
+		if (isSuggested) {
+			// For suggested items, return a string that will always sort first
+			return '0' + node.text.toLowerCase();
+		} else {
+			// For non-suggested items, return a string that will sort alphabetically
+			return '1' + node.text.toLowerCase();
+		}
+	};
+
+	// Function to check if the node is in suggestions (for bold styling)
+	vm.isSuggested = function(node) {
+		if (!vm.suggestions) {return false}
+		return vm.suggestions.some(suggestion => suggestion.term === node.text);
+	};
+
+	// Cancel modal
 	vm.cancel = function() {
-        $modalInstance.dismiss('cancel');
-    };
+		$modalInstance.dismiss('cancel');
+	};
 }
