@@ -495,11 +495,14 @@ Make botx text inputs look the sameish
 
 					<h5 class="function-image-element" style="padding-top:5px; padding-bottom:5px; margin:0px;">
 						<a href="" ng-click="openModal(input, 'data')" class="tool-page-grey-text" tooltips
-							tooltip-content="Input data : click to find more tools with this input data.">{{ input.data.term }}</a>
+							tooltip-content="Input data : click to find more tools with this input data.">{{
+							input.data.term }}</a>
 						<span style="font-weight: lighter;">
 							<br>(<span ng-repeat="format in input.format" tooltips
-								tooltip-content="Input format : click to find more tools with this input format." tooltip-side="bottom">
-								<a href="" ng-click="inputFormatNameClicked(format)" class="tool-page-grey-text">{{ format.term }} </a>
+								tooltip-content="Input format : click to find more tools with this input format."
+								tooltip-side="bottom">
+								<a href="" ng-click="inputFormatNameClicked(format)" class="tool-page-grey-text">{{
+									format.term }} </a>
 								<span ng-show="input.format.length > 0">, </span>
 							</span> <a href="" ng-click="addWithModal('format', input)">Add format</a> )
 						</span>
@@ -519,7 +522,8 @@ Make botx text inputs look the sameish
 
 					<h5 class="" style="padding-top:5px; padding-bottom:5px; margin:0px;">
 						<!-- <a href="" ng-show="!meta.function[functionIndex].input[inputIndex].visibility" ng-click="addButtonClick('input', function, true, true)">Add input</a> -->
-						<a href="" ng-show="!meta.function[functionIndex].input[inputIndex].visibility" ng-click="addWithModal('input', function)">Add input</a>
+						<a href="" ng-show="!meta.function[functionIndex].input[inputIndex].visibility"
+							ng-click="addWithModal('input', function)">Add input</a>
 					</h5>
 				</div>
 			</div>
@@ -538,7 +542,8 @@ Make botx text inputs look the sameish
 							href="http://biotools.readthedocs.io/en/latest/curators_guide.html#note-function"><i
 								class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 				<textarea class="form-control" rows="2" style="font-size: 80%;resize: vertical;margin-top: 4px;"
-					ng-model="function.note" placeholder="e.g. Run MEME on DNA sequences."></textarea>
+					ng-model="function.note" ng-model-options="{ updateOn: 'blur' }"
+					placeholder="e.g. Run MEME on DNA sequences."></textarea>
 			</div>
 
 			<ul class="list-unstyled" style="margin-bottom:0px;">
@@ -562,7 +567,7 @@ Make botx text inputs look the sameish
 							href="http://biotools.readthedocs.io/en/latest/curators_guide.html#command"><i
 								class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 				<textarea class="form-control fakecode" style="resize: vertical; margin-bottom: 4px;"
-					ng-model="function.cmd" class="form-control" rows="2"
+					ng-model="function.cmd" class="form-control" rows="2" ng-model-options="{ updateOn: 'blur' }"
 					placeholder="e.g. `meme sequence.s -dna`"></textarea>
 			</div>
 		</div>
@@ -586,11 +591,12 @@ Make botx text inputs look the sameish
 						<span style="font-weight: lighter;">
 							<br>(
 							<span ng-repeat="format in output.format">
-								<a href="" ng-click="openModal(format, 'format')" class="tool-page-grey-text">{{ format.term }}</a>
+								<a href="" ng-click="openModal(format, 'format')" class="tool-page-grey-text">{{
+									format.term }}</a>
 								<span ng-show="output.format.length > 0">, </span>
-							<!-- </span> <a href="" ng-click="addButtonClick('format', output, true, true)">Add format</a> ) -->
+								<!-- </span> <a href="" ng-click="addButtonClick('format', output, true, true)">Add format</a> ) -->
 							</span> <a href="" ng-click="addWithModal('format', output)">Add format</a> )
-						</span> 
+						</span>
 					</h5>
 					<div style="margin-bottom:5px;" ng-show="!$last"></div>
 				</div>
@@ -608,7 +614,8 @@ Make botx text inputs look the sameish
 
 					<h5 class="" style="padding-top:5px; padding-bottom:5px; margin:0px;">
 						<!-- <a href="" ng-show="!meta.function[functionIndex].output[outputIndex].visibility" ng-click="addButtonClick('output', function, true, true)">Add output</a> -->
-						<a href="" ng-show="!meta.function[functionIndex].output[outputIndex].visibility" ng-click="addWithModal('output', function)">Add output</a>
+						<a href="" ng-show="!meta.function[functionIndex].output[outputIndex].visibility"
+							ng-click="addWithModal('output', function)">Add output</a>
 					</h5>
 				</div>
 			</div>
