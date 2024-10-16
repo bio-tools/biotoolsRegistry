@@ -108,7 +108,7 @@ def update_pmcid_only_publication_metadata():
 
 
 # @shared_task
-def genereate_missing_stats():
+def generate_missing_stats():
     monthsCount = 12
     currentMonth = datetime.today().replace(day=1)
     for i in range(12):
@@ -149,7 +149,7 @@ def notify_resource_request(type, request_body):
         settings.ADMIN_EMAIL_LIST
     )
 
-# Ecosytem background tasks
+# Ecosystem background tasks
 # import the ecosytem_handle_tool_operations which handles the create, update and delete ecosystem operations
 from elixir.biotools_to_github import ecosytem_handle_tool_operations
 
