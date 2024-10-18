@@ -14,7 +14,7 @@ angular.module('elixir_front.controllers', [])
 	};
 	$scope.restoreState = function() {
 		$timeout(function() {
-			var state = localStorage.getItem('gridState');
+            var state = localStorage.getItem('gridState');
 			if (state) $scope.gridApi.saveState.restore($scope, JSON.parse(state));
 		});
 	};
@@ -22,7 +22,7 @@ angular.module('elixir_front.controllers', [])
 		enableSorting: false,
 		enableColumnMenus: false,
 		enableColumnResizing: true,
-		enableVerticalScrollbar: 0,
+		enableVerticalScrollbar: 1,
 		enableHorizontalScrollbar: true,
 		columnVirtualizationThreshold: ToolTableDataSource.columnsDescription([]).length,
 		data: ToolList.list,
@@ -804,7 +804,7 @@ angular.module('elixir_front.controllers', [])
 		{value: "Proprietary", text: "Proprietary"},
 		{value: "Other", text: "Other"},
 		{value: "Not licensed", text: "Not licensed"}
-	]
+	];
 
 	$scope.costOptions = [
 		{value: "Free of charge", text: "Free of charge"},
@@ -858,6 +858,7 @@ angular.module('elixir_front.controllers', [])
 		{value: "Racket", text: "Racket"},
 		{value: "REXX", text: "REXX"},
 		{value: "Ruby", text: "Ruby"},
+		{value: "Rust", text: "Rust"},
 		{value: "SAS", text: "SAS"},
 		{value: "Scala", text: "Scala"},
 		{value: "Scheme", text: "Scheme"},
@@ -1062,6 +1063,12 @@ angular.module('elixir_front.controllers', [])
 		{value: "very low", text: "very low"},
 	];
 
+	$scope.$watch('software.license', function(newValue) {
+        if (newValue === "") {
+            // Remove the license property if the empty option is selected
+            delete $scope.software.license;
+        }
+    });
 
 }])
 .controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', 'Covid', 'CommunityCollection', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator, Covid, CommunityCollection) {
