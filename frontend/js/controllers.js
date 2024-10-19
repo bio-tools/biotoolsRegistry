@@ -248,22 +248,13 @@ angular.module('elixir_front.controllers', [])
 	}
 
 	// modals
-	$scope.openModal = function(edam, type, suggestions){
-		var onto = null;
-		switch (type) {
-			case 'data':
-				onto = $scope.EDAM_data;
-				break;
-			case 'format':
-				onto = $scope.EDAM_format;
-				break;
-			case 'operation':
-				onto = $scope.EDAM_operation;
-				break;
-			default:
-				onto = $scope.EDAM_data;
-				break;
+	$scope.openModal = function (edam, type, suggestions) {
+		var ontoMap = {
+			'data': $scope.EDAM_data,
+			'format': $scope.EDAM_format,
+			'operation': $scope.EDAM_operation
 		};
+		var onto = ontoMap[type] || $scope.EDAM_data;
 
 		var modalInstance = $modal.open({
 			templateUrl: 'partials/tool_edit/toolEditEdamModal.html',
@@ -273,214 +264,181 @@ angular.module('elixir_front.controllers', [])
 				edam: function () { return edam; },
 				onto: function () { return onto; },
 				type: function () { return type; },
-				suggestions: function () {return suggestions; },
+				suggestions: function () { return suggestions; },
 			}
 		});
 
 		modalInstance.result.then(function (updatedEdam) {
 			angular.copy(updatedEdam, edam);
-		}, function () {});
+		}, function () { });
 
 		return modalInstance.result;
 	}
 
-	$scope.findObjectByUri = function(obj, targetUri) {
-		// Helper function to search recursively
+
+	$scope.findObjectByUri = function (obj, targetUri) {
 		function search(current) {
-			if (current.data && current.data.uri == targetUri) {
+			if (current.data && current.data.uri === targetUri) {
 				return current;
 			}
-
 			if (current.children) {
 				for (var i = 0; i < current.children.length; i++) {
-					var child = current.children[i];
-					const result = search(child, current);
+					var result = search(current.children[i]);
 					if (result) return result;
 				}
 			}
-
 			return null;
 		}
 
-		// Iterate through the array at the root level
-		for (let item of obj) {
-			const result = search(item);
+		for (var i = 0; i < obj.length; i++) {
+			var result = search(obj[i]);
 			if (result) return result;
-		  }
-		
-		  return null;
-	}
+		}
+		return null;
+	};
 
-	$scope.flattenObject = function(obj) {
+	$scope.flattenObject = function (obj) {
 		var result = [];
 		var stack = [obj];
-		
+
 		while (stack.length > 0) {
 			var current = stack.pop();
-			
 			for (var key in current) {
 				if (current.hasOwnProperty(key)) {
 					var value = current[key];
-					
 					if (typeof value === 'object' && value !== null) {
-						// If it's an object or array, add it to the stack
 						stack.push(value);
 					} else {
-						// If it's a primitive value, add it to the result
 						result.push(value);
 					}
 				}
 			}
 		}
-		
 		return result;
 	};	
 
-	$scope.recommend_terms = function(edam, type) {
-		// edam = currently edited operation
-		// type = input/output/format/operation
-		// console.log(edam, type, $scope);
+	$scope.recommend_terms = function (edam, type) {
+		var edamArray = $scope.flattenObject(edam).filter(function (word) {
+			return typeof word === 'string' && word.indexOf('http://edamontology.org/') !== -1;
+		});
 
-		// generate a list of all EDAM strings in `edam`
-		var edam_array = $scope.flattenObject(edam).filter((word) => typeof word == 'string' && word.includes('http://edamontology.org/'));
+		if (type === "operation") return null;  // No recommendations for operations
 
-		var onto = null;
-		switch (type) {
-			case 'format':
-				onto = $scope.EDAM_data;
-				break;
-			case 'operation':
-				// No recomendations for operations
-				return null;
-			default:
-				// If the user clicks on the input/output (data), we need to search the operations edam
-				onto = $scope.EDAM_operation;
-				break;
+		var ontoMap = {
+			'format': $scope.EDAM_data,
+			'input': $scope.EDAM_operation,
+			'output': $scope.EDAM_operation
 		};
+		var onto = ontoMap[type] || $scope.EDAM_operation;
 
 		var suggestions = [];
 
-		for (let index = 0; index < edam_array.length; index++) {
-			const element = edam_array[index];
-			var edam_obj = $scope.findObjectByUri(onto, element);
-			if (!edam_obj) continue;
+		for (var i = 0; i < edamArray.length; i++) {
+			var element = edamArray[i];
+			var edamObj = $scope.findObjectByUri(onto, element);
+			if (!edamObj) continue;
 
-			var append = true;
-
-			switch (type) { 
-				case 'operation':
-					// No recomendations for operations
-				break;
-				case 'input':
-					// Check for duplicates
-					if (!edam_obj || !edam_obj.has_input) continue;
-					if (edam.hasOwnProperty('input')) {
-						for (let i2 = 0; i2 < edam.input.length; i2++) {
-							const input = edam.input[i2];
-							if (edam_obj.has_input.includes(input.data.uri)) append = false;
-						}
-					}
-					if (append)
-						suggestions = suggestions.concat(edam_obj.has_input);
-					break;
-				case 'output':
-					if (!edam_obj || !edam_obj.has_output) continue;
-					if (edam.hasOwnProperty('output')) {
-						for (let i2 = 0; i2 < edam.output.length; i2++) {
-							const output = edam.output[i2];
-							if (edam_obj.has_output.includes(output.data.uri)) append = false;
-						}
-					}
-					if (append)
-						suggestions = suggestions.concat(edam_obj.has_output);
-					break;
-				default:
-					break;
+			var appendSuggestions = getSuggestions(type, edamObj, edam);
+			if (appendSuggestions.length) {
+				suggestions = suggestions.concat(appendSuggestions);
 			}
 		}
 
-		// If the user is picking an output, search the EDAM_operation onto for
-		// the current operations and their has_output restrictions
+		return mapSuggestions(suggestions, type);
+	};
 
-		// console.debug("suggestions:", suggestions)
-
-		// Map suggestions from an array of URIs to an array of objects with a URI and term name
-		// Just like the data the modal returns
-		for (let index = 0; index < suggestions.length; index++) {
-			const element = suggestions[index];
-
-			var onto = null
-			switch (type) {
-				case 'format':
-					onto = $scope.EDAM_format;
-					break;
-				case 'output':
-				case 'input':
-					onto = $scope.EDAM_data;
-			};
-			
-			var edam_obj = $scope.findObjectByUri(onto, element);
-
-			var new_obj = {'uri': element, 'term': edam_obj.text}
-
-			suggestions[index] = new_obj;
-		}
-
-		return suggestions
-	}
-
-	$scope.addWithModal = function(type, edam) {
-		var pickertype = null;
+	function getSuggestions(type, edamObj, edam) {
 		switch (type) {
 			case 'input':
-				pickertype = 'data';
-				break;
+				return getInputSuggestions(edamObj, edam);
 			case 'output':
-				pickertype = 'data';
-				break;
-			case 'format':
-				pickertype = 'format';
-				break;
-			case 'function':
-				pickertype = 'operation';
-				break;
-			case 'operation':
-				pickertype = 'operation';
-				break;
+				return getOutputSuggestions(edamObj, edam);
 			default:
-				break;
+				return [];
+		}
+	}
+
+	function getInputSuggestions(edamObj, edam) {
+		if (!edamObj.has_input) return [];
+		if (!edam.hasOwnProperty('input')) return edamObj.has_input;
+		return edamObj.has_input.filter(function (input) {
+			return !edam.input.some(function (existingInput) {
+				return existingInput.data.uri === input;
+			});
+		});
+	}
+
+	function getOutputSuggestions(edamObj, edam) {
+		if (!edamObj.has_output) return [];
+		if (!edam.hasOwnProperty('output')) return edamObj.has_output;
+		return edamObj.has_output.filter(function (output) {
+			return !edam.output.some(function (existingOutput) {
+				return existingOutput.data.uri === output;
+			});
+		});
+	}
+
+	function mapSuggestions(suggestions, type) {
+		var ontoMap = {
+			'format': $scope.EDAM_format,
+			'output': $scope.EDAM_data,
+			'input': $scope.EDAM_data
 		};
+		var onto = ontoMap[type];
+
+		return suggestions.map(function (element) {
+			var edamObj = $scope.findObjectByUri(onto, element);
+			return {
+				'uri': element,
+				'term': edamObj ? edamObj.text : ''
+			};
+		});
+	}
+
+	$scope.addWithModal = function (type, edam) {
+		var pickerTypeMap = {
+			'input': 'data',
+			'output': 'data',
+			'format': 'format',
+			'function': 'operation',
+			'operation': 'operation'
+		};
+		var pickertype = pickerTypeMap[type] || '';
 
 		var suggestions = $scope.recommend_terms(edam, type);
 
-		var n = $scope.openModal({}, pickertype, suggestions);
-		
-		n.then(function (newEdam) {
-			switch (type) {
-				case 'format':
-					$scope.addButtonClick('format', edam, true, true);
-					edam.format[edam.format.length - 1] = newEdam;
-					break;
-				case 'output':
-					$scope.addButtonClick('output', edam, true, true);
-					edam.output[edam.output.length - 1] = newEdam;
-					break;
-				case 'input':
-					$scope.addButtonClick('input', edam, true, true);
-					edam.input[edam.input.length - 1] = newEdam;
-					break;
-				case 'function':
-					$scope.addButtonClick('function', edam, true, true);
-					edam.function[edam.function.length - 1].operation = [newEdam];
-					break;
-				case 'operation':
-					$scope.addButtonClick('function', edam, true, true);
-					edam.push(newEdam);
-					break;
-			};
-		}, function () {});
-	}
+		var modalPromise = $scope.openModal({}, pickertype, suggestions);
 
+		modalPromise.then(function (newEdam) {
+			handleModalResult(type, edam, newEdam);
+		}, function () { });
+	};
+
+	function handleModalResult(type, edam, newEdam) {
+		switch (type) {
+			case 'format':
+				$scope.addButtonClick('format', edam, true, true);
+				edam.format[edam.format.length - 1] = newEdam;
+				break;
+			case 'output':
+				$scope.addButtonClick('output', edam, true, true);
+				edam.output[edam.output.length - 1] = newEdam;
+				break;
+			case 'input':
+				$scope.addButtonClick('input', edam, true, true);
+				edam.input[edam.input.length - 1] = newEdam;
+				break;
+			case 'function':
+				$scope.addButtonClick('function', edam, true, true);
+				edam.function[edam.function.length - 1].operation = [newEdam];
+				break;
+			case 'operation':
+				$scope.addButtonClick('function', edam, true, true);
+				edam.push(newEdam);
+				break;
+		}
+	}
+	
 	// used terms (biotoolsID) for searching in relations
 	function getBiotoolsIDs(){
 		var d = $q.defer();
