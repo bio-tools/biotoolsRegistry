@@ -1562,50 +1562,42 @@ function EdamModalCtrl($modalInstance, edam, onto, type, suggestions) {
 	vm.type = type;
 	vm.suggestions = suggestions;
 
-	// console.debug("modal", edam, onto, type, suggestions)
-
-	vm.saveData = function() {
-		// User may press save and not have anything selected
-		if(angular.equals(vm.data, {})) {
+	vm.saveData = function () {
+		if (isEmptyObject(vm.data)) {
 			$modalInstance.dismiss('cancel');
 			return;
 		}
-		
-		// Save changes and pass updated edam object back to the parent scope
 		$modalInstance.close(vm.data);
 	};
 
-	vm.apply_suggestion = function(suggestion) {
-		// let tree = document.getElementById('treecontrol');
-
+	vm.apply_suggestion = function (suggestion) {
 		vm.predicate = suggestion.term;
-	}
+	};
 
-	// Prioritize suggestions
-	vm.customOrder = function(node) {
+	vm.customOrder = function (node) {
 		if (!vm.suggestions) {
-			return node.text.toLowerCase(); // Fallback to alphabetical sorting if no suggestions
+			return node.text.toLowerCase();
 		}
-		
-		var isSuggested = vm.suggestions.some(suggestion => suggestion.term === node.text);
-		
-		if (isSuggested) {
-			// For suggested items, return a string that will always sort first
-			return '0' + node.text.toLowerCase();
-		} else {
-			// For non-suggested items, return a string that will sort alphabetically
-			return '1' + node.text.toLowerCase();
-		}
+
+		var isSuggested = containsSuggestion(node);
+		return (isSuggested ? '0' : '1') + node.text.toLowerCase();
 	};
 
-	// Function to check if the node is in suggestions (for bold styling)
-	vm.isSuggested = function(node) {
-		if (!vm.suggestions) {return false}
-		return vm.suggestions.some(suggestion => suggestion.term === node.text);
+	vm.isSuggested = function (node) {
+		return vm.suggestions && containsSuggestion(node);
 	};
 
-	// Cancel modal
-	vm.cancel = function() {
+	vm.cancel = function () {
 		$modalInstance.dismiss('cancel');
 	};
+
+	function isEmptyObject(obj) {
+		return angular.equals(obj, {});
+	}
+
+	function containsSuggestion(node) {
+		return vm.suggestions.some(function (suggestion) {
+			return suggestion.term === node.text;
+		});
+	}
 }
