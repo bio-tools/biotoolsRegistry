@@ -547,20 +547,6 @@
 			<i class="fa fa-times remove-icon highlight-icon"
 				ng-click="removeButtonClick('function', software, $index)"></i>
 
-			<div class="form-group" style="text-align: left">
-				<label class="control-label" style="margin-bottom: 0px;"><span tooltips tooltip-side="right"
-						tooltip-content="{{Attribute.description.functionNote.description}}">Note <a target="_blank"
-							href="http://biotools.readthedocs.io/en/latest/curators_guide.html#note-function"><i
-								class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
-				<textarea class="form-control" rows="2" style="font-size: 80%;resize: vertical;margin-top: 4px;"
-					ng-model="function.note" ng-model-options="{ updateOn: 'blur' }"
-					placeholder="e.g. Run MEME on DNA sequences."></textarea>
-				<div ng-class="{'has-error': true};">
-					<label class="help-block" ng-repeat="error in registrationErrorPayload.function[functionIndex].note"
-						ng-bind-html="error"></label>
-				</div>
-			</div>
-
 			<ul class="list-unstyled" style="margin-bottom:0px;">
 				<span ng-if="function.operation.length == null" class="tool-page-grey-text">{{ software.name }}</span>
 				<li ng-repeat="functionName in function.operation track by $index" ng-init="functionNameIndex = $index">
@@ -602,6 +588,17 @@
 					placeholder="e.g. `meme sequence.s -dna`"></textarea>
 				<div ng-class="{'has-error': true};">
 					<label class="help-block" ng-repeat="error in registrationErrorPayload.function[functionIndex].cmd"
+						ng-bind-html="error"></label>
+				</div>
+				<label class="control-label" style="margin-bottom: 0px;"><span tooltips tooltip-side="right"
+						tooltip-content="{{Attribute.description.functionNote.description}}">Note <a target="_blank"
+							href="http://biotools.readthedocs.io/en/latest/curators_guide.html#note-function"><i
+								class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
+				<textarea class="form-control" rows="2" style="font-size: 80%;resize: vertical;margin-top: 4px;"
+					ng-model="function.note" ng-model-options="{ updateOn: 'blur' }"
+					placeholder="e.g. Run MEME on DNA sequences."></textarea>
+				<div ng-class="{'has-error': true};">
+					<label class="help-block" ng-repeat="error in registrationErrorPayload.function[functionIndex].note"
 						ng-bind-html="error"></label>
 				</div>
 			</div>
