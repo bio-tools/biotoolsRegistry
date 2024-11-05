@@ -54,7 +54,7 @@ gulp.task('scripts', function() {
 	.pipe(plumber())
 	.pipe(concat('app.js'))
 	.pipe(rename({suffix:'.min'}))
-	.pipe(uglify({ mangle: false }))
+	// .pipe(uglify({ mangle: false })) // Causes false errors, need an update
 	.pipe(gulp.dest('dist'));
 });
 
@@ -83,7 +83,7 @@ gulp.task('bower', function() {
 	.pipe(plumber())
 	.pipe(concat('vendor.js'))
 	.pipe(rename({suffix:'.min'}))
-	//.pipe(uglify())
+	.pipe(uglify())
 	.pipe(gulp.dest('dist'));
 	
 	gulp.src([
