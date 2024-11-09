@@ -13,7 +13,7 @@ In support of discoveries in the life sciences, a plethora of databases and tool
 bio.tools, supported by [ELIXIR](https://www.elixir-europe.org/) — the European infrastructure for biological information - is available at 
 
 https://bio.tools (production version)
-https://dev.bio.tools (latest development version)
+https://bio-tools-dev.sdu.dk (latest development version)
 
 Please read the [documentation](http://biotools.readthedocs.io/en/latest/).
 
