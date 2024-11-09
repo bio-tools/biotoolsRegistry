@@ -14,7 +14,7 @@ angular.module('elixir_front.controllers', [])
 	};
 	$scope.restoreState = function() {
 		$timeout(function() {
-			var state = localStorage.getItem('gridState');
+            var state = localStorage.getItem('gridState');
 			if (state) $scope.gridApi.saveState.restore($scope, JSON.parse(state));
 		});
 	};
@@ -22,7 +22,7 @@ angular.module('elixir_front.controllers', [])
 		enableSorting: false,
 		enableColumnMenus: false,
 		enableColumnResizing: true,
-		enableVerticalScrollbar: 0,
+		enableVerticalScrollbar: 1,
 		enableHorizontalScrollbar: true,
 		columnVirtualizationThreshold: ToolTableDataSource.columnsDescription([]).length,
 		data: ToolList.list,
