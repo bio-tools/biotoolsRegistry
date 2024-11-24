@@ -27,7 +27,7 @@
                         options="treeOptions"
                         on-selection="vm.data.data.term = node.text; vm.data.data.uri=node.data.uri"
                         filter-expression="vm.predicate">
-                            <span ng-class="{'suggested': vm.isSuggested(node)}">{{node.text}}</span>
+                            <span ng-class="{'suggested': vm.isSuggested(node)}" tooltip-append-to-body="true" tooltip-popup-delay='300' uib-tooltip="{{node.text}}">{{node.text}}</span>
                         </div>
                     </div>
 
@@ -44,7 +44,7 @@
                         options="treeOptions"
                         on-selection="vm.data.term = node.text; vm.data.uri=node.data.uri"
                         filter-expression="vm.predicate">
-                            <span ng-class="{'suggested': vm.isSuggested(node)}">{{node.text}}</span>
+                            <span ng-class="{'suggested': vm.isSuggested(node)}" tooltip-append-to-body="true" tooltip-popup-delay='300' uib-tooltip="{{node.definition}}">{{node.text}}</span>
                         </div>
                     </div>
                 </div>
