@@ -146,7 +146,7 @@ angular.module('elixir_front.directives', [])
 .directive('toolPaginator', ['ToolList', '$state','$stateParams', 'Query', '$timeout', 'ToolPaginator', function(ToolList, $state, $stateParams, Query, $timeout, ToolPaginator) {
 	return {
 		restrict: 'A',
-		template: '<ul uib-pagination style="margin-bottom:25px; margin-top:25px;" total-items="ToolList.count" ng-model="ToolPaginator.currentPage" items-per-page="ToolPaginator.pageSize" max-size="ToolPaginator.maxSize" ng-change="pageChanged()" class="pagination-sm pagination-top" boundary-links="true" rotate="true" ng-disabled="ToolList.loading"></ul>',
+		template: '<div style="display: flex; align-items: center; margin-top: 25px; margin-bottom: 25px;"><ul uib-pagination total-items="ToolList.count" ng-model="ToolPaginator.currentPage" items-per-page="ToolPaginator.pageSize" max-size="ToolPaginator.maxSize" ng-change="pageChanged()" class="pagination-sm pagination-top" boundary-links="true" rotate="true" ng-disabled="ToolList.loading"></ul><div style="margin-left: 15px; display: flex; align-items: center;"><label for="pageInput" style="margin-right: 5px;">Go to page:</label><input type="number" id="pageInput" ng-model="inputPage" min="1" max="{{Math.ceil(ToolList.count / ToolPaginator.pageSize)}}" ng-keypress="handlePageInput($event)" style="width: 60px;" /></div></div>',
 		link: function(scope, element, attrs) {
 			// reference the Query in the scope
 			scope.Query = Query;
@@ -170,6 +170,21 @@ angular.module('elixir_front.directives', [])
 					ToolList.refresh();
 				});
 			}
+
+			// Allow direct page navigation via input
+            scope.handlePageInput = function(event) {
+                if (event.key === 'Enter') { // Navigate on pressing Enter
+                    if (
+                        scope.inputPage >= 1 &&
+                        scope.inputPage <= Math.ceil(ToolList.count / ToolPaginator.pageSize)
+                    ) {
+                        ToolPaginator.currentPage = scope.inputPage;
+                        scope.pageChanged();
+                    } else {
+                        alert('Invalid page number.');
+                    }
+                }
+            };
 
 			// riddiculous hax, otherwise it keeps changing to 1
 			var initializing = true;
