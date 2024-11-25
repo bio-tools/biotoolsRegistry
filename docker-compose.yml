@@ -54,7 +54,7 @@ services:
       - BIOTOOLS_MYSQL_PASSWORD=123
       - BIOTOOLS_MYSQL_USER=elixir
     ports:
-      - "8000:80"
+      - "80:80"
     networks:
       - net
     depends_on:

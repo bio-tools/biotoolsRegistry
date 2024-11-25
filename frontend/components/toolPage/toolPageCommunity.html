@@ -29,22 +29,29 @@
 
     <div ng-if="hasRRID()" >
         <a class="biolib_logo"
-        ng-href="https://scicrunch.org" 
-        target="_blank"><img src="img/scicrunch.png" 
-        height="40" 
-        title="SciCrunch" 
-        alt="SciCrunch">
+            ng-href="https://scicrunch.org" 
+            target="_blank"><img src="img/scicrunch.png" 
+            height="40" 
+            title="SciCrunch" 
+            alt="SciCrunch">
         </a>
+
         <a ng-repeat="otherID in software.otherID"
-             
             class="scicrunch_pill" 
-            ng-href="https://scicrunch.org/resolver/{{otherID.value}}"
-            target="_blank"
-        >
-         <span class="scicrunch_label">RRID:</span><span class="scicrunch_value">{{otherID.value | limitTo:20:5}}&nbsp;&nbsp;<i class="fa fa-external-link"></i></span>
-        </a>
-        
-        
+            ng-href="{{otherID.type === 'doi' ? 'https://doi.org/' + otherID.value
+                    : otherID.type === 'cpe' ? 'https://cpe-link.org/' + otherID.value  
+                    : 'https://scicrunch.org/resolver/' + otherID.value}}"
+            target="_blank">
+         
+            <span class="scicrunch_label">
+                {{ otherID.type === 'doi' ? 'DOI:' 
+                : otherID.type === 'cpe' ? 'CPE:' 
+                : 'RRID:' }}
+            </span>
+            <span class="scicrunch_value">
+                {{otherID.value | limitTo:20:5}}&nbsp;&nbsp;<i class="fa fa-external-link"></i>
+            </span>
+        </a>       
       
     </div>
 

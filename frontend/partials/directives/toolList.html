@@ -11,10 +11,10 @@
 					<i style="font-size:110%;" class="fa fa-3x fa-windows" ng-show="operatingSystem == 'Windows'" tooltips tooltip-side="top" tooltip-content="Operating system:: {{ operatingSystem }}"></i>
 				</span>
 			</span>
-			<span ng-if="Covid.hasCovid(tool.collectionID)">
+			<!-- <span ng-if="Covid.hasCovid(tool.collectionID)">
 				<span style="color: #CCCCCC"> | </span>
 				<span style="color: #BA1E4A">COVID-19</span>
-			</span>
+			</span> -->
 		</div>
 		<div class="panel pill-background pill-text">
 			<!-- Tool description -->
@@ -41,6 +41,6 @@
 		</div>
 	</div>
 </div>	
-<div ng-if="!ToolList.loading && ToolList.count && ToolList.count > 10" style="display: flex; justify-content: center;">
+<div ng-if="!ToolList.loading && ToolList.count && ToolList.count > 50" style="display: flex; justify-content: center;">
 	<div tool-paginator></div>
 </div>
