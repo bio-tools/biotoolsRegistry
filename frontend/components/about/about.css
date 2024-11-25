@@ -89,3 +89,30 @@ div .about-container{
 	margin-bottom: 45px;
 	margin-top: 45px;
 }
+
+
+/* Copy from home */
+.flag-item{
+	margin-bottom: 25px;
+	margin-top: 15px;	
+}
+.flag-item img{
+	border: 1px solid lightgrey;
+	max-width: 60px;
+    height: auto;
+}
+
+.flag-item span{
+	font-size: 12px;
+	display: block;
+ 	margin-left: auto;
+  	margin-right: auto;
+  	margin-top: 5px;
+  	text-align: center !important; 
+  	font-weight: bolder;
+}
+
+.icon-blue {
+    color: orange;
+	margin-right: 8px;
+}

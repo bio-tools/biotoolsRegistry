@@ -345,8 +345,8 @@ angular.module('elixir_front')
 			callout += '<span ng-show="' + attr.typeentity + '">{{' + attr.typeentity + '}}</span>';
 			callout += '</div>';
 			callout += '<div class="tool-page-callout-text">';
-			callout += '<span ng-show="' + attr.typerole.count + ' != 0" ng-repeat="role in ' + attr.typerole + '">{{role}}{{$last ? "" : ", "}}';
-			callout += '<span ng-show="' + attr.email + ' || ' + attr.url + ' || ' + attr.orcidid + ' || ' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';
+			callout += '<span ng-show="' + attr.typerole.count + ' != 0" ng-repeat="role in ' + attr.typerole + '">{{role}}{{$last ? "" : ", "}}</span>';
+			callout += '<span ng-show="' + attr.email + ' || ' + attr.url + ' || ' + attr.orcidid + ' || ' + attr.gridid + '" style="color: #CCCCCC;"> | </span>';
 			callout += '<span ng-show="' + attr.email + '"><i class="fa fa-envelope-o" aria-hidden="true"></i> {{' + attr.email +'.replace(\'@\', \' at \') }}';
 			callout += '<span ng-show="' + attr.url + ' || ' + attr.orcidid + ' || ' + attr.gridid + '" style="color: #CCCCCC;"> | </span></span>';
 			callout += '<span ng-show="' + attr.url + '"><a href="{{' + attr.url + '}}" target="_blank">Link › </a>';
