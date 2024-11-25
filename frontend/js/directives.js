@@ -146,7 +146,7 @@ angular.module('elixir_front.directives', [])
 .directive('toolPaginator', ['ToolList', '$state','$stateParams', 'Query', '$timeout', 'ToolPaginator', function(ToolList, $state, $stateParams, Query, $timeout, ToolPaginator) {
 	return {
 		restrict: 'A',
-		template: '<uib-pagination style="margin-bottom:25px; margin-top:25px;" total-items="ToolList.count" ng-model="ToolPaginator.currentPage" items-per-page="ToolPaginator.pageSize" max-size="ToolPaginator.maxSize" ng-change="pageChanged()" class="pagination-sm pagination-top" ng-disabled="ToolList.loading"></uib-pagination>',
+		template: '<ul uib-pagination style="margin-bottom:25px; margin-top:25px;" total-items="ToolList.count" ng-model="ToolPaginator.currentPage" items-per-page="ToolPaginator.pageSize" max-size="ToolPaginator.maxSize" ng-change="pageChanged()" class="pagination-sm pagination-top" boundary-links="true" rotate="true" ng-disabled="ToolList.loading"></ul>',
 		link: function(scope, element, attrs) {
 			// reference the Query in the scope
 			scope.Query = Query;
