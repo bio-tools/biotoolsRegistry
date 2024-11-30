@@ -1,682 +1,235 @@
 <br>
 <div class="panel panel-info">
-	<div class="panel-heading" style="position: relative;"><label align="justify">A tool can have one or more basic
-			functions (modes of operation) described in terms from the <a target="_blank"
-				ng-href="https://github.com/edamontology/edamontology/">EDAM Ontology <i
-					class="fa fa-external-link"></i></a>. Each function performs one or more specific operation(s), e.g.
-			"Sequence alignment". An operation may have one or more primary inputs and outputs, each of a defined type
-			of data, e.g. "Sequence", and listing supported format(s) e.g. "FASTA".
-			<br>We recommend you specify at least the operation(s) for the primary function of the tool. See the <a
-				target="_blank"
-				ng-href="http://biotools.readthedocs.io/en/latest/curators_guide.html#function-group">Curation
-				Guidelines <i class="fa fa-external-link"></i></a>.</label>
-	</div>
+    <div class="panel-heading" style="position: relative;"><label align="justify">A tool can have one or more basic
+        functions (modes of operation) described in terms from the <a ng-href="https://github.com/edamontology/edamontology/"
+                                                                      target="_blank">EDAM
+            Ontology <i
+                    class="fa fa-external-link"></i></a>. Each function performs one or more specific operation(s), e.g.
+        "Sequence alignment". An operation may have one or more primary inputs and outputs, each of a defined type
+        of data, e.g. "Sequence", and listing supported format(s) e.g. "FASTA".
+        <br>We recommend you specify at least the operation(s) for the primary function of the tool. See the <a
+                ng-href="http://biotools.readthedocs.io/en/latest/curators_guide.html#function-group"
+                target="_blank">Curation
+            Guidelines <i class="fa fa-external-link"></i></a>.</label>
+    </div>
 </div>
 
-<form name="form.functionForm" class="form-horizontal" novalidate>
-	<!-- Drop down menu to hide old design. New does not work on mobile. -->
-	<details>
-		<summary>Old editor</summary>
-		<div class="form-group">
-			<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
-				<!-- FUNCTION -->
-				<div uib-collapse="meta.function.visibility">
+<div class="row tool-page-row" ng-init="functionIndex = $index"
+     ng-repeat="function in software.function track by $index"
+     style="padding-left: 40px; padding-right: 40px;">
+    <br>
+    <div class="row flex-adaptive">
+        <!-- Input -->
+        <div class="col-sm-4 col-md-4 col-lg-4">
+            <!-- Add -->
+            <div class="visible-xs row flex-adaptive" style="margin:0px;">
+                <div class="col-sm-10 col-md-10 text-center">
 
-					<div class="panel panel-default" ng-repeat="function in software.function track by $index"
-						ng-init="functionIndex = $index" style="background-color: #fff;"
-						ng-class="{'no-margin-bottom': $last};">
-						<div class="panel-heading" style="position: relative;">
-							<i class="fa fa-times remove-icon highlight-icon"
-								ng-click="removeButtonClick('function', software, $index)"></i>
-							<label class="control-label">Function details
-								<a target="_blank"
-									href="http://biotools.readthedocs.io/en/latest/curators_guide.html#toolfunctions"><i
-										class="fa fa-question-circle fa" aria-hidden="true"></i></a>
-							</label>
-						</div>
-						<div class="panel-body" style="position: relative;">
-							<div class="form-group" style="margin-bottom:0px;">
-								<label class="control-label"><span tooltips tooltip-side="right"
-										tooltip-content="{{Attribute.description.operation.description}}">Operation <a
-											target="_blank"
-											href="http://biotools.readthedocs.io/en/latest/curators_guide.html#operation"><i
-												class="fa fa-question-circle fa" aria-hidden="true"></i></a></span><span
-										style="color:#ff0000;"><b>
-											*</b></span></label>
-								<div class="form-group" ng-repeat="operation in function.operation track by $index"
-									ng-init="functionNameIndex = $index" ng-class="{'no-margin-bottom': $last};">
-									<div class="input-group">
-										<input type="text" ng-model="operation.term" class="form-control input-ontology"
-											placeholder="Operation" disabled="disabled"></input>
-										<span class="input-group-btn">
-											<button class="btn" type="button"
-												ng-click="function.operation[functionNameIndex].term = 'Operation'; meta.function[functionIndex].operation[functionNameIndex].selected = undefined; meta.function[functionIndex].operation[functionNameIndex].visibility = true;"
-												tooltips tooltip-side="right"
-												tooltip-content="If you can't find the terms you are looking for, please specify them in the 'Note' section below. "
-												ng-class="{'btn-primary': function.operation[functionNameIndex].term == 'Operation', 'btn-default': function.operation[functionNameIndex].term != 'Operation'}">I
-												don't know</button>
-											<button class="btn btn-default highlight-icon input-ontology-btn"
-												type="button"
-												ng-click="removeButtonClick('operation', function, $index)"><i
-													class="fa fa-times remove-icon-button"></i> </button>
-										</span>
-									</div>
-									<div class="panel panel-default panel-ontology">
-										<div class="panel-body" style="padding:0px;">
-											<div
-												uib-collapse="meta.function[functionIndex].operation[functionNameIndex].visibility">
-												<div class="form-group" style="margin:5px;">
-													<input type="text"
-														ng-model="meta.function[functionIndex].operation[functionNameIndex].predicate"
-														class="form-control input-sm" placeholder="Filter"></input>
-												</div>
-												<div treecontrol class="tree-light" tree-model="EDAM_operation"
-													order-by="orderby" reverse-order="false" options="treeOptions"
-													on-selection="ontologyOnSelect(software.function[functionIndex].operation, functionNameIndex, node); resetError('operation', registrationErrorPayload.function[functionIndex], functionNameIndex)"
-													selected-node="meta.function[functionIndex].operation[functionNameIndex].selected"
-													filter-expression="meta.function[functionIndex].operation[functionNameIndex].predicate">
-													{{node.text}}</div>
-											</div>
-											<button type="button" class="btn btn-default btn-xs btn-block btn-ontology"
-												ng-class="{'btn-ontology-closed': meta.function[functionIndex].operation[functionNameIndex].visibility}"
-												ng-click="meta.function[functionIndex].operation[functionNameIndex].visibility = !meta.function[functionIndex].operation[functionNameIndex].visibility"><i
-													class="fa"
-													ng-class="{'fa-chevron-up':!meta.function[functionIndex].operation[functionNameIndex].visibility, 'fa-chevron-down':meta.function[functionIndex].operation[functionNameIndex].visibility}"></i></button>
-										</div>
-									</div>
-									<div ng-class="{'has-error': true};">
-										<label class="help-block"
-											ng-repeat="error in registrationErrorPayload.function[functionIndex].operation[functionNameIndex]"
-											ng-bind-html="error"></label>
-									</div>
-								</div>
-								<div ng-class="{'has-error': true};"
-									ng-show="registrationErrorPayload.function[functionIndex].operation[0]=='This field is required.'">
-									<label class="help-block"
-										ng-repeat="error in registrationErrorPayload.function[functionIndex].operation"
-										ng-bind-html="error"></label>
-								</div>
-							</div>
+                    <h5 style="padding-top:5px; padding-bottom:5px; margin:0px;">
+                        <a class="add-data-link" href=""
+                           ng-click="addWithModal('input', function)"
+                           ng-show="!meta.function[functionIndex].input[inputIndex].visibility">Add input</a>
+                    </h5>
+                </div>
+            </div>
 
-							<div class="form-group" style="padding-top:7px;">
-								<a href="" ng-click="addButtonClick('operation', function, true, true)">Add
-									operation</a>
-							</div>
-							<!-- INPUT -->
-							<div class="form-group" style="margin-bottom:0px;">
-								<label class="control-label"><span tooltips tooltip-side="right"
-										tooltip-content="{{Attribute.description.input.description}}">Input</span></label>
-								<div uib-collapse="meta.function[functionIndex].input[inputIndex].visibility">
-									<div class="panel panel-default panel-inner"
-										ng-repeat="input in function.input track by $index"
-										ng-init="inputIndex = $index" ng-class="{'no-margin-bottom': $last};">
-										<div class="panel-body" style="position: relative;">
-											<i class="fa fa-times remove-icon highlight-icon"
-												ng-click="removeButtonClick('input', function, $index)"></i>
-											<div class="form-group" style="margin-bottom:0px;">
-												<label class="control-label"><span tooltips tooltip-side="right"
-														tooltip-content="{{Attribute.description.inputDataType.description}}">Data
-														type <a target="_blank"
-															href="http://biotools.readthedocs.io/en/latest/curators_guide.html#data-type-input-and-output-data"><i
-																class="fa fa-question-circle fa"
-																aria-hidden="true"></i></a></span> <span
-														style="color:#ff0000;"><b>*</b></span></label>
-												<div class="input-group" ng-if="input.data != null">
-													<input type="text" ng-model="input.data.term"
-														class="form-control input-ontology" placeholder="Data type"
-														disabled="disabled"></input>
-													<span class="input-group-btn">
-														<button class="btn" type="button"
-															ng-click="input.data.term = 'Data'; meta.function[functionIndex].input[inputIndex].data.selected = undefined; meta.function[functionIndex].input[inputIndex].data.visibility = true;"
-															tooltips tooltip-side="right"
-															tooltip-content="If you can't find the terms you are looking for, please specify them in the 'Note' section below"
-															ng-class="{'btn-primary': input.data.term == 'Data Type', 'btn-default': input.data.term != 'Data Type'}">I
-															don't know</button>
-														<button
-															class="btn btn-default highlight-icon input-ontology-btn"
-															type="button"
-															ng-click="input.data = undefined; meta.function[functionIndex].input[inputIndex].data.selected = undefined;"><i
-																class="fa fa-times remove-icon-button"></i></button>
-													</span>
-												</div>
-												<div ng-if="input.data != null"
-													class="panel panel-default panel-ontology">
-													<div class="panel-body" style="padding:0px;">
-														<div
-															uib-collapse="meta.function[functionIndex].input[inputIndex].data.visibility">
-															<div class="form-group" style="margin:5px;">
-																<input type="text"
-																	ng-model="meta.function[functionIndex].input[inputIndex].data.predicate"
-																	class="form-control input-sm"
-																	placeholder="Filter"></input>
-															</div>
-															<div treecontrol class="tree-light" tree-model="EDAM_data"
-																order-by="orderby" reverse-order="false"
-																options="treeOptions"
-																on-selection="input.data.term = node.text;input.data.uri = node.data.uri; resetError('input', registrationErrorPayload.function[functionIndex], inputIndex)"
-																selected-node="meta.function[functionIndex].input[inputIndex].data.selected"
-																filter-expression="meta.function[functionIndex].input[inputIndex].data.predicate">
-																{{node.text}}</div>
-														</div>
-														<button type="button"
-															class="btn btn-default btn-xs btn-block btn-ontology"
-															ng-class="{'btn-ontology-closed': meta.function[functionIndex].input[inputIndex].data.visibility}"
-															ng-click="meta.function[functionIndex].input[inputIndex].data.visibility = !meta.function[functionIndex].input[inputIndex].data.visibility"><i
-																class="fa"
-																ng-class="{'fa-chevron-up':!meta.function[functionIndex].input[inputIndex].data.visibility, 'fa-chevron-down':meta.function[functionIndex].input[inputIndex].data.visibility}"></i></button>
+            <div class="row flex-adaptive" ng-class="{'first-element': $first}"
+                 ng-init="inputIndex = $index"
+                 ng-repeat="input in function.input track by $index" style="margin:0px;">
+                <div class="col-sm-10 col-md-10 text-center">
+                    <i class="fa fa-times highlight-icon" ng-click="removeButtonClick('input', function, $index)"
+                       style="position: absolute; top: 3px; right: 20px;"></i>
 
-													</div>
-												</div>
-											</div>
-											<div ng-class="{'has-error': true};">
-												<label class="help-block"
-													ng-repeat="error in registrationErrorPayload.function[functionIndex].input[inputIndex].data"
-													ng-bind-html="error"></label>
-											</div>
-											<div class="form-group" style="padding-top:7px;">
-												<a href="" ng-show="input.data == null"
-													ng-click="addButtonClick('data', input, false, true)">Add data
-													type</a>
-											</div>
-											<div class="form-group" style="margin-bottom:0px;">
-												<label class="control-label"><span tooltips tooltip-side="right"
-														tooltip-content="{{Attribute.description.inputDataFormat.description}}">Data
-														format <a target="_blank"
-															href="http://biotools.readthedocs.io/en/latest/curators_guide.html#data-format-input-and-output-data"><i
-																class="fa fa-question-circle fa"
-																aria-hidden="true"></i></a></span></span></label>
-												<div class="form-group"
-													ng-repeat="format in input.format track by $index"
-													ng-init="dataFormatIndex = $index"
-													ng-class="{'no-margin-bottom': $last};">
-													<div class="input-group">
-														<input type="text" ng-model="input.format[dataFormatIndex].term"
-															class="form-control input-ontology"
-															placeholder="Data Format" disabled="disabled"></input>
-														<span class="input-group-btn">
-															<button class="btn" type="button"
-																ng-click="input.format[dataFormatIndex].term = 'Format'; meta.function[functionIndex].input[inputIndex].format[dataFormatIndex].selected = undefined; meta.function[functionIndex].input[inputIndex].format[dataFormatIndex].visibility = true;"
-																tooltips tooltip-side="right"
-																tooltip-content="If you can't find the terms you are looking for, please specify them in the 'Note' section below"
-																ng-class="{'btn-primary': input.format[dataFormatIndex].term == 'Data Format', 'btn-default': input.format[dataFormatIndex].term != 'Operation'}">I
-																don't know</button>
-															<button
-																class="btn btn-default highlight-icon input-ontology-btn"
-																type="button"
-																ng-click="removeButtonClick('format', input, $index)"><i
-																	class="fa fa-times remove-icon-button"></i>
-															</button>
-														</span>
-													</div>
-													<div class="panel panel-default panel-ontology">
-														<div class="panel-body" style="padding:0px;">
-															<div
-																uib-collapse="meta.function[functionIndex].input[inputIndex].format[dataFormatIndex].visibility">
-																<div class="form-group" style="margin:5px;">
-																	<input type="text"
-																		ng-model="meta.function[functionIndex].input[inputIndex].format[dataFormatIndex].predicate"
-																		class="form-control input-sm"
-																		placeholder="Filter"></input>
-																</div>
-																<div treecontrol class="tree-light"
-																	tree-model="EDAM_format" order-by="orderby"
-																	reverse-order="false" options="treeOptions"
-																	on-selection="ontologyOnSelect(input.format, dataFormatIndex, node); resetError('format', registrationErrorPayload.function[functionIndex].input[inputIndex], dataFormatIndex)"
-																	selected-node="meta.function[functionIndex].input[inputIndex].format[dataFormatIndex].selected"
-																	filter-expression="meta.function[functionIndex].input[inputIndex].format[dataFormatIndex].predicate">
-																	{{node.text}}</div>
-															</div>
-															<button type="button"
-																class="btn btn-default btn-xs btn-block btn-ontology"
-																ng-class="{'btn-ontology-closed': meta.function[functionIndex].input[inputIndex].format[dataFormatIndex].visibility}"
-																ng-click="meta.function[functionIndex].input[inputIndex].format[dataFormatIndex].visibility = !meta.function[functionIndex].input[inputIndex].format[dataFormatIndex].visibility"><i
-																	class="fa"
-																	ng-class="{'fa-chevron-up':!meta.function[functionIndex].input[inputIndex].format[dataFormatIndex].visibility, 'fa-chevron-down':meta.function[functionIndex].input[inputIndex].format[dataFormatIndex].visibility}"></i></button>
-														</div>
-													</div>
-													<div ng-class="{'has-error': true};">
-														<label class="help-block"
-															ng-repeat="error in registrationErrorPayload.function[functionIndex].input[inputIndex].format[dataFormatIndex]"
-															ng-bind-html="error"></label>
-													</div>
-												</div>
-											</div>
-											<div class="form-group" style="padding-top:7px;">
-												<a href="" ng-click="addButtonClick('format', input, true, true)">Add
-													data format</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="form-group" style="padding-top:7px;">
-								<a href="" ng-show="!meta.function[functionIndex].input[inputIndex].visibility"
-									ng-click="addButtonClick('input', function, true, true)">Add input</a>
-								<span ng-show="meta.function[functionIndex].input[inputIndex].visibility">{{
-									function.input.length }} input<span
-										ng-show="function.input.length > 1">s</span></span> <span
-									ng-show="!meta.function[functionIndex].input[inputIndex].visibility && function.input">|
-								</span><a href=""
-									ng-click="meta.function[functionIndex].input[inputIndex].visibility = !meta.function[functionIndex].input[inputIndex].visibility"><span
-										ng-show="meta.function[functionIndex].input[inputIndex].visibility">Show</span><span
-										ng-show="!meta.function[functionIndex].input[inputIndex].visibility && function.input">Hide
-										inputs</span></a>
-							</div>
-							<!-- OUTPUT -->
-							<div class="form-group" style="margin-bottom:0px;">
-								<label class="control-label"><span tooltips tooltip-side="right"
-										tooltip-content="{{Attribute.description.output.description}}">Output</span></label>
-								<div uib-collapse="meta.function[functionIndex].output[outputIndex].visibility">
-									<div class="panel panel-default panel-inner"
-										ng-repeat="output in function.output track by $index"
-										ng-init="outputIndex = $index" ng-class="{'no-margin-bottom': $last};">
-										<div class="panel-body" style="position: relative;">
-											<i class="fa fa-times remove-icon highlight-icon"
-												ng-click="removeButtonClick('output', function, $index)"></i>
-											<div class="form-group" style="margin-bottom:0px;">
-												<label class="control-label"><span tooltips tooltip-side="right"
-														tooltip-content="{{Attribute.description.outputDataType.description}}">Data
-														type <a target="_blank"
-															href="http://biotools.readthedocs.io/en/latest/curators_guide.html#data-type-input-and-output-data"><i
-																class="fa fa-question-circle fa"
-																aria-hidden="true"></i></a></span> <span
-														style="color:#ff0000;"><b>*</b></span></label>
-												<div class="input-group" ng-if="output.data != null">
-													<input type="text" ng-model="output.data.term"
-														class="form-control input-ontology" placeholder="Data type"
-														disabled="disabled"></input>
-													<span class="input-group-btn">
-														<button class="btn" type="button"
-															ng-click="output.data.term = 'Data'; meta.function[functionIndex].output[outputIndex].data.selected = undefined; meta.function[functionIndex].output[outputIndex].data.visibility = true;"
-															tooltips tooltip-side="right"
-															tooltip-content="If you can't find the terms you are looking for, please specify them in the 'Note' section below"
-															ng-class="{'btn-primary': output.data.term == 'Data Type', 'btn-default': output.data.term != 'Data Type'}">I
-															don't know</button>
-														<button
-															class="btn btn-default highlight-icon input-ontology-btn"
-															type="button"
-															ng-click="output.data = undefined; meta.function[functionIndex].output[outputIndex].data.selected = undefined;"><i
-																class="fa fa-times remove-icon-button"></i> </button>
-													</span>
-												</div>
-												<div ng-if="output.data != null"
-													class="panel panel-default panel-ontology">
-													<div class="panel-body" style="padding:0px;">
-														<div
-															uib-collapse="meta.function[functionIndex].output[outputIndex].data.visibility">
-															<div class="form-group" style="margin:5px;">
-																<input type="text"
-																	ng-model="meta.function[functionIndex].output[outputIndex].data.predicate"
-																	class="form-control input-sm"
-																	placeholder="Filter"></input>
-															</div>
-															<div treecontrol class="tree-light" tree-model="EDAM_data"
-																order-by="orderby" reverse-order="false"
-																options="treeOptions"
-																on-selection="output.data.term = node.text; output.data.uri=node.data.uri; resetError('output', registrationErrorPayload.function[functionIndex], outputIndex)"
-																selected-node="meta.function[functionIndex].output[outputIndex].data.selected"
-																filter-expression="meta.function[functionIndex].output[outputIndex].data.predicate">
-																{{node.text}}</div>
-														</div>
-														<button type="button"
-															class="btn btn-default btn-xs btn-block btn-ontology"
-															ng-class="{'btn-ontology-closed': meta.function[functionIndex].output[outputIndex].data.visibility}"
-															ng-click="meta.function[functionIndex].output[outputIndex].data.visibility = !meta.function[functionIndex].output[outputIndex].data.visibility"><i
-																class="fa"
-																ng-class="{'fa-chevron-up':!meta.function[functionIndex].output[outputIndex].data.visibility, 'fa-chevron-down':meta.function[functionIndex].output[outputIndex].data.visibility}"></i></button>
-													</div>
-												</div>
-											</div>
-											<div ng-class="{'has-error': true};">
-												<label class="help-block"
-													ng-repeat="error in registrationErrorPayload.function[functionIndex].output[outputIndex].data"
-													ng-bind-html="error"></label>
-											</div>
-											<div class="form-group" style="padding-top:7px;">
-												<a href="" ng-show="output.data == null"
-													ng-click="addButtonClick('data', output, false, true)">Add data
-													type</a>
-											</div>
-											<div class="form-group" style="margin-bottom:0px;">
-												<label class="control-label"><span tooltips tooltip-side="right"
-														tooltip-content="{{Attribute.description.outputDataFormat.description}}">Data
-														format <a target="_blank"
-															href="http://biotools.readthedocs.io/en/latest/curators_guide.html#data-format-input-and-output-data"><i
-																class="fa fa-question-circle fa"
-																aria-hidden="true"></i></a></span></label>
-												<div class="form-group"
-													ng-repeat="format in output.format track by $index"
-													ng-init="dataFormatIndex = $index"
-													ng-class="{'no-margin-bottom': $last};">
-													<div class="input-group">
-														<input type="text"
-															ng-model="output.format[dataFormatIndex].term"
-															class="form-control input-ontology"
-															placeholder="Data Format" disabled="disabled"></input>
-														<span class="input-group-btn">
-															<button class="btn" type="button"
-																ng-click="output.format[dataFormatIndex].term = 'Format'; meta.function[functionIndex].output[outputIndex].format[dataFormatIndex].selected = undefined; meta.function[functionIndex].output[outputIndex].format[dataFormatIndex].visibility = true;"
-																tooltips tooltip-side="right"
-																tooltip-content="If you can't find the terms you are looking for, please specify them in the 'Note' section below"
-																ng-class="{'btn-primary': output.format[dataFormatIndex].term == 'Data Format', 'btn-default': output.format[dataFormatIndex].term != 'Operation'}">I
-																don't know</button>
-															<button
-																class="btn btn-default highlight-icon input-ontology-btn"
-																type="button"
-																ng-click="removeButtonClick('format', output, $index)"><i
-																	class="fa fa-times remove-icon-button"></i>
-															</button>
-														</span>
-													</div>
-													<div class="panel panel-default panel-ontology">
-														<div class="panel-body" style="padding:0px;">
-															<div
-																uib-collapse="meta.function[functionIndex].output[outputIndex].format[dataFormatIndex].visibility">
-																<div class="form-group" style="margin:5px;">
-																	<input type="text"
-																		ng-model="meta.function[functionIndex].output[outputIndex].format[dataFormatIndex].predicate"
-																		class="form-control input-sm"
-																		placeholder="Filter"></input>
-																</div>
-																<div treecontrol class="tree-light"
-																	tree-model="EDAM_format" order-by="orderby"
-																	reverse-order="false" options="treeOptions"
-																	on-selection="ontologyOnSelect(output.format, dataFormatIndex, node); resetError('format', registrationErrorPayload.function[functionIndex].output[outputIndex], dataFormatIndex)"
-																	selected-node="meta.function[functionIndex].output[outputIndex].format[dataFormatIndex].selected"
-																	filter-expression="meta.function[functionIndex].output[outputIndex].format[dataFormatIndex].predicate">
-																	{{node.text}}</div>
-															</div>
-															<button type="button"
-																class="btn btn-default btn-xs btn-block btn-ontology"
-																ng-class="{'btn-ontology-closed': meta.function[functionIndex].output[outputIndex].format[dataFormatIndex].visibility}"
-																ng-click="meta.function[functionIndex].output[outputIndex].format[dataFormatIndex].visibility = !meta.function[functionIndex].output[outputIndex].format[dataFormatIndex].visibility"><i
-																	class="fa"
-																	ng-class="{'fa-chevron-up':!meta.function[functionIndex].output[outputIndex].format[dataFormatIndex].visibility, 'fa-chevron-down':meta.function[functionIndex].output[outputIndex].format[dataFormatIndex].visibility}"></i></button>
-														</div>
-													</div>
-													<div ng-class="{'has-error': true};">
-														<label class="help-block"
-															ng-repeat="error in registrationErrorPayload.function[functionIndex].output[outputIndex].format[dataFormatIndex]"
-															ng-bind-html="error"></label>
-													</div>
-												</div>
-											</div>
-											<div class="form-group" style="padding-top:7px;">
-												<a href="" ng-click="addButtonClick('format', output, true, true)">Add
-													data format</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="form-group" style="padding-top:7px;">
-								<a href="" ng-show="!meta.function[functionIndex].output[outputIndex].visibility"
-									ng-click="addButtonClick('output', function, true, true)">Add output</a>
-								<span ng-show="meta.function[functionIndex].output[outputIndex].visibility">{{
-									function.output.length }} output<span
-										ng-show="function.output.length > 1">s</span></span> <span
-									ng-show="!meta.function[functionIndex].output[outputIndex].visibility && function.output">|
-								</span><a href=""
-									ng-click="meta.function[functionIndex].output[outputIndex].visibility = !meta.function[functionIndex].output[outputIndex].visibility"><span
-										ng-show="meta.function[functionIndex].output[outputIndex].visibility">Show</span><span
-										ng-show="!meta.function[functionIndex].output[outputIndex].visibility && function.output">Hide
-										outputs</span></a>
-							</div>
-							<!-- Function Command -->
-							<div class="form-group">
-								<label class="control-label"><span tooltips tooltip-side="right"
-										tooltip-content="{{Attribute.description.cmd.description}}">Command <a
-											target="_blank"
-											href="http://biotools.readthedocs.io/en/latest/curators_guide.html#command"><i
-												class="fa fa-question-circle fa"
-												aria-hidden="true"></i></a></span></label>
-								<textarea ng-model="software.function[$index].cmd" class="form-control" rows="2"
-									placeholder="e.g. `meme sequence.s -dna`" validate-edit-resource-field
-									index={{$index}}></textarea>
-							</div>
-							<div ng-class="{'has-error': true};">
-								<label class="help-block"
-									ng-repeat="error in registrationErrorPayload.function[functionIndex].cmd"
-									ng-bind-html="error"></label>
-							</div>
-							<!-- Function Note -->
-							<div class="form-group">
-								<label class="control-label"><span tooltips tooltip-side="right"
-										tooltip-content="{{Attribute.description.functionNote.description}}">Note <a
-											target="_blank"
-											href="http://biotools.readthedocs.io/en/latest/curators_guide.html#note-function"><i
-												class="fa fa-question-circle fa"
-												aria-hidden="true"></i></a></span></label>
-								<textarea ng-model="software.function[$index].note" class="form-control" rows="2"
-									placeholder="e.g. Run MEME on DNA sequences." validate-edit-resource-field
-									index={{$index}}></textarea>
-							</div>
-							<div ng-class="{'has-error': true};">
-								<label class="help-block"
-									ng-repeat="error in registrationErrorPayload.function[functionIndex].note"
-									ng-bind-html="error"></label>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="form-group" style="padding-top:7px;">
-					<a href="" ng-show="!meta.function.visibility"
-						ng-click="addButtonClick('function', software, true, true)">Add function</a>
-					<span ng-show="meta.function.visibility">{{ software.function.length }} function<span
-							ng-show="software.function.length > 1">s</span></span> <span
-						ng-show="!meta.function.visibility && software.function">| </span><a href=""
-						ng-click="meta.function.visibility = !meta.function.visibility"><span
-							ng-show="meta.function.visibility">Show</span><span
-							ng-show="!meta.function.visibility && software.function">Hide functions</span></a>
-				</div>
+                    <h5 class="function-image-element" style="padding-top:5px; padding-bottom:5px; margin:0px;">
+                        <a class="tool-page-grey-text" href="" uib-tooltip="Click to edit" ng-click="openModal(input, 'data')">{{ input.data.term
+                            }}</a>
 
-			</div>
-		</div>
-	</details>
-</form>
+                        <div ng-if="registrationErrorPayload.function[functionIndex].input[inputIndex].data.length > 0">
+                            <label class="help-block"
+                                   ng-bind-html="error"
+                                   ng-repeat="error in registrationErrorPayload.function[functionIndex].input[inputIndex].data"></label>
+                        </div>
 
-<hr>
-
-<div class="row hidden-xs tool-page-row" ng-repeat="function in software.function track by $index"
-	ng-init="functionIndex = $index">
-	<br>
-	<div class="row flex-vertical">
-		<!-- Input -->
-		<div class="col-sm-4 col-md-4 col-lg-4">
-			<div class="row flex-vertical" ng-repeat="input in function.input track by $index"
-				ng-init="inputIndex = $index" style="margin:0px;">
-				<div class="col-sm-10 col-md-10 text-center">
-					<i class="fa fa-times highlight-icon" style="position: absolute; top: 3px; right: 20px;"
-						ng-click="removeButtonClick('input', function, $index)"></i>
-
-					<h5 class="function-image-element" style="padding-top:5px; padding-bottom:5px; margin:0px;">
-						<a href="" ng-click="openModal(input, 'data')" class="tool-page-grey-text">{{ input.data.term
-							}}</a>
-
-						<div ng-if="registrationErrorPayload.function[functionIndex].input[inputIndex].data.length > 0">
-							<label class="help-block"
-								ng-repeat="error in registrationErrorPayload.function[functionIndex].input[inputIndex].data"
-								ng-bind-html="error"></label>
-						</div>
-
-						<span style="font-weight: lighter;">
-							<br>(<span ng-repeat="format in input.format track by $index"
-								ng-init="dataFormatIndex = $index">
-								<a href="" tooltips tooltip-content="Click to remove"
-									ng-click="removeButtonClick('format', input, $index)" class="tool-page-grey-text">{{
-									format.term }} </a>
+                        <span style="font-weight: lighter;">
+							<br>(<span ng-init="dataFormatIndex = $index"
+                                       ng-repeat="format in input.format track by $index">
+								<a class="tool-page-grey-text" href="" ng-click="removeButtonClick('format', input, $index)"
+                                   tooltip-content="Click to remove" tooltips>{{
+                                    format.term }} </a>
 								<span ng-show="input.format.length > 0">, </span>
 							</span> <a class="add-data-link" href="" ng-click="addWithModal('format', input)">Add
 								format</a> )
 						</span>
-						<div ng-class="{'has-error': true};">
-							<div
-								ng-repeat="(dataFormatIndex, formatErrors) in registrationErrorPayload.function[functionIndex].input[inputIndex].format">
-								<label class="help-block" ng-repeat="error in formatErrors" ng-bind-html="error">
-								</label>
-							</div>
-						</div>
+                        <div ng-class="{'has-error': true};">
+                            <div
+                                    ng-repeat="(dataFormatIndex, formatErrors) in registrationErrorPayload.function[functionIndex].input[inputIndex].format">
+                                <label class="help-block" ng-bind-html="error" ng-repeat="error in formatErrors">
+                                </label>
+                            </div>
+                        </div>
 
-					</h5>
-					<div style="margin-bottom:5px;" ng-show="!$last"></div>
-				</div>
-				<div class="col-sm-2 col-md-2 text-center">
-					<div class="row">
-						<i class="fa fa-1x fa-long-arrow-right function-arrow-element"></i>
-					</div>
-				</div>
-			</div>
+                    </h5>
+                    <div ng-show="!$last" style="margin-bottom:5px;"></div>
+                </div>
+                <div class="col-sm-2 col-md-2 text-center">
+                    <div class="row">
+                        <i class="fa fa-1x fa-long-arrow-right function-arrow-element"></i>
+                    </div>
+                </div>
+            </div>
 
-			<!-- Add -->
-			<div class="row flex-vertical" style="margin:0px;">
-				<div class="col-sm-10 col-md-10 text-center">
+            <!-- Add -->
+            <div class="hidden-xs row flex-adaptive" style="margin:0px;">
+                <div class="col-sm-10 col-md-10 text-center">
 
-					<h5 style="padding-top:5px; padding-bottom:5px; margin:0px;">
-						<!-- <a href="" ng-show="!meta.function[functionIndex].input[inputIndex].visibility" ng-click="addButtonClick('input', function, true, true)">Add input</a> -->
-						<a href="" class="add-data-link"
-							ng-show="!meta.function[functionIndex].input[inputIndex].visibility"
-							ng-click="addWithModal('input', function)">Add input</a>
-					</h5>
-				</div>
-			</div>
-		</div>
+                    <h5 style="padding-top:5px; padding-bottom:5px; margin:0px;">
+                        <a class="add-data-link" href=""
+                           ng-click="addWithModal('input', function)"
+                           ng-show="!meta.function[functionIndex].input[inputIndex].visibility">Add input</a>
+                    </h5>
+                </div>
+            </div>
+        </div>
 
-		<!-- Operation -->
-		<div class="col-sm-4 col-md-4 col-lg-4 text-center function-image-element"
-			style="align-self:stretch;display:flex;justify-content: center;flex-direction: column;text-align: center; padding-right: 25px;">
-			<i class="fa fa-times remove-icon highlight-icon"
-				ng-click="removeButtonClick('function', software, $index)"></i>
+        <!-- Operation -->
+        <div class="col-sm-4 col-md-4 col-lg-4 text-center function-image-element"
+             style="align-self:stretch;display:flex;justify-content: center;flex-direction: column;text-align: center; padding-right: 25px;">
+            <i class="fa fa-times remove-icon highlight-icon"
+               ng-click="removeButtonClick('function', software, $index)"></i>
 
-			<ul class="list-unstyled" style="margin-bottom:0px;">
-				<span ng-if="function.operation.length == null" class="tool-page-grey-text">{{ software.name }}</span>
-				<li ng-repeat="functionName in function.operation track by $index" ng-init="functionNameIndex = $index">
-					<h5 style="color: #575757; font-size: 100%;">
-						<!-- <a tooltips tooltip-content="Tool operation : click to find more tools with this operation."
-							ng-if="functionName.term != 'N/A' && functionName.term != ''" href=""
-							ng-click="openModal(functionName, 'operation')" class="tool-page-grey-text">{{ functionName.term }}</a> -->
+            <ul class="list-unstyled" style="margin-bottom:0px;">
+                <span class="tool-page-grey-text" ng-if="function.operation.length == null">{{ software.name }}</span>
+                <li ng-init="functionNameIndex = $index" ng-repeat="functionName in function.operation track by $index">
+                    <h5 style="color: #575757; font-size: 100%;">
+                        <!-- <a tooltips tooltip-content="Tool operation : click to find more tools with this operation."
+                            ng-if="functionName.term != 'N/A' && functionName.term != ''" href=""
+                            ng-click="openModal(functionName, 'operation')" class="tool-page-grey-text">{{ functionName.term }}</a> -->
 
-						<a href="" tooltips tooltip-content="Click to remove"
-							ng-click="removeButtonClick('operation', function, $index)" class="tool-page-grey-text">{{
-							functionName.term }}</a>
+                        <a class="tool-page-grey-text" href="" ng-click="removeButtonClick('operation', function, $index)"
+                           tooltip-content="Click to remove" tooltips>{{
+                            functionName.term }}</a>
 
-						<div ng-class="{'has-error': true};">
-							<label class="help-block"
-								ng-repeat="error in registrationErrorPayload.function[functionIndex].operation[functionNameIndex]"
-								ng-bind-html="error"></label>
-						</div>
-					</h5>
-				</li>
+                        <div ng-class="{'has-error': true};">
+                            <label class="help-block"
+                                   ng-bind-html="error"
+                                   ng-repeat="error in registrationErrorPayload.function[functionIndex].operation[functionNameIndex]"></label>
+                        </div>
+                    </h5>
+                </li>
 
-				<a href="" class="add-data-link" ng-click="addWithModal('operation', function.operation)">Add
-					operation</a>
+                <a class="add-data-link" href="" ng-click="addWithModal('operation', function.operation)">Add
+                    operation</a>
 
-				<div ng-class="{'has-error': true};"
-					ng-show="registrationErrorPayload.function[functionIndex].operation[0]=='This field is required.'">
-					<label class="help-block"
-						ng-repeat="error in registrationErrorPayload.function[functionIndex].operation"
-						ng-bind-html="error"></label>
-				</div>
-			</ul>
+                <div ng-class="{'has-error': true};"
+                     ng-show="registrationErrorPayload.function[functionIndex].operation[0]=='This field is required.'">
+                    <label class="help-block"
+                           ng-bind-html="error"
+                           ng-repeat="error in registrationErrorPayload.function[functionIndex].operation"></label>
+                </div>
+            </ul>
 
-			<div class="form-group" style="text-align: left">
-				<label class="control-label" style="margin-bottom: 0px;"><span tooltips tooltip-side="right"
-						tooltip-content="{{Attribute.description.cmd.description}}">Command <a target="_blank"
-							href="http://biotools.readthedocs.io/en/latest/curators_guide.html#command"><i
-								class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
-				<textarea class="form-control fakecode" style="resize: vertical; margin-bottom: 4px;"
-					ng-model="function.cmd" rows="2" ng-model-options="{ updateOn: 'blur' }"
-					placeholder="e.g. `meme sequence.s -dna`"></textarea>
-				<div ng-class="{'has-error': true};">
-					<label class="help-block" ng-repeat="error in registrationErrorPayload.function[functionIndex].cmd"
-						ng-bind-html="error"></label>
-				</div>
-				<label class="control-label" style="margin-bottom: 0px;"><span tooltips tooltip-side="right"
-						tooltip-content="{{Attribute.description.functionNote.description}}">Note <a target="_blank"
-							href="http://biotools.readthedocs.io/en/latest/curators_guide.html#note-function"><i
-								class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
-				<textarea class="form-control" rows="2" style="font-size: 80%;resize: vertical;margin-top: 4px;"
-					ng-model="function.note" ng-model-options="{ updateOn: 'blur' }"
-					placeholder="e.g. Run MEME on DNA sequences."></textarea>
-				<div ng-class="{'has-error': true};">
-					<label class="help-block" ng-repeat="error in registrationErrorPayload.function[functionIndex].note"
-						ng-bind-html="error"></label>
-				</div>
-			</div>
-		</div>
+            <div class="form-group" style="text-align: left">
+                <label class="control-label" style="margin-bottom: 0px;"><span tooltip-content="{{Attribute.description.cmd.description}}" tooltip-side="right"
+                                                                               tooltips>Command <a
+                        href="http://biotools.readthedocs.io/en/latest/curators_guide.html#command"
+                        target="_blank"><i
+                        aria-hidden="true" class="fa fa-question-circle fa"></i></a></span></label>
+                <textarea class="form-control fakecode" ng-model="function.cmd"
+                          ng-model-options="{ updateOn: 'blur' }" placeholder="e.g. `meme sequence.s -dna`" rows="2"
+                          style="resize: vertical; margin-bottom: 4px;"></textarea>
+                <div ng-class="{'has-error': true};">
+                    <label class="help-block" ng-bind-html="error"
+                           ng-repeat="error in registrationErrorPayload.function[functionIndex].cmd"></label>
+                </div>
+                <label class="control-label" style="margin-bottom: 0px;"><span tooltip-content="{{Attribute.description.functionNote.description}}" tooltip-side="right"
+                                                                               tooltips>Note <a
+                        href="http://biotools.readthedocs.io/en/latest/curators_guide.html#note-function"
+                        target="_blank"><i
+                        aria-hidden="true" class="fa fa-question-circle fa"></i></a></span></label>
+                <textarea class="form-control" ng-model="function.note" ng-model-options="{ updateOn: 'blur' }"
+                          placeholder="e.g. Run MEME on DNA sequences." rows="2"
+                          style="font-size: 80%;resize: vertical;margin-top: 4px;"></textarea>
+                <div ng-class="{'has-error': true};">
+                    <label class="help-block" ng-bind-html="error"
+                           ng-repeat="error in registrationErrorPayload.function[functionIndex].note"></label>
+                </div>
+            </div>
+        </div>
 
-		<!-- Output -->
-		<div class="col-sm-4 col-md-4 col-lg-4 text-center">
-			<div class="row flex-vertical" ng-repeat="output in function.output track by $index"
-				ng-init="outputIndex = $index" style="margin:0px;">
-				<div class="col-sm-2 col-md-2">
-					<div class="row">
-						<!-- Hide arrow but keep it so that the text aligns correctly -->
-						<i class="fa fa-1x fa-long-arrow-right function-arrow-element"></i>
-					</div>
-				</div>
-				<div class="col-sm-10 col-md-10">
-					<i class="fa fa-times highlight-icon" style="position: absolute; top: 3px; right: 20px;"
-						ng-click="removeButtonClick('output', function, $index)"></i>
+        <!-- Output -->
+        <div class="col-sm-4 col-md-4 col-lg-4 text-center">
+            <div class="row flex-adaptive" ng-class="{'first-element': $first}"
+                 ng-init="outputIndex = $index"
+                 ng-repeat="output in function.output track by $index" style="margin:0px;">
+                <div class="col-sm-2 col-md-2">
+                    <div class="row">
+                        <!-- Hide arrow but keep it so that the text aligns correctly -->
+                        <i class="fa fa-1x fa-long-arrow-right function-arrow-element"></i>
+                    </div>
+                </div>
+                <div class="col-sm-10 col-md-10">
+                    <i class="fa fa-times highlight-icon" ng-click="removeButtonClick('output', function, $index)"
+                       style="position: absolute; top: 3px; right: 20px;"></i>
 
-					<h5 class="function-image-element" style="padding-top:5px;padding-bottom:5px;margin:0px;">
-						<a href="" ng-click="openModal(output, 'data')" class="tool-page-grey-text">{{ output.data.term
-							}}</a>
+                    <h5 class="function-image-element" style="padding-top:5px;padding-bottom:5px;margin:0px;">
+                        <a class="tool-page-grey-text" href="" uib-tooltip="Click to edit" ng-click="openModal(output, 'data')">{{ output.data.term
+                            }}</a>
 
-						<div
-							ng-if="registrationErrorPayload.function[functionIndex].output[outputIndex].data.length > 0">
-							<label class="help-block"
-								ng-repeat="error in registrationErrorPayload.function[functionIndex].output[outputIndex].data"
-								ng-bind-html="error"></label>
-						</div>
+                        <div
+                                ng-if="registrationErrorPayload.function[functionIndex].output[outputIndex].data.length > 0">
+                            <label class="help-block"
+                                   ng-bind-html="error"
+                                   ng-repeat="error in registrationErrorPayload.function[functionIndex].output[outputIndex].data"></label>
+                        </div>
 
-						<span style="font-weight: lighter;">
+                        <span style="font-weight: lighter;">
 							<br>(
 							<span ng-repeat="format in output.format">
-								<a href="" tooltips tooltip-content="Click to remove"
-									ng-click="removeButtonClick('format', output, $index)"
-									class="tool-page-grey-text">{{
-									format.term }}</a>
+								<a class="tool-page-grey-text" href="" ng-click="removeButtonClick('format', output, $index)"
+                                   tooltip-content="Click to remove"
+                                   tooltips>{{
+                                    format.term }}</a>
 								<span ng-show="output.format.length > 0">, </span>
-								<!-- </span> <a href="" ng-click="addButtonClick('format', output, true, true)">Add format</a> ) -->
+                                <!-- </span> <a href="" ng-click="addButtonClick('format', output, true, true)">Add format</a> ) -->
 							</span> <a class="add-data-link" href="" ng-click="addWithModal('format', output)">Add
 								format</a> )
 						</span>
-						<div ng-class="{'has-error': true};">
-							<div
-								ng-repeat="(dataFormatIndex, formatErrors) in registrationErrorPayload.function[functionIndex].input[inputIndex].format">
-								<label class="help-block" ng-repeat="error in formatErrors" ng-bind-html="error">
-								</label>
-							</div>
-						</div>
-					</h5>
-					<div style="margin-bottom:5px;" ng-show="!$last"></div>
-				</div>
-			</div>
+                        <div ng-class="{'has-error': true};">
+                            <div
+                                    ng-repeat="(dataFormatIndex, formatErrors) in registrationErrorPayload.function[functionIndex].input[inputIndex].format">
+                                <label class="help-block" ng-bind-html="error" ng-repeat="error in formatErrors">
+                                </label>
+                            </div>
+                        </div>
+                    </h5>
+                    <div ng-show="!$last" style="margin-bottom:5px;"></div>
+                </div>
+            </div>
 
-			<!-- Add -->
-			<div class="row flex-vertical" style="margin:0px;">
-				<div class="col-sm-2 col-md-2">
-					<div class="row">
-						<i class="fa fa-1x fa-long-arrow-right function-arrow-element" style="display: none;"></i>
-					</div>
-				</div>
+            <!-- Add -->
+            <div class="row flex-adaptive" style="margin:0px;">
+                <div class="col-sm-2 col-md-2">
+                    <div class="row">
+                        <i class="fa fa-1x fa-long-arrow-right function-arrow-element" style="display: none;"></i>
+                    </div>
+                </div>
 
-				<div class="col-sm-10 col-md-10 text-center">
+                <div class="col-sm-10 col-md-10 text-center">
 
-					<h5 class="" style="padding-top:5px; padding-bottom:5px; margin:0px;">
-						<!-- <a href="" ng-show="!meta.function[functionIndex].output[outputIndex].visibility" ng-click="addButtonClick('output', function, true, true)">Add output</a> -->
-						<a href="" class="add-data-link"
-							ng-show="!meta.function[functionIndex].output[outputIndex].visibility"
-							ng-click="addWithModal('output', function)">Add output</a>
-					</h5>
-				</div>
-			</div>
-		</div>
-	</div>
+                    <h5 class="" style="padding-top:5px; padding-bottom:5px; margin:0px;">
+                        <!-- <a href="" ng-show="!meta.function[functionIndex].output[outputIndex].visibility" ng-click="addButtonClick('output', function, true, true)">Add output</a> -->
+                        <a class="add-data-link" href=""
+                           ng-click="addWithModal('output', function)"
+                           ng-show="!meta.function[functionIndex].output[outputIndex].visibility">Add output</a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Add function button -->
 <div class="tool-page-row col-sm-4 col-md-4 col-lg-4 text-center" style="margin-top: 5px;">
-	<!-- <a href="" ng-click="addButtonClick('function', software, true, true)">Add function</a> -->
-	<a href="" class="add-data-link" ng-click="addWithModal('function', software)">Add function</a>
+    <!-- <a href="" ng-click="addButtonClick('function', software, true, true)">Add function</a> -->
+    <a class="add-data-link" href="" ng-click="addWithModal('function', software)">Add function</a>
 </div>
