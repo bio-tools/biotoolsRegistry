@@ -3,7 +3,7 @@ boltons==20.2.1
 certifi==2020.6.20
 chardet==3.0.4
 defusedxml==0.6.0
-Django==3.1.2
+Django==3.1.13
 django-allauth==0.42.0
 django-background-tasks==1.2.5
 django-compat==1.0.15
