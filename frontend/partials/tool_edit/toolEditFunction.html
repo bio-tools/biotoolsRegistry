@@ -1,8 +1,9 @@
 <br>
 <div class="panel panel-info">
     <div class="panel-heading" style="position: relative;"><label align="justify">A tool can have one or more basic
-        functions (modes of operation) described in terms from the <a ng-href="https://github.com/edamontology/edamontology/"
-                                                                      target="_blank">EDAM
+        functions (modes of operation) described in terms from the <a
+                ng-href="https://github.com/edamontology/edamontology/"
+                target="_blank">EDAM
             Ontology <i
                     class="fa fa-external-link"></i></a>. Each function performs one or more specific operation(s), e.g.
         "Sequence alignment". An operation may have one or more primary inputs and outputs, each of a defined type
@@ -33,7 +34,7 @@
                 </div>
             </div>
 
-            <div class="row flex-adaptive" ng-class="{'first-element': $first}"
+            <div class="row flex-adaptive"
                  ng-init="inputIndex = $index"
                  ng-repeat="input in function.input track by $index" style="margin:0px;">
                 <div class="col-sm-10 col-md-10 text-center">
@@ -41,7 +42,8 @@
                        style="position: absolute; top: 3px; right: 20px;"></i>
 
                     <h5 class="function-image-element" style="padding-top:5px; padding-bottom:5px; margin:0px;">
-                        <a class="tool-page-grey-text" href="" uib-tooltip="Click to edit" ng-click="openModal(input, 'data')">{{ input.data.term
+                        <a class="tool-page-grey-text" href="" ng-click="openModal(input, 'data')"
+                           uib-tooltip="Click to edit">{{ input.data.term
                             }}</a>
 
                         <div ng-if="registrationErrorPayload.function[functionIndex].input[inputIndex].data.length > 0">
@@ -53,7 +55,8 @@
                         <span style="font-weight: lighter;">
 							<br>(<span ng-init="dataFormatIndex = $index"
                                        ng-repeat="format in input.format track by $index">
-								<a class="tool-page-grey-text" href="" ng-click="removeButtonClick('format', input, $index)"
+								<a class="tool-page-grey-text" href=""
+                                   ng-click="removeButtonClick('format', input, $index)"
                                    tooltip-content="Click to remove" tooltips>{{
                                     format.term }} </a>
 								<span ng-show="input.format.length > 0">, </span>
@@ -73,7 +76,7 @@
                 </div>
                 <div class="col-sm-2 col-md-2 text-center">
                     <div class="row">
-                        <i class="fa fa-1x fa-long-arrow-right function-arrow-element"></i>
+                        <i class="fa fa-1x hidden-xs fa-long-arrow-right function-arrow-element"></i>
                     </div>
                 </div>
             </div>
@@ -91,6 +94,11 @@
             </div>
         </div>
 
+        <!-- Arrow on mobile -->
+        <div ng-show="function.input.length > 0">
+            <i class="fa fa-1x visible-xs fa-long-arrow-right function-arrow-element"></i>
+        </div>
+
         <!-- Operation -->
         <div class="col-sm-4 col-md-4 col-lg-4 text-center function-image-element"
              style="align-self:stretch;display:flex;justify-content: center;flex-direction: column;text-align: center; padding-right: 25px;">
@@ -105,7 +113,8 @@
                             ng-if="functionName.term != 'N/A' && functionName.term != ''" href=""
                             ng-click="openModal(functionName, 'operation')" class="tool-page-grey-text">{{ functionName.term }}</a> -->
 
-                        <a class="tool-page-grey-text" href="" ng-click="removeButtonClick('operation', function, $index)"
+                        <a class="tool-page-grey-text" href=""
+                           ng-click="removeButtonClick('operation', function, $index)"
                            tooltip-content="Click to remove" tooltips>{{
                             functionName.term }}</a>
 
@@ -129,8 +138,9 @@
             </ul>
 
             <div class="form-group" style="text-align: left">
-                <label class="control-label" style="margin-bottom: 0px;"><span tooltip-content="{{Attribute.description.cmd.description}}" tooltip-side="right"
-                                                                               tooltips>Command <a
+                <label class="control-label" style="margin-bottom: 0px;"><span
+                        tooltip-content="{{Attribute.description.cmd.description}}" tooltip-side="right"
+                        tooltips>Command <a
                         href="http://biotools.readthedocs.io/en/latest/curators_guide.html#command"
                         target="_blank"><i
                         aria-hidden="true" class="fa fa-question-circle fa"></i></a></span></label>
@@ -141,8 +151,9 @@
                     <label class="help-block" ng-bind-html="error"
                            ng-repeat="error in registrationErrorPayload.function[functionIndex].cmd"></label>
                 </div>
-                <label class="control-label" style="margin-bottom: 0px;"><span tooltip-content="{{Attribute.description.functionNote.description}}" tooltip-side="right"
-                                                                               tooltips>Note <a
+                <label class="control-label" style="margin-bottom: 0px;"><span
+                        tooltip-content="{{Attribute.description.functionNote.description}}" tooltip-side="right"
+                        tooltips>Note <a
                         href="http://biotools.readthedocs.io/en/latest/curators_guide.html#note-function"
                         target="_blank"><i
                         aria-hidden="true" class="fa fa-question-circle fa"></i></a></span></label>
@@ -172,7 +183,8 @@
                        style="position: absolute; top: 3px; right: 20px;"></i>
 
                     <h5 class="function-image-element" style="padding-top:5px;padding-bottom:5px;margin:0px;">
-                        <a class="tool-page-grey-text" href="" uib-tooltip="Click to edit" ng-click="openModal(output, 'data')">{{ output.data.term
+                        <a class="tool-page-grey-text" href="" ng-click="openModal(output, 'data')"
+                           uib-tooltip="Click to edit">{{ output.data.term
                             }}</a>
 
                         <div
@@ -185,7 +197,8 @@
                         <span style="font-weight: lighter;">
 							<br>(
 							<span ng-repeat="format in output.format">
-								<a class="tool-page-grey-text" href="" ng-click="removeButtonClick('format', output, $index)"
+								<a class="tool-page-grey-text" href=""
+                                   ng-click="removeButtonClick('format', output, $index)"
                                    tooltip-content="Click to remove"
                                    tooltips>{{
                                     format.term }}</a>

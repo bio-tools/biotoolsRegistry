@@ -4,72 +4,94 @@
 </div> -->
 <!-- DESKTOP -->
 <div class="row tool-page-row" ng-repeat="function in software.function">
-	<div class="row flex-adaptive">
-		<!-- Inputs -->
-		<div class="col-sm-4 col-md-4 col-lg-4">
-			<div class="row flex-adaptive" ng-repeat="input in function.input" ng-class="{'first-element': $first}" style="margin:0px;">
-				<div class="col-sm-10 col-md-10 text-center">
-					<h5 class="function-image-element" style="padding-top:5px; padding-bottom:5px; margin:0px;">
-						<a href="" ng-click="inputNameClicked(input)" class="tool-page-grey-text" tooltips tooltip-content="Input data : click to find more tools with this input data.">{{ input.data.term }} ›</a>
-						<span ng-show="input.format.length > 0" style="font-weight: lighter;">
-							<br>(<span ng-repeat="format in input.format" tooltips tooltip-content="Input format : click to find more tools with this input format." tooltip-side="bottom">
-							<a href="" ng-click="inputFormatNameClicked(format)" class="tool-page-grey-text">{{ format.term }} ›</a>
+    <div class="row flex-adaptive">
+        <!-- Inputs -->
+        <div class="col-sm-4 col-md-4 col-lg-4">
+            <div class="row flex-adaptive" ng-class="{'first-element': $first}" ng-repeat="input in function.input"
+                 style="margin:0px;">
+                <div class="col-sm-10 col-md-10 text-center">
+                    <h5 class="function-image-element" style="padding-top:5px; padding-bottom:5px; margin:0px;">
+                        <a class="tool-page-grey-text" href="" ng-click="inputNameClicked(input)" tooltip-content="Input data : click to find more tools with this input data."
+                           tooltips>{{ input.data.term
+                            }} ›</a>
+                        <span ng-show="input.format.length > 0" style="font-weight: lighter;">
+							<br>(<span ng-repeat="format in input.format" tooltip-content="Input format : click to find more tools with this input format."
+                                       tooltip-side="bottom"
+                                       tooltips>
+							<a class="tool-page-grey-text" href=""
+                               ng-click="inputFormatNameClicked(format)">{{ format.term }} ›</a>
 							<span ng-show="!$last">, </span></span>)
 						</span>
-					</h5>
-					<div style="margin-bottom:5px;" ng-show="!$last"></div>
-				</div>
-				<div class="col-sm-2 col-md-2 text-center">
-					<div class="row">
-						<i class="fa fa-1x fa-long-arrow-right function-arrow-element"></i>
-					</div>
-				</div>
-			</div>
-		</div>
+                    </h5>
+                    <div ng-show="!$last" style="margin-bottom:5px;"></div>
+                </div>
+                <div class="col-sm-2 col-md-2 text-center">
+                    <div class="row">
+                        <i class="fa fa-1x fa-long-arrow-right function-arrow-element hidden-xs"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<!-- Function -->
-		<div class="col-sm-4 col-md-4 col-lg-4 text-center function-image-element" style="align-self:stretch;display:flex;justify-content: center;flex-direction: column;text-align: center;">
-			<span><i ng-show="function.note" class="fa fa-question-circle" aria-hidden="true" style="font-size: 100%; margin-left: 0.5em;" tooltips tooltip-content="{{ ::function.note }}"></i></span>
-			<ul class="list-unstyled" style="margin-bottom:0px;">
-				<span ng-if="function.operation.length == null" class="tool-page-grey-text">{{ ::software.name }}</span>
-				<li ng-repeat="functionName in function.operation">
-					<h5 style="color: #575757; font-size: 100%;">
-						<a tooltips tooltip-content="Tool operation : click to find more tools with this operation." ng-if="functionName.term != 'N/A' && functionName.term != ''" href="" ng-click="functionNameClicked(functionName)" class="tool-page-grey-text">{{ ::functionName.term }} ›</a>
-					</h5>
-				</li>
-			</ul>
-			<span ng-if="function.cmd" style="padding-bottom: 8px;">
+        <!-- Arrow on mobile -->
+        <div ng-show="function.input.length > 0">
+            <i class="fa fa-1x visible-xs fa-long-arrow-right function-arrow-element"></i>
+        </div>
+
+        <!-- Function -->
+        <div class="col-sm-4 col-md-4 col-lg-4 text-center function-image-element"
+             style="align-self:stretch;display:flex;justify-content: center;flex-direction: column;text-align: center;">
+            <span><i aria-hidden="true" class="fa fa-question-circle" ng-show="function.note"
+                     style="font-size: 100%; margin-left: 0.5em;" tooltip-content="{{ ::function.note }}" tooltips></i></span>
+            <ul class="list-unstyled" style="margin-bottom:0px;">
+                <span class="tool-page-grey-text" ng-if="function.operation.length == null">{{ ::software.name }}</span>
+                <li ng-repeat="functionName in function.operation">
+                    <h5 style="color: #575757; font-size: 100%;">
+                        <a class="tool-page-grey-text" href=""
+                           ng-click="functionNameClicked(functionName)" ng-if="functionName.term != 'N/A' && functionName.term != ''"
+                           tooltip-content="Tool operation : click to find more tools with this operation."
+                           tooltips>{{ ::functionName.term }} ›</a>
+                    </h5>
+                </li>
+            </ul>
+            <span ng-if="function.cmd" style="padding-bottom: 8px;">
 				<code>
 					{{ ::function.cmd }}
 				</code>
 			</span>
-		</div>
+        </div>
 
-		<!-- Outputs -->
-		<div class="col-sm-4 col-md-4 col-lg-4 text-center">
-			<div class="row flex-adaptive" ng-repeat="output in function.output" ng-class="{'first-element': $first}" style="margin:0px;">
-				<div class="col-sm-2 col-md-2">
-					<div class="row">
-						<i class="fa fa-1x fa-long-arrow-right function-arrow-element"></i>
-					</div>
-				</div>
-				<div class="col-sm-10 col-md-10">
-					<h5 class="function-image-element" style="padding-top:5px;padding-bottom:5px;margin:0px;">
-						<a href="" ng-click="outputNameClicked(output)" class="tool-page-grey-text" tooltips tooltip-content="Output data : click to find more tools with this output data.">{{ output.data.term }} ›</a>
-						<span ng-show="output.format.length > 0" style="font-weight: lighter;">
+        <!-- Outputs -->
+        <div class="col-sm-4 col-md-4 col-lg-4 text-center">
+            <div class="row flex-adaptive" ng-class="{'first-element': $first}" ng-repeat="output in function.output"
+                 style="margin:0px;">
+                <div class="col-sm-2 col-md-2">
+                    <div class="row">
+                        <i class="fa fa-1x fa-long-arrow-right function-arrow-element"></i>
+                    </div>
+                </div>
+                <div class="col-sm-10 col-md-10">
+                    <h5 class="function-image-element" style="padding-top:5px;padding-bottom:5px;margin:0px;">
+                        <a class="tool-page-grey-text" href="" ng-click="outputNameClicked(output)" tooltip-content="Output data : click to find more tools with this output data."
+                           tooltips>{{ output.data.term
+                            }} ›</a>
+                        <span ng-show="output.format.length > 0" style="font-weight: lighter;">
 							<br>(
 							<span ng-repeat="format in output.format">
-								<a href="" ng-click="outputFormatNameClicked(format)" class="tool-page-grey-text" tooltips tooltip-content="Output format : click to find more tools with this output format." tooltip-side="bottom">{{ format.term }} ›</a>
+								<a class="tool-page-grey-text" href="" ng-click="outputFormatNameClicked(format)"
+                                   tooltip-content="Output format : click to find more tools with this output format."
+                                   tooltip-side="bottom"
+                                   tooltips>{{ format.term }} ›</a>
 								<span ng-show="!$last">, </span>
 							</span>)
-						</span> 
-					</h5>
-					<div style="margin-bottom:5px;" ng-show="!$last"></div>
-				</div>
-			</div>
-		</div>
-		<p ng-if="function.comment" style="margin-left: 4px;"></p>
-	</div>
+						</span>
+                    </h5>
+                    <div ng-show="!$last" style="margin-bottom:5px;"></div>
+                </div>
+            </div>
+        </div>
+        <p ng-if="function.comment" style="margin-left: 4px;"></p>
+    </div>
 </div>
 <br>
 <br>
