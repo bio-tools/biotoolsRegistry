@@ -94,9 +94,9 @@ angular.module('elixir_front.controllers', [])
 		//$state.go('search', {'topic': topic.term}, {reload: true});
 		$state.transitionTo('search', {'topicID': quoteQueryStringValue(stripEdam(topic.uri))},
 		{
-    	reload: true,
-    	inherit: false,
-    	notify: true
+		reload: true,
+		inherit: false,
+		notify: true
 		});
 	}
 
@@ -104,18 +104,18 @@ angular.module('elixir_front.controllers', [])
 		//$state.go('search', {'topic': topic.term}, {reload: true});
 		$state.transitionTo('search', {'operationID': quoteQueryStringValue(stripEdam(operation.uri))},
 		{
-    	reload: true,
-    	inherit: false,
-    	notify: true
+		reload: true,
+		inherit: false,
+		notify: true
 		});
 	}
 	$scope.collectionNameClicked = function(collection) {
 		//$state.go('search', {'topic': topic.term}, {reload: true});
 		$state.transitionTo('search', {'collectionID': quoteQueryStringValue(collection)},
 		{
-    	reload: true,
-    	inherit: false,
-    	notify: true
+		reload: true,
+		inherit: false,
+		notify: true
 		});
 	}
 
@@ -184,7 +184,7 @@ angular.module('elixir_front.controllers', [])
 		localStorage.welcome_message = false;
 	};
 }])
-.controller('ToolEditController', ['$scope', '$controller', '$state', '$stateParams', 'Ontology', 'Attribute', 'CheckUserEditingRights', 'User', '$timeout', 'UsedTerms','$q','filterFilter', function($scope, $controller, $state, $stateParams, Ontology, Attribute, CheckUserEditingRights, User, $timeout, UsedTerms, $q, filterFilter ) {
+.controller('ToolEditController', ['$scope', '$controller', '$state', '$stateParams', 'Ontology', 'Attribute', 'CheckUserEditingRights', 'User', '$timeout', 'UsedTerms','$q','$modal', function($scope, $controller, $state, $stateParams, Ontology, Attribute, CheckUserEditingRights, User, $timeout, UsedTerms, $q, $modal ) {
 
 	// reference the service
 	$scope.Attribute = Attribute;
@@ -247,7 +247,198 @@ angular.module('elixir_front.controllers', [])
 		});
 	}
 
+	// modals
+	$scope.openModal = function (edam, type, suggestions) {
+		var ontoMap = {
+			'data': $scope.EDAM_data,
+			'format': $scope.EDAM_format,
+			'operation': $scope.EDAM_operation
+		};
+		var onto = ontoMap[type] || $scope.EDAM_data;
 
+		var modalInstance = $modal.open({
+			templateUrl: 'partials/tool_edit/toolEditEdamModal.html',
+			controllerAs: 'vm',
+			controller: ['$modalInstance', 'edam', 'onto', 'type', 'suggestions', EdamModalCtrl],
+			resolve: {
+				edam: function () { return edam; },
+				onto: function () { return onto; },
+				type: function () { return type; },
+				suggestions: function () { return suggestions; },
+			}
+		});
+
+		modalInstance.result.then(function (updatedEdam) {
+			angular.copy(updatedEdam, edam);
+		}, function () { });
+
+		return modalInstance.result;
+	}
+
+
+	$scope.findObjectByUri = function (obj, targetUri) {
+		function search(current) {
+			if (current.data && current.data.uri === targetUri) {
+				return current;
+			}
+			if (current.children) {
+				for (var i = 0; i < current.children.length; i++) {
+					var result = search(current.children[i]);
+					if (result) return result;
+				}
+			}
+			return null;
+		}
+
+		for (var i = 0; i < obj.length; i++) {
+			var result = search(obj[i]);
+			if (result) return result;
+		}
+		return null;
+	};
+
+	$scope.flattenObject = function (obj) {
+		var result = [];
+		var stack = [obj];
+
+		while (stack.length > 0) {
+			var current = stack.pop();
+			for (var key in current) {
+				if (current.hasOwnProperty(key)) {
+					var value = current[key];
+					if (typeof value === 'object' && value !== null) {
+						stack.push(value);
+					} else {
+						result.push(value);
+					}
+				}
+			}
+		}
+		return result;
+	};	
+
+	$scope.recommend_terms = function (edam, type) {
+		var edamArray = $scope.flattenObject(edam).filter(function (word) {
+			return typeof word === 'string' && word.indexOf('http://edamontology.org/') !== -1;
+		});
+
+		if (type === "operation") return null;  // No recommendations for operations
+
+		var ontoMap = {
+			'format': $scope.EDAM_data,
+			'input': $scope.EDAM_operation,
+			'output': $scope.EDAM_operation
+		};
+		var onto = ontoMap[type] || $scope.EDAM_operation;
+
+		var suggestions = [];
+
+		for (var i = 0; i < edamArray.length; i++) {
+			var element = edamArray[i];
+			var edamObj = $scope.findObjectByUri(onto, element);
+			if (!edamObj) continue;
+
+			var appendSuggestions = getSuggestions(type, edamObj, edam);
+			if (appendSuggestions.length) {
+				suggestions = suggestions.concat(appendSuggestions);
+			}
+		}
+
+		return mapSuggestions(suggestions, type);
+	};
+
+	function getSuggestions(type, edamObj, edam) {
+		switch (type) {
+			case 'input':
+				return getInputSuggestions(edamObj, edam);
+			case 'output':
+				return getOutputSuggestions(edamObj, edam);
+			default:
+				return [];
+		}
+	}
+
+	function getInputSuggestions(edamObj, edam) {
+		if (!edamObj.has_input) return [];
+		if (!edam.hasOwnProperty('input')) return edamObj.has_input;
+		return edamObj.has_input.filter(function (input) {
+			return !edam.input.some(function (existingInput) {
+				return existingInput.data.uri === input;
+			});
+		});
+	}
+
+	function getOutputSuggestions(edamObj, edam) {
+		if (!edamObj.has_output) return [];
+		if (!edam.hasOwnProperty('output')) return edamObj.has_output;
+		return edamObj.has_output.filter(function (output) {
+			return !edam.output.some(function (existingOutput) {
+				return existingOutput.data.uri === output;
+			});
+		});
+	}
+
+	function mapSuggestions(suggestions, type) {
+		var ontoMap = {
+			'format': $scope.EDAM_format,
+			'output': $scope.EDAM_data,
+			'input': $scope.EDAM_data
+		};
+		var onto = ontoMap[type];
+
+		return suggestions.map(function (element) {
+			var edamObj = $scope.findObjectByUri(onto, element);
+			return {
+				'uri': element,
+				'term': edamObj ? edamObj.text : ''
+			};
+		});
+	}
+
+	$scope.addWithModal = function (type, edam) {
+		var pickerTypeMap = {
+			'input': 'data',
+			'output': 'data',
+			'format': 'format',
+			'function': 'operation',
+			'operation': 'operation'
+		};
+		var pickertype = pickerTypeMap[type] || '';
+
+		var suggestions = $scope.recommend_terms(edam, type);
+
+		var modalPromise = $scope.openModal({}, pickertype, suggestions);
+
+		modalPromise.then(function (newEdam) {
+			handleModalResult(type, edam, newEdam);
+		}, function () { });
+	};
+
+	function handleModalResult(type, edam, newEdam) {
+		switch (type) {
+			case 'format':
+				$scope.addButtonClick('format', edam, true, true);
+				edam.format[edam.format.length - 1] = newEdam;
+				break;
+			case 'output':
+				$scope.addButtonClick('output', edam, true, true);
+				edam.output[edam.output.length - 1] = newEdam;
+				break;
+			case 'input':
+				$scope.addButtonClick('input', edam, true, true);
+				edam.input[edam.input.length - 1] = newEdam;
+				break;
+			case 'function':
+				$scope.addButtonClick('function', edam, true, true);
+				edam.function[edam.function.length - 1].operation = [newEdam];
+				break;
+			case 'operation':
+				$scope.addButtonClick('function', edam, true, true);
+				edam.push(newEdam);
+				break;
+		}
+	}
+	
 	// used terms (biotoolsID) for searching in relations
 	function getBiotoolsIDs(){
 		var d = $q.defer();
@@ -328,7 +519,9 @@ angular.module('elixir_front.controllers', [])
 	}
 
 	$scope.removeObjectClick = function(_what, _parent, _where){
-		if (confirm("Are you sure you want to remove this element?")){
+		var message = _parent[_what][_index].term ? `Are you sure you want to remove ${_parent[_what][_index].term}?` : "Are you sure you want to remove this element?"
+
+		if (confirm(message)){
 			if (_parent[_where][_what]){
 				delete _parent[_where][_what];
 			}
@@ -340,18 +533,32 @@ angular.module('elixir_front.controllers', [])
 
 	// remove attribute or list entry
 	$scope.removeButtonClick = function (_what, _parent, _index, _event) {
-		if (_parent[_what][_index] ? confirm("Are you sure you want to remove this element?") : 1) {
+		var message = _parent[_what][_index].term 
+			? `Are you sure you want to remove ${_parent[_what][_index].term}?` 
+			: "Are you sure you want to remove this element?";
+	
+		if (_parent[_what][_index] ? confirm(message) : true) {
 			// remove jstree if exists
 			if (_event) {
 				$(_event.target).closest('div').find('.jstree').jstree("destroy").remove();
 			}
+	
 			_parent[_what].splice(_index, 1);
-			// if last instance in array delete entire attribute from the software object
+	
+			// if last instance in array delete entire attribute from the parent object
 			if (_parent[_what].length == 0) {
 				delete _parent[_what];
+	
+				// If we're removing an operation and it's the last one, remove the entire function
+				if (_what === 'operation') {
+					var functionIndex = $scope.software.function.indexOf(_parent);
+					if (functionIndex > -1) {
+						$scope.software.function.splice(functionIndex, 1);
+					}
+				}
 			}
 		}
-	}
+	};	
 
 	// create connections between entries
 	$scope.errorConnections = {
@@ -1353,3 +1560,51 @@ angular.module('elixir_front.controllers', [])
 		});
 	}
 }]);
+
+function EdamModalCtrl($modalInstance, edam, onto, type, suggestions) {
+	var vm = this;
+	vm.data = angular.copy(edam);
+	vm.onto = onto;
+	vm.self = $modalInstance;
+	vm.type = type;
+	vm.suggestions = suggestions;
+
+	vm.saveData = function () {
+		if (isEmptyObject(vm.data)) {
+			$modalInstance.dismiss('cancel');
+			return;
+		}
+		$modalInstance.close(vm.data);
+	};
+
+	vm.apply_suggestion = function (suggestion) {
+		vm.predicate = suggestion.term;
+	};
+
+	vm.customOrder = function (node) {
+		if (!vm.suggestions) {
+			return node.text.toLowerCase();
+		}
+
+		var isSuggested = containsSuggestion(node);
+		return (isSuggested ? '0' : '1') + node.text.toLowerCase();
+	};
+
+	vm.isSuggested = function (node) {
+		return vm.suggestions && containsSuggestion(node);
+	};
+
+	vm.cancel = function () {
+		$modalInstance.dismiss('cancel');
+	};
+
+	function isEmptyObject(obj) {
+		return angular.equals(obj, {});
+	}
+
+	function containsSuggestion(node) {
+		return vm.suggestions.some(function (suggestion) {
+			return suggestion.term === node.text;
+		});
+	}
+}
