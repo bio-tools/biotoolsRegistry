@@ -1,11 +1,11 @@
 .navbar-default {
-  background-color: #ffa500;
-  border-bottom: 3px solid #F6A623 !important;
+  background-color: rgb(0, 84, 114);
+  border-bottom: 3px solid rgb(0, 84, 114) !important;
   height: 62px; 
   box-shadow: 0px 2px 4px 0px rgba(74,74,74,0.25)
 }
 .navbar-default-background {
-  background-color: #ffa500;
+  background-color: rgb(0, 84, 114);
 }
 .navbar-default .navbar-brand {
   color: #ecf0f1;
