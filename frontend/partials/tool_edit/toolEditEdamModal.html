@@ -31,7 +31,7 @@
                             <span ng-class="{'suggested': vm.isSuggested(node)}" tooltip-append-to-body="true"
                                   tooltip-popup-delay='300'
                                   uib-tooltip="{{node.definition}} {{node.exact_synonyms.length > 0 ? '(' + node.exact_synonyms.join(', ') + ')' : ''}}">{{node.text}} <a
-                                    href="{{node.data.uri}}" target="_blank">ⓘ</a></span>
+                                    href="{{node.data.uri.toString().replace('http://edamontology.org/', 'https://edamontology.github.io/edam-browser/#')}}" target="_blank">ⓘ</a></span>
                         </div>
                     </div>
 
@@ -52,7 +52,7 @@
                             <span ng-class="{'suggested': vm.isSuggested(node)}" tooltip-append-to-body="true"
                                   tooltip-popup-delay='300'
                                   uib-tooltip="{{node.definition}} {{node.exact_synonyms.length > 0 ? '(' + node.exact_synonyms.join(', ') + ')' : ''}}">{{node.text}} <a
-                                    href="{{node.data.uri}}" target="_blank">ⓘ</a></span>
+                                    href="{{node.data.uri.toString().replace('http://edamontology.org/', 'https://edamontology.github.io/edam-browser/#')}}" target="_blank">ⓘ</a></span>
                         </div>
                     </div>
                 </div>
