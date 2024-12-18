@@ -1,0 +1,67 @@
+<div style="padding: 15px;">
+    <div class="modal-header">
+        <h5 class="modal-title">Select EDAM term</h5>
+    </div>
+
+    <div class="modal-body">
+
+        <div ng-repeat="suggestion in vm.suggestions" style="display: flex; align-items: center; margin-bottom: 1em;">
+            <p ng-if="$first" style="margin-right: 1em; margin-top: 10px;">Suggestions:</p>
+            <button class="btn" ng-click="vm.apply_suggestion(suggestion)">{{suggestion.term}}</button>
+        </div>
+
+        <div class="panel panel-default panel-modal">
+            <div class="panel-body" style="padding:0px;">
+                <div uib-collapse="vm.data.data.visibility">
+
+                    <!-- Data picker -->
+                    <div ng-if="vm.type == 'data'">
+                        <div class="form-group" style="margin:5px;">
+                            <input class="form-control input-sm" ng-model="vm.predicate" placeholder="Filter"
+                                   type="text">
+                        </div>
+                        <div class="tree-light" filter-expression="vm.predicate"
+                             id="treecontrol"
+                             on-selection="vm.data.data.term = node.text; vm.data.data.uri=node.data.uri"
+                             options="treeOptions"
+                             order-by="vm.customOrder"
+                             reverse-order="false"
+                             tree-model="vm.onto"
+                             treecontrol>
+                            <span ng-class="{'suggested': vm.isSuggested(node)}" tooltip-append-to-body="true"
+                                  tooltip-popup-delay='300'
+                                  uib-tooltip="{{node.definition}} {{node.exact_synonyms.length > 0 ? '(' + node.exact_synonyms.join(', ') + ')' : ''}}">{{node.text}} <a
+                                    href="{{node.data.uri.toString().replace('http://edamontology.org/', 'https://edamontology.github.io/edam-browser/#')}}" target="_blank">ⓘ</a></span>
+                        </div>
+                    </div>
+
+                    <!-- Operation and Format picker -->
+                    <div ng-if="vm.type == 'operation' || vm.type == 'format'">
+                        <div class="form-group" style="margin:5px;">
+                            <input class="form-control input-sm" ng-model="vm.predicate" placeholder="Filter"
+                                   type="text"></input>
+                        </div>
+                        <div class="tree-light" filter-expression="vm.predicate"
+                             id="treecontrol"
+                             on-selection="vm.data.term = node.text; vm.data.uri=node.data.uri"
+                             options="treeOptions"
+                             order-by="vm.customOrder"
+                             reverse-order="false"
+                             tree-model="vm.onto"
+                             treecontrol>
+                            <span ng-class="{'suggested': vm.isSuggested(node)}" tooltip-append-to-body="true"
+                                  tooltip-popup-delay='300'
+                                  uib-tooltip="{{node.definition}} {{node.exact_synonyms.length > 0 ? '(' + node.exact_synonyms.join(', ') + ')' : ''}}">{{node.text}} <a
+                                    href="{{node.data.uri.toString().replace('http://edamontology.org/', 'https://edamontology.github.io/edam-browser/#')}}" target="_blank">ⓘ</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="vm.saveData(); $close()">Save changes</button>
+        <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+    </div>
+</div>

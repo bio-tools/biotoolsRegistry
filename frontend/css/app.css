@@ -150,6 +150,10 @@ body {
 			margin-left:0px;
 		}
 
+		.form-group {
+			margin-top: 15px;
+		}
+
 		.img-holder {
 			height:50px;
 			overflow:visible;
@@ -260,6 +264,10 @@ body {
 			margin-bottom:0px;
 			background-color: #f3f3f3;
 			margin-right:1px;
+		}
+
+		.panel-modal {
+			background-color: #f3f3f3;
 		}
 
 		.input-ontology {
@@ -474,6 +482,15 @@ tags-input .autocomplete .filter-list > .selected {
 	text-decoration: underline;
 }
 
+.add-data-link {
+	font-size: 12.6px;
+	font-weight: normal;
+}
+
+.tool-edit-tab-error::before {
+	content: "⚠ "
+}
+
 @media (min-width: 768px) {
 	.container {
 		width: 735px;
@@ -548,3 +565,24 @@ to prevent collapsing during animation*/
 	opacity: 0;
 }
 
+.fakecode {
+	font-size: 80%;
+	/* The text color might confuse people to think that it has an error */
+	/* color: #c7254e; */
+	font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+summary {
+	cursor: pointer;
+	display: list-item;
+}
+
+details {
+	display: block;
+}
+
+.suggested {
+	text-decoration: underline;
+}
