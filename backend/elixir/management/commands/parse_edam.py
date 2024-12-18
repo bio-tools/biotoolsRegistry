@@ -101,12 +101,26 @@ def listify(input_list):
 				attrs['narrow_synonyms'] = []
 				attrs['replaced_by'] = []
 				attrs['consider'] = []
+				attrs['has_input'] = []
+				attrs['has_topic'] = []
+				attrs['has_output'] = []
 				for n2 in node.childNodes:
 					if n2.nodeName == 'rdfs:label':
 						attrs['text'] = n2.firstChild.nodeValue
 						attrs['data']['uri'] = node.attributes['rdf:about'].value
-					if n2.nodeName == 'rdfs:subClassOf' and n2.attributes:
-						attrs['parents'].append(n2.attributes['rdf:resource'].value)
+					if n2.nodeName == 'rdfs:subClassOf':
+						if n2.attributes:
+							attrs['parents'].append(n2.attributes['rdf:resource'].value)
+						else:
+							for child in n2.childNodes:
+								if child.nodeName == 'owl:Restriction':
+									restriction = parse_restriction(child)
+									if restriction['property'] == 'http://edamontology.org/has_input':
+										attrs['has_input'].append(restriction['value'])
+									elif restriction['property'] == 'http://edamontology.org/has_output':
+										attrs['has_output'].append(restriction['value'])
+									elif restriction['property'] == 'http://edamontology.org/has_topic':
+										attrs['has_topic'].append(restriction['value'])
 					if n2.nodeName == 'oboInOwl:hasExactSynonym' and n2.firstChild:
 						attrs['exact_synonyms'].append(n2.firstChild.nodeValue)
 					if n2.nodeName == 'oboInOwl:hasNarrowSynonym' and n2.firstChild:
@@ -122,17 +136,40 @@ def listify(input_list):
 	return obj_list
 
 
+def parse_restriction(restriction_node):
+	restriction = {}
+	for child in restriction_node.childNodes:
+		if child.nodeName == 'owl:onProperty':
+			restriction['property'] = child.attributes['rdf:resource'].value
+		elif child.nodeName == 'owl:someValuesFrom':
+			restriction['value'] = child.attributes['rdf:resource'].value
+	return restriction
+
 def treefy(node, o):
 	for el in o:
-		for parent in el['parents']:
-			if node['data']['uri'] == parent:
+		for parent in el["parents"]:
+			if node["data"]["uri"] == parent:
 				exists = False
-				for ch in node['children']:
-					if ch['data']['uri'] == el['data']['uri']:
+				for ch in node["children"]:
+					if ch["data"]["uri"] == el["data"]["uri"]:
 						exists = True
 				if not exists:
-					node['children'].append({'text':el['text'], 'data':{'uri':el['data']['uri']}, 'children': [], 'exact_synonyms': el['exact_synonyms'], 'narrow_synonyms': el['narrow_synonyms'], 'replaced_by': el['replaced_by'], 'consider': el['consider'], 'definition': el['definition']})
-	for ch in node['children']:
+					node["children"].append(
+						{
+							"text": el["text"],
+							"data": {"uri": el["data"]["uri"]},
+							"children": [],
+							"exact_synonyms": el["exact_synonyms"],
+							"narrow_synonyms": el["narrow_synonyms"],
+							"replaced_by": el["replaced_by"],
+							"consider": el["consider"],
+							"definition": el["definition"],
+							'has_input': el.get('has_input', []),
+							'has_output': el.get('has_output', []),
+							'has_topic': el.get('has_topic', [])
+						}
+					)
+	for ch in node["children"]:
 		treefy(ch, o)
 
 def minify_tree(data):
@@ -144,6 +181,9 @@ def minify_tree(data):
 		.replace('"children":','"ch":')
 		.replace('"consider":','"co":')
 		.replace('"replaced_by":','"rb":')
+		.replace('"has_input":','"hi":')
+		.replace('"has_topic":','"ht":')
+		.replace('"has_output":','"ho":')
 	)
 
 def indexify(flat_data):
@@ -178,11 +218,14 @@ def minify_flat_data(flat_data):
 			.replace('"name":','"n":')
 			.replace('"key":','"k":')
 		)
+		n['hi'] = e.get('has_input')
+		n['ht'] = e.get('has_topic')
+		n['ho'] = e.get('has_output')
 		
 		new_flat_data.append(n)
 
 	return new_flat_data
-		
+
 def minify_index_data(index_data):
 	new_index_data = {}
 	for k in list(index_data.keys()):
@@ -201,6 +244,9 @@ def minify_index_data(index_data):
 			.replace('"name":','"n":')
 			.replace('"key":','"k":')
 		)
+		new_index_data[k]['hi'] = index_data[k].get('has_input', [])
+		new_index_data[k]['ho'] = index_data[k].get('has_output', [])
+		new_index_data[k]['ht'] = index_data[k].get('has_topic', [])
 	
 	return new_index_data
 
@@ -502,7 +548,7 @@ class Command(BaseCommand):
 				'uri': 'http://www.w3.org/2002/07/owl#DeprecatedClass'
 			},
 			"narrow_synonyms": [],
-            "exact_synonyms": [],
+			"exact_synonyms": [],
 			'children': []
 		}
 		treefy(obsolete_tree, listify(obsolete_list))
