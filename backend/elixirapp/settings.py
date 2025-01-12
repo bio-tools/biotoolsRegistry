@@ -89,12 +89,13 @@ INSTALLED_APPS = (
     'elixir',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_auth',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_auth.registration',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
     'django_extensions',
+    'rest_framework_simplejwt',
     # 'djcelery',
     # 'kombu.transport.django',
     'background_task'
@@ -109,6 +110,7 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 )
 
 ROOT_URLCONF = 'elixirapp.urls'
@@ -215,13 +217,9 @@ STATIC_ROOT = getenv('STATIC_ROOT', '/elixir/application/frontend/static/')
 STATIC_URL = getenv('STATIC_URL', '/static/')
 
 # Django REST Framework
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -245,20 +243,13 @@ REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'general_errors'
 }
 
-# djangorestframework-simplejwt
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-}
-
 # REST Auth
-
-REST_AUTH_SERIALIZERS = {
+REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
     'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer',
-  #  'PASSWORD_CHANGE_SERIALIZER': 'elixir.serializers.CustomPasswordChangeSerializer',
     'OLD_PASSWORD_FIELD_ENABLED': True,
 }
+
 # necessary for custom user validation
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'elixir.serializers.UserRegisterSerializer'
@@ -273,7 +264,7 @@ ACCOUNT_USERNAME_REQUIRED = getenv(
     castf=bool,
 )
 ACCOUNT_AUTHENTICATION_METHOD = getenv(
-    'ACCOUNT_AUTHENTICATION_METHOD'
+    'ACCOUNT_AUTHENTICATION_METHOD',
     'username_email'
 )
 ACCOUNT_CONFIRM_EMAIL_ON_GET = getenv(
