@@ -89,12 +89,13 @@ INSTALLED_APPS = (
     'elixir',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_auth',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_auth.registration',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
     'django_extensions',
+    'rest_framework_simplejwt',
     # 'djcelery',
     # 'kombu.transport.django',
     'background_task'
@@ -120,6 +121,7 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 )
 
 ROOT_URLCONF = 'elixirapp.urls'
@@ -226,13 +228,9 @@ STATIC_ROOT = getenv('STATIC_ROOT', '/elixir/application/frontend/static/')
 STATIC_URL = getenv('STATIC_URL', '/static/')
 
 # Django REST Framework
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
@@ -253,20 +251,12 @@ REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'general_errors'
 }
 
-# JWT Authentication
-
-JWT_EXPIRATION_DELTA_DAYS = getenv('JWT_EXPIRATION_DELTA_DAYS', 1, castf=int)
-
-JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=JWT_EXPIRATION_DELTA_DAYS),
-}
-
 # REST Auth
-
-REST_AUTH_SERIALIZERS = {
+REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
-    'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer'
+    'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer',
 }
+
 # necessary for custom user validation
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'elixir.serializers.UserRegisterSerializer'
@@ -284,7 +274,7 @@ ACCOUNT_USERNAME_REQUIRED = getenv(
     castf=bool,
 )
 ACCOUNT_AUTHENTICATION_METHOD = getenv(
-    'ACCOUNT_AUTHENTICATION_METHOD'
+    'ACCOUNT_AUTHENTICATION_METHOD',
     'username_email'
 )
 ACCOUNT_CONFIRM_EMAIL_ON_GET = getenv(
