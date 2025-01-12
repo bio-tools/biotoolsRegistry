@@ -12,12 +12,11 @@ Class-based views
 Including another URLconf
 	1. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import include, url
-from django.urls import path
+from django.urls import include, path, re_path
 from django.contrib import admin
 
 urlpatterns = [
-	url(r'^admin/', admin.site.urls)	,
+	re_path(r'^admin/', admin.site.urls)	,
 	# url(r'^', include('django.contrib.auth.urls')),
 	# url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	# url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),

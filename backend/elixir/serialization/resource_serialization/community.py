@@ -12,13 +12,13 @@ class BioLibSerializer(serializers.ModelSerializer):
         fields = ('app_name', 'author_name', 'author_username',)
     
     def validate_app_name(self, attrs):
-        p = re.compile('^[a-zA-Z0-9_-]+$', re.IGNORECASE | re.UNICODE)
+        p = re.compile(r'^[a-zA-Z0-9_-]+$', re.IGNORECASE | re.UNICODE)
         if not p.search(attrs):
             raise serializers.ValidationError('This field can only contain letters, numbers or - _')
         return attrs
 
     def validate_author_username(self, attrs):
-        p = re.compile('^[a-zA-Z0-9_-]+$', re.IGNORECASE | re.UNICODE)
+        p = re.compile(r'^[a-zA-Z0-9_-]+$', re.IGNORECASE | re.UNICODE)
         if not p.search(attrs):
             raise serializers.ValidationError('This field can only contain letters, numbers or - _')
         return attrs

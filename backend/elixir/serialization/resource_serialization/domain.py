@@ -106,7 +106,7 @@ class DomainSerializer(serializers.ModelSerializer):
 				raise Http404
 
 
-		p = re.compile('^[a-zA-Z0-9-]{2,40}$', re.IGNORECASE | re.UNICODE)
+		p = re.compile(r'^[a-zA-Z0-9-]{2,40}$', re.IGNORECASE | re.UNICODE)
 
 		if not p.search(domain_name):
 			raise serializers.ValidationError('Domain name can only contain alphanumeric characters and dashes, with length between 2 and 40 characters.')
