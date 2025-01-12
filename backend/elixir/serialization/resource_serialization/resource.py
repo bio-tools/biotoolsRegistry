@@ -44,12 +44,12 @@ class OtherIDSerializer(serializers.ModelSerializer):
 
 	def validate_value(self, attrs):
 		# make sure the version matches the regular expression
-		d = re.compile('^DOI:10\.[0-9]{4,9}\/[-\._;\(\)\/:a-zA-Z0-9]+$', re.IGNORECASE)
-		r = re.compile('^RRID:.+$', re.IGNORECASE | re.UNICODE)
-		c = re.compile('^cpe:.+$', re.IGNORECASE | re.UNICODE)
+		d = re.compile(r'^DOI:10\.[0-9]{4,9}\/[-\._;\(\)\/:a-zA-Z0-9]+$', re.IGNORECASE)
+		r = re.compile(r'^RRID:.+$', re.IGNORECASE | re.UNICODE)
+		c = re.compile(r'^cpe:.+$', re.IGNORECASE | re.UNICODE)
 		# The biotoolsCURIE must have at least one character, that's why the + is there
 		# need access to multiple fields should merge the two validate_ functions into one validate()
-		b = re.compile('^biotools:[_\-.0-9a-zA-Z]+$', re.IGNORECASE | re.UNICODE)
+		b = re.compile(r'^biotools:[_\-.0-9a-zA-Z]+$', re.IGNORECASE | re.UNICODE)
 
 		if not (d.search(attrs) or r.search(attrs) or c.search(attrs) or b.search(attrs)):
 			raise serializers.ValidationError('The value has to be a DOI, RRID, cpe or biotoolsCURIE. Make sure you added the prefixes.')
@@ -334,15 +334,15 @@ class ResourceSerializer(serializers.ModelSerializer):
 		#p = re.compile('^[\p{Zs}A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
 
 		#use this
-		p = re.compile('^[ A-Za-z0-9+\.,\-\~_:;()]*$', re.IGNORECASE | re.UNICODE)
+		p = re.compile(r'^[ A-Za-z0-9+\.,\-\~_:;()]*$', re.IGNORECASE | re.UNICODE)
 
 		if not p.search(attrs):
 			raise serializers.ValidationError('This field can only contain letters, numbers, spaces or these characters: + . , - ~ _ : ; ( )')
 		return attrs
 
 	def validate_biotoolsID(self, attrs):
-		p = re.compile('^[A-Za-z0-9\.\-\~_]*$', re.IGNORECASE | re.UNICODE)
-		p1 = re.compile('^[A-Za-z0-9]+.*$', re.IGNORECASE | re.UNICODE)
+		p = re.compile(r'^[A-Za-z0-9\.\-\~_]*$', re.IGNORECASE | re.UNICODE)
+		p1 = re.compile(r'^[A-Za-z0-9]+.*$', re.IGNORECASE | re.UNICODE)
 		if not p.search(attrs):
 			raise serializers.ValidationError('The biotoolsID can only contain letters, numbers or these characters: . - _ ~ ')
 		if not p1.search(attrs):

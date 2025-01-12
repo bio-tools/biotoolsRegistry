@@ -17,7 +17,7 @@ class CustomPasswordResetSerializer(PasswordResetSerializer):
 class UserRegisterSerializer(RegisterSerializer):
 	def validate_username(self, attrs):
 		# make sure the username matches the regular expression
-		p = re.compile('^[A-Za-z0-9-_.]*$', re.IGNORECASE)
+		p = re.compile(r'^[A-Za-z0-9-_.]*$', re.IGNORECASE)
 		if not p.search(attrs):
 			raise serializers.ValidationError('This field can only contain uppercase and lowercase letters, decimal digits, or these characters - _ .')
 		# clean username using function built into allauth
