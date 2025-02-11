@@ -6,15 +6,24 @@
 <i ng-show="note != null && note.length > 0" class="fa fa-question-circle" aria-hidden="true" style="font-size: 100%; margin-left: 0.5em; color: '#524656';" tooltips tooltip-side="top" tooltip-content="{{note}}"></i>
 <br>
 
-<span ng-show="doi">DOI: <a href="https://dx.doi.org/{{  doi  }}" target="_blank">{{ doi  }}</a>
+<span ng-show="doi">
+	DOI: 
+	<a href="https://dx.doi.org/{{  doi  }}" target="_blank">{{ doi }}</a>
 	<span ng-show=" pmid || pmcid   " style="color: #CCCCCC;"> | </span>
 </span>
 
-<span ng-show="pmid">PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/{{ pmid }}" target="_blank">{{ pmid }}</a>
+<span ng-show="pmid">
+	PMID: 
+	<a href="https://europepmc.org/article/MED/{{ pmid }}" target="_blank">{{ pmid }}</a>
 	<span class="pull-right">Cited by 
 		<a href=" http://europepmc.org/search?query=CITES%3A{{  pmid  }}_MED" class="fa fa-external-link" style="padding-top: 3px; text-color={{color}}" aria-hidden="true" target="_blank"></a>
 	</span>
 </span>
-<span ng-show="( doi || pmid  ) &&   pmcid  " style="color: #CCCCCC;"> | </span></span>
-<span ng-show="pmcid">PMCID: <a href="http://www.ncbi.nlm.nih.gov/pmc/{{pmcid}}" target="_blank">{{ pmcid }}</a>
+
+<span ng-show="( doi || pmid  ) &&   pmcid  " style="color: #CCCCCC;"> | </span>
+<span ng-show="pmcid">
+	PMCID: 
+	<a href="https://europepmc.org/article/PMC/{{ pmcid.substring(3) }}" target="_blank">{{ pmcid }}</a>
+</span>ß
+
 </div>
