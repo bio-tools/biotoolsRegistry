@@ -2,12 +2,11 @@
 # - mysql
 # - elasticsearch
 # - backend: depends on mysql and elasticsearch
+# - taskrunner: process background tasks
 # - frontnend: depends on backend
 
 # This file is meant to aid local development and testing. It *must not* be
 # used for production deployment.
-
-version: "3.5"
 
 services:
 
@@ -60,14 +59,31 @@ services:
     depends_on:
       - mysql
       - elasticsearch
-    links:
+    volumes:
+      - ./backend:/elixir/application/backend:consistent
+      - ./frontend:/elixir/application/frontend
+
+  taskrunner:
+    container_name: biotools-taskrunner
+    image: biotools/backend:latest
+    build:
+      context: ./backend
+    environment:
+      - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
+      - BIOTOOLS_MYSQL_DB=elixir
+      - BIOTOOLS_MYSQL_HOST=mysql
+      - BIOTOOLS_MYSQL_PASSWORD=123
+      - BIOTOOLS_MYSQL_USER=elixir
+    networks:
+      - net
+    depends_on:
       - mysql
       - elasticsearch
     volumes:
       - ./backend:/elixir/application/backend:consistent
       - ./frontend:/elixir/application/frontend
+    command: python manage.py process_tasks
 
-  # dockerfile in frontend dir
   frontend:
     container_name: biotools-frontend
     image: biotools/frontend:latest
