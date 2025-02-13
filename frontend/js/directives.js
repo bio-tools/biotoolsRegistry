@@ -3,7 +3,7 @@
 /* Directives */
 
 angular.module('elixir_front.directives', [])
-.directive('toolList', ['ToolList', 'Highlighting', 'Covid', function(ToolList, Highlighting, Covid) {
+.directive('toolList', ['ToolList', 'Highlighting', function(ToolList, Highlighting) {
 	return {
 		restrict: 'A',
 		templateUrl: 'partials/directives/toolList.html',
@@ -12,7 +12,6 @@ angular.module('elixir_front.directives', [])
 			scope.ToolList = ToolList;
 			// reference Highlighting in the scope
 			scope.Highlighting = Highlighting;
-			scope.Covid = Covid;
 		}
 	}
 }])
