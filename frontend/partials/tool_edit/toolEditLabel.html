@@ -7,23 +7,6 @@
 <form name="form.labelForm" class="form-horizontal" novalidate  autocomplete="off">
 	<div class="form-group">
 		<div class="col-xs-12 col-sm-12 col-md-9 col-md-offset-1 no-side-padding">
-			<!-- Tag with COVID-19 -->
-			<div class="form-group">
-				<label class="control-label col-sm-3" style="position: relative;">
-					<span tooltips tooltip-side="right" tooltip-content="Tag tool as COVID-19">Tag as COVID-19 <a target="_blank" ng-href="/t?domain=covid-19"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
-				</label>
-				<div class="col-sm-9">
-					<div style="padding-top:7px;" ng-if="!Covid.hasCovid(software.collectionID)">
-						<a class="covid-tag-link" href="" ng-click="software.collectionID=Covid.addCovid(software.collectionID)">Click to tag tool as COVID-19</a>
-					</div>
-					<div ng-if="Covid.hasCovid(software.collectionID)">
-						<h5>
-							Tool is tagged as <span style="color: #BA1E4A">COVID-19</span>. See all <a target="_blank" ng-href="/t?domain=covid-19">COVID-19</a> tools.
-						</h5>
-						<a class="covid-tag-link" href="" ng-click="software.collectionID=Covid.removeCovid(software.collectionID)">Click to remove COVID-19 tag</a>
-					</div>
-				</div>
-			</div>
 			<!-- 	Tool Type	 -->
 			<div class="form-group no-margin-bottom">
 				<label class="control-label col-sm-3" style="position: relative;">
