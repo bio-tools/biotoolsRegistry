@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from github import Github
 from github import GithubException
+from github import Auth
 from github import BadCredentialsException
 from github import UnknownObjectException
 import elixir.ecosystem.settings as ecosystem_settings
@@ -39,7 +40,7 @@ class GithubToolHandler:
         """
 
         try:
-            self.__g = Github(ecosystem_settings.ECO_PERSONAL_TOKEN)
+            self.__g = Auth(ecosystem_settings.ECO_PERSONAL_TOKEN)
             self.__username = self.__g.get_user().login
             self.__logged_in = True
             self.__repo_name = ecosystem_settings.ECO_GITHUB_REPO_NAME
