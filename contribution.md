@@ -14,7 +14,7 @@ Instance     | Branch         | Comment
 "hotfixes"   | hotfix/\<id\>  | Always branch off "master"
 
 
-- **"development" branch** (`origin/develop`) (code deployed on https://dev.bio.tools) 
+- **"development" branch** (`origin/develop`) (code deployed on https://bio-tools-dev.sdu.dk) 
   - the default / base branch of the repo, against which all pull requests and code pushes are automatically made
   - holds changes for the next release
   - developers will branch from / merge to it
@@ -52,14 +52,14 @@ The Danish ELIXIR node provides stable funding for bio.tools as part of the ELIX
 - **bio.tools developer**
   - this could be you :)
 
-- **Release Manager** (currently [Hans Ienasescu](mailto:hans@bio.tools) and [Piotr Chmura](mailto:piotr.chmura@cpr.ku.dk))
+- **Release Manager**
 
   - can push changes to "master" branch (merging from "develop" or "hotfixes")
   - responsible for:
-    - building the "master" (https://bio.tools) and "develop" (https://dev.bio.tools) deployments, as per the [release process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
+    - building the "master" (https://bio.tools) and "develop" (https://bio-tools-dev.sdu.dk) deployments, as per the [release process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
 
 
-- **Community Leader** (currently [Hans Ienasescu](mailto:hans@bio.tools)) responsibilities:
+- **Community Leader** responsibilities:
 
   - announce changes to "develop" deployment, support the projects dependant on bio.tools in migrating them to the new version
   - announce planned and actual changes to "master" deployment (esp. any potentially breaking changes to API) via all available channels
@@ -103,4 +103,4 @@ This code of conduct outlines our expectations for the bio.tools developer commu
 - **Wise:** We are not infallible; we will make mistakes and change our viewpoints: admit and learn from mistakes and allow others to do the same.  
 
 ## Conflict resolution
-If you are unhappy in regard to the code of conduct not being honoured, you should raise your concerns immediately and try to resolve them, either directly with the person concerned, or failing that with the nominated *community leader* (currently [Jon Ison](mailto:jison@bioinformatics.dtu.dk)) who will try to resolve the issue discretely and fairly. 
+If you are unhappy in regard to the code of conduct not being honoured, you should raise your concerns immediately and try to resolve them, either directly with the person concerned, or failing that with the nominated *community leader* who will try to resolve the issue discretely and fairly. 
