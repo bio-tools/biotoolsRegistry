@@ -265,7 +265,9 @@ JWT_AUTH = {
 
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
-    'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer'
+    'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer',
+    'PASSWORD_CHANGE_SERIALIZER': 'rest_auth.serializers.PasswordChangeSerializer'
+    
 }
 # necessary for custom user validation
 REST_AUTH_REGISTER_SERIALIZERS = {
