@@ -94,7 +94,10 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'dj_rest_auth',
     'dj_rest_auth.registration',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
     'django_extensions',
+    'rest_framework_simplejwt',
     'rest_framework_simplejwt',
     # 'djcelery',
     # 'kombu.transport.django',
@@ -110,6 +113,7 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 )
 
@@ -245,6 +249,7 @@ REST_FRAMEWORK = {
 
 # REST Auth
 REST_AUTH = {
+REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
     'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer',
     'OLD_PASSWORD_FIELD_ENABLED': True,
@@ -264,6 +269,7 @@ ACCOUNT_USERNAME_REQUIRED = getenv(
     castf=bool,
 )
 ACCOUNT_AUTHENTICATION_METHOD = getenv(
+    'ACCOUNT_AUTHENTICATION_METHOD',
     'ACCOUNT_AUTHENTICATION_METHOD',
     'username_email'
 )
