@@ -1,5 +1,5 @@
 from rest_framework.exceptions import APIException
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from rest_framework import status
 
 class CustomError(APIException):
@@ -9,5 +9,5 @@ class CustomError(APIException):
     def __init__(self, detail, field, status_code):
         if status_code is not None:self.status_code = status_code
         if detail is not None:
-            self.detail = {field: force_text(detail)}
-        else: self.detail = {'detail': force_text(self.default_detail)}
+            self.detail = {field: force_str(detail)}
+        else: self.detail = {'detail': force_str(self.default_detail)}
