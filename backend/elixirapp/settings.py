@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import datetime
 import json
-from datetime import timedelta
 # import djcelery
 
 
@@ -100,6 +100,17 @@ INSTALLED_APPS = (
     'background_task'
 )
 
+
+MIDDLEWARE_CLASSES = (
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#     'django.middleware.security.SecurityMiddleware',
+)
 
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -219,12 +230,9 @@ STATIC_URL = getenv('STATIC_URL', '/static/')
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
@@ -245,19 +253,19 @@ REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'general_errors'
 }
 
-# djangorestframework-simplejwt
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+# JWT Authentication
+
+JWT_EXPIRATION_DELTA_DAYS = getenv('JWT_EXPIRATION_DELTA_DAYS', 1, castf=int)
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=JWT_EXPIRATION_DELTA_DAYS),
 }
 
 # REST Auth
 
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
-    'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer',
-  #  'PASSWORD_CHANGE_SERIALIZER': 'elixir.serializers.CustomPasswordChangeSerializer',
-    'OLD_PASSWORD_FIELD_ENABLED': True,
+    'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer'
 }
 # necessary for custom user validation
 REST_AUTH_REGISTER_SERIALIZERS = {

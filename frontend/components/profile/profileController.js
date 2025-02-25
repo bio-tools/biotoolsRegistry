@@ -1,6 +1,5 @@
-// Use the existing djangoAuth service from djangoAuth.js to avoid duplication
 angular.module('elixir_front')
-.controller('ProfileController', ['$scope', '$state', 'djangoAuth', 'DisownToolService', 'User', '$uibModal', function($scope, $state, djangoAuth, DisownToolService, User, $uibModal) {
+.controller('ProfileController', ['$scope', '$state', 'djangoAuth', 'DisownToolService', 'User', function($scope, $state, djangoAuth, DisownToolService, User) {
 	$scope.profile = {};
 	$scope.loading = true;
 	$scope.User = User;
@@ -22,12 +21,5 @@ angular.module('elixir_front')
 		}, function(response) {
 			alert("Failed to disown " + entry.name + ". Please check your connection and try again later.");
 		});
-	};
-	
-	$scope.openChangePasswordModal = function() {
-        $uibModal.open({
-            templateUrl: 'components/profile/changePasswordModal.html',
-            controller: 'ChangePasswordController'
-        });
-    };
+	}
 }]);
