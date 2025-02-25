@@ -249,7 +249,6 @@ REST_FRAMEWORK = {
 
 # REST Auth
 REST_AUTH = {
-REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
     'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer',
     'OLD_PASSWORD_FIELD_ENABLED': True,
