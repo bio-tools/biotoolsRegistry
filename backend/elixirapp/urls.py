@@ -1,7 +1,7 @@
 """elixirapp URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-	https://docs.djangoproject.com/en/1.8/topics/http/urls/
+	https://docs.djangoproject.com/en/1.8/topics/http/urls
 Examples:
 Function views
 	1. Add an import:  from my_app import views
@@ -20,8 +20,8 @@ urlpatterns = [
 	# url(r'^', include('django.contrib.auth.urls')),
 	# url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	# url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
-	url(r'^rest-auth/', include('rest_auth.urls')),
-	url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
-	url(r'^accounts/', include('allauth.urls')),
-	url(r'^', include('elixir.urls')),
+	path('rest-auth/', include('dj_rest_auth.urls')),
+	path('rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+	path('accounts/', include('allauth.urls')),
+	path('', include('elixir.urls')),
 ]
