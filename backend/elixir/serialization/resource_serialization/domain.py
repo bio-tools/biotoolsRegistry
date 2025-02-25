@@ -2,7 +2,7 @@ from rest_framework import serializers
 from elixir.models import Domain, DomainResource, DomainTag, DomainCollection, Resource
 from elixir.validators import *
 from rest_framework.validators import UniqueValidator
-from orderedset import OrderedSet
+from collections import OrderedDict
 from django.http import Http404
 
 
@@ -106,7 +106,7 @@ class DomainSerializer(serializers.ModelSerializer):
 				raise Http404
 
 
-		p = re.compile('^[a-zA-Z0-9-]{2,40}$', re.IGNORECASE | re.UNICODE)
+		p = re.compile(r'^[a-zA-Z0-9-]{2,40}$', re.IGNORECASE | re.UNICODE)
 
 		if not p.search(domain_name):
 			raise serializers.ValidationError('Domain name can only contain alphanumeric characters and dashes, with length between 2 and 40 characters.')
@@ -120,7 +120,7 @@ class DomainSerializer(serializers.ModelSerializer):
 
 	def create(self, validated_data):
 		pop = lambda l, k: l.pop(k) if k in list(l.keys()) else []
-		uniq = lambda l, k: [dict(t) for t in OrderedSet([tuple(d.items()) for d in pop(l, k)])]
+		uniq = lambda l, k: [dict(t) for t in OrderedDict([tuple(d.items()) for d in pop(l, k)])]
 
 		# domain resource unique list
 		resources_list = pop(validated_data, 'resource') if 'resource' in list(validated_data.keys()) else []
