@@ -255,7 +255,6 @@ REST_FRAMEWORK = {
 REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
     'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer',
-    'PASSWORD_CHANGE_SERIALIZER': 'rest_auth.serializers.PasswordChangeSerializer'
 }
 
 # necessary for custom user validation
