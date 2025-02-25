@@ -21,8 +21,7 @@ urlpatterns = [
 	# url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	# url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
 	path('rest-auth/', include('dj_rest_auth.urls')),
-	path('rest-auth/registration/',
-		 include('dj_rest_auth.registration.urls')),
+	path('rest-auth/registration/', include('dj_rest_auth.registration.urls')),
 	path('accounts/', include('allauth.urls')),
 	path('', include('elixir.urls')),
 ]
