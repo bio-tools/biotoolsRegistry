@@ -23,13 +23,6 @@ angular.module('elixir_front')
         });
     };
 
-    $scope.openChangeEmailModal = function() {
-        $uibModal.open({
-            templateUrl: 'components/profile/changeEmailModal.html',
-            controller: 'ChangeEmailController'
-        });
-    };
-
     $scope.openChangePasswordModal = function() {
         $uibModal.open({
             templateUrl: 'components/profile/changePasswordModal.html',

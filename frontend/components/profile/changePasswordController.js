@@ -1,20 +1,21 @@
 angular.module('elixir_front')
 .controller('ChangePasswordController', ['$scope', '$uibModalInstance', 'djangoAuth', function($scope, $uibModalInstance, djangoAuth) {
-    $scope.passwordData = {};
+
     $scope.submitPassword = function() {
-        if ($scope.passwordData.newPassword !== $scope.passwordData.confirmPassword) {
-            alert('Passwords do not match!');
-            return;
-        }
-        djangoAuth.changePassword(
-            $scope.passwordData.currentPassword,
-            $scope.passwordData.newPassword,
-            $scope.passwordData.confirmPassword
-        ).then(function(response) {
-            alert('Password updated successfully!');
-            $uibModalInstance.close();
-        }, function(error) {
-            alert('Failed to update password: ' + (error.data.message || error.statusText));
-        });
+		var token = localStorage.getItem("authToken");  // Store and retrieve auth token securely
+        var oldPassword = $scope.oldPassword;
+        var newPassword1 = $scope.newPassword;
+        var newPassword2 = $scope.confirmPassword;    
+
+        djangoAuth.changePassword(token, oldPassword, newPassword1, newPassword2)
+            .then(function(response) {
+                alert('Password updated successfully!');
+                $uibModalInstance.close();
+            })
+            .catch(function(error) {
+                console.error("error: ", error);
+                let firstKey = Object.keys(error)[0]; // First error key (old_password, new_password2...)
+                alert('Failed to update password: ' + error[firstKey][0]);
+            });
     };
 }]);
