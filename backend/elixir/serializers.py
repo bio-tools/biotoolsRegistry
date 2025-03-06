@@ -13,7 +13,6 @@ from django.conf import settings
 from elixir.request_handling import ResourceRequestHandler
 from random import randint
 
-from elixir.serialization.resource_serialization.community import *
 from elixir.serialization.resource_serialization.domain import *
 from elixir.serialization.resource_serialization.edam import *
 from elixir.serialization.resource_serialization.operatingSystem import *
