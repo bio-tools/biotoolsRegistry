@@ -38,5 +38,5 @@ six==1.15.0
 sqlparse==0.4.0
 urllib3==1.25.10
 PyGithub==1.54.1
-ipython==7.23.1
+ipython==8.10.0
 jupyterlab==3.0.16
