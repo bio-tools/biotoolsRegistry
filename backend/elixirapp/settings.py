@@ -308,3 +308,6 @@ try:
     from elixir.blacklisted_domains import *
 except ImportError:
     print ("Could not import deployment settings")
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
