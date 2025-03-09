@@ -385,7 +385,14 @@ class ResourceSerializer(serializers.ModelSerializer):
 	# creating the resource
 	def create(self, validated_data):
 		pop = lambda l, k: l.pop(k) if k in list(l.keys()) else []
-		uniq = lambda l, k: [dict(t) for t in OrderedDict([tuple(d.items()) for d in pop(l, k)])]
+		# uniq = lambda l, k: [dict(t) for t in OrderedDict([tuple(d.items()) for d in pop(l, k)])]
+
+		uniq = lambda l, k: [
+    		dict(t) for t in OrderedDict([
+        		tuple(d.items()) for d in pop(l, k) if isinstance(d, dict)
+    		])
+		] if isinstance(pop(l, k), list) and pop(l, k) else []
+		
 
 		# nested attributes need to be popped from resource and added after resource has been saved
 		# otherwise nothing will work
