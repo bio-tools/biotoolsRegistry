@@ -800,7 +800,7 @@ angular.module('elixir_front.services', [])
 		}
 	};
 }])
-.service('Covid', function(){
+/* .service('Covid', function(){
 	self.tag = 'COVID-19';
 	this.hasCovid = function(collection){
 		if (collection && Array.isArray(collection) && collection.length > 0){
@@ -834,7 +834,7 @@ angular.module('elixir_front.services', [])
 		}
 		return result;
 	}
-})
+}) */
 .service('CommunityCollection', function(){
 	this.hasCommunityCollection = function(collectionList, communityCollection){
 		if (collectionList && Array.isArray(collectionList) && collectionList.length > 0){

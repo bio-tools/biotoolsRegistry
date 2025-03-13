@@ -10,11 +10,9 @@ ENV HOME=/home/biotools
 
 WORKDIR $HOME/frontend
 
-RUN mkdir components/ css/ dist/ images/ img/ js/ json/ lib/ partials/ resources/ static/
+RUN mkdir components/ css/ img/ js/ json/ lib/ partials/ resources/ static/
 COPY components components/
 COPY css css/
-COPY dist dist/
-COPY images images/
 COPY img img/
 COPY js js/
 COPY json json/
