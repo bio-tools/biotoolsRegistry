@@ -14,7 +14,7 @@ djangorestframework-yaml==2.0.0
 djangorestframework-simplejwt==5.4.0
 dj-rest-auth==7.0.1
 elasticsearch==7.12.1
-idna==2.10
+idna==3.7
 isodate==0.6.0
 jsonfield==3.1.0
 lxml==5.3.0
