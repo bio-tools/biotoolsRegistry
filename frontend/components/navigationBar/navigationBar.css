@@ -22,12 +22,12 @@
 }
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-  color: #575757;
+  color: #ababab;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-  color: #575757;
+  color: #ababab;
   background-color: #f6a623;
 }
 .navbar-default .navbar-nav > .open > a,
