@@ -1530,15 +1530,16 @@ angular.module('elixir_front.controllers', [])
 	$scope.credentials = {};
 	$scope.error_message = '';
 	$scope.success_message = '';
-
 	$scope.loading = false;
+
 	$scope.resetButtonClick = function() {
 		$scope.error_message = '';
 		$scope.success_message = '';
 		$scope.loading = true;
+
 		djangoAuth.resetPassword($scope.credentials.email)
 		.then(function (response) {
-			$scope.success_message = response.success;
+			$scope.success_message = 'If this email is linked to an account, a reset link will be sent.';
 			$scope.loading = false;
 		}, function (response) {
 			$scope.error_message = response;
