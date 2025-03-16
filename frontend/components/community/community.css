@@ -29,7 +29,7 @@ div.community-content {
     display: inline-block;
     padding-left: 0.7em;
     padding-right: 1.2em;
-    border-bottom: 2px solid rgb(255, 165, 0);
+    border-bottom: 2px solid rgb(0, 84, 114);
     padding-bottom: 5px;
     font-weight: bold;
     /* margin-left: 0.1em; */
@@ -40,7 +40,7 @@ div.community-content {
     position: absolute;
     height: 3em;
     width: 3em;
-    border: 0.5em solid rgb(255, 165, 0);
+    border: 0.5em solid rgb(0, 84, 114);
     top: -0.12em;
     left: -3.0em;
     border-radius: 50%;

@@ -1,11 +1,11 @@
 .navbar-default {
-  background-color: #ffa500;
-  border-bottom: 3px solid #F6A623 !important;
+  background-color: rgb(0, 84, 114);
+  border-bottom: 3px solid rgb(0, 84, 114) !important;
   height: 62px; 
   box-shadow: 0px 2px 4px 0px rgba(74,74,74,0.25)
 }
 .navbar-default-background {
-  background-color: #ffa500;
+  background-color: rgb(0, 84, 114);
 }
 .navbar-default .navbar-brand {
   color: #ecf0f1;
@@ -22,13 +22,13 @@
 }
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-  color: #575757;
+  color: #ababab;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-  color: #575757;
-  background-color: #f6a623;
+  color: #ababab;
+  background-color: rgb(0, 84, 114);
 }
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:hover,
@@ -39,12 +39,12 @@
   border-top-left-radius: 8px;
 }
 .navbar-default .navbar-toggle {
-  border-color: #f6a623;
+  border-color:  rgb(0, 84, 114);
 }
 
 .navbar-default .navbar-toggle:hover,
 .navbar-default .navbar-toggle:focus {
-  background-color: #f6a623;
+  background-color:  rgb(0, 84, 114);
 }
 .navbar-default .navbar-toggle .icon-bar {
   background-color: #ecf0f1;
@@ -72,7 +72,7 @@
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
     color: #d8e9f3;
-    background-color: #f6a623;
+    background-color:  rgb(0, 84, 114);
   }
 }
 
@@ -115,7 +115,7 @@
 
 .label-navbar, .label-navbar:hover, .label-navbar:focus {
   text-shadow: 0px 2px 5px rgba(150, 150, 150, 0.15);
-  background-color: #F6A623;
+  background-color:  rgb(0, 84, 114);
   color: white;
   margin-bottom: 2px;
   width: 30px;
