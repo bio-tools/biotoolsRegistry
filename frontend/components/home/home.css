@@ -245,11 +245,11 @@ div.subtopics-list > span:hover{
 }
 
 div.subtopics-list > span:hover span:not(:hover) {
-    color:#ffa500 !important;
+    color: rgb(0, 84, 114) !important;
 }
 
 div.subtopics-list > span > span:hover {
-    color:#ffa500 !important;
+    color: rgb(0, 84, 114) !important;
 }
 
 
