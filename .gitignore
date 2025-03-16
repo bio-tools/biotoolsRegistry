@@ -1,5 +1,6 @@
 frontend/bower_components/
 frontend/node_modules/
+frontend/dist/
 *.pyc
 backend/elixirapp/deployment_settings.py
 backend/elixir/blacklisted_domains.py
