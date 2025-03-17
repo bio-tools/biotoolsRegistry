@@ -17,7 +17,6 @@ from elixir.serialization.resource_serialization.documentation import *
 from elixir.serialization.resource_serialization.collection import *
 from elixir.serialization.resource_serialization.contact import *
 from elixir.serialization.resource_serialization.version import *
-from elixir.serialization.resource_serialization.community import *
 from elixir.issues import EDAMTopicIssue, EDAMOperationIssue, EDAMDataIssue, EDAMFormatIssue, NoLicenseIssue, NoContactIssue, NoTOSIssue
 from random import randint
 from rest_framework.validators import UniqueValidator
@@ -68,7 +67,7 @@ class OtherIDSerializer(serializers.ModelSerializer):
 				try:
 					is_superuser =  self.context['request'].user.is_superuser
 					if is_superuser == False and self.context['request_type'] == 'POST':
-				 		raise serializers.ValidationError('Only admin users can add \'biotools:\'-type of otherID.')
+						raise serializers.ValidationError('Only admin users can add \'biotools:\'-type of otherID.')
 				except (AttributeError, KeyError) as e: 
 				# this means there is no context, so no PUT / POST request
 					pass
@@ -81,7 +80,7 @@ class OtherIDSerializer(serializers.ModelSerializer):
 				try:
 					is_superuser =  self.context['request'].user.is_superuser
 					if is_superuser == False and self.context['request_type'] == 'POST':
-				 		raise serializers.ValidationError('Only admin users can add \'biotools:\'-type of otherID.')
+						raise serializers.ValidationError('Only admin users can add \'biotools:\'-type of otherID.')
 				except (AttributeError, KeyError) as e: 
 				# this means there is no context, so no PUT / POST request
 					pass
@@ -278,9 +277,6 @@ class ResourceSerializer(serializers.ModelSerializer):
 	#relation
 	relation = RelationSerializer(many=True, required=False, allow_empty=False)
 
-	# community
-	community = CommunitySerializer(many=False, required=False, allow_null=False)
-
 	# contact = ContactSerializer(many=True, required=False, allow_empty=False)
 	editPermission = EditPermissionSerializer(many=False, required=False)
 
@@ -313,7 +309,6 @@ class ResourceSerializer(serializers.ModelSerializer):
 			'documentation',
 			'publication',
 			'credit',
-			'community',
 			'owner',
 			'additionDate',
 			'lastUpdate',
@@ -422,23 +417,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 
 		relation_list = validated_data.pop('relation') if 'relation' in list(validated_data.keys()) else []
 		
-		# create community object
-		# the properties are nested
-		# first create the smaller object(s) (e.g. biolib)
-		# then create the community object out of the smaller object(s)
-
-		community_dict = validated_data.pop('community') if 'community' in list(validated_data.keys()) else {}
-		community = None
-
-		if community_dict.get('biolib'):
-			b = community_dict['biolib']
-			biolib_object = BioLib.objects.create(
-				app_name = b['app_name'],
-				author_name = b['author_name'],
-				author_username  = b['author_username']
-			)
-			community = Community.objects.create(biolib=biolib_object)
-
+	
 		# contact_list = validated_data.pop('contact') if 'contact' in validated_data.keys() else []
 		editPermission_dict = validated_data.pop('editPermission') if 'editPermission' in list(validated_data.keys()) else {}
 		editPermissionAuthor_dict = editPermission_dict.pop('authors') if 'authors' in list(editPermission_dict.keys()) else {}
@@ -486,7 +465,6 @@ class ResourceSerializer(serializers.ModelSerializer):
 		# create parent attribute
 		resource = Resource.objects.create(
 			editPermission=editPermission, 
-			community=community,
 			**validated_data
 		)
 
@@ -666,7 +644,6 @@ class ResourceUpdateSerializer(ResourceSerializer):
 			'documentation',
 			'publication',
 			'credit',
-			'community',
 			'owner',
 			'additionDate',
 			'lastUpdate',

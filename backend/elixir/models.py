@@ -23,8 +23,6 @@ from elixir.model.resource_model.download import *
 from elixir.model.resource_model.documentation import *
 from elixir.model.resource_model.collection import *
 from elixir.model.resource_model.contact import *
-from elixir.model.resource_model.community import *
-
 from elixir.model.stats_model.search import *
 from elixir.model.stats_model.stats import *
 

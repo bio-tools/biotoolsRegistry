@@ -32,7 +32,16 @@
 					<span class="help-block" ng-show="signup_form.password.$error.required && signup_form.password.$dirty">Password is required.</span>
 					<span class="help-block" ng-show="signup_form.password.$error.minlength">Password too short - needs to be at least 8 characters.</span>
 				</div>
-				<button type="submit" class="btn btn-primary btn-lg btn-block" ng-disabled="signup_form.$invalid || loading" ng-click="signupButtonClick()">Create account <span ng-show="loading"><i class="fa fa-spinner fa-spin icon-cog"></i></span></button>
+				<div class="form-group has-feedback" ng-class="{'has-error': signup_form.confirm_password.$dirty && (signup_form.confirm_password.$invalid || credentials.confirm_password !== credentials.password), 'has-success': signup_form.confirm_password.$dirty && signup_form.confirm_password.$valid && credentials.confirm_password === credentials.password}">
+					<label>Confirm Password</label>
+					<input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" ng-model="credentials.confirm_password" required autocomplete="new-password">
+					<span ng-show="signup_form.confirm_password.$valid && credentials.confirm_password === credentials.password" class="glyphicon glyphicon-ok form-control-feedback"></span>
+					<span ng-show="signup_form.confirm_password.$dirty && (signup_form.confirm_password.$invalid || credentials.confirm_password !== credentials.password)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+					<span class="help-block" ng-show="signup_form.confirm_password.$error.required && signup_form.confirm_password.$dirty">Confirm Password is required.</span>
+					<span class="help-block" ng-show="credentials.confirm_password !== credentials.password && signup_form.confirm_password.$dirty">Passwords do not match.</span>
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg btn-block" ng-disabled="signup_form.$invalid || credentials.password !== credentials.confirm_password || loading" ng-click="signupButtonClick()">Create account <span ng-show="loading"><i class="fa fa-spinner fa-spin icon-cog"></i></span>
+				</button>
 				<div class="form-group has-feedback has-error" ng-show="error_message.creation">
 					<span class="help-block">{{ error_message.creation }}</span>
 				</div>

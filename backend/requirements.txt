@@ -12,16 +12,12 @@ django-rest-auth==0.9.5
 djangorestframework==3.12.1
 djangorestframework-xml==2.0.0
 djangorestframework-yaml==2.0.0
-# elasticsearch==7.9.1
 elasticsearch==7.12.1
 idna==2.10
 isodate==0.6.0
 jsonfield==3.1.0
-# old: lxml==4.5.2
-# new:
 lxml==4.6.3
 mysqlclient==2.0.1
-#mysqlclient==2.0.3 is available
 oauthlib==3.1.0
 orderedset==2.0.3
 Pillow==8.2.0
