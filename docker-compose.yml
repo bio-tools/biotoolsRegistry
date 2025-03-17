@@ -7,8 +7,6 @@
 # This file is meant to aid local development and testing. It *must not* be
 # used for production deployment.
 
-version: "3.5"
-
 services:
 
   mysql:
