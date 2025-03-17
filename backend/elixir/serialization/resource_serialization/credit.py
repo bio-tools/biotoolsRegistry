@@ -88,7 +88,7 @@ class CreditSerializer(serializers.ModelSerializer):
 
 
 	def validate_orcidid(self, attrs):
-		p = re.compile(r'^https?://orcid.org/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$', re.IGNORECASE | re.UNICODE)
+		p = re.compile('^https?://orcid.org/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$', re.IGNORECASE | re.UNICODE)
 		if not p.search(attrs):
 			raise serializers.ValidationError('This field can only contain a valid ORCID ID')
 		return attrs
@@ -100,19 +100,19 @@ class CreditSerializer(serializers.ModelSerializer):
 
 	# TODO in the user interface, wherever there is a regex we should give an example of what is expected
 	def validate_gridid(self, attrs):
-		p = re.compile(r'^grid.[0-9]{4,}.[a-f0-9]{1,2}$', re.IGNORECASE | re.UNICODE)
+		p = re.compile('^grid.[0-9]{4,}.[a-f0-9]{1,2}$', re.IGNORECASE | re.UNICODE)
 		if not p.search(attrs):
 			raise serializers.ValidationError('This field can only contain a valid GRID ID')
 		return attrs
 
 	def validate_rorid(self, attrs):
-		p = re.compile(r'^0[0-9a-zA-Z]{6}[0-9]{2}$', re.IGNORECASE | re.UNICODE)
+		p = re.compile('^0[0-9a-zA-Z]{6}[0-9]{2}$', re.IGNORECASE | re.UNICODE)
 		if not p.search(attrs):
 			raise serializers.ValidationError('This field can only contain a valid ROR ID')
 		return attrs
 	
 	def validate_fundrefid(self, attrs):
-		p = re.compile(r'^10\.13039\/[-\.\[\]<>_;\(\)\/:a-zA-Z0-9]+$', re.IGNORECASE | re.UNICODE)
+		p = re.compile('^10\.13039\/[-\.\[\]<>_;\(\)\/:a-zA-Z0-9]+$', re.IGNORECASE | re.UNICODE)
 		if not p.search(attrs):
 			raise serializers.ValidationError('This field can only contain a valid FundRef ID')
 		return attrs

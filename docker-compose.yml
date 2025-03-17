@@ -2,10 +2,12 @@
 # - mysql
 # - elasticsearch
 # - backend: depends on mysql and elasticsearch
-# - frontend: depends on backend
+# - frontnend: depends on backend
 
 # This file is meant to aid local development and testing. It *must not* be
 # used for production deployment.
+
+version: "3.5"
 
 services:
 

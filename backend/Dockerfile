@@ -1,9 +1,11 @@
-FROM ubuntu:24.04
+FROM ubuntu:20.04
+
 
 LABEL maintainer="Hans-Ioan Ienasescu <hans@bio.tools>"
 
 # Disable buffering for logs.
 ENV PYTHONUNBUFFERED 1
+
 
 # Set up working directory and files.
 WORKDIR /elixir/application/backend
@@ -16,37 +18,22 @@ COPY runtime runtime/
 COPY templates templates/
 
 
-# Install system dependencies
-RUN apt-get update -y && \
-    apt-get upgrade -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    software-properties-common \
-    apache2 \
-    apache2-utils \
-    ssl-cert \
-    libapache2-mod-wsgi-py3 \
-    python3-dev \
-    default-libmysqlclient-dev \
-    build-essential \
-    python3-pip \
-    python3-venv \
-    curl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Install Python 3.8
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y software-properties-common -y && add-apt-repository ppa:deadsnakes/ppa -y && apt-get update -y && apt-get -y install python3.8 python3-pip
 
-# Create a virtual environment to avoid system package conflicts
-RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+# make symlink for python3 to python
+RUN ln -sf /usr/bin/python3 /usr/bin/python && ln -sf /usr/bin/pip3 /usr/bin/pip
 
-RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir -r requirements.txt && \
-    rm -f requirements.txt
 
-RUN . /opt/venv/bin/activate
+RUN apt-get update && apt-get -y install apache2 apache2-utils ssl-cert libapache2-mod-wsgi-py3 && apt-get install -y python3-dev default-libmysqlclient-dev build-essential 
+
+RUN pip install -r requirements.txt && rm -f requirements.txt
 
 COPY runtime/apache.conf /etc/apache2/sites-available/elixir.conf
 
 RUN a2enmod wsgi && a2enmod ssl && a2enmod rewrite && a2enmod proxy_http && a2ensite elixir.conf && service apache2 restart
+
+RUN apt-get update -y && apt-get install curl
 
 EXPOSE 80
 

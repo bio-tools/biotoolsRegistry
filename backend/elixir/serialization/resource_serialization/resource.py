@@ -17,10 +17,11 @@ from elixir.serialization.resource_serialization.documentation import *
 from elixir.serialization.resource_serialization.collection import *
 from elixir.serialization.resource_serialization.contact import *
 from elixir.serialization.resource_serialization.version import *
+from elixir.serialization.resource_serialization.community import *
 from elixir.issues import EDAMTopicIssue, EDAMOperationIssue, EDAMDataIssue, EDAMFormatIssue, NoLicenseIssue, NoContactIssue, NoTOSIssue
 from random import randint
 from rest_framework.validators import UniqueValidator
-from collections import OrderedDict
+from orderedset import OrderedSet
 
 def issue_function(resource, user):
 	pass
@@ -44,12 +45,12 @@ class OtherIDSerializer(serializers.ModelSerializer):
 
 	def validate_value(self, attrs):
 		# make sure the version matches the regular expression
-		d = re.compile(r'^DOI:10\.[0-9]{4,9}\/[-\._;\(\)\/:a-zA-Z0-9]+$', re.IGNORECASE)
-		r = re.compile(r'^RRID:.+$', re.IGNORECASE | re.UNICODE)
-		c = re.compile(r'^cpe:.+$', re.IGNORECASE | re.UNICODE)
+		d = re.compile('^DOI:10\.[0-9]{4,9}\/[-\._;\(\)\/:a-zA-Z0-9]+$', re.IGNORECASE)
+		r = re.compile('^RRID:.+$', re.IGNORECASE | re.UNICODE)
+		c = re.compile('^cpe:.+$', re.IGNORECASE | re.UNICODE)
 		# The biotoolsCURIE must have at least one character, that's why the + is there
 		# need access to multiple fields should merge the two validate_ functions into one validate()
-		b = re.compile(r'^biotools:[_\-.0-9a-zA-Z]+$', re.IGNORECASE | re.UNICODE)
+		b = re.compile('^biotools:[_\-.0-9a-zA-Z]+$', re.IGNORECASE | re.UNICODE)
 
 		if not (d.search(attrs) or r.search(attrs) or c.search(attrs) or b.search(attrs)):
 			raise serializers.ValidationError('The value has to be a DOI, RRID, cpe or biotoolsCURIE. Make sure you added the prefixes.')
@@ -277,6 +278,9 @@ class ResourceSerializer(serializers.ModelSerializer):
 	#relation
 	relation = RelationSerializer(many=True, required=False, allow_empty=False)
 
+	# community
+	community = CommunitySerializer(many=False, required=False, allow_null=False)
+
 	# contact = ContactSerializer(many=True, required=False, allow_empty=False)
 	editPermission = EditPermissionSerializer(many=False, required=False)
 
@@ -309,6 +313,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 			'documentation',
 			'publication',
 			'credit',
+			'community',
 			'owner',
 			'additionDate',
 			'lastUpdate',
@@ -334,15 +339,15 @@ class ResourceSerializer(serializers.ModelSerializer):
 		#p = re.compile('^[\p{Zs}A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
 
 		#use this
-		p = re.compile(r'^[ A-Za-z0-9+\.,\-\~_:;()]*$', re.IGNORECASE | re.UNICODE)
+		p = re.compile('^[ A-Za-z0-9+\.,\-\~_:;()]*$', re.IGNORECASE | re.UNICODE)
 
 		if not p.search(attrs):
 			raise serializers.ValidationError('This field can only contain letters, numbers, spaces or these characters: + . , - ~ _ : ; ( )')
 		return attrs
 
 	def validate_biotoolsID(self, attrs):
-		p = re.compile(r'^[A-Za-z0-9\.\-\~_]*$', re.IGNORECASE | re.UNICODE)
-		p1 = re.compile(r'^[A-Za-z0-9]+.*$', re.IGNORECASE | re.UNICODE)
+		p = re.compile('^[A-Za-z0-9\.\-\~_]*$', re.IGNORECASE | re.UNICODE)
+		p1 = re.compile('^[A-Za-z0-9]+.*$', re.IGNORECASE | re.UNICODE)
 		if not p.search(attrs):
 			raise serializers.ValidationError('The biotoolsID can only contain letters, numbers or these characters: . - _ ~ ')
 		if not p1.search(attrs):
@@ -385,14 +390,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 	# creating the resource
 	def create(self, validated_data):
 		pop = lambda l, k: l.pop(k) if k in list(l.keys()) else []
-		# uniq = lambda l, k: [dict(t) for t in OrderedDict([tuple(d.items()) for d in pop(l, k)])]
-
-		uniq = lambda l, k: [
-    		dict(t) for t in OrderedDict([
-        		tuple(d.items()) for d in pop(l, k) if isinstance(d, dict)
-    		])
-		] if isinstance(pop(l, k), list) and pop(l, k) else []
-		
+		uniq = lambda l, k: [dict(t) for t in OrderedSet([tuple(d.items()) for d in pop(l, k)])]
 
 		# nested attributes need to be popped from resource and added after resource has been saved
 		# otherwise nothing will work
@@ -424,6 +422,22 @@ class ResourceSerializer(serializers.ModelSerializer):
 
 		relation_list = validated_data.pop('relation') if 'relation' in list(validated_data.keys()) else []
 		
+		# create community object
+		# the properties are nested
+		# first create the smaller object(s) (e.g. biolib)
+		# then create the community object out of the smaller object(s)
+
+		community_dict = validated_data.pop('community') if 'community' in list(validated_data.keys()) else {}
+		community = None
+
+		if community_dict.get('biolib'):
+			b = community_dict['biolib']
+			biolib_object = BioLib.objects.create(
+				app_name = b['app_name'],
+				author_name = b['author_name'],
+				author_username  = b['author_username']
+			)
+			community = Community.objects.create(biolib=biolib_object)
 
 		# contact_list = validated_data.pop('contact') if 'contact' in validated_data.keys() else []
 		editPermission_dict = validated_data.pop('editPermission') if 'editPermission' in list(validated_data.keys()) else {}
@@ -472,6 +486,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 		# create parent attribute
 		resource = Resource.objects.create(
 			editPermission=editPermission, 
+			community=community,
 			**validated_data
 		)
 
@@ -651,6 +666,7 @@ class ResourceUpdateSerializer(ResourceSerializer):
 			'documentation',
 			'publication',
 			'credit',
+			'community',
 			'owner',
 			'additionDate',
 			'lastUpdate',

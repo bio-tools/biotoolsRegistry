@@ -1,5 +1,5 @@
 angular.module('elixir_front')
-.controller('ToolPageController', ['$scope', '$state', '$timeout', '$stateParams', 'Tool', 'User', 'CheckUserEditingRights', 'ResourceRequestProvider', 'ngMeta', 'Query', '$http',  function($scope, $state, $timeout, $stateParams, Tool, User, CheckUserEditingRights, ResourceRequestProvider, ngMeta, Query, $http) {
+.controller('ToolPageController', ['$scope', '$state', '$timeout', '$stateParams', 'Tool', 'User', 'CheckUserEditingRights', 'ResourceRequestProvider', 'ngMeta', 'Query', 'Covid', '$http',  function($scope, $state, $timeout, $stateParams, Tool, User, CheckUserEditingRights, ResourceRequestProvider, ngMeta, Query, Covid, $http) {
 	$scope.notFound = false;
 	$scope.versions = [];
 	$scope.CheckUserEditingRights = CheckUserEditingRights;
@@ -8,6 +8,7 @@ angular.module('elixir_front')
 	
 
 	$scope.User = User;
+	$scope.Covid = Covid;
 	$scope.elixirCommunityIndex = {
 		"3D-BioInfo": "3d-bioinfo",
 		"Federated Human Data": "human-data",

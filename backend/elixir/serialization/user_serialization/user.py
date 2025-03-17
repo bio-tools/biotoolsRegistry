@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from elixir.models import *
-from dj_rest_auth.serializers import PasswordResetSerializer#, UserDetailsSerializer
-from dj_rest_auth.registration.serializers import RegisterSerializer
+from rest_auth.serializers import PasswordResetSerializer#, UserDetailsSerializer
+from rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.adapter import get_adapter
 import re
 
@@ -17,7 +17,7 @@ class CustomPasswordResetSerializer(PasswordResetSerializer):
 class UserRegisterSerializer(RegisterSerializer):
 	def validate_username(self, attrs):
 		# make sure the username matches the regular expression
-		p = re.compile(r'^[A-Za-z0-9-_.]*$', re.IGNORECASE)
+		p = re.compile('^[A-Za-z0-9-_.]*$', re.IGNORECASE)
 		if not p.search(attrs):
 			raise serializers.ValidationError('This field can only contain uppercase and lowercase letters, decimal digits, or these characters - _ .')
 		# clean username using function built into allauth
