@@ -439,6 +439,14 @@ angular.module('elixir_front.controllers', [])
 		}
 	}
 	
+	// reset success flags when changes are made
+	$scope.$watch('software', function(newVal, oldVal) {
+		if (newVal !== oldVal) {
+			$scope.savingProgress.success = false;
+			$scope.validationProgress.success = false;
+		}
+	}, true);
+	
 	// used terms (biotoolsID) for searching in relations
 	function getBiotoolsIDs(){
 		var d = $q.defer();
@@ -1278,7 +1286,7 @@ angular.module('elixir_front.controllers', [])
     });
 
 }])
-.controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', 'Covid', 'CommunityCollection', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator, Covid, CommunityCollection) {
+.controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', 'CommunityCollection', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator, CommunityCollection) {
 	// inherit common controller
 	$controller('ToolEditController', {$scope: $scope});
 
@@ -1287,7 +1295,6 @@ angular.module('elixir_front.controllers', [])
 
 	// set the ID to not autoupdate when name is changed
 	$scope.autoUpdateId = false;
-	$scope.Covid = Covid;
 	$scope.CommunityCollection = CommunityCollection;
 	$scope.validateButtonClick = function() {
 		$timeout(function() {
@@ -1328,7 +1335,7 @@ angular.module('elixir_front.controllers', [])
 	// })
 
 }])
-.controller('ToolCreateController', ['$scope', '$controller', '$timeout', 'ToolListConnection', 'ToolCreateValidator', 'User', '$stateParams', 'Covid', 'CommunityCollection',function($scope, $controller, $timeout, ToolListConnection, ToolCreateValidator, User, $stateParams, Covid, CommunityCollection){
+.controller('ToolCreateController', ['$scope', '$controller', '$timeout', 'ToolListConnection', 'ToolCreateValidator', 'User', '$stateParams',  'CommunityCollection',function($scope, $controller, $timeout, ToolListConnection, ToolCreateValidator, User, $stateParams, CommunityCollection){
 	// inherit common controller
 	$controller('ToolEditController', {$scope: $scope});
 	$scope.orderby = 'text';
@@ -1338,7 +1345,6 @@ angular.module('elixir_front.controllers', [])
 	// initially set the ID to change automatically when name is modified
 	$scope.biotoolsIDDisabled = true;
 	$scope.editIdButtonText = 'Edit ID';
-	$scope.Covid = Covid;
 	$scope.CommunityCollection = CommunityCollection;
 	// remove or replace all URL unsafe characters and set software.id
 	$scope.makeIdURLSafe = function(value) {
@@ -1532,7 +1538,7 @@ angular.module('elixir_front.controllers', [])
 		$scope.loading = true;
 		djangoAuth.resetPassword($scope.credentials.email)
 		.then(function (response) {
-			$scope.success_message = response.success;
+			$scope.success_message = 'If this email is linked to an account, a reset link will be sent.';
 			$scope.loading = false;
 		}, function (response) {
 			$scope.error_message = response;

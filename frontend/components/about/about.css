@@ -1,6 +1,6 @@
 .about-section-container 
 {	
-	border-left: 5px solid #EF7500;
+	border-left: 5px solid rgb(0, 84, 114);
 	padding-left: 15px;
 	margin-top: 50px;
 	padding-bottom: 5px;
@@ -110,9 +110,4 @@ div .about-container{
   	margin-top: 5px;
   	text-align: center !important; 
   	font-weight: bolder;
-}
-
-.icon-blue {
-    color: orange;
-	margin-right: 8px;
 }

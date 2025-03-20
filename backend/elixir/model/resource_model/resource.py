@@ -2,7 +2,7 @@ from django.db import models
 from elixir.model.resource_model.elixirInfo import * 
 from elixir.model.resource_model.editPermission import *
 from django.contrib.auth.models import User
-from elixir.model.resource_model.community import Community
+
 
 class Resource(models.Model):
     
@@ -78,9 +78,6 @@ class Resource(models.Model):
     editPermission = models.ForeignKey(EditPermission, null=False, blank=True, on_delete=models.CASCADE)
 
 
-    # Community data
-    community = models.ForeignKey(Community, blank=False, null=True, on_delete=models.CASCADE)
-    
     # metadata
     additionDate = models.DateTimeField(blank=True, null=True)
     lastUpdate = models.DateTimeField(auto_now=True)
