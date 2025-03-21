@@ -114,7 +114,6 @@ class BaseTestObject(APITestCase):
                                format='json', HTTP_ACCEPT='application/json')
 
     def remove_tool(self, url, id):
-        print(f"blub user {self.user.username}, is superuser: {self.user.is_superuser},is trying to delete.")
         return self.client.delete(f"{url}{id}", format='json',
                            HTTP_AUTHORIZATION=f"Token {self.tokens[self.user.username]}")
 
@@ -139,26 +138,32 @@ class BaseTestObject(APITestCase):
                                           email=registration_data['email']
                                           )
 
-    def switch_user(self, registration_data, login_data, isSuperuser=False):
-        if registration_data['username'] not in [u.username for u in User.objects.all()]:
+    def switch_user(self, registration_data, isSuperuser=False):
+        username = registration_data['username']
+        password = registration_data['password1']
+
+        if username not in [u.username for u in User.objects.all()]:
             assert isSuperuser is not None
             user = self.create_user(registration_data, isSuperuser)
-            self.tokens[registration_data['username']] = (Token.objects.create(user=user)).key
+            self.tokens[username] = (Token.objects.create(user=user)).key
 
-        login_success = self.client.login(username=login_data['username'], password=login_data['password'])
-        self.user = User.objects.get(username=login_data['username'])
+        self.login_user(username, password)
+
+        return self.tokens[registration_data['username']]
+
+    def login_user(self, username, password):
+        login_success = self.client.login(username=username, password=password)
+        self.user = User.objects.get(username=username)
 
         if not login_success:
-            raise Exception(f"Login failed for user {login_data['username']}")
+            raise Exception(f"Login failed for user {username}")
 
         user_token = self.tokens[self.user.username]
         if user_token:
             self.client.credentials(HTTP_AUTHORIZATION=f"Token {user_token}")
         else: raise Exception(f"Token not found for user {self.user.username}")
 
-        return self.tokens[registration_data['username']]
-
     # SETUP ------------------------------------------------------------------------------------------------------------
     def setUp(self):
         self.client = APIClient()
-        self.switch_user(self.superuser_registration_data, self.superuser_login_data, True)
+        self.switch_user(self.superuser_registration_data, True)

@@ -192,5 +192,3 @@ class TestTool(BaseTestObject):
             # ensure update was not executed on database
             get_response = self.get_tool(url, data['biotoolsID'])
             self.assertEqual(get_response.json()['name'], name)
-
-    # todo single attributes
