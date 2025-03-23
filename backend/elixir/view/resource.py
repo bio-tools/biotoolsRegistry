@@ -214,7 +214,7 @@ class ProcessResourceRequest(APIView):
 		try:
 			resourceRequest = ResourceRequest.objects.get(requestId=request.data['requestId'])
 		except:
-   			return Response({"detail": "No active requests with a specified 'requestId' could be found."}, status=status.HTTP_404_NOT_FOUND)
+			return Response({"detail": "No active requests with a specified 'requestId' could be found."}, status=status.HTTP_404_NOT_FOUND)
 		self.check_object_permissions(self.request, resourceRequest)
 		if resourceRequest.completed == True: 
 			return Response({"detail": "Request has already been concluded."}, status=status.HTTP_400_BAD_REQUEST)

@@ -22,12 +22,10 @@ class GithubToolHandler:
     ROOT_GITHUB_FOLDER = ecosystem_settings.ECO_ROOT_GITHUB_FOLDER
     BIOTOOLS_EXTENSION = ecosystem_settings.ECO_BIOTOOLS_EXTENSION
     DELETED_BRANCH_SUFFIX = ecosystem_settings.ECO_DELETED_BRANCH_SUFFIX
-    
 
     CREATE = 'CREATE'
     UPDATE = 'UPDATE'
     DELETE = 'DELETE'
-    
 
     # Soon this will need to change as the login will be done with a token
     # For now we use one main GitHub account, e.g. biotools-bot for working
@@ -38,9 +36,9 @@ class GithubToolHandler:
         """
         Creates a central handler object from which the main GitHub operations are called. 
         """
-
         try:
-            self.__g = Auth(ecosystem_settings.ECO_PERSONAL_TOKEN)
+            self.__auth = Auth.Token(ecosystem_settings.ECO_PERSONAL_TOKEN)
+            self.__g = Github(auth = self.__auth)
             self.__username = self.__g.get_user().login
             self.__logged_in = True
             self.__repo_name = ecosystem_settings.ECO_GITHUB_REPO_NAME
@@ -74,6 +72,7 @@ class GithubToolHandler:
             t = tool_id,
             d = self.DELETED_BRANCH_SUFFIX if delete else ''
         )
+    
     def __branch_exists(self, branch_name):
         return branch_name in [b.name for b in self.__repo.get_branches()]
 
@@ -88,7 +87,7 @@ class GithubToolHandler:
     
     # Maybe in commit message at a timestamp from the tool
     def __create_commit_message(self, method, username, tool_id):
-        return '{m} tool with id: {id} by user: {u} at: {at}'.format(
+        return '{m} tool with id: {id} by bio.tools user: {u} at {at}'.format(
             m = method, 
             id = tool_id, 
             u = username,
@@ -150,9 +149,7 @@ class GithubToolHandler:
         Raises ToolCreationException if file cannot be created
         """
         
-
         # Create file on that branch
-
         # allow for custom messages for the special case of the flagged delete file
         if custom_message:
             commit_message = custom_message
@@ -166,7 +163,6 @@ class GithubToolHandler:
         # This operation may also raise GithubException
         # We deal with it outside by catching GithubException
         #   or we deal with it here and raise generic EcosystemException
-
         try:
             c = self.__repo.create_file(
                 path = new_file_path,
@@ -253,11 +249,11 @@ class GithubToolHandler:
         Raises one of: 
         ToolCreationException, ToolUpdateException, ToolDeleteException, EcosystemException on fail
         """
-        pr_title = '{type} tool with id: {id}'.format(type=pr_type, id=tool_id)
+        pr_title = 'bio.tools update for tool with id: {id}'.format(id=tool_id)
         pr_body = """
         {type} tool with id: {id}
-        by user: {user}
-        at: {at}
+        by bio.tools user: {user}
+        at {at}
         """.format(
             type=pr_type, 
             id=tool_id, 
@@ -484,6 +480,13 @@ class GithubToolHandler:
             pr_list = self.__get_pull(update_branch_name)
             if len(pr_list) > 0:
                 pr = pr_list[0]
+                # Add a comment to the PR that a new commit has been added
+                # v.1.59.0 doesn't have create_comment method for prs so we need to use the issue object
+                last_commit = pr.get_commits()[pr.commits - 1]
+                comment_body = f"New commit added:\n\n```\n{last_commit.commit.message}\n```"
+                issue = pr.as_issue()
+                issue.create_comment(comment_body)
+
         
         return (u, pr)    
 
@@ -647,8 +650,9 @@ class GithubToolHandler:
         self.__repo.create_issue(
             title = 'Error in ecosystem from bio.tools; tool id: {}'.format(biotools_data.tool_id),
             body = '''
-Error in ecosystem from bio.tools:
-{}
-{}
-'''.format(error_message, biotools_data.tool_json)
+                Error in ecosystem from bio.tools:
+                {}
+                {}
+            '''.format(error_message, biotools_data.tool_json)
         )
+
