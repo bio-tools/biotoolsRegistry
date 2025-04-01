@@ -45,7 +45,7 @@ angular.module('elixir_front.controllers', [])
 		}
 	};
 	$scope.tableHeight = function() {
-		return {"height": ((Math.min($scope.ToolList.count, 10) * $scope.gridOptions.rowHeight) + 33) + "px"};
+		return {"height": ((Math.min($scope.ToolList.count, 4) * $scope.gridOptions.rowHeight) + 33) + "px"};
 	}
 }])
 .controller('ToolGridCellController', ['$scope', function ($scope) {

@@ -150,7 +150,7 @@ angular.module('elixir_front.services', [])
 		var widthCharMultiplier = 12;
 		var columnDescription = {};
 		if (key == 'Name') {
-			columnDescription = {field: 'name', displayName: 'Name', cellTemplate: '/partials/grid_cells/nameCell.html', width: '150', resizable: true};
+			columnDescription = {field: 'name', pinnedLeft: true, displayName: 'Name', cellTemplate: '/partials/grid_cells/nameCell.html', width: '150', resizable: true};
 		}
 		else if (key == 'Operating System') {
 			columnDescription = {field: 'operatingSystem', displayName: 'Operating system', cellTemplate: '/partials/grid_cells/platformCell.html', width: '100', resizable: true};
