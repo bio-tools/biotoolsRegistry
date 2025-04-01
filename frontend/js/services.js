@@ -209,6 +209,12 @@ angular.module('elixir_front.services', [])
 		else if (key == 'Version') {
 			columnDescription = {field: key.toLowerCase(), displayName: key, width: '90', resizable: true, cellTemplate: '/partials/grid_cells/listCell.html'};
 		}
+		else if (key == 'Added') {
+			columnDescription = {field: 'additionDate', displayName: key, width: '100', resizable: true, cellTemplate: '/partials/grid_cells/dateCell.html'};
+		}
+		else if (key == 'Updated') {
+			columnDescription = {field: 'lastUpdate', displayName: key, width: '100', resizable: true, cellTemplate: '/partials/grid_cells/dateCell.html'};
+		}
 		else {
 			columnDescription = {field: key.toLowerCase(), displayName: key, width: key.length * widthCharMultiplier, resizable: true, cellTemplate: '/partials/grid_cells/defaultCell.html'};
 		}
@@ -242,7 +248,9 @@ angular.module('elixir_front.services', [])
 			columnDescriptionForKey('Download', visibleColumns.indexOf('Download') != -1),
 			columnDescriptionForKey('Collection', visibleColumns.indexOf('Collection') != -1),
 			columnDescriptionForKey('Cost', visibleColumns.indexOf('Cost') != -1),
-			columnDescriptionForKey('Maturity', visibleColumns.indexOf('Maturity') != -1)
+			columnDescriptionForKey('Maturity', visibleColumns.indexOf('Maturity') != -1),
+			columnDescriptionForKey('Added', visibleColumns.indexOf('Added') != -1),
+			columnDescriptionForKey('Updated', visibleColumns.indexOf('Updated') != -1)
 			];
 		}
 	}
