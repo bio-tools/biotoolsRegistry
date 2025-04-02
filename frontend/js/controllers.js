@@ -568,6 +568,15 @@ angular.module('elixir_front.controllers', [])
 		}
 	};	
 
+	$scope.movePublication = function(index, direction) {
+		var newIndex = index + direction;
+		if (newIndex < 0 || newIndex >= $scope.software.publication.length) return;
+		// Swap the elements
+		var temp = $scope.software.publication[newIndex];
+		$scope.software.publication[newIndex] = $scope.software.publication[index];
+		$scope.software.publication[index] = temp;
+	  };	  
+
 	// create connections between entries
 	$scope.errorConnections = {
 		"name" : ["id"]
