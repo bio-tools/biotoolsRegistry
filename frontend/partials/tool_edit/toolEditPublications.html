@@ -13,8 +13,8 @@
 			<div class="panel panel-default" ng-repeat="publication in software.publication track by $index" ng-class="{'no-margin-bottom': $last};">
 				<div class="panel-heading" style="position: relative;">
 						<div style="display: inline-flex; align-items: center; position: absolute; right: 10px; gap: 8px;">
-							<i class="fa fa-arrow-up pointer" ng-click="movePublication($index, -1)" ng-show="$index > 0"></i>
-							<i class="fa fa-arrow-down pointer" ng-click="movePublication($index, 1)" ng-show="$index < software.publication.length - 1"></i>
+							<i class="fa fa-arrow-up pointer" ng-click="moveItem('publication', $index, -1)" ng-show="$index > 0"></i>
+							<i class="fa fa-arrow-down pointer" ng-click="moveItem('publication', $index, 1)" ng-show="$index < software.publication.length - 1"></i>
 							<i class="fa fa-times highlight-icon" ng-click="removeButtonClick('publication', software, $index)"></i>
 						</div>
 						<label class="control-label">Details for a single publication</label>
