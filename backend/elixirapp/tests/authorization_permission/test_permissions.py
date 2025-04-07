@@ -1,8 +1,7 @@
 from rest_framework import status
 from elixir.serializers import *
 from backend.elixirapp.tests.test_baseobject import BaseTestObject
-from elixir.test_datastructure_json import inputTool, inputToolInvalid
-import unittest
+from elixir.tool_helper import ToolHelper as TH
 
 
 class TestPermissions(BaseTestObject):
@@ -43,7 +42,7 @@ class TestPermissions(BaseTestObject):
             - Update executed as normal user (creator)
         Expected: Successful update (200 OK)
         """
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_private)
 
         # update tool
@@ -64,7 +63,7 @@ class TestPermissions(BaseTestObject):
             - Update executed as normal user (not the creator)
         Expected: No update (403 Forbidden)
         """
-        data = inputTool()
+        data = TH.get_input_tool()
         self.switch_user(self.superuser_registration_data, True)
         self.post_tool_with_permissions(data, self.editingRights_private)
 
@@ -87,7 +86,7 @@ class TestPermissions(BaseTestObject):
             - Update executed as superuser (not the creator)
         Expected: Successful update (200 OK)
         """
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_private)
 
         # try to update tool as superuser
@@ -110,7 +109,7 @@ class TestPermissions(BaseTestObject):
             - Deletion executed as normal user (creator)
         Expected: Successful deletion (200 OK)
         """
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_private)
 
         # delete tool
@@ -130,7 +129,7 @@ class TestPermissions(BaseTestObject):
         Expected: No deletion (403 Forbidden)
         """
 
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_private)
 
         # try to delete tool as other user
@@ -151,7 +150,7 @@ class TestPermissions(BaseTestObject):
         Expected: Successful deletion (200 OK)
         """
 
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_private)
 
         # delete tool as superuser
@@ -175,7 +174,7 @@ class TestPermissions(BaseTestObject):
             - Update executed as normal user (creator)
         Expected: Successful update (200 OK)
         """
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_public)
 
         # update tool
@@ -196,7 +195,7 @@ class TestPermissions(BaseTestObject):
             - Update executed as normal user (not the creator)
         Expected: Successful update (200 OK)
         """
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_public)
 
         # try to update tool as other user
@@ -218,7 +217,7 @@ class TestPermissions(BaseTestObject):
             - Update executed as superuser (not the creator)
         Expected: Successful update (200 OK)
         """
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_public)
 
         # try to update tool as superuser
@@ -242,7 +241,7 @@ class TestPermissions(BaseTestObject):
             - Deletion executed as normal user (creator)
         Expected: Successful deletion (200 OK)
         """
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_public)
 
         # delete tool
@@ -261,7 +260,7 @@ class TestPermissions(BaseTestObject):
             - Deletion executed as normal user (not the creator)
         Expected: No deletion (403 Forbidden)
         """
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_public)
 
         # try to delete tool as other user
@@ -282,7 +281,7 @@ class TestPermissions(BaseTestObject):
         Expected: Successful deletion (200 OK)
         """
 
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_public)
 
         # delete tool as superuser
@@ -308,7 +307,7 @@ class TestPermissions(BaseTestObject):
         """
         self.switch_user(self.other_valid_user_1_registration_data, False)
         self.switch_user(self.valid_user_registration_data, False)
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_group)
 
         # update tool
@@ -329,7 +328,7 @@ class TestPermissions(BaseTestObject):
             - Update executed as normal user (not the creator)
         Expected: Successful update (200 OK)
         """
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_public)
 
         # try to update tool as a user of the specified group
@@ -353,7 +352,7 @@ class TestPermissions(BaseTestObject):
         """
         self.switch_user(self.other_valid_user_1_registration_data, False)
         self.switch_user(self.valid_user_registration_data, False)
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_group)
 
         # try to update tool as a user that is not in the specified group
@@ -377,7 +376,7 @@ class TestPermissions(BaseTestObject):
         """
         self.switch_user(self.other_valid_user_1_registration_data, False)
         self.switch_user(self.valid_user_registration_data, False)
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_group)
 
         # try to update tool as a superuser
@@ -403,7 +402,7 @@ class TestPermissions(BaseTestObject):
         """
         self.switch_user(self.other_valid_user_1_registration_data, False)
         self.switch_user(self.valid_user_registration_data, False)
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_group)
 
         # update tool
@@ -424,7 +423,7 @@ class TestPermissions(BaseTestObject):
         """
         self.switch_user(self.other_valid_user_1_registration_data, False)
         self.switch_user(self.valid_user_registration_data, False)
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_public)
 
         # try to update tool as a user of the specified group
@@ -445,7 +444,7 @@ class TestPermissions(BaseTestObject):
         """
         self.switch_user(self.other_valid_user_1_registration_data, False)
         self.switch_user(self.valid_user_registration_data, False)
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_group)
 
         # try to delete tool as a user that is not in the specified group
@@ -467,7 +466,7 @@ class TestPermissions(BaseTestObject):
         """
         self.switch_user(self.other_valid_user_1_registration_data, False)
         self.switch_user(self.valid_user_registration_data, False)
-        data = inputTool()
+        data = TH.get_input_tool()
         self.post_tool_with_permissions(data, self.editingRights_group)
 
         # try to delete tool as a superuser

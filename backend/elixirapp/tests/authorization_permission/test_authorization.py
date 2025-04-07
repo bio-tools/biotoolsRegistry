@@ -1,7 +1,7 @@
 from rest_framework import status
 from elixir.serializers import *
 from backend.elixirapp.tests.test_baseobject import BaseTestObject
-from elixir.test_datastructure_json import inputTool, inputToolInvalid
+from elixir.tool_helper import ToolHelper as TH
 
 
 class TestAuthorization(BaseTestObject):
@@ -198,7 +198,7 @@ class TestAuthorization(BaseTestObject):
         Expected: Retrieved info aligns with current user state in terms of username, email and amount of resources (1).
         """
         token = self.checked_login(self.superuser_login_data).data['key']
-        self.post_tool_checked(inputTool())
+        self.post_tool_checked(TH.get_input_tool())
 
         user_info = self.get_user_info(token).json()  # post tool
 
@@ -230,7 +230,7 @@ class TestAuthorization(BaseTestObject):
         Expected: Retrieved info aligns with current user state in terms of username, email and amount of resources (1).
         """
         token_key = self.switch_user(self.valid_user_registration_data, False)
-        self.post_tool_checked(inputTool())  # post tool
+        self.post_tool_checked(TH.get_input_tool())  # post tool
 
         user_info = self.get_user_info(token_key).json()
 
