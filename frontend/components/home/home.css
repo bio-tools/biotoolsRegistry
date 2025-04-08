@@ -158,66 +158,6 @@ div.subtopic{
     padding-bottom: 99999px;
 }
 
-.about-summary-cell h4{
-	text-align: center;
-}
-
-.about-summary-cell p{
-	font-size: 14px;
-}
-
-.about-summary-cell{
-	padding: 10px;
-	background-color: #FFF;
-	border: 1px solid #5CACEE;
-	border-radius: 5px;
-	
-	margin: 0px;
-}
-
-@media (min-width: 992px) {
-    .about-summary-cell{
-			min-height: 200px !important;
-		}
-}
-
-@media (min-width: 1100px) {
-    .about-summary-cell{
-			min-height: 180px !important;
-		}
-}
-
-@media (min-width: 1200px) {
-    .about-summary-cell{
-			min-height: 180px !important;
-		}
-}
-
-@media (min-width: 1300px) {
-    .about-summary-cell{
-			min-height: 160px !important;
-		}
-}
-
-@media (min-width: 1700px) {
-    .about-summary-cell{
-			min-height: 140px !important;
-		}
-}
-
-
-.about-summary-container{
-	margin-top: 33px;
-	padding: 5px;
-	background-color: #D3EEFF;
-	border-radius: 5px;
-}
-
-.outer-summary-cell{
-	padding: 10px;
-}
-
-
 
 /* New design on topic browser */
 
@@ -337,6 +277,9 @@ div.subtopics-list > span > span:hover {
 @media only screen and (max-width : 755px) {
 	.new-logo-item{
 		width: 49% !important;
+	}
+	.jumbotron{
+		padding:30px;
 	}
 }
 

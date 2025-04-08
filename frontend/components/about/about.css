@@ -111,3 +111,61 @@ div .about-container{
   	text-align: center !important; 
   	font-weight: bolder;
 }
+
+
+.about-summary-cell h4{
+	text-align: center;
+}
+
+.about-summary-cell p{
+	font-size: 14px;
+}
+
+.about-summary-cell{
+	background-color: #FFF;
+	border: 1px solid #5CACEE;
+	border-radius: 5px;
+	margin: 0 0 10px 0;
+}
+
+@media (min-width: 992px) {
+    .about-summary-cell{
+		min-height: 200px !important;
+	}
+}
+
+@media (min-width: 1100px) {
+    .about-summary-cell{
+			min-height: 180px !important;
+		}
+}
+
+@media (min-width: 1200px) {
+    .about-summary-cell{
+			min-height: 180px !important;
+		}
+}
+
+@media (min-width: 1300px) {
+    .about-summary-cell{
+			min-height: 160px !important;
+		}
+}
+
+@media (min-width: 1700px) {
+    .about-summary-cell{
+			min-height: 140px !important;
+		}
+}
+
+.about-summary-container{
+	margin-top: 33px;
+	padding: 5px;
+	background-color: #D3EEFF;
+	border-radius: 5px;
+}
+
+.equal-height-row .outer-summary-cell .about-summary-cell{
+	flex:1;
+	padding:10px;
+}
