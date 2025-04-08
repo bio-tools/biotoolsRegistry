@@ -6,6 +6,7 @@ from django.test import TestCase
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as ESExceptions
 from django.conf import settings
+from elixir.tool_helper import ToolHelper as TH
 
 # TODO find out why the database doesn't clean up after itself
 
@@ -132,13 +133,16 @@ class BaseTestObject(TestCase):
 
     def get_all_tools(self, url, filter_kvp_dict=None):
         response_format = 'json'  # json is default
+
         if filter_kvp_dict:
             query_params = "&".join(f"{k}={v}" for k, v in filter_kvp_dict.items())
             url += f"?{query_params}"
             if 'format' in filter_kvp_dict and filter_kvp_dict['format'].strip():
                 response_format = filter_kvp_dict['format']
-
-        return self.client.get(self.base_url, HTTP_ACCEPT=f"application/{response_format}")
+        try:
+            return self.client.get(url, HTTP_ACCEPT=f"application/{response_format}")
+        except ESExceptions.NotFoundError as e:
+            raise e
 
     def put_tool(self, url, updated_data):
         return self.client.put(f"{url}{updated_data['biotoolsID']}", updated_data,
@@ -158,6 +162,23 @@ class BaseTestObject(TestCase):
     def validate_tool_put(self, id, data):
         return self.client.put(f"/{id}/{self.validation_url_extension}", data,
                                format='json', HTTP_ACCEPT='application/json')
+
+    def ensure_tools(self, url):
+        """
+        Description: Post tool to ensure there is at least one tool on the server.
+        Throws: RuntimeError if there are no tools on the server.
+        """
+        number_tools = self.get_all_tools(url).json()['count']
+        if number_tools > 0:
+            return
+
+        # create tool
+        data = TH.get_input_tool()
+        self.post_tool_checked(data)
+        number_tools = self.get_all_tools(url).json()['count']
+
+        if number_tools < 1:
+            raise RuntimeError("No tools on the test server.")
 
     # USER MANAGEMENT --------------------------------------------------------------------------------------------------
 
@@ -204,17 +225,39 @@ class BaseTestObject(TestCase):
         self.tokens = {}
         self.client = APIClient()
         self.switch_user(self.superuser_registration_data, True)
-        BaseTestObject._clean_up_ES()
-
-    def tearDown(self):
-        BaseTestObject._clean_up_ES()
+        es = BaseTestObject._initialize_ES()
+        es.indices.create(settings.ELASTIC_SEARCH_INDEX)
+        mapping = BaseTestObject.read_schema()
+        es.indices.put_mapping(index=settings.ELASTIC_SEARCH_INDEX, body=mapping)
 
     @staticmethod
-    def _clean_up_ES(self):
+    def read_schema():
+        import json
+        with open("elixirapp/tests/Mapping.json", 'r') as schema_file:
+            return json.load(schema_file)
+
+    def tearDown(self):
+        BaseTestObject._reset_ES()
+
+    @staticmethod
+    def _initialize_ES():
+        settings.ELASTIC_SEARCH_INDEX = 'test'
         es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
         try:
             es.indices.delete(index=settings.ELASTIC_SEARCH_INDEX)
         except ESExceptions.TransportError as TE:
             if not TE.status_code == 404:
                 raise TE
+        return es
+
+    @staticmethod
+    def _reset_ES():
+        es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
+        try:
+            es.indices.delete(index='test')
+        except ESExceptions.TransportError as TE:
+            if not TE.status_code == 404:
+                raise TE
+        settings.ELASTIC_SEARCH_INDEX = 'elixir'
+        return es
 
