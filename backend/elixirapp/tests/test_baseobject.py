@@ -3,6 +3,9 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from elixir.views import Ontology, User
 from django.test import TestCase
+from elasticsearch import Elasticsearch
+from elasticsearch import exceptions as ESExceptions
+from django.conf import settings
 
 # TODO find out why the database doesn't clean up after itself
 
@@ -201,8 +204,17 @@ class BaseTestObject(TestCase):
         self.tokens = {}
         self.client = APIClient()
         self.switch_user(self.superuser_registration_data, True)
+        BaseTestObject._clean_up_ES()
 
     def tearDown(self):
-        from elixir.model.resource_model.resource import Resource
-        Resource.objects.all().delete()
-        User.objects.all().delete()
+        BaseTestObject._clean_up_ES()
+
+    @staticmethod
+    def _clean_up_ES(self):
+        es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
+        try:
+            es.indices.delete(index=settings.ELASTIC_SEARCH_INDEX)
+        except ESExceptions.TransportError as TE:
+            if not TE.status_code == 404:
+                raise TE
+
