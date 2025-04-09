@@ -44,6 +44,7 @@ input
 	text-shadow: 0px 2px 5px rgba(150, 150, 150, 0.12);
 	padding-top: 4px !important;
 	padding-left: 4px !important;
+	width: 160px;
 }
 
 .tag-item
@@ -62,7 +63,7 @@ input
 }
 
 .home-search-bar input {
-	background: transparent;
+	background: transparent;	
 }
 
 tags-input .tags .tag-item 
@@ -77,7 +78,7 @@ tags-input .tags .tag-item
 	padding-top: 4px;
 }
 
-tags-input .tags.focused
-{
-	/*box-shadow: none;*/
+tags-input .tags .input {
+	width: 160px !important;
 }
+  

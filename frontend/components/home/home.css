@@ -252,7 +252,7 @@ div.subtopics-list > span > span:hover {
 
 /* New design on institution logos */
 .inner-logo-container{
-		width: 100%;
+		max-width: 1300px;
 		padding-left: 1%;
 		padding-right: 1%;
 		padding-bottom: 1%;
@@ -278,6 +278,9 @@ div.subtopics-list > span > span:hover {
 	.new-logo-item{
 		width: 49% !important;
 	}
+	.new-logo-item > a > img{
+		max-height: 40px !important;
+	}
 	.jumbotron{
 		padding:30px;
 	}
@@ -292,7 +295,6 @@ div.subtopics-list > span > span:hover {
 	.new-logo-item{
 		width: 12% !important; /* 0.5 margin each */
 	}
-
 }
 
 
@@ -329,4 +331,14 @@ div.fund-text > span > a{
 }
 .equal-height-row .jumbotron {
     flex: 1; /* Force each jumbotron to fill the available height */
+}
+
+.supported-by {
+	margin: 20px 0 -20px 10px;
+}
+
+.supported-by > p {
+	font-size: 14px;
+	bottom: 0;
+	margin: 0;
 }
