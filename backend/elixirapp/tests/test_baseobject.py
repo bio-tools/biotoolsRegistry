@@ -8,8 +8,6 @@ from elasticsearch import exceptions as ESExceptions
 from django.conf import settings
 from elixir.tool_helper import ToolHelper as TH
 
-# TODO find out why the database doesn't clean up after itself
-
 
 class BaseTestObject(TestCase):
 
@@ -27,6 +25,18 @@ class BaseTestObject(TestCase):
         "username": superuser_registration_data['username'],
         "password": superuser_registration_data['password1']
     }
+
+    # URLS -------------------------------------------------------------------------------------------------------------
+    base_url = '/tool/'
+    put_post_urls = ['/tool/']
+    base_urls = ['/tool/']  # TODO should also work with '/t/' and ''
+    validation_url_extension = 'validate/'
+    user_list_url = '/user-list/'
+    auth_url = '/rest-auth/'
+    registration_url = f"{auth_url}registration/"
+    login_url = f"{auth_url}login/"
+    logout_url = f"{auth_url}logout/"
+    user_info_url = f"{auth_url}user/"
 
     # DATA -------------------------------------------------------------------------------------------------------------
     valid_user_registration_data = {
@@ -89,18 +99,6 @@ class BaseTestObject(TestCase):
         "username": other_valid_user_2_registration_data['username'],
         "password": other_valid_user_2_registration_data['password1']
     }
-
-    # URLS -------------------------------------------------------------------------------------------------------------
-    base_url = '/tool/'
-    put_post_urls = ['/tool/']
-    base_urls = ['/tool/']  # TODO should also work with '/t/' and ''
-    validation_url_extension = 'validate/'
-    user_list_url = '/user-list/'
-    auth_url = '/rest-auth/'
-    registration_url = f"{auth_url}registration/"
-    login_url = f"{auth_url}login/"
-    logout_url = f"{auth_url}logout/"
-    user_info_url = f"{auth_url}user/"
 
     # BASE METHODS -----------------------------------------------------------------------------------------------------
 
@@ -166,19 +164,19 @@ class BaseTestObject(TestCase):
     def ensure_tools(self, url):
         """
         Description: Post tool to ensure there is at least one tool on the server.
-        Throws: RuntimeError if there are no tools on the server.
+        Info: Post is executed in a loop including a 1ms sleep before querying due to race condition issues.
         """
+        import time
         number_tools = self.get_all_tools(url).json()['count']
-        if number_tools > 0:
-            return
 
-        # create tool
+        while number_tools == 0:
+            self._try_post(url)
+            time.sleep(1)
+            number_tools = self.get_all_tools(url).json()['count']
+
+    def _try_post(self, url):
         data = TH.get_input_tool()
         self.post_tool_checked(data)
-        number_tools = self.get_all_tools(url).json()['count']
-
-        if number_tools < 1:
-            raise RuntimeError("No tools on the test server.")
 
     # USER MANAGEMENT --------------------------------------------------------------------------------------------------
 

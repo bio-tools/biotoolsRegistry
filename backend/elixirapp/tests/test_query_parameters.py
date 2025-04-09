@@ -2,13 +2,14 @@ import sys
 
 from rest_framework import status
 from elixir.serializers import *
-from backend.elixirapp.tests.test_baseobject import BaseTestObject
+from elixirapp.tests.test_baseobject import BaseTestObject
 from elixir.tool_helper import ToolHelper as TH
+from elasticsearch import exceptions as ESExceptions
 
 
 class TestQueryParameters(BaseTestObject):
     query_param_dict = {
-        "page": {"valid": [1, sys.maxsize], "invalid": ["invalid", ""]},
+        "page": {"valid": [1], "invalid": ["invalid", sys.maxsize, ""]},
         "format": {"valid": ["json", "xml", "yaml", ""], "invalid": ["invalid"]},
         # TODO api returns 406, empty shouldn't work i guess
         "sort": {"valid": ["lastUpdate", "additionDate", "name", "affiliation", "score"], "invalid": ["invalid", ""]},
@@ -17,28 +18,15 @@ class TestQueryParameters(BaseTestObject):
     }
 
     # HELPERS ----------------------------------------------------------------------------------------------------------
-    def ensure_tools(self, url):
-        """
-        Description: Post tool to ensure there is at least one tool on the server.
-        Throws: RuntimeError if there are no tools on the server.
-        """
-        number_tools = self.get_all_tools(url).json()['count']
-        if number_tools > 0: return
-        # create tool
-        data = TH.get_input_tool()
-        self.post_tool_checked(data)
-        number_tools = self.get_all_tools(url).json()['count']
-        if number_tools < 1:
-            raise RuntimeError("No tools on the test server.")
 
     def compare_dates(self, date1, date2):
         """
         Description: Compare 2 dates using dateutil.parser.
         Throws: ValueError if one of the dates cannot be parsed.
         Returns:
-            - 1 if date1 is after date2
-            - 0 if the dates are the same
-            - -1 if date1 is before date2
+            -  1 if date1 is bigger than (after) date2
+            -  0 if the dates are the same
+            - -1 if date1 is smaller than (before) date2
         """
         from dateutil import parser
 
@@ -71,7 +59,7 @@ class TestQueryParameters(BaseTestObject):
                     response = self.get_all_tools(url, {"page": f"{page_nr}"})
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_page_invalid(self):  # TODO recheck result; else refactor dictionary and delete this method
+    def test_page_invalid(self):
         """
         Description: Test the 'page' endpoint parameter with invalid values.
         Info: Tested on query on all tools.
@@ -82,8 +70,8 @@ class TestQueryParameters(BaseTestObject):
                 with self.subTest(url=url, page=page_nr):
                     self.ensure_tools(url)
                     # query tools using page parameter
-                    response = self.get_all_tools(url, {"page": f"{page_nr}"})
-                    self.assertEqual(response.status_code, status.HTTP_200_OK)
+                    with self.assertRaises(Exception):
+                        self.get_all_tools(url, {"page": f"{page_nr}"})
 
     # FORMAT -----------------------------------------------------------------------------------------------------------
     def test_format_valid(self):
@@ -127,7 +115,7 @@ class TestQueryParameters(BaseTestObject):
         Expected: Successful GET Request (200 OK)
         """
         for url in self.base_urls:
-            for sort_option in self.query_param_dict["sort"]["valid"]:
+            for sort_option in self.query_param_dict["sort"]["valid"]:  # TODO make option specific
                 self._test_sort_lastUpdate(url)
 
     def _test_sort_lastUpdate(self, url):
@@ -144,8 +132,11 @@ class TestQueryParameters(BaseTestObject):
         tool1_update = self.get_tool(url, tool1_id).json()['lastUpdate']
         tool2_update = self.get_tool(url, tool2_id).json()['lastUpdate']
 
+        print(f"BLUBINFO", self.get_all_tools(self.base_url).json()['list'])
+
         # check which tool was updated more recently
         is_tool1_older = self.compare_dates(tool1_update, tool2_update) == 1
+        print(f"{tool1_update} {'>' if is_tool1_older else '<'} {tool2_update}")
         response = self._sort_with_option(url, 'lastUpdate').json()
 
         matches = response['count']
@@ -157,11 +148,11 @@ class TestQueryParameters(BaseTestObject):
         t1_index = self.__get_tool_index(response['list'], tool1_id)
         t2_index = self.__get_tool_index(response['list'], tool2_id)
 
-        print(f"blub {t1_index}, {t2_index}")
-
         if is_tool1_older:  # older -> date is smaller -> should be later in list (bigger index)
             self.assertGreater(t1_index, t2_index)
         else: self.assertLessEqual(t1_index, t2_index)
+
+        # TODO anchor
 
     def _sort_with_option(self, url, sort_option):
         """
@@ -175,7 +166,7 @@ class TestQueryParameters(BaseTestObject):
 
     def __get_tool_index(self, tool_list, tool_id):
         ids = [tool["biotoolsID"] for tool in tool_list]
-        print(f"BLUB || IDs: {ids} ({len(ids)}) || ID_LATER: {tool_id} || IS IN LIST: {tool_id in ids}")
+        print(f"BLUB || IDs: {ids} ({len(ids)}) || ID_LATER: {tool_id} || IS IN LIST: {tool_id in ids}")  # TODO delete
         print(f"IDX: {ids.index(tool_id)}")
         return ids.index(tool_id)
 

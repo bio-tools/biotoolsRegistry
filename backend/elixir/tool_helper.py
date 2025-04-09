@@ -21,19 +21,16 @@ class ToolHelper:
 
     @staticmethod
     def get_input_tool_invalid():
-        tool = ToolHelper.get_tool_from_file("/EDAM_Data_invalid.json")
-        return deepcopy(tool)
+        return ToolHelper.get_tool_from_file("/EDAM_Data_invalid.json")
 
     @staticmethod
     def get_output_tool():
-        tool = ToolHelper.get_tool_from_file("/EDAM_Data_output.json")
-        return deepcopy(tool)
+        return ToolHelper.get_tool_from_file("/EDAM_Data_output.json")
 
     @staticmethod
     def get_tool_from_file(filename):
         with open(path_edam + filename, 'r') as example:
-            tool = json.load(example)
-        return deepcopy(tool)
+            return json.load(example)
 
     @staticmethod
     def tools_are_equal(lhs_tool, rhs_tool):

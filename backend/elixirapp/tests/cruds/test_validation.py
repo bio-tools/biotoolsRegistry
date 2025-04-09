@@ -1,7 +1,7 @@
 from rest_framework import status
 from elixir.tool_helper import ToolHelper as TH
 from elixir.serializers import *
-from backend.elixirapp.tests.test_baseobject import BaseTestObject
+from elixirapp.tests.test_baseobject import BaseTestObject
 
 
 class TestValidation(BaseTestObject):

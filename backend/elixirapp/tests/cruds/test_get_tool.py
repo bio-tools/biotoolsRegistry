@@ -1,13 +1,13 @@
 from rest_framework import status
 from elixir.tool_helper import ToolHelper as TH
 from elixir.serializers import *
-from backend.elixirapp.tests.test_baseobject import BaseTestObject
+from elixirapp.tests.test_baseobject import BaseTestObject
 
 
 class TestGetTool(BaseTestObject):
     def test_get_all_tools(self):
         for url in self.base_urls:
-            self.post_tool_checked(TH.get_input_tool())
+            self.ensure_tools(url)
             response = self.get_all_tools(url)
             self.assertGreaterEqual(response.json()['count'], 1)
 
