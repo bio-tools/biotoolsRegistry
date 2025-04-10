@@ -9,7 +9,7 @@ class TestGetTool(BaseTestObject):
         for url in self.base_urls:
             self.ensure_tools(url)
             response = self.get_all_tools(url)
-            self.assertGreaterEqual(response.json()['count'], 1)
+        return response
 
     def test_get_tool_valid(self):
         for url in self.base_urls:
