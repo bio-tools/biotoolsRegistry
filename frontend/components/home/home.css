@@ -11,6 +11,7 @@
 	padding-top: 7px !important;
 	padding-left: 8px !important;
 	border-radius: 25px !important;
+	box-shadow: 2px 2px 4px 2px rgba(74,74,74,0.12);
 }
 
 .home-search-bar input{
@@ -157,66 +158,6 @@ div.subtopic{
     padding-bottom: 99999px;
 }
 
-.about-summary-cell h4{
-	text-align: left;
-}
-
-.about-summary-cell p{
-	font-size: 14px;
-}
-
-.about-summary-cell{
-	padding: 10px;
-	background-color: #FFF;
-	border: 1px solid #5CACEE;
-	border-radius: 5px;
-	
-	margin: 0px;
-}
-
-@media (min-width: 992px) {
-    .about-summary-cell{
-			min-height: 200px !important;
-		}
-}
-
-@media (min-width: 1100px) {
-    .about-summary-cell{
-			min-height: 180px !important;
-		}
-}
-
-@media (min-width: 1200px) {
-    .about-summary-cell{
-			min-height: 180px !important;
-		}
-}
-
-@media (min-width: 1300px) {
-    .about-summary-cell{
-			min-height: 160px !important;
-		}
-}
-
-@media (min-width: 1700px) {
-    .about-summary-cell{
-			min-height: 140px !important;
-		}
-}
-
-
-.about-summary-container{
-	margin-top: 33px;
-	padding: 5px;
-	background-color: #D3EEFF;
-	border-radius: 5px;
-}
-
-.outer-summary-cell{
-	padding: 10px;
-}
-
-
 
 /* New design on topic browser */
 
@@ -311,7 +252,7 @@ div.subtopics-list > span > span:hover {
 
 /* New design on institution logos */
 .inner-logo-container{
-		width: 100%;
+		max-width: 1300px;
 		padding-left: 1%;
 		padding-right: 1%;
 		padding-bottom: 1%;
@@ -337,6 +278,12 @@ div.subtopics-list > span > span:hover {
 	.new-logo-item{
 		width: 49% !important;
 	}
+	.new-logo-item > a > img{
+		max-height: 40px !important;
+	}
+	.jumbotron{
+		padding:30px;
+	}
 }
 
 @media only screen and (min-width : 756px) and (max-width : 991px) {
@@ -348,7 +295,6 @@ div.subtopics-list > span > span:hover {
 	.new-logo-item{
 		width: 12% !important; /* 0.5 margin each */
 	}
-
 }
 
 
@@ -385,4 +331,14 @@ div.fund-text > span > a{
 }
 .equal-height-row .jumbotron {
     flex: 1; /* Force each jumbotron to fill the available height */
+}
+
+.supported-by {
+	margin: 20px 0 -20px 10px;
+}
+
+.supported-by > p {
+	font-size: 14px;
+	bottom: 0;
+	margin: 0;
 }

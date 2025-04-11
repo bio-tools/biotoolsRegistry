@@ -45,7 +45,7 @@ angular.module('elixir_front.controllers', [])
 		}
 	};
 	$scope.tableHeight = function() {
-		return {"height": ((Math.min($scope.ToolList.count, 10) * $scope.gridOptions.rowHeight) + 33) + "px"};
+		return {"height": ((Math.min($scope.ToolList.count, 4) * $scope.gridOptions.rowHeight) + 33) + "px"};
 	}
 }])
 .controller('ToolGridCellController', ['$scope', function ($scope) {
@@ -567,6 +567,16 @@ angular.module('elixir_front.controllers', [])
 			}
 		}
 	};	
+
+	$scope.moveItem = function(key, index, direction) {
+		var array = $scope.software[key];
+  		var newIndex = index + direction;
+  		if (newIndex < 0 || newIndex >= array.length) return;
+		// Swap the elements
+  		var temp = array[newIndex];
+		array[newIndex] = array[index];
+		array[index] = temp;
+	};	  
 
 	// create connections between entries
 	$scope.errorConnections = {

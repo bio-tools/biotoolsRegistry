@@ -1,0 +1,10 @@
+<div class="ui-grid-cell-contents" ng-controller="ToolGridCellController" ng-init="init(col.colDef.name, grid.renderContainers.body.visibleRowCache.indexOf(row))">
+
+    <div ng-if="COL_FIELD === null">-</div>
+    <div ng-if="COL_FIELD !== null" id="{{::RowIdentifier()}}">
+        <span bindonce>
+            {{ COL_FIELD | date:'dd-MM-yyyy' }}
+        </span>
+    </div>
+
+</div>
