@@ -15,42 +15,44 @@ class TestSort(TestQueryParameters):
 
     def test_sort_valid(self):
         """
-        Description: Test the 'sort' endpoint parameter with valid values.
+        Description: Test the 'sort' endpoint parameter.
         Info: Tested on query on all tools.
         Expected: Successful GET Request (200 OK)
         """
+        tool_pushed_back = TH.get_input_tool()
+        tool_pushed_front = TH.get_input_tool()
+
+        tool_pushed_back["name"] = f'Alphabetically later {tool_pushed_back["name"]}'
+        tool_pushed_front["name"] = f'Alphabetically before {tool_pushed_front["name"]}'
+
+        tool_pushed_back_id = self.post_tool_checked(tool_pushed_back).json()['biotoolsID']
+        tool_pushed_front_id = self.post_tool_checked(tool_pushed_front).json()['biotoolsID']
+
+        # TODO ensure correct order concerning every attribute
+
+        time.sleep(1)
+
         for url in self.base_urls:
-            for sort_option in qpd["sort"]["valid"]:  # TODO make option specific
-                tool_pushed_back = TH.get_input_tool()
-                tool_pushed_front = TH.get_input_tool()
-
-                tool_pushed_back["name"] = f'Alphabetically later {tool_pushed_back["name"]}'
-                tool_pushed_front["name"] = f'Alphabetically before {tool_pushed_front["name"]}'
-
-                tool_pushed_back_id = self.post_tool_checked(tool_pushed_back).json()['biotoolsID']
-                tool_pushed_front_id = self.post_tool_checked(tool_pushed_front).json()['biotoolsID']
-
-                # TODO ensure correct order concerning every attribute
-
-                time.sleep(1)
-
-                with self.subTest(sort_option=sort_option):
-                    print(f"running test for {sort_option}")
-                    if sort_option == "lastUpdate":
+            for valid_sort_option in qpd["sort"]["valid"]:  # TODO make option specific or remove for loop
+                with self.subTest(sort_option=valid_sort_option):
+                    if valid_sort_option == "lastUpdate":
                         self._test_sort_lastUpdate(url, tool_pushed_back_id, tool_pushed_front_id)
-                    elif sort_option == "name":
+                    elif valid_sort_option == "name":
                         self._test_sort_name(url, tool_pushed_back_id, tool_pushed_front_id)
-                    elif sort_option == "additionDate":
+                    elif valid_sort_option == "additionDate":
                         self._test_sort_additionDate(url, tool_pushed_back_id, tool_pushed_front_id)
+            for invalid_sort_option in qpd["sort"]["invalid"]:
+                with self.subTest(sort_option=invalid_sort_option):
+                    self._test_invalid_sort_option(url, invalid_sort_option)
 
     # HELPERS ----------------------------------------------------------------------------------------------------------
-    def __sort_with_option(self, url, sort_option):
+    def __sort_with_option(self, url, sort_option, expected_response_code=status.HTTP_200_OK):
         """
         Description: Helper method to test sorting.
         Returns: Sorted list of tools.
         """
         response = self.get_all_tools(url, {"sort": sort_option})
-        self.assertEqual(response.status_code, 200, f"Failed for sort={sort_option}")
+        self.assertEqual(response.status_code, expected_response_code)
         return response
 
     def __get_tool_index(self, tool_list, tool_id):
@@ -70,7 +72,6 @@ class TestSort(TestQueryParameters):
         response = self.get_all_tools(url).json()
         t1_index_before = self.__get_tool_index(response['list'], tool_pushed_back_id)
         t2_index_before = self.__get_tool_index(response['list'], tool_pushed_front_id)
-        print(f"t1bef: {t1_index_before} | t2bef: {t2_index_before}")
 
         # get lastUpdate values
         tool_pushed_back_update, tool_pushed_front_update = self.__get_tool_attributes(url, tool_pushed_back_id,
@@ -118,3 +119,13 @@ class TestSort(TestQueryParameters):
 
         # name of tool 1 is alphabetically smaller -> expected to have a smaller idx after sorting
         self.assertLess(t2_index, t1_index)
+
+    # TODO affiliation and score
+
+    # INVALID ----------------------------------------------------------------------------------------------------------
+    def _test_invalid_sort_option(self, sorting_option, url):
+        """
+        Description: Helper method to test sorting using invalid options.
+        """
+        response = self.__sort_with_option(url, sorting_option, status.HTTP_404_NOT_FOUND)
+        self.assertEquals(response.status_code, status.HTTP_404_NOT_FOUND)
