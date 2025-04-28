@@ -45,6 +45,5 @@ class ToolHelper:
         for key in lhs_tool.keys():
             if key in rhs_tool.keys():
                 if lhs_tool[key] != rhs_tool[key]:
-                    print(f"bluberror {lhs_tool[key]} != {rhs_tool[key]}")
                     return False
         return True

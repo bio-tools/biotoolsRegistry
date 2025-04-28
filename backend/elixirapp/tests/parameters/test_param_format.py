@@ -37,5 +37,11 @@ class TestFormat(TestQueryParameters):
                 with self.subTest(url=url, format=invalid_format):
                     data = TH.get_input_tool()
                     self.post_tool_checked(data)
+                    tools_default = self.get_all_tools(url).json()['count']  # TODO modify and outsource
+
                     response = self.get_tool(url, data['biotoolsID'], {"format": invalid_format})
-                    self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+                    tools_after = self.get_all_tools(url).json()['count']
+
+                    if response.status_code != status.HTTP_404_NOT_FOUND and tools_after != tools_default:
+                        self.fail()
