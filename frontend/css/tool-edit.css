@@ -1,5 +1,4 @@
 
-
 .reorder-icons {
     display: inline-flex;
     align-items: center;
@@ -10,3 +9,7 @@
     margin-bottom: 8px;
     font-size: 12px;
   }
+
+.radio input[type="radio"] {
+  width: auto !important;
+}
