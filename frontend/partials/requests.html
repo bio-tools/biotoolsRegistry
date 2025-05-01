@@ -30,6 +30,7 @@
 										<th>Resource</th>
 										<th>Request type</th>
 										<th>Requested by</th>
+										<th>Email</th>
 										<th style="width: 120px;">Action</th>
 									</tr>
 								</thead>
@@ -38,6 +39,7 @@
 										<td><a ui-sref="tool({id: entry.resourceId})">{{ entry.resourceId }}</a></td>
 										<td>{{ typeDescription(entry.type) }}</td>
 										<td>{{ entry.username }}</td>
+										<td>{{ entry.email }}</td>
 										<td>
 											<div ng-if="entry.processing"> 
 												<i class="fa fa-circle-o-notch fa-spin fa-1x fa-fw"></i> Processing...
