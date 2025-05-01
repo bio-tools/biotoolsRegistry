@@ -1,4 +1,4 @@
-angular.module('elixir_front')
+angular.module('elixir_front.directives', [])
 .directive('cookieBanner', function() {
   return {
     restrict: 'E',

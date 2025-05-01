@@ -108,8 +108,7 @@ var elixir_front = angular.module('elixir_front', [
 			},
 			roles: []
 		},
-		resolve: {},
-		controller: "CookiesController"
+		resolve: {}
 	})
 	.state('schema', {
 		url: "/schema",
