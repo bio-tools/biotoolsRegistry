@@ -4,20 +4,31 @@ import json
 schema_dir = os.path.dirname(os.path.abspath(__file__))
 schema_filename = "biotoolsj.json"
 
-# automatically created & filled: ("string": ["name": {"minLength": {"schemaValue": 1, "valid": [xy], "invalid": [yz]}])
-test_dict = {}
-type_dict = { # data types and constraints (e.g. "string": ["minLength", "pattern"]; prefilled
-    "string": ["minLength", "maxLength", "enum", "pattern", "anyOf"],
-    "array": ["items"],
-    "referenceType": []
+TYPE_STRING_STR = "string"
+TYPE_OBJECT_STR = "object"
+TYPE_ARRAY_STR = "array"
+TYPE_INTEGER_STR = "integer"
+
+# automatically created : ("string": ["name": {"minLength": 1, ..., "path": ["parent1", "parent2", ...]]}])
+test_dict = {
+    TYPE_STRING_STR: [],
+    TYPE_OBJECT_STR: [],
+    TYPE_ARRAY_STR: []
+}
+
+# specifies constraints for data types; can be extended (e.g. numbers)
+type_dict = {  # data types and constraints (e.g. "string": ["minLength", "pattern"]; TODO prefill
+    TYPE_STRING_STR: ["minLength", "maxLength", "enum", "pattern", "anyOf"]
 }
 
 
 class SchemaParser:
-    def __init__(self):
+    def create_test_dict(self):
         self.schema = self.read_schema()
         self.tool_properties = self.schema["definitions"]["tool"]["properties"]
         self.definitions = self.schema["definitions"]
+        self.build_dict()
+        return test_dict
 
     @staticmethod
     def read_schema():
@@ -29,79 +40,68 @@ class SchemaParser:
         for prop in level_one_properties:
             prop_def = self.tool_properties[prop]  # get property definition
 
-            if self.has_preknown_type(prop_def):
-                self.handle_property(prop_def, prop)  # parse the property
+            if self.has_type_attribute(prop_def):
+                self.handle_property(prop_def, prop,  [])  # parse the property
             else:
-                print("TODO handle special type")
+                # print("TODO handle special type")
                 # TODO handle special type
+                None    # TODO del
+    # TODO parse special types (e.g. urlftpType)
 
-    # TODO save special types ("$.definitions.{type}"; e.g. urlftpType) in dictionary
-
-    def has_preknown_type(self, property: object):
+    def has_type_attribute(self, property: object):
         return "type" in property
 
-    def handle_property(self, property: object, prop_name: str, depth=0):
+    def handle_property(self, property: object, prop_name: str, path_to_prop: list):
         prop_type = property["type"]
-        if prop_type == "string":
-            print(f"{'\t'*depth}{prop_name}: string")
-            self.parse_string(property, depth)
-        elif prop_type == "array":
-            print(f"{'\t'*depth}{prop_name}: array")
-            self.parse_array(property, 1)
-        elif prop_type == "object":
-            print(f"{'\t'*depth}{prop_name}: object")
-            self.parse_object(property)
-        else:
-            raise RuntimeError(f"[ERROR] Received invalid type {prop_type}")
+        path_to_prop.append(prop_name)
 
-    def parse_array(self, array_prop: object, depth):
-        if "type" in array_prop and array_prop["type"] == "string":
-            print(f"{'\t' * depth}\tstring")
+        if prop_type == TYPE_STRING_STR:
+            self.parse_string(property, path_to_prop)
+        elif prop_type == TYPE_ARRAY_STR:
+            self.parse_array(property, path_to_prop)  # TODO extend path
+        elif prop_type == TYPE_OBJECT_STR:
+            self.parse_object(property, path_to_prop)
+        elif prop_type == TYPE_INTEGER_STR:
+            raise RuntimeWarning(f"Type '{prop_type}' (property '{prop_name}') is not being handled.")
+        else:
+            raise RuntimeError(f"[ERROR] Received invalid type '{prop_type}' for property '{prop_name}'")
+
+    def parse_array(self, array_prop: object, path: list):
+        if "type" in array_prop and array_prop["type"] in [TYPE_STRING_STR]:
+            # fill dictionary
+            self.create_dict_entry(array_prop, path)
         elif "items" in array_prop:
             items = array_prop["items"]
             if "type" in items:
-                if items["type"] == "string":
-                    print(f"{'\t'*depth}\t[string]")
-                    self.handle_property(array_prop["items"], "*name*", depth+1)
-                elif items["type"] == "object":
-                    print(f"{'\t'*depth}[object]")
-                    # TODO this can still be an array (e.g. properties-function-items-type-properties-type
+                if items["type"] == TYPE_STRING_STR:
+                    self.handle_property(array_prop["items"], None, path)
+                elif items["type"] == TYPE_OBJECT_STR:
                     for prop in items["properties"]:
-                        self.parse_array(items["properties"][prop], depth + 1)
+                        path.append(prop)
+                        self.parse_array(items["properties"][prop], path)
+                        path.remove(prop)
             else:  # TODO throw error or handle ref
-                print(f"{'\t'*depth}[ref]")  #, array_prop["items"]["$ref"])
+                None
         else:      # TODO handle ref
-            print(f"{'\t'*depth}{array_prop["$ref"]}")
-            return
+            None
 
-    def parse_object(self, object_prop: object):
-        return None
+    def parse_object(self, object_prop, path):
+        for prop_key, prop_val in object_prop["properties"].items():
+            self.handle_property(prop_val, prop_key)
 
-    def parse_string(self, string_prop: str, depth=0):
-        for constraint in type_dict["string"]:
-            if constraint in string_prop:
-                print(f"\t{'\t'*depth}{constraint}: {string_prop[constraint]}")
+    def parse_string(self, string_prop, path):
+        self.create_dict_entry(string_prop, path)
 
-    def get_prop_from_path(self, path_to_prop: list):
-        depth = len(path_to_prop) - 1
-        if depth == 0: return
+    def create_dict_entry(self, prop, path):
+        restriction_dict = {}
+        prop_type = prop["type"]
 
-        print(f"depth: {depth}")
-        for idx in range(depth):
-            print(f"entering with {idx}")
-            current_element_name = path_to_prop[idx]
-            current_element = self.tool_properties[current_element_name]
-            print(f"{depth * '\t'}{current_element_name}")
+        for type_restriction in type_dict[prop_type]:
+            if type_restriction in prop:
+                restriction_dict[type_restriction] = prop[type_restriction]
+        restriction_dict["path"] = path
 
-            if idx < depth-1:
-                next_element = current_element[path_to_prop[idx + 1]]
-                print(next_element)
-            else:
-                break
-        print(f"{depth * '\t'}{current_element["type"]}")
+        test_dict[prop_type].append({f"{path[len(path) - 1]}": restriction_dict})
 
-
-    # TODO enums are seen as strings right now
 
 parser = SchemaParser()
-parser.build_dict()

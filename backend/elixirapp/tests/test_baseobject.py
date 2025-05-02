@@ -7,7 +7,7 @@ from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as ESExceptions
 from django.conf import settings
 from elixir.tool_helper import ToolHelper as TH
-from backend.elixirapp.tests.login_data import superuser_registration_data
+from elixirapp.tests.login_data import superuser_registration_data
 
 
 class BaseTestObject(TestCase):
