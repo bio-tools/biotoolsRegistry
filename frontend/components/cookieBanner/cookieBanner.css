@@ -32,13 +32,23 @@
   font-size: 14px;
   border-radius: 4px; /* Small rounded corners */
   position: relative;
+  width: 160px;
 }
 
 .cookie-banner button:hover {
   background-color: rgb(0, 35, 47);
 }
 
-@media (max-width: 768px) {
+.cookie-banner button.dismiss-button {
+  background-color: white;
+  color: black;
+}
+
+.cookie-banner button.dismiss-button:hover {
+  background-color: lightgrey;
+}
+
+@media (max-width: 900px) {
     .cookie-buttons {
       flex: 0 0 auto;
       margin-left: auto;
