@@ -20,6 +20,29 @@ class IsDomainOwnerOrReadOnly(permissions.BasePermission):
 		
 		# Write permissions are only allowed to the owner of the domain.
 		return obj.owner == request.user
+
+
+class IsDomainEditorOrReadOnly(permissions.BasePermission):
+	"""
+	Custom permission to only allow owners or people with edit permissions of a domain to edit it.
+	"""
+	def has_permission(self, request, view, obj=None):
+		# Write permissions are only allowed to the owner and editors of the domain
+		return obj is None or obj.from_user == request.user
+
+	def has_object_permission(self, request, view, obj):
+		# Read permissions are allowed to any requests,
+		# so we'll always allow GET, HEAD or OPTIONS requests.
+		if request.method in permissions.SAFE_METHODS:
+			return True
+
+		if request.user.is_superuser:
+			return True
+		
+		# Write permissions are only allowed to the owner of the domain.
+		return obj.owner == request.user or request.user in obj.editors.all()
+
+
 class IsOwnerOrReadOnly(permissions.BasePermission):
 	"""
 	Custom permission to only allow owners of an object to edit it.
