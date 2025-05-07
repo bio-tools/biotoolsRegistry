@@ -138,7 +138,7 @@ angular.module('elixir_front.controllers')
 
 
 }])
-.controller('SubdomainController', ['$scope', '$state',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', function($scope, $state, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms) {
+.controller('SubdomainController', ['$scope', '$state',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', 'UserSuggestionsProvider', function($scope, $state, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms, UserSuggestionsProvider) {
 	var vm = this;
 	$scope.ToolListOverviewConnection = ToolListOverviewConnection;
 	$scope.updating = false;
@@ -160,6 +160,7 @@ angular.module('elixir_front.controllers')
 	$scope.subdomain.title = '';
 	$scope.subdomain.subtitle = '';
 	$scope.subdomain.description = '';
+	$scope.subdomain.editors = [];
 	$scope.subdomain.toolList = [];
 	$scope.subdomain.resources = [];
 	$scope.subdomain.tag = [];
@@ -184,6 +185,37 @@ angular.module('elixir_front.controllers')
 			$state.go('subdomain', {domain: d});
 		}
 		
+	}
+
+	// Handle users search
+	$scope.userSuggestions = function(prefix) {
+		return UserSuggestionsProvider.getSuggestions(prefix).then(function(data) {
+			var suggestions = _.map(data, function(obj){
+				return obj.username;
+			});
+			return _.difference(suggestions, $scope.subdomain.editors);
+		});
+	};
+
+	$scope.userSelected = function($item, $model, $label) {
+		// Initialize authors if not present.
+		if ($scope.subdomain.editors == undefined) {
+			$scope.subdomain.editors = [];
+		}
+		// Clear the input field on selection.
+		$scope.userSuggestion = '';
+		$scope.subdomain.editors.push($model);
+	};
+
+	$scope.isDomainOwner = function() {
+		if ($scope.subdomain.owner == $scope.User.getUsername()) {
+			return true;
+		}
+		return false;
+	}
+
+	$scope.deleteUser = function(index) {
+		$scope.subdomain.editors.splice(index, 1);
 	}
 
 	// Handle tool search
@@ -395,7 +427,8 @@ angular.module('elixir_front.controllers')
 		'resources': $scope.subdomain.resources,
 		'tag': $scope.subdomain.tag,
 		'collection': $scope.subdomain.collection,
-		'is_private': $scope.subdomain.is_private
+		'is_private': $scope.subdomain.is_private,
+		'editors': $scope.subdomain.editors,
 	};
 }
 
@@ -405,3 +438,20 @@ angular.module('elixir_front.controllers')
 	}
 }]);
 
+
+// Services and Factories
+angular.module('elixir_front').factory('UserSuggestionsProvider', ['$http', function ($http) {
+	return {
+		getSuggestions: function(prefix) {
+			return $http({
+				method: 'GET',
+				url: '/api/user-list',
+				params: {term: prefix}
+			}).then(function successCallback(response) {
+				return response.data;
+			}, function errorCallback(response) {
+				return {};
+			})
+		}
+	};
+}]);
