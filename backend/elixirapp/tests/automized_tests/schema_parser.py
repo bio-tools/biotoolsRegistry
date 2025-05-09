@@ -17,20 +17,19 @@ test_dict = {
     TYPE_ARRAY_STR: []
 }
 
-# specifies constraints for data types; can be extended (e.g. numbers)
-type_dict = {  # data types and constraints (e.g. "string": ["minLength", "pattern"]; TODO finish prefilling
+# specifies constraints for data types; can/should be extended (e.g. numbers, different restrictions)
+type_dict = {  # data types and constraints (e.g. "string": ["minLength", "pattern"]
     TYPE_STRING_STR: ["minLength", "maxLength", "enum", "pattern", "anyOf"],
     TYPE_ARRAY_STR: ["minItems", "maxItems"]
 }
 
 
 class SchemaParser:
-    @staticmethod
-    def create_test_dict():
-        schema = SchemaParser.read_schema()
-        tool_properties = schema["definitions"]["tool"]["properties"]
-        definitions = schema["definitions"]  # TODO
-        SchemaParser.build_dict(tool_properties)
+    def create_test_dict(self):
+        self.schema = SchemaParser.read_schema()
+        self.type_definitions = self.schema["definitions"]
+        self.tool_properties = self.type_definitions.pop("tool")["properties"]  # extract tool type into own variable
+        self.build_dict()
         return test_dict
 
     @staticmethod
@@ -38,45 +37,52 @@ class SchemaParser:
         with open(f"{schema_dir}/{schema_filename}", 'r', encoding='utf-8') as schema_file:
             return json.load(schema_file)
 
-    @staticmethod
-    def build_dict(tool_properties):
+    def build_dict(self):
         """
         Description: Iterates first-level dictionary items to build type-based test dictionary.
         """
-        for prop in tool_properties.keys():
-            prop_def = tool_properties[prop]  # extract definition of current property
+        for prop in self.tool_properties.keys():
+            prop_def = self.tool_properties[prop]  # extract definition of current property
+            self.handle_prop(prop_def, [prop])  # parse the prop
 
-            if SchemaParser.has_type_attribute(prop_def):  # known type
-                SchemaParser.handle_prop(prop_def, [prop])  # parse the prop
-            else:  # schema-defined type
-                # TODO handle special type
-                None  # TODO del
 
     # TODO parse special type definitions and save type info (e.g. urlftpType)
 
     @staticmethod
-    def has_type_attribute(prop: object):
+    def is_predefined_type(prop: object):
         """
-        Description: Checks whether the current property is a known or schema-defined type.
+        Description: Checks whether the current property is a known type.
         """
         return "type" in prop
 
     @staticmethod
-    def handle_prop(prop: object, path_to_prop: list):
+    def is_ref_type(prop: object):
+        """
+        Description: Checks whether the current property is a schema-defined type.
+        """
+        return "$ref" in prop
+
+    def handle_ref_type(self, reference: str, path_to_prop: list):
+        reference_name = reference.split('/')[-1]
+        reference_definition = self.type_definitions[reference_name]
+        print(f"reference {path_to_prop} '{reference_name}': {reference_definition}")
+
+    def handle_prop(self, prop: object, path_to_prop: list):
         """
         Description: Parses the property based on its 'type' or '$ref' attribute and fills dictionary.
         """
-        type = prop["type"] if "type" in prop else prop["$ref"]
+        if SchemaParser.is_predefined_type(prop):  # known type
+            prop_type = prop["type"]
+            if prop_type == TYPE_STRING_STR:
+                SchemaParser.create_dict_entry(prop, path_to_prop)
+            elif prop_type == TYPE_ARRAY_STR:
+                self.parse_array(prop, path_to_prop)
+            else:
+                raise RuntimeWarning(f"[WARNING]: Type '{prop_type}' is currently not being handled.")
+        elif SchemaParser.is_ref_type(prop):  # schema-defined type
+            self.handle_ref_type(prop["$ref"], path_to_prop)
 
-        if type == TYPE_STRING_STR:
-            SchemaParser.create_dict_entry(prop, path_to_prop)
-        elif type == TYPE_ARRAY_STR:
-            SchemaParser.parse_array(prop, path_to_prop)
-        else:
-            print(path_to_prop, "unhandled")
-
-    @staticmethod
-    def parse_array(array_prop: object, path: list):
+    def parse_array(self, array_prop: object, path: list):
         """
         Description: Handles an array type, extracting its restrictions and initiating further parsing (if required).
         """
@@ -87,11 +93,11 @@ class SchemaParser:
 
             properties = array_items["properties"]
             for prop_name, prop_def in zip(properties.keys(), properties.values()):
-                SchemaParser.handle_prop(prop_def, path + [prop_name])
+                self.handle_prop(prop_def, path + [prop_name])
 
             path[:] = [p for p in path if p not in ARRAY_PATH_EXTENSION]  # reverse path extension
         else:
-            SchemaParser.handle_prop(array_items, path)
+            self.handle_prop(array_items, path)
 
         SchemaParser.create_dict_entry(array_prop, path)
 
@@ -107,7 +113,6 @@ class SchemaParser:
 
         for type_restriction in type_dict[prop_type]:
             if type_restriction in prop:
-                print(f"{type_restriction} fits with {prop_type}")
                 restriction_dict[type_restriction] = prop[type_restriction]
                 restriction_dict["path"] = path
 
