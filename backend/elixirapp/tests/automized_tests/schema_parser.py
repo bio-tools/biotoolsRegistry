@@ -24,9 +24,9 @@ class SchemaParser:
         self.type_definitions = self.schema["definitions"]
         self.tool_properties = self.type_definitions.pop("tool")["properties"]  # extract tool type into own variable
         self.test_dict = {
-            TYPE_STRING_STR: [],
-            TYPE_OBJECT_STR: [],
-            TYPE_ARRAY_STR: []
+            TYPE_STRING_STR: {},
+            TYPE_OBJECT_STR: {},
+            TYPE_ARRAY_STR: {}
         }
 
     def create_test_dict(self):
@@ -118,7 +118,7 @@ class SchemaParser:
                 restriction_dict["path"] = path
 
         if restriction_dict != {}:
-            self.test_dict[prop_type].append({f"{path[len(path) - 1]}": restriction_dict})
+            self.test_dict[prop_type][f"{path[len(path) - 1]}"] = restriction_dict
 
 
 parser = SchemaParser()
