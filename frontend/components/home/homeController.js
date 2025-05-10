@@ -98,7 +98,6 @@ angular.module('elixir_front')
 			// helper function for getting used terms
 			function getUsedTerms(term, params) {
 				var d = $q.defer();
-				var list = []
 				params["usedTermName"] = term;
 				UsedTerms.get(params, function(response) {
 					d.resolve(response.data);
@@ -109,37 +108,30 @@ angular.module('elixir_front')
 			// necessary for filtering suggestions for the autocomplete
 			scope.loadSuggestions = function(term, query) {
 				var deferred = $q.defer();
+				// fetch suggestions if not loaded
+				scope.getSuggestionsFor(term);
 				scope.usedTerms[term].then(function(list) {
-					deferred.resolve(filterFilter(list,query));
-				})
+					deferred.resolve(filterFilter(list, query));
+				});
 				return deferred.promise;
 			}
 
-			function getSuggestions() {
-				// get used terms for typeahead
-				scope.usedTerms = {};
-
-				// add query and filtering parameters to refine suggestions
-				var params = _.clone($stateParams);
-				params['page'] = null;
-				params['sort'] = null;
-				params['ord'] = null;
-
-				// create promises for all suggestions
-				scope.usedTerms['everything'] = getUsedTerms('all', params);
-				scope.usedTerms['topic'] = getUsedTerms('topic', params);
-				scope.usedTerms['operation'] = getUsedTerms('operation', params);
-				scope.usedTerms['input'] = getUsedTerms('input', params);
-				scope.usedTerms['output'] = getUsedTerms('output', params);
-				scope.usedTerms['toolType'] = getUsedTerms('toolType', params);
-				scope.usedTerms['language'] = getUsedTerms('language', params);
-				scope.usedTerms['accessibility'] = getUsedTerms('accessibility', params);
-				scope.usedTerms['cost'] = getUsedTerms('cost', params);
-				scope.usedTerms['license'] = getUsedTerms('license', params);
-				scope.usedTerms['credit'] = getUsedTerms('credit', params);
-				scope.usedTerms['collectionID'] = getUsedTerms('collectionID', params);
-				scope.usedTerms['name'] = getUsedTerms('name', params);  
-			}
+			// get used terms for typeahead
+			scope.usedTerms = {};
+			scope.usedTermsLoaded = {};
+		
+			scope.getSuggestionsFor = function(term) {
+				// only fetch if not already loaded
+				if (!scope.usedTermsLoaded[term]) {
+					var params = _.clone($stateParams);
+					params['page'] = null;
+					params['sort'] = null;
+					params['ord'] = null;
+			
+					scope.usedTerms[term] = getUsedTerms(term === 'everything' ? 'all' : term, params);
+					scope.usedTermsLoaded[term] = true;
+				}
+			};
 
 			// custom object necessary for ngTagsInput
 			scope.filter = {};
@@ -163,7 +155,7 @@ angular.module('elixir_front')
 			];
 
 			// get initial suggestions
-			getSuggestions();
+			// getSuggestions();
 
 			// when tag is added save the filter and reset it to 'everything'
 			scope.tagAdded = function(tag) {
