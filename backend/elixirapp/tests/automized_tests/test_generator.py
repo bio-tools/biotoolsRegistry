@@ -1,20 +1,17 @@
-import random
-
 from backend.elixir.tool_helper import ToolHelper
 from .schema_parser import SchemaParser
+
 import rstr
+import string
 import random
 import copy
-import string
 import re
 
-MIN_LENGTH = "minLength"    # done
-MAX_LENGTH = "maxLength"    # done
-ENUM = "enum"               # done
-PATTERN = "pattern"         # TODO
-ANY_OF = "anyOf"            # can use pattern implementation
-
-test_dict = {}
+MIN_LENGTH = "minLength"
+MAX_LENGTH = "maxLength"
+ENUM = "enum"
+PATTERN = "pattern"
+ANY_OF = "anyOf"
 
 INVALID = "invalid"
 VALID = "valid"
@@ -31,12 +28,12 @@ class TestGenerator:
 
     def test_all(self):
         self.test_string()
-        # TODO array
+        # TODO array & ev. object
 
     def test_string(self):
         string_test_dict = self.test_dict["string"]
 
-        input_tool = ToolHelper.get_input_tool()
+        input_tool = ToolHelper.get_input_tool()  # TODO insert into tool
 
         for attr_name, attr_constraints in zip(string_test_dict.keys(), string_test_dict.values()):
             print(attr_name)
@@ -49,7 +46,7 @@ class TestGenerator:
         if PATTERN in constraint_dict:
             pattern = constraint_dict[PATTERN]
             base_string = self.create_string_matching_pattern(pattern)
-            # self.create_pattern_test_values(pattern, value_dict)
+            self.create_pattern_test_values(pattern, value_dict)
 
         if MIN_LENGTH in constraint_dict:
             minLength_value = constraint_dict[MIN_LENGTH]
@@ -60,21 +57,21 @@ class TestGenerator:
             self.create_maxLength_test_values(maxLength_value, base_string, value_dict)
 
         if ENUM in constraint_dict:
-            self.create_enum_test_values(constraint_dict[ENUM], value_dict)
-            None
+            allowed_values = constraint_dict[ENUM]
+            self.create_enum_test_values(allowed_values, value_dict)
 
         if ANY_OF in constraint_dict:
-            None
+            patterns = constraint_dict[ANY_OF]
+            self.create_anyOf_test_values(patterns, value_dict)
 
         print(value_dict)
-
 
     # PATTERN ----------------------------------------------------------------------------------------------------------
     def create_string_matching_pattern(self, pattern: str):
         return rstr.xeger(pattern)
 
     def create_invalid_string_for_pattern(self, input_string: str, pattern: str):
-        if not pattern:  # TODO handle empty pattern
+        if not pattern:  # TODO maybe handle empty pattern
             return DEFAULT_BASE_STRING
 
         compiled_pattern = re.compile(pattern)
@@ -82,22 +79,24 @@ class TestGenerator:
         while True:
             index = random.randint(0, len(s) - 1)
             char_at_index = s[index]
-            corrupted_char = 'x' if s[index].isdigit() else '1'
+            corrupted_char = random.choice(string.punctuation)
             s = s[:index] + corrupted_char + s[index + 1:]
-            print(f"trying {s} for pattern {pattern}")
             if not compiled_pattern.fullmatch(s):
                 return s
             else:
                 s = s.replace(corrupted_char, char_at_index)
 
-    def manipulate_string_by_pattern(self, input_string: str, pattern: str):
-        None
-
     def create_pattern_test_values(self, pattern: str, value_dict: dict):
         valid_string = self.create_string_matching_pattern(pattern)
-        value_dict[VALID] = valid_string
+        value_dict[VALID].append(valid_string)
 
         invalid_string = self.create_invalid_string_for_pattern(valid_string, pattern)
+        value_dict[INVALID].append(invalid_string)
+
+    # ANY OF -----------------------------------------------------------------------------------------------------------
+    def create_anyOf_test_values(self, patterns: list, value_dict: dict):
+        for pattern in patterns:
+            self.create_pattern_test_values(pattern[PATTERN], value_dict)
 
     # ENUM -------------------------------------------------------------------------------------------------------------
     def create_enum_test_values(self, valid_values: list, value_dict: dict):
