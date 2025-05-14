@@ -11,9 +11,9 @@ TYPE_ARRAY_STR = "array"
 ARRAY_PATH_EXTENSION = ["items", "properties"]
 
 
-# specifies constraints for data types; can/should be extended (e.g. numbers, different restrictions)
+# specifies constraints for data types; extension needed for new attributes/types (e.g. numbers, different restrictions)
 type_dict = {  # data types and constraints (e.g. "string": ["minLength", "pattern"]
-    TYPE_STRING_STR: ["minLength", "maxLength", "enum", "pattern", "anyOf"],
+    TYPE_STRING_STR: ["minLength", "maxLength", "enum", "pattern", "anyOf", "examples"],
     TYPE_ARRAY_STR: ["minItems", "maxItems"]
 }
 
@@ -115,10 +115,6 @@ class SchemaParser:
         for type_restriction in type_dict[prop_type]:
             if type_restriction in prop:
                 restriction_dict[type_restriction] = prop[type_restriction]
-                restriction_dict["path"] = path
 
         if restriction_dict != {}:
-            self.restriction_dict[prop_type][f"{path[len(path) - 1]}"] = restriction_dict
-
-
-parser = SchemaParser()
+            self.restriction_dict[prop_type]['/'.join(path)] = restriction_dict
