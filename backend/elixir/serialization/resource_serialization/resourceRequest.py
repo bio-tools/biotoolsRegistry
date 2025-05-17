@@ -6,11 +6,12 @@ from elixir.request_handling import ResourceRequestHandler
 
 class ResourceRequestSerializer(serializers.ModelSerializer):
 	username = serializers.CharField(allow_blank=False, max_length=25, min_length=1, source="user.username")
+	email = serializers.EmailField(source="user.email") 
 	resourceId = serializers.CharField(allow_blank=False, min_length=1, source="resource.biotoolsID")
 
 	class Meta:
 		model = ResourceRequest
-		fields = ('type', 'completed', 'accepted', 'username', 'requestId', 'resourceId',)
+		fields = ('type', 'completed', 'accepted', 'username', 'email', 'requestId', 'resourceId',)
 
 	def create(self, validated_data):
 		request = ResourceRequest.objects.create()

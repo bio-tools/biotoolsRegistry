@@ -1288,12 +1288,15 @@ angular.module('elixir_front.controllers', [])
 		{value: "very low", text: "very low"},
 	];
 
-	$scope.$watch('software.license', function(newValue) {
-        if (newValue === "") {
-            // Remove the license property if the empty option is selected
-            delete $scope.software.license;
-        }
-    });
+	
+	$scope.$watch('software', function() {
+        angular.forEach($scope.software, function(value, key) {
+			if (value === null || value === "") {
+				delete $scope.software[key];
+			}
+		});
+    }, true);
+
 
 }])
 .controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', 'CommunityCollection', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator, CommunityCollection) {

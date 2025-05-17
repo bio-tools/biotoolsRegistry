@@ -123,6 +123,7 @@
 				<label class="control-label col-sm-3" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.maturity.description}}">Maturity <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#maturity"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 				<div class="col-sm-9">
 					<select class="form-control select-btn-group" ng-options="item.value as item.text for item in maturityOptions" name="maturity" ng-model="software.maturity" validate-edit-resource-field>
+						<option value=""></option>
 					</select>
 					<label class="help-block" ng-repeat="error in form.labelForm.maturity.errorMessages" bo-text="error"></label>
 				</div>
@@ -132,6 +133,7 @@
 				<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.license.description}}">License <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#license"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 				<div class="col-sm-9">
 					<select class="form-control select-btn-group" ng-options="item.value as item.text for item in licenseOptions" ng-model="software.license" name="license" validate-edit-resource-field>
+						<option value=""></option>
 					</select>						
 					<label class="help-block" ng-repeat="error in form.labelForm.license.errorMessages" bo-text="error"></label>
 				</div>
@@ -141,6 +143,7 @@
 				<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.cost.description}}">Cost <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#cost"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 				<div class="col-sm-9">
 					<select class="form-control select-btn-group" ng-options="item.value as item.text for item in costOptions" ng-model="software.cost" name="cost" validate-edit-resource-field>
+						<option value=""></option>
 					</select>
 					<label class="help-block" ng-repeat="error in form.labelForm.cost.errorMessages" bo-text="error"></label>
 				</div>
@@ -171,6 +174,7 @@
 				<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.accessibility.description}}">Accessibility <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#accessibility"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 				<div class="col-sm-9">
 					<select class="form-control select-btn-group" ng-options="item.value as item.text for item in accessibilityOptions" ng-model="software.accessibility" name="accessibility" validate-edit-resource-field>
+						<option value=""></option>
 					</select>
 					<label class="help-block" ng-repeat="error in form.labelForm.accessibility.errorMessages" bo-text="error"></label>
 				</div>
@@ -246,6 +250,7 @@
 				<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.confidence.description}}">Tool Confidence score <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#confidence"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 				<div class="col-sm-9">
 					<select class="form-control select-btn-group" ng-options="item.value as item.text for item in confidenceOptions" ng-model="software.confidence_flag" name="confidence" validate-edit-resource-field>
+						<option value=""></option>
 					</select>
 					<label class="help-block" ng-repeat="error in form.labelForm.confidence.errorMessages" bo-text="error"></label>
 				</div>
