@@ -1,4 +1,4 @@
-angular.module('elixir_front.directives', [])
+angular.module('elixir_front')
 .directive('cookieBanner', function() {
   return {
     restrict: 'E',
@@ -30,7 +30,7 @@ angular.module('elixir_front.directives', [])
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
     
-    ga('create', 'G-9RWP2H84XB');
+    ga('create', 'UA-63650187-1', 'auto');
     ga('send', 'pageview');
   };
 
