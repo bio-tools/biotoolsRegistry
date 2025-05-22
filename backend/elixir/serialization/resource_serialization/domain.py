@@ -87,12 +87,17 @@ class DomainSerializer(serializers.ModelSerializer):
 	tag = DomainTagSerializer(many=True, required=False, allow_empty=True, allow_null=False)
 	collection = DomainCollectionSerializer(many=True, required=False, allow_empty=True, allow_null=False)
 
+	last_update = serializers.SerializerMethodField()
+
 	class Meta:
 		model = Domain
-		fields = ('domain', 'title', 'sub_title', 'description', 'is_private', 'tag', 'collection', 'resources', )
+		fields = ('domain', 'title', 'sub_title', 'description', 'is_private', 'last_update', 'tag', 'collection', 'resources')
 
 	def get_domain(self, obj):
 		return obj.domain.lower()
+	
+	def get_last_update(self, obj):
+		return obj.last_update.strftime('%Y-%m-%d') if obj.last_update else None
 
 	def validate_domain(self, domain_name):
 		if self.context['request_type'] in ['POST', 'PUT', 'DELETE'] and domain_name.strip().lower() == 'all':

@@ -1,6 +1,7 @@
 from django.db import models
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from django.db.models import Max
 
 class Domain(models.Model):
     YES_NO_CHOICES = (
@@ -21,6 +22,11 @@ class Domain(models.Model):
 
     def __unicode__(self):
         return str(self.name) or ''
+    
+    @property
+    def last_update(self):
+        return self.resource.aggregate(Max('additionDate'))['additionDate__max']
+
 
 
 class DomainResource(models.Model):

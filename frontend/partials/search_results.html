@@ -1,9 +1,12 @@
-<div class="search-results-container">
+<div class="search-results-container container">
 	<div ng-controller="DomainBarController as domain" ng-show="domain.Domain.isLoaded()"  class="domain-bar-container row" ng-cloak>
 		<span class="domain-bar-title">{{ domain.Domain.current.title }}</span>
 		<a class="edit-domain-text" ui-sref="edit-domain({id: domain.Domain.current.domain})"><i class="fa fa-edit"></i> Edit domain</a>
 		<br>
 		<span class="domain-bar-subtitle">{{ domain.Domain.current.sub_title }}</span>
+		<div class="last-update-text" ng-if="domain.Domain.current.last_update">
+ 			<small>Last tool added: {{ domain.Domain.current.last_update | date:'mediumDate' }}</small>
+		</div>
 		<hr>
 		<div class="domain-bar-description" ng-bind-html="domain.Domain.current.description"></div>
 	</div>
