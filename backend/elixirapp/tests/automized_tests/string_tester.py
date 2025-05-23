@@ -3,7 +3,8 @@ import string
 import random
 import copy
 import re
-from .constants import INVALID, VALID, PATTERN, MIN_LENGTH, MAX_LENGTH, ENUM, VALUE_DICT_BASE, DEFAULT_BASE_STRING, ANY_OF, EXAMPLES
+from .constants import INVALID, VALID, PATTERN, MIN_LENGTH, MAX_LENGTH, ENUM, VALUE_DICT_BASE, DEFAULT_BASE_STRING,\
+                       ANY_OF, EXAMPLES
 
 
 class StringTester:
@@ -15,6 +16,7 @@ class StringTester:
         if PATTERN in constraint_dict:
             pattern = constraint_dict[PATTERN]
             base_string = StringTester.get_example_string(constraint_dict, pattern)
+            value_dict[VALID].append(base_string)
             StringTester.create_pattern_test_values(pattern, value_dict, base_string)
 
         if MIN_LENGTH in constraint_dict:
@@ -67,8 +69,6 @@ class StringTester:
 
     @staticmethod
     def create_pattern_test_values(pattern: str, value_dict: dict, valid_string: str):
-        value_dict[VALID].append(valid_string)
-
         invalid_string = StringTester.create_invalid_string_for_pattern(valid_string, pattern)
         value_dict[INVALID].append(invalid_string)
 
@@ -81,7 +81,8 @@ class StringTester:
     # ENUM -------------------------------------------------------------------------------------------------------------
     @staticmethod
     def create_enum_test_values(valid_values: list, value_dict: dict):
-        value_dict[VALID].append(random.choice(valid_values))
+        if not value_dict[VALID]:
+            value_dict[VALID].append(random.choice(valid_values))
         value_dict[INVALID].extend([DEFAULT_BASE_STRING])
 
     # MIN LENGTH -------------------------------------------------------------------------------------------------------
@@ -107,11 +108,11 @@ class StringTester:
     # CHECK -----------------------------------------------------------------------------------------------------------
     @staticmethod
     def trim_value_dict(value_dict: dict):
-        valid_values = value_dict["valid"]
+        valid_values = value_dict[VALID]
 
-        if not valid_values:  # no restrictions were specified
-            value_dict["valid"].append(DEFAULT_BASE_STRING)
+        if not valid_values:  # use default if no restrictions were specified
+            value_dict[VALID].append(DEFAULT_BASE_STRING)
         else:  # choose one valid value
-            value_dict["valid"] = random.choice(valid_values)
+            value_dict[VALID] = [random.choice(valid_values)]
 
         return value_dict

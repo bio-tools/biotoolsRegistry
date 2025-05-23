@@ -1,5 +1,6 @@
 import copy
 from .constants import VALUE_DICT_BASE, MIN_ITEMS, MAX_ITEMS
+from .object_tester import ObjectTester
 
 
 class ArrayTester:
@@ -20,7 +21,7 @@ class ArrayTester:
     # MIN ITEMS --------------------------------------------------------------------------------------------------------
     @staticmethod
     def create_minItems_test_values(min_items: int, value_dict: dict, string_dict: dict):
-        created_object = ArrayTester.create_object(string_dict)
+        created_object = ObjectTester.create_object(string_dict)
 
         value_dict["valid"].append([created_object for _ in range(min_items)])
         value_dict["invalid"].append([created_object for _ in range(min_items-1)])
@@ -32,12 +33,3 @@ class ArrayTester:
 
         value_dict["valid"].append([created_object for _ in range(max_items)])
         value_dict["invalid"].append([created_object for _ in range(max_items+1)])
-
-    # HELPER -----------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def create_object(constraint_dict: dict):
-        return { key: values["valid"] for key, values in constraint_dict.items() }
-
-
-
-

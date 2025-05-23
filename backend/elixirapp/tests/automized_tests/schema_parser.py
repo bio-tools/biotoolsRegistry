@@ -1,32 +1,20 @@
 import os
 import json
+from .constants import STRING, ARRAY, OBJECT, DEFINITIONS, TOOL, PROPERTIES, ITEMS, TYPE, REF, TYPE_DICT
 
 schema_dir = os.path.dirname(os.path.abspath(__file__))
 schema_filename = "biotoolsj.json"
-
-TYPE_STRING_STR = "string"
-TYPE_OBJECT_STR = "object"
-TYPE_ARRAY_STR = "array"
-
-ARRAY_PATH_EXTENSION = ["items", "properties"]
-
-
-# specifies constraints for data types; extension needed for new attributes/types (e.g. numbers, different restrictions)
-type_dict = {  # data types and constraints (e.g. "string": ["minLength", "pattern"]
-    TYPE_STRING_STR: ["minLength", "maxLength", "enum", "pattern", "anyOf", "examples"],
-    TYPE_ARRAY_STR: ["minItems", "maxItems"]
-}
 
 
 class SchemaParser:
     def __init__(self):
         self.schema = SchemaParser.read_schema()
-        self.type_definitions = self.schema["definitions"]
-        self.tool_properties = self.type_definitions.pop("tool")["properties"]  # extract tool type into own variable
+        self.type_definitions = self.schema[DEFINITIONS]
+        self.tool_properties = self.type_definitions.pop(TOOL)[PROPERTIES]  # extract tool type into own variable
         self.restriction_dict = {
-            TYPE_STRING_STR: {},
-            TYPE_OBJECT_STR: {},
-            TYPE_ARRAY_STR: {}
+            STRING: {},
+            OBJECT: {},
+            ARRAY: {}
         }
 
     def create_restriction_dict(self):
@@ -51,14 +39,14 @@ class SchemaParser:
         """
         Description: Checks whether the current property is a known type.
         """
-        return "type" in prop
+        return TYPE in prop
 
     @staticmethod
     def is_ref_type(prop: object):
         """
         Description: Checks whether the current property is a schema-defined type.
         """
-        return "$ref" in prop
+        return REF in prop
 
     def handle_ref_type(self, reference: str, path_to_prop: list):
         reference_name = reference.split('/')[-1]
@@ -70,51 +58,63 @@ class SchemaParser:
         Description: Parses the property based on its 'type' or '$ref' attribute and fills dictionary.
         """
         if SchemaParser.is_predefined_type(prop):  # known type
-            prop_type = prop["type"]
-            if prop_type == TYPE_STRING_STR:
+            prop_type = prop[TYPE]
+            if prop_type == STRING:
                 SchemaParser.create_dict_entry(self, prop, path_to_prop)
-            elif prop_type == TYPE_ARRAY_STR:
+            elif prop_type == ARRAY:
                 self.parse_array(prop, path_to_prop)
-            elif prop_type == TYPE_OBJECT_STR:
+            elif prop_type == OBJECT:
                 self.parse_object(prop, path_to_prop)
             else:
                 raise RuntimeWarning(f"[WARNING]: Type '{prop_type}' is currently not being handled.")
         elif SchemaParser.is_ref_type(prop):  # schema-defined type
-            self.handle_ref_type(prop["$ref"], path_to_prop)
+            self.handle_ref_type(prop[REF], path_to_prop)
 
     def parse_array(self, array_prop: object, path: list):
         """
         Description: Handles an 'array' type, extracting its restrictions and initiating further parsing (if required).
         """
-        array_items = array_prop["items"]
+        array_items = array_prop[ITEMS]
 
-        if "properties" in array_items:
-            properties = array_items["properties"]
-            for prop_name, prop_def in zip(properties.keys(), properties.values()):
-                self.handle_prop(prop_def, path + [prop_name])
+        item_type = array_items[TYPE] if self.is_predefined_type(array_items) else array_items[REF]
+
+        if item_type == OBJECT:
+            self.parse_object(array_items, path)
         else:
-            self.handle_prop(array_items, path)
+            self.handle_prop(array_items, path)  # save info on strings
 
-        SchemaParser.create_dict_entry(self, array_prop, path)
+        self.create_dict_entry(array_prop, path)
 
     def parse_object(self, object_prop: object, path: list):
         """
         Description: Handles an 'object' type.
         """
-        properties = object_prop["properties"]
+        if PROPERTIES in object_prop:
+            properties = object_prop[PROPERTIES]
 
-        for prop in properties:
-            path.append(prop)
-            self.handle_prop(object_prop["properties"][prop], path)
-            path.remove(prop)
+            for prop in properties:
+                path.append(prop)
+                self.handle_prop(object_prop[PROPERTIES][prop], path)
+                path.remove(prop)
+            self.create_object_entry(path, list(properties.keys()))
+
+    def create_object_entry(self, path: list, property_names: list):
+        self.restriction_dict[OBJECT]['/'.join(path)] = {}
+        self.restriction_dict[OBJECT]['/'.join(path)][PROPERTIES] = property_names
+
 
     def create_dict_entry(self, prop, path):
-        restriction_dict = {}
-        prop_type = prop["type"]
+        """
+        Description: Adds an entry to the restriction_dict.
+        """
 
-        for type_restriction in type_dict[prop_type]:
+        restriction_dict = {}
+        prop_type = prop[TYPE]
+
+        for type_restriction in TYPE_DICT[prop_type]:
             if type_restriction in prop:
                 restriction_dict[type_restriction] = prop[type_restriction]
 
-        if restriction_dict != {}:
+        if prop_type != STRING or restriction_dict:  # there are restrictions
             self.restriction_dict[prop_type]['/'.join(path)] = restriction_dict
+
