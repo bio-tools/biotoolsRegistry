@@ -96,12 +96,18 @@ class SchemaParser:
                 path.append(prop)
                 self.handle_prop(object_prop[PROPERTIES][prop], path)
                 path.remove(prop)
-            self.create_object_entry(path, list(properties.keys()))
+            self.create_object_entry(path, object_prop)
 
-    def create_object_entry(self, path: list, property_names: list):
-        self.restriction_dict[OBJECT]['/'.join(path)] = {}
-        self.restriction_dict[OBJECT]['/'.join(path)][PROPERTIES] = property_names
+    def create_object_entry(self, path: list, prop):
+        object_restrictions = {}
+        property_names = list(prop[PROPERTIES].keys())
 
+        for type_restriction in TYPE_DICT[OBJECT]:
+            if type_restriction in prop:
+                object_restrictions[type_restriction] = prop[type_restriction]
+
+        object_restrictions[PROPERTIES] = property_names
+        self.restriction_dict[OBJECT]['/'.join(path)] = object_restrictions
 
     def create_dict_entry(self, prop, path):
         """
@@ -115,6 +121,5 @@ class SchemaParser:
             if type_restriction in prop:
                 restriction_dict[type_restriction] = prop[type_restriction]
 
-        if prop_type != STRING or restriction_dict:  # there are restrictions
-            self.restriction_dict[prop_type]['/'.join(path)] = restriction_dict
+        self.restriction_dict[prop_type]['/'.join(path)] = restriction_dict
 

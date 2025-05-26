@@ -17,9 +17,10 @@ TYPE = "type"
 
 VALUE_DICT_BASE = {VALID: [], INVALID: []}
 
-TYPE_DICT = {  # data types and constraints (e.g. "string": ["minLength", "pattern"]
+TYPE_DICT = {
     STRING: ["minLength", "maxLength", "enum", "pattern", "anyOf", "examples"],
-    ARRAY: ["minItems", "maxItems"]
+    ARRAY: ["minItems", "maxItems"],
+    OBJECT: ["additionalProperties", "required"]
 }
 
 # ---------- STRING ATTRIBUTES ----------
@@ -40,3 +41,15 @@ EMPTY_STRING = ""
 
 MIN_ITEMS = "minItems"
 MAX_ITEMS = "maxItems"
+
+# ------------ OBJECT VALUES ------------
+
+DEFAULT_KEY = "someKey"
+DEFAULT_VALUE = "someValue"
+DEFAULT_KVP = {DEFAULT_KEY: DEFAULT_VALUE}
+
+# ---------- OBJECT ATTRIBUTES ----------
+
+ADDITIONAL_PROPERTIES = "additionalProperties"
+REQUIRED = "required"
+

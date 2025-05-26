@@ -6,72 +6,81 @@ from .object_tester import ObjectTester
 from .constants import STRING, ARRAY, VALID, INVALID, OBJECT, PROPERTIES
 import random
 
+
 class TestGenerator:
     def __init__(self):
         parser = SchemaParser()
         self.restriction_dict = parser.create_restriction_dict()
 
-        print(f"objdict: {self.restriction_dict[OBJECT]}")
-        print(f"strdict: {self.restriction_dict[STRING]}")
-        print(f"arrdict: {self.restriction_dict[ARRAY]}")
-
         self.string_values = {}
-        self.array_values = {}
         self.object_values = {}
+        self.array_values = {}
 
     def test_all(self):
         """
         Description:    Method for automized testing based on restrictions parsed from the schema.
         """
-        self.string_values = self.create_string_values()
-        self.object_values = self.create_object_values()
-        self.array_values = self.create_array_values()
+        self.create_values_by_level()
 
         # self.test_string(self.string_values)
 
-    def create_string_values(self):
+    def get_paths_grouped_by_depth(self):
+        from collections import defaultdict
+
+        depth_to_paths = defaultdict(list)
+        categories = [STRING, ARRAY, OBJECT]
+
+        for category in categories:
+            path_dict = self.restriction_dict[category]
+            for path in path_dict.keys():
+                depth = len(path.strip('/').split('/'))
+                depth_to_paths[depth].append(path)
+
+        return dict(depth_to_paths)
+
+    def create_values_by_level(self):
+        depth_dict = self.get_paths_grouped_by_depth()
+
+        self.string_restrictions = self.restriction_dict[STRING]
+        self.array_restrictions = self.restriction_dict[ARRAY]
+        self.object_restrictions = self.restriction_dict[OBJECT]
+
+        for depth in range(max(depth_dict.keys()), min(depth_dict.keys()) - 1, -1):
+            for path in depth_dict[depth]:
+                self.create_value(path)
+
+    def create_value(self, path: str):
+        if path in self.restriction_dict[STRING]:  # delegate to string dictionary
+            self.create_string_value(path)
+        if path in self.restriction_dict[OBJECT]:  # delegate to object dictionary
+            self.create_object_value(path)
+        if path in self.restriction_dict[ARRAY]:  # delegate to array dictionary
+            self.create_array_value(path)
+
+    def create_string_value(self, path: str):
         """
         Description:    Method for creating valid and invalid values for the string attributes based on schema
                         restrictions.
         """
         string_restrictions = self.restriction_dict[STRING]
-        string_test_dict = {}
-        for attr_path, attr_constraints in zip(string_restrictions.keys(), string_restrictions.values()):
-            string_test_dict[attr_path] = StringTester.create_string_values(attr_constraints)
-        return string_test_dict
+        self.string_values[path] = StringTester.create_string_values(string_restrictions[path])
 
-    def create_array_values(self):
+    def create_array_value(self, path: str):
         """
         Description:    Method for creating valid and invalid values for the array attributes based on schema
                         restrictions.
         """
-        array_test_dict = self.restriction_dict[ARRAY]
-        for attr_path, attr_constraints in zip(array_test_dict.keys(), array_test_dict.values()):
-            filtered_dict = {k: v for k, v in self.string_values.items() if attr_path in k}
-            array_test_dict[attr_path] = ArrayTester.create_array_values(attr_constraints, filtered_dict)
-        return array_test_dict
+        self.array_values[path] = ArrayTester.create_array_values(path, self.array_restrictions[path],
+                                                                  self.string_values, self.object_values)
 
-    def create_object_values(self):
+    def create_object_value(self, path: str):
         """
         Description:    Method for creating valid and invalid values for the objects based on schema restrictions.
         """
-        object_restrictions = self.restriction_dict[OBJECT]
-        print(f"object restrictions: {object_restrictions}")
-        object_test_dict = {}
-        print(f"amount: {len(object_restrictions.keys())}")
-        for attr_path, attr_constraints in zip(object_restrictions.keys(), object_restrictions.values()):
-            items = attr_constraints[PROPERTIES]
-            object_test_dict[attr_path] = {}
-            valid_object, invalid_object = {}, {}
-
-            print(f"attrpath: {attr_path}")
-
-            object_test_dict[attr_path][VALID] = valid_object
-            object_test_dict[attr_path][INVALID] = invalid_object
-
-            # # print(f"test_dict for {path_to_prop}: {object_test_dict[attr_path]}")
-
-        return object_test_dict
+        # iterate all objects and create valid and invalid instances
+        new_obj_entry = ObjectTester.create_object_values(self.object_restrictions[path], path, self.string_values,
+                                                          self.object_values)
+        self.object_values[path] = new_obj_entry
 
     def test_string(self, string_dict: dict):
         """
@@ -97,7 +106,7 @@ class TestGenerator:
         value_before = None
         for valid_value in constraints[VALID]:
             value_before = self._get_altered_tool(input_tool, path_list, valid_value)
-            # print(f"changed {path_list} from '{value_before}' to valid '{valid_value}'")
+            print(f"changed {path_list} from '{value_before}' to valid '{valid_value}'")
         return value_before
 
     def _test_invalid_values(self, constraints: dict, input_tool: object, path_list: list):
@@ -108,7 +117,7 @@ class TestGenerator:
         value_before = None
         for invalid_value in constraints[INVALID]:
             value_before = self._get_altered_tool(input_tool, path_list, invalid_value)
-            # print(f"changed {path_list} from '{value_before}' to invalid '{invalid_value}'")
+            print(f"changed {path_list} from '{value_before}' to invalid '{invalid_value}'")
         return value_before
 
     def _get_altered_tool(self, input_tool: dict, path: list, new_value: str):

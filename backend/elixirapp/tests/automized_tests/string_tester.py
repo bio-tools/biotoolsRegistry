@@ -11,7 +11,7 @@ class StringTester:
     @staticmethod
     def create_string_values(constraint_dict: dict):
         value_dict = copy.deepcopy(VALUE_DICT_BASE)
-        base_string = DEFAULT_BASE_STRING
+        base_string = StringTester.get_example_string(constraint_dict)
 
         if PATTERN in constraint_dict:
             pattern = constraint_dict[PATTERN]
@@ -35,16 +35,17 @@ class StringTester:
             patterns = constraint_dict[ANY_OF]
             StringTester.create_anyOf_test_values(patterns, value_dict, base_string)
 
-        value_dict = StringTester.trim_value_dict(value_dict)
-        return value_dict
+        return StringTester.trim_value_dict(value_dict)
 
     # PATTERN ----------------------------------------------------------------------------------------------------------
     @staticmethod
-    def get_example_string(constraint_dict: dict, pattern: str):
+    def get_example_string(constraint_dict: dict, pattern: str = None):
         if EXAMPLES in constraint_dict and constraint_dict[EXAMPLES]:  # take given example if one exists
             return random.choice(constraint_dict[EXAMPLES])
-        else:  # generate random value that matches pattern
+        elif pattern:  # generate random value that matches pattern
             return StringTester.create_string_matching_pattern(pattern)
+        else:
+            return DEFAULT_BASE_STRING
 
     @staticmethod
     def create_string_matching_pattern(pattern: str):
@@ -111,8 +112,8 @@ class StringTester:
         valid_values = value_dict[VALID]
 
         if not valid_values:  # use default if no restrictions were specified
-            value_dict[VALID].append(DEFAULT_BASE_STRING)
+            value_dict[VALID] = DEFAULT_BASE_STRING
         else:  # choose one valid value
-            value_dict[VALID] = [random.choice(valid_values)]
+            value_dict[VALID] = random.choice(valid_values)
 
         return value_dict
