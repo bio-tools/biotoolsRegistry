@@ -5,11 +5,10 @@ from elixir.serializers import *
 from elixirapp.tests.test_baseobject import BaseTestObject
 from elixir.tool_helper import ToolHelper as TH
 import time
-from elixirapp.tests.parameters.test_query_parameters import TestQueryParameters
 from elixirapp.tests.param_config import query_param_dict as qpd
 
 
-class TestFormat(TestQueryParameters):
+class TestFormat(BaseTestObject):
 
     # FORMAT -----------------------------------------------------------------------------------------------------------
     def test_format_valid(self):

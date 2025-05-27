@@ -18,7 +18,7 @@ class BaseTestObject(TestCase):
     # URLS -------------------------------------------------------------------------------------------------------------
     base_url = '/tool/'
     put_post_urls = ['/tool/']
-    base_urls = ['/tool/']  # TODO should also work with '/t/' and ''
+    base_urls = ['/tool/']
     validation_url_extension = 'validate/'
     user_list_url = '/user-list/'
     auth_url = '/rest-auth/'
@@ -44,7 +44,7 @@ class BaseTestObject(TestCase):
                 f"Post did not succeed: attempt to post tool to {self.base_url} returned {response.status_code}.")
         return response
 
-    def get_tool(self, url, id, query_kvp_dict=None):  # TODO modify
+    def get_tool(self, url, id, query_kvp_dict=None):
         get_url = f"{url}{id}"
         response_format = 'json'
 
@@ -154,6 +154,11 @@ class BaseTestObject(TestCase):
         es.indices.create(settings.ELASTIC_SEARCH_INDEX)
         mapping = BaseTestObject.read_schema()
         es.indices.put_mapping(index=settings.ELASTIC_SEARCH_INDEX, body=mapping)
+
+    @staticmethod
+    def post_ontologies():
+        # TODO
+        None
 
     @staticmethod
     def read_schema():

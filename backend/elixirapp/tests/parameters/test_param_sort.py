@@ -2,12 +2,12 @@ from rest_framework import status
 from elixir.serializers import *
 from elixir.tool_helper import ToolHelper as th
 import time
-from elixirapp.tests.parameters.test_query_parameters import TestQueryParameters
+from elixirapp.tests.test_baseobject import BaseTestObject
 from elixirapp.tests.param_config import query_param_dict as qpd
 from elasticsearch import exceptions as ESExceptions
 
 
-class TestSort(TestQueryParameters):
+class TestSort(BaseTestObject):
     """
     Description: Class to test 'sort' and 'ord' endpoint parameters.
     Info: Tool 1 is designed to occur after tool1 by default and second after sorting.
