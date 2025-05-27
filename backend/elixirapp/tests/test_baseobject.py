@@ -1,4 +1,4 @@
-from rest_framework.test import APIClient, APITestCase
+from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from elixir.views import Ontology, User
@@ -8,6 +8,7 @@ from elasticsearch import exceptions as ESExceptions
 from django.conf import settings
 from elixir.tool_helper import ToolHelper as TH
 from elixirapp.tests.login_data import superuser_registration_data
+from elixir.management.commands.parse_edam import Command
 
 
 class BaseTestObject(TestCase):
@@ -35,8 +36,8 @@ class BaseTestObject(TestCase):
     def post_tool_checked(self, data):
         """
         Description: Checked POST request for given data.
-        Returns: The response for the POST request.
-        Throws: RuntimeError if the tool could not be created.
+        Returns:    The response for the POST request.
+        Throws:     RuntimeError if the tool could not be created.
         """
         response = self.post_tool(self.base_url, data)
         if response.status_code != status.HTTP_201_CREATED:
@@ -155,10 +156,12 @@ class BaseTestObject(TestCase):
         mapping = BaseTestObject.read_schema()
         es.indices.put_mapping(index=settings.ELASTIC_SEARCH_INDEX, body=mapping)
 
+        BaseTestObject.post_ontologies()
+
     @staticmethod
     def post_ontologies():
-        # TODO
-        None
+        cmd = Command()
+        cmd.handle()
 
     @staticmethod
     def read_schema():
