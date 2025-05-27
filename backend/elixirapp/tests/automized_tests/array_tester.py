@@ -28,9 +28,6 @@ class ArrayTester:
         if not value_dict[validity]:  # no constraints
             value_dict[validity].append([value])
 
-
-
-
     # MIN ITEMS --------------------------------------------------------------------------------------------------------
     @staticmethod
     def create_minItems_test_values(value, min_items: int, value_dict: dict):
