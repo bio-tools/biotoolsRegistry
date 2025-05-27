@@ -3,16 +3,14 @@ from .schema_parser import SchemaParser
 from .string_tester import StringTester
 from .array_tester import ArrayTester
 from .object_tester import ObjectTester
-from .constants import STRING, ARRAY, VALID, INVALID, OBJECT, PROPERTIES
-import random
+from .constants import STRING, ARRAY, VALID, INVALID, OBJECT
 
+TESTCOUNT = 0
 
 class TestGenerator:
     def __init__(self):
         parser = SchemaParser()
         self.restriction_dict = parser.create_restriction_dict()
-
-        print(self.restriction_dict)
 
         self.string_values = {}
         self.object_values = {}
@@ -24,7 +22,9 @@ class TestGenerator:
         """
         self.create_values_by_level()  # create valid and invalid values
 
-        self.test_string(self.string_values)
+        self.test_string_or_object(self.string_values)
+        self.test_string_or_object(self.object_values)
+        self.test_array(self.array_values)
 
     def get_paths_grouped_by_depth(self):
         from collections import defaultdict
@@ -79,21 +79,20 @@ class TestGenerator:
         """
         Description:    Method for creating valid and invalid values for the objects based on schema restrictions.
         """
-        # iterate all objects and create valid and invalid instances
         new_obj_entry = ObjectTester.create_object_values(self.object_restrictions[path], path, self.string_values,
                                                           self.object_values)
         self.object_values[path] = new_obj_entry
 
-    def test_string(self, string_dict: dict):
+    def test_string_or_object(self, test_dict: dict):
         """
-        Description:    Method for testing string attributes in the tool based on schema restrictions.
+        Description:    Method for testing attributes in the tool based on schema restrictions.
         """
         input_tool = ToolHelper.get_input_tool()
 
-        for path, constraints in zip(string_dict.keys(), string_dict.values()):
+        for path, constraints in test_dict.items():
 
             if path not in self.array_restrictions:  # only test real strings
-                constraints = string_dict[path]
+                constraints = test_dict[path]
                 path_list = path.split('/')
 
                 value_before = self._test_valid_values(constraints, input_tool, path_list)  # extract original
@@ -102,38 +101,71 @@ class TestGenerator:
                 # change back to original
                 self._alter_tool(input_tool, path_list, value_before)
 
+    def test_array(self, test_dict: dict):
+        """
+        Description:    Method for testing attributes in the tool based on schema restrictions.
+        """
+        input_tool = ToolHelper.get_input_tool()
+
+        for path, constraints in test_dict.items():
+            constraints = test_dict[path]
+            path_list = path.split('/')
+
+            value_before = self._test_valid_values(constraints, input_tool, path_list)  # extract original
+            self._test_invalid_values(constraints, input_tool, path_list)
+
+            # change back to original
+            self._alter_tool(input_tool, path_list, value_before)
+
     def _test_valid_values(self, values: dict, input_tool: object, path_list: list):
         """
         Description:    Alters tool based on path using the valid values specified for the attribute.
         Returns:        Value at the specified path for the input tool before replacement.
         """
-        value_before = None
+        original_value = self._get_tool_value(input_tool, path_list)
+
         if isinstance(values[VALID], list):
-            print(f"validvallist for {path_list}: {values[VALID]}")
             for valid_value in values[VALID]:
-                value_before = self._alter_tool(input_tool, path_list, valid_value)
+                if isinstance(original_value, list) and not isinstance(valid_value, list):
+                    valid_value = [valid_value]
+                original_value = self._alter_tool(input_tool, path_list, valid_value)
         else:
-            print(f"validvalobj for {path_list}: {values[VALID]}")
-            value_before = self._alter_tool(input_tool, path_list, values[VALID])
+            original_value = self._alter_tool(input_tool, path_list, values[VALID])
 
-        self._alter_tool(input_tool, path_list, value_before)
+        self._alter_tool(input_tool, path_list, original_value)
 
-        # print(f"altered tool after changing {path_list} from '{value_before}' to '{values[VALID]}':\n\t\t{input_tool}")
-
-        return value_before
+        return original_value
 
     def _test_invalid_values(self, constraints: dict, input_tool: object, path_list: list):
         """
         Description:    Alters tool based on path using the invalid values specified for the attribute.
         Returns:        Value at the specified path for the input tool before replacement.
         """
-        value_before = None
-        for invalid_value in constraints[INVALID]:
-            value_before = self._alter_tool(input_tool, path_list, invalid_value)
-            print(f"invalidval for {path_list}: {invalid_value} instead of {value_before}")
-        return value_before
+        original_value = self._get_tool_value(input_tool, path_list)
 
-    def _alter_tool(self, input_tool: dict, path: list, new_value: str):
+        for invalid_value in constraints[INVALID]:
+            if isinstance(original_value, list) and not isinstance(invalid_value, list):
+                invalid_value = [invalid_value]
+
+            original_value = self._alter_tool(input_tool, path_list, invalid_value)
+        return original_value
+
+    def _get_tool_value(self, parsing_object, path):
+        if not path:
+            return parsing_object
+
+        key = path[0]
+
+        if isinstance(parsing_object, list):
+            if not parsing_object:
+                return None
+            next_obj = parsing_object[0].get(key)
+        else:
+            next_obj = parsing_object.get(key)
+
+        return self._get_tool_value(next_obj, path[1:]) if next_obj is not None else None
+
+    def _alter_tool(self, input_tool: dict, path: list, new_value):
         """
         Description:    Wrapper for updating a tool value.
         """
@@ -141,27 +173,31 @@ class TestGenerator:
 
     def _update_tool_value(self, parsing_object, path, new_value):
         """
-        Description:    Modifies the parsing_object by replacing the value at the path with the given new_value.
-        Returns:        Value at the specified path for the parsing_object before replacement.
+        Description:    Modifies the parsing_object in-place by replacing the value at the path with new_value.
+                        Returns the value before replacement (if any).
         """
-        if len(path) == 1:  # last level reached
-            attribute_name = path[0]
+        key = path[0]
+
+        if len(path) == 1:
             if isinstance(parsing_object, list):
-                if parsing_object:  # list is not empty
-                    first_value = parsing_object[0]
-                    value_before = first_value[attribute_name] if attribute_name in first_value else None
-                    first_value[attribute_name] = new_value
-                    # print(f"new chosen value1: '{new_value}' for '{attribute_name}' instead of '{value_before}'")
+                if parsing_object:
+                    value_before = parsing_object[0].get(key)
+                    parsing_object[0][key] = new_value
                     return value_before
-                else:  # list is empty
-                    parsing_object.append({attribute_name: new_value})
-                    # print(f"new chosen value2: '{new_value}' for '{attribute_name}'")
-                    return parsing_object
-        else:
-            if isinstance(parsing_object, list):
-                return self._update_tool_value(parsing_object[0][path[0]], path[1:], new_value)
+                else:
+                    parsing_object.append({key: new_value})
+                    return None
             else:
-                return self._update_tool_value(parsing_object[path[0]], path[1:], new_value)
+                value_before = parsing_object.get(key)
+                parsing_object[key] = new_value
+                return value_before
+
+        if isinstance(parsing_object, list):
+            next_object = parsing_object[0].get(key)
+        else:
+            next_object = parsing_object.get(key)
+
+        return self._update_tool_value(next_object, path[1:], new_value)
 
 
 testgen = TestGenerator()

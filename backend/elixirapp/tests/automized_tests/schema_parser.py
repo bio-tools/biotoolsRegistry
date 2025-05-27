@@ -122,4 +122,3 @@ class SchemaParser:
                 restriction_dict[type_restriction] = prop[type_restriction]
 
         self.restriction_dict[prop_type]['/'.join(path)] = restriction_dict
-
