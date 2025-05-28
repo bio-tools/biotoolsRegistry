@@ -4,7 +4,6 @@ from rest_framework import status
 from elixir.serializers import *
 from elixirapp.tests.test_baseobject import BaseTestObject
 from elixir.tool_helper import ToolHelper as TH
-import time
 from elixirapp.tests.param_config import query_param_dict as qpd
 
 

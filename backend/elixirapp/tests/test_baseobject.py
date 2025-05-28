@@ -156,12 +156,15 @@ class BaseTestObject(TestCase):
         mapping = BaseTestObject.read_schema()
         es.indices.put_mapping(index=settings.ELASTIC_SEARCH_INDEX, body=mapping)
 
-        BaseTestObject.post_ontologies()
-
-    @staticmethod
-    def post_ontologies():
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         cmd = Command()
         cmd.handle()
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
 
     @staticmethod
     def read_schema():
