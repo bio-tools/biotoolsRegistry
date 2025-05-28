@@ -10,13 +10,11 @@ class ToolHelper:
     input_tool = None
     output_tool = None
     invalid_input_tool = None
-    tool_id = None
 
     @staticmethod
     def get_input_tool():
         tool = ToolHelper.get_tool_from_file("TestTool.json")
-        ToolHelper.tool_id = uuid.uuid4().hex[:4]
-        tool["biotoolsID"] += f"_{ToolHelper.tool_id}"
+        tool["biotoolsID"] += f"_{uuid.uuid4().hex[:4]}"
         return deepcopy(tool)
 
     @staticmethod

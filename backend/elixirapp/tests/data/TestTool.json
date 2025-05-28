@@ -1,63 +1,36 @@
 {
-  "name": "MS Amanda",
-  "description": "MS Amanda is a scoring system to identify peptides out of tandem mass spectrometry data using a database of known proteins. It is especially designed for high resolution and high accuracy tandem mass spectra.",
-  "homepage": "https://ms.imp.ac.at/?action=ms-amanda",
-  "biotoolsID": "ms_amanda",
-  "biotoolsCURIE": "biotools:ms_amanda",
-  "version": [],
-  "otherID": [],
-  "relation": [
-    {
-      "biotoolsID": "peptide-shaker",
-      "type": "includedIn"
-    }
+  "name": "IRescue",
+  "description": "Uncertainty-aware quantification of transposable elements expression in scRNA-seq",
+  "homepage": "https://github.com/bodegalab/irescue",
+  "biotoolsID": "irescue",
+  "biotoolsCURIE": "biotools:irescue",
+  "version": [
+    "1.0.0",
+    "1.0.1",
+    "1.0.2",
+    "1.0.3",
+    "1.1.0",
+    "1.1.1",
+    "1.1.2"
   ],
   "function": [
     {
       "operation": [
         {
-          "uri": "http://edamontology.org/operation_3646",
-          "term": "Peptide database search"
-        },
-        {
-          "uri": "http://edamontology.org/operation_3767",
-          "term": "Protein identification"
-        },
-        {
-          "uri": "http://edamontology.org/operation_3645",
-          "term": "PTM identification"
-        },
-        {
-          "uri": "http://edamontology.org/operation_3755",
-          "term": "PTM localisation"
+          "uri": "http://edamontology.org/operation_3800",
+          "term": "RNA-Seq quantification"
         }
       ],
       "input": [
         {
           "data": {
-            "uri": "http://edamontology.org/data_0943",
-            "term": "Mass spectrum"
+            "uri": "http://edamontology.org/data_1383",
+            "term": "Nucleic acid sequence alignment"
           },
           "format": [
             {
-              "uri": "http://edamontology.org/format_3244",
-              "term": "mzML"
-            },
-            {
-              "uri": "http://edamontology.org/format_3651",
-              "term": "MGF"
-            }
-          ]
-        },
-        {
-          "data": {
-            "uri": "http://edamontology.org/data_2976",
-            "term": "Protein sequence"
-          },
-          "format": [
-            {
-              "uri": "http://edamontology.org/format_1929",
-              "term": "FASTA"
+              "uri": "http://edamontology.org/format_2572",
+              "term": "BAM"
             }
           ]
         }
@@ -65,200 +38,98 @@
       "output": [
         {
           "data": {
-            "uri": "http://edamontology.org/data_0945",
-            "term": "Peptide identification"
+            "uri": "http://edamontology.org/data_3917",
+            "term": "Count matrix"
           },
           "format": [
             {
-              "uri": "http://edamontology.org/format_3247",
-              "term": "mzIdentML"
-            },
-            {
-              "uri": "http://edamontology.org/format_3475",
-              "term": "TSV"
+              "uri": "http://edamontology.org/format_3989",
+              "term": "GZIP format"
             }
           ]
         }
       ],
-      "note": null,
-      "cmd": null
+      "cmd": "irescue -b bam_file -g genome_assembly"
     }
   ],
   "toolType": [
-    "Command-line tool",
-    "Plug-in"
+    "Command-line tool"
   ],
   "topic": [
     {
-      "uri": "http://edamontology.org/topic_0121",
-      "term": "Proteomics"
+      "uri": "http://edamontology.org/topic_0659",
+      "term": "Functional, regulatory and non-coding RNA"
     },
     {
-      "uri": "http://edamontology.org/topic_0601",
-      "term": "Protein modifications"
+      "uri": "http://edamontology.org/topic_3308",
+      "term": "Transcriptomics"
     }
   ],
   "operatingSystem": [
-    "Windows",
-    "Mac",
     "Linux"
   ],
   "language": [
-    "C#"
+    "Python"
   ],
-  "license": "Freeware",
-  "collectionID": [
-    "Proteomics"
-  ],
+  "license": "MIT",
   "maturity": "Mature",
   "cost": "Free of charge",
   "accessibility": "Open access",
-  "elixirPlatform": [],
-  "elixirNode": [],
-  "elixirCommunity": [],
-  "link": [],
+  "link": [
+    {
+      "url": "https://github.com/bodegalab/irescue",
+      "type": [
+        "Repository"
+      ]
+    }
+  ],
   "download": [
     {
-      "url": "https://ms.imp.ac.at/?action=ms-amanda",
-      "type": "Downloads page",
-      "note": null,
-      "version": null
+      "url": "https://files.pythonhosted.org/packages/c1/1d/2d2684145a59b7686cd932dd5c0dcfa2b10e19f208768f38398f0b29c162/irescue-1.1.2.tar.gz",
+      "type": "Software package",
+      "note": "Python package (download and install with: \"pip install irescue\")",
+      "version": "1.1.2"
+    },
+    {
+      "url": "https://anaconda.org/bioconda/irescue/1.1.2/download/noarch/irescue-1.1.2-pyhdfd78af_0.tar.bz2",
+      "type": "Software package",
+      "note": "Bioconda package (download and install with: \"conda install -c conda-forge -c bioconda irescue\"",
+      "version": "1.1.2"
     }
   ],
   "documentation": [
     {
-      "url": "https://ms.imp.ac.at/?file=Manual%20MS%20Amanda%20for%20PD1.4.pdf",
+      "url": "https://github.com/bodegalab/irescue/blob/main/README.md",
       "type": [
         "User manual"
-      ],
-      "note": null
+      ]
     }
   ],
   "publication": [
     {
-      "doi": "10.1021/pr500202e",
-      "pmid": "24909410",
-      "pmcid": "PMC4119474",
+      "doi": "10.1093/nar/gkae793",
+      "pmid": "39271103",
       "type": [
         "Primary"
       ],
-      "version": null,
-      "note": null,
-      "metadata": {
-        "title": "MS Amanda, a universal identification algorithm optimized for high accuracy tandem mass spectra",
-        "abstract": "Todays highly accurate spectra provided by modern tandem mass spectrometers offer considerable advantages for the analysis of proteomic samples of increased complexity. Among other factors, the quantity of reliably identified peptides is considerably influenced by the peptide identification algorithm. While most widely used search engines were developed when high-resolution mass spectrometry data were not readily available for fragment ion masses, we have designed a scoring algorithm particularly suitable for high mass accuracy. Our algorithm, MS Amanda, is generally applicable to HCD, ETD, and CID fragmentation type data. The algorithm confidently explains more spectra at the same false discovery rate than Mascot or SEQUEST on examined high mass accuracy data sets, with excellent overlap and identical peptide sequence identification for most spectra also explained by Mascot or SEQUEST. MS Amanda, available at http://ms.imp.ac.at/?goto=msamanda, is provided free of charge both as standalone version for integration into custom workflows and as a plugin for the Proteome Discoverer platform. © 2014 American Chemical Society.",
-        "date": "2014-08-01T00:00:00Z",
-        "citationCount": 327,
-        "authors": [
-          {
-            "name": "Dorfer V."
-          },
-          {
-            "name": "Pichler P."
-          },
-          {
-            "name": "Stranzl T."
-          },
-          {
-            "name": "Stadlmann J."
-          },
-          {
-            "name": "Taus T."
-          },
-          {
-            "name": "Winkler S."
-          },
-          {
-            "name": "Mechtler K."
-          }
-        ],
-        "journal": "Journal of Proteome Research"
-      }
-    },
-    {
-      "doi": "10.1002/rcm.9088",
-      "pmid": "33759252",
-      "pmcid": "PMC8244010",
-      "type": [],
-      "version": null,
-      "note": null,
-      "metadata": {
-        "title": "MS Amanda 2.0: Advancements in the standalone implementation",
-        "abstract": "Rationale: Database search engines are the preferred method to identify peptides in mass spectrometry data. However, valuable software is in this context not only defined by a powerful algorithm to separate correct from false identifications, but also by constant maintenance and continuous improvements. Methods: In 2014, we presented our peptide identification algorithm MS Amanda, showing its suitability for identifying peptides in high-resolution tandem mass spectrometry data and its ability to outperform widely used tools to identify peptides. Since then, we have continuously worked on improvements to enhance its usability and to support new trends and developments in this fast-growing field, while keeping the original scoring algorithm to assess the quality of a peptide spectrum match unchanged. Results: We present the outcome of these efforts, MS Amanda 2.0, a faster and more flexible standalone version with the original scoring algorithm. The new implementation has led to a 3–5× speedup, is able to handle new ion types and supports standard data formats. We also show that MS Amanda 2.0 works best when using only the most common ion types in a particular search instead of all possible ion types. Conclusions: MS Amanda is available free of charge from https://ms.imp.ac.at/index.php?action=msamanda.",
-        "date": "2021-06-15T00:00:00Z",
-        "citationCount": 12,
-        "authors": [
-          {
-            "name": "Dorfer V."
-          },
-          {
-            "name": "Strobl M."
-          },
-          {
-            "name": "Winkler S."
-          },
-          {
-            "name": "Mechtler K."
-          }
-        ],
-        "journal": "Rapid Communications in Mass Spectrometry"
-      }
-    },
-    {
-      "doi": "10.1021/acs.jproteome.7b00836",
-      "pmid": "29863353",
-      "pmcid": "PMC6079931",
-      "type": [],
-      "version": null,
-      "note": null,
-      "metadata": {
-        "title": "CharmeRT: Boosting Peptide Identifications by Chimeric Spectra Identification and Retention Time Prediction",
-        "abstract": "Coeluting peptides are still a major challenge for the identification and validation of MS/MS spectra, but carry great potential. To tackle these problems, we have developed the here presented CharmeRT workflow, combining a chimeric spectra identification strategy implemented as part of the MS Amanda algorithm with the validation system Elutator, which incorporates a highly accurate retention time prediction algorithm. For high-resolution data sets this workflow identifies 38-64% chimeric spectra, which results in up to 63% more unique peptides compared to a conventional single search strategy.",
-        "date": "2018-08-03T00:00:00Z",
-        "citationCount": 48,
-        "authors": [
-          {
-            "name": "Dorfer V."
-          },
-          {
-            "name": "Maltsev S."
-          },
-          {
-            "name": "Winkler S."
-          },
-          {
-            "name": "Mechtler K."
-          }
-        ],
-        "journal": "Journal of Proteome Research"
-      }
+      "version": "1.1.0"
     }
   ],
   "credit": [
     {
-      "name": "Viktoria Dorfer",
-      "email": "viktoria.dorfer@fh-hagenberg.at",
-      "url": "http://bioinformatics.fh-hagenberg.at",
-      "orcidid": "https://orcid.org/0000-0002-5332-5701",
-      "gridid": null,
-      "rorid": null,
-      "fundrefid": null,
-      "typeEntity": null,
-      "typeRole": [],
-      "note": null
+      "name": "Benedetto Polimeni",
+      "email": "polimeni@ingm.org",
+      "orcidid": "https://orcid.org/0000-0002-7064-7294",
+      "typeEntity": "Person",
+      "typeRole": [
+        "Developer"
+      ]
     }
   ],
-  "owner": "v_dorfer",
-  "additionDate": "2023-07-26T07:25:03.101789Z",
-  "lastUpdate": "2024-11-24T14:16:38.343182Z",
-  "editPermission": {
-    "type": "group",
-    "authors": [
-      "n.m.palmblad@lumc.nl"
-    ]
-  },
+  "owner": "bepoli",
+  "additionDate": "2024-09-24T11:03:55.145438Z",
+  "lastUpdate": "2024-09-24T11:03:55.152445Z",
   "validated": 0,
   "homepage_status": 0,
-  "elixir_badge": 0,
-  "confidence_flag": null
+  "elixir_badge": 0
 }
