@@ -18,6 +18,8 @@ class TestGenerator(BaseTestObject):
         """
         self.build()
 
+        print(f"ARRVALS: {self.value_factory.array_values}")
+
         self.test_string_or_object(self.value_factory.string_values)
         self.test_string_or_object(self.value_factory.object_values)
         self.test_array(self.value_factory.array_values)

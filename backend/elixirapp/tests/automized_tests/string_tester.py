@@ -3,15 +3,20 @@ import string
 import random
 import copy
 import re
+from .object_tester import ObjectTester
 from .constants import INVALID, VALID, PATTERN, MIN_LENGTH, MAX_LENGTH, ENUM, VALUE_DICT_BASE, DEFAULT_BASE_STRING,\
                        ANY_OF, EXAMPLES
 
 
 class StringTester:
     @staticmethod
-    def create_string_values(constraint_dict: dict):
+    def create_string_values(path: str, constraint_dict: dict, ref_info: dict):
         value_dict = copy.deepcopy(VALUE_DICT_BASE)
         base_string = StringTester.get_example_string(constraint_dict)
+
+        outer_path = '/'.join(path.split('/')[:-1])
+        if ObjectTester.get_edam_type(outer_path, ref_info):  # edam string values are tested as implicit object
+            return
 
         if PATTERN in constraint_dict:
             pattern = constraint_dict[PATTERN]

@@ -10,18 +10,19 @@ class ObjectTester:
         """
         Description:    Method for creating valid and invalid values for the objects based on schema restrictions.
         """
-        properties = obj_restrictions[PROPERTIES]
 
+        properties = obj_restrictions[PROPERTIES]
         object_restrictions = copy.deepcopy(VALUE_DICT_BASE)
-        object_restrictions[VALID], object_restrictions[INVALID] = ObjectTester.mess_with_properties(properties,
-                                                                                                     ref_info, path,
-                                                                                                     string_values,
-                                                                                                     object_values)
+
         edam_type = ObjectTester.get_edam_type(path, ref_info)
         if edam_type:
             object_restrictions[VALID] = VALID_EDAM_DATA if edam_type == EDAM_DATA else VALID_EDAM_FORMAT
             object_restrictions[INVALID] = [INVALID_EDAM_DATA if edam_type == EDAM_DATA else INVALID_EDAM_FORMAT]
         else:
+            object_restrictions[VALID], object_restrictions[INVALID] = ObjectTester.mess_with_properties(properties,
+                                                                                                     ref_info, path,
+                                                                                                     string_values,
+                                                                                                     object_values)
             if ADDITIONAL_PROPERTIES in obj_restrictions:
                 extended_object = ObjectTester.get_additionalProperties_test_value(object_restrictions[VALID])
                 if obj_restrictions[ADDITIONAL_PROPERTIES]:  # additional properties are allowed
@@ -45,7 +46,6 @@ class ObjectTester:
                         to the given obj_rest dictionary.
         """
         valid_object, invalid_values = {}, []  # instantiate
-
         for item_name in properties:  # get valid value for each item using other dictionaries
             path_to_item = f"{path}/{item_name}"  # assemble path
             [path_to_item.split('/')[-1]]
