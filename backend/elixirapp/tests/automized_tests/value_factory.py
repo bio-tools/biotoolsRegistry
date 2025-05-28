@@ -2,13 +2,18 @@ from .schema_parser import SchemaParser
 from .string_tester import StringTester
 from .array_tester import ArrayTester
 from .object_tester import ObjectTester
-from .constants import STRING, ARRAY, OBJECT
+from .constants import STRING, ARRAY, OBJECT, REF_INFO
 
 
 class ValueFactory:
     def __init__(self):
         parser = SchemaParser()
         self.restriction_dict = parser.create_restriction_dict()
+
+        self.string_restrictions = self.restriction_dict[STRING]
+        self.array_restrictions = self.restriction_dict[ARRAY]
+        self.object_restrictions = self.restriction_dict[OBJECT]
+        self.ref_info = self.restriction_dict[REF_INFO]
 
         self.string_values = {}
         self.object_values = {}
@@ -30,10 +35,6 @@ class ValueFactory:
 
     def create_values_by_level(self):
         depth_dict = self.get_paths_grouped_by_depth()
-
-        self.string_restrictions = self.restriction_dict[STRING]
-        self.array_restrictions = self.restriction_dict[ARRAY]
-        self.object_restrictions = self.restriction_dict[OBJECT]
 
         for depth in range(max(depth_dict.keys()), min(depth_dict.keys()) - 1, -1):
             for path in depth_dict[depth]:
@@ -67,7 +68,7 @@ class ValueFactory:
         """
         Description:    Method for creating valid and invalid values for the objects based on schema restrictions.
         """
-        new_obj_entry = ObjectTester.create_object_values(self.object_restrictions[path], path, self.string_values,
+        new_obj_entry = ObjectTester.create_object_values(self.object_restrictions[path], self.ref_info, path, self.string_values,
                                                           self.object_values)
         self.object_values[path] = new_obj_entry
 
@@ -104,3 +105,12 @@ class ValueFactory:
             next_object = parsing_object.get(key)
 
         return self._update_tool_value(next_object, path[1:], new_value)
+
+
+def main():
+    fac = ValueFactory()
+    fac.create_values_by_level()
+
+
+if __name__ == "__main__":
+    main()

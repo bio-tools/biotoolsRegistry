@@ -1,6 +1,6 @@
 import os
 import json
-from .constants import STRING, ARRAY, OBJECT, DEFINITIONS, TOOL, PROPERTIES, ITEMS, TYPE, REF, TYPE_DICT
+from .constants import STRING, ARRAY, OBJECT, DEFINITIONS, TOOL, PROPERTIES, ITEMS, TYPE, REF, TYPE_DICT, REF_INFO
 
 schema_dir = os.path.dirname(os.path.abspath(__file__))
 schema_filename = "biotoolsj.json"
@@ -14,7 +14,8 @@ class SchemaParser:
         self.restriction_dict = {
             STRING: {},
             OBJECT: {},
-            ARRAY: {}
+            ARRAY: {},
+            REF_INFO: {}
         }
 
     def create_restriction_dict(self):
@@ -51,6 +52,11 @@ class SchemaParser:
     def handle_ref_type(self, reference: str, path_to_prop: list):
         reference_name = reference.split('/')[-1]
         reference_definition = self.type_definitions[reference_name]
+
+        if reference_name not in self.restriction_dict[REF_INFO]:
+            self.restriction_dict[REF_INFO][reference_name] = []
+        self.restriction_dict[REF_INFO][reference_name].append('/'.join(path_to_prop))
+
         self.handle_prop(reference_definition, path_to_prop)
 
     def handle_prop(self, prop: object, path_to_prop: list):

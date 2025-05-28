@@ -5,6 +5,7 @@ VALID = "valid"
 STRING = "string"
 ARRAY = "array"
 OBJECT = "object"
+REF_INFO = "ref_info"
 
 DEFINITIONS = "definitions"
 PROPERTIES = "properties"
@@ -12,6 +13,9 @@ ITEMS = "items"
 TOOL = "tool"
 REF = "$ref"
 TYPE = "type"
+
+EDAM_DATA = "EDAMdata"
+EDAM_FORMAT = "EDAMformat"
 
 # --------- DICTIONARY TEMPLATES --------
 
@@ -48,8 +52,26 @@ DEFAULT_KEY = "someKey"
 DEFAULT_VALUE = "someValue"
 DEFAULT_KVP = {DEFAULT_KEY: DEFAULT_VALUE}
 
+VALID_EDAM_DATA = {
+    "uri": "http://edamontology.org/data_3917",
+    "term": "Count matrix"
+},
+VALID_EDAM_FORMAT = {
+    "uri": "http://edamontology.org/format_3989",
+    "term": "GZIP format"
+}
+
+INVALID_EDAM_DATA = {
+    "uri": "http://edamontology.org/data_3917",
+    "term": "INVALID DATA"
+}
+
+INVALID_EDAM_FORMAT = {
+    "uri": "http://edamontology.org/format_3989",
+    "term": "INVALID FORMAT"
+}
+
 # ---------- OBJECT ATTRIBUTES ----------
 
 ADDITIONAL_PROPERTIES = "additionalProperties"
 REQUIRED = "required"
-
