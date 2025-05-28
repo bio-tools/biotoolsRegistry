@@ -14,8 +14,12 @@ class StringTester:
         value_dict = copy.deepcopy(VALUE_DICT_BASE)
         base_string = StringTester.get_example_string(constraint_dict)
 
-        outer_path = '/'.join(path.split('/')[:-1])
-        if ObjectTester.get_edam_type(outer_path, ref_info):  # edam string values are tested as implicit object
+        path_parts = path.split('/')
+        has_edam_type = any(
+            ObjectTester.get_edam_type('/'.join(path_parts[:i]), ref_info)
+            for i in range(1, len(path_parts) + 1)
+        )
+        if has_edam_type:  # edam string values are tested as implicit object
             return
 
         if PATTERN in constraint_dict:

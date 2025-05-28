@@ -2,7 +2,7 @@ from .schema_parser import SchemaParser
 from .string_tester import StringTester
 from .array_tester import ArrayTester
 from .object_tester import ObjectTester
-from .constants import STRING, ARRAY, OBJECT, REF_INFO
+from .constants import STRING, ARRAY, OBJECT, REF_INFO, EDGE_CASE_PATHS
 
 
 class ValueFactory:
@@ -40,6 +40,10 @@ class ValueFactory:
             for path in depth_dict[depth]:
                 self.create_value(path)
 
+        self.string_values = self._clean_values(self.string_values, False)
+        self.object_values = self._clean_values(self.object_values, False)
+        self.array_values = self._clean_values(self.array_values, True)
+
     def create_value(self, path: str):
         if path in self.restriction_dict[STRING]:  # delegate to string dictionary
             self.create_string_value(path)
@@ -54,7 +58,7 @@ class ValueFactory:
                         restrictions.
         """
         string_restrictions = self.restriction_dict[STRING]
-        self.string_values[path] = StringTester.create_string_values(string_restrictions[path])
+        self.string_values[path] = StringTester.create_string_values(path, string_restrictions[path], self.ref_info)
 
     def create_array_value(self, path: str):
         """
@@ -72,6 +76,27 @@ class ValueFactory:
                                                           self.object_values)
         self.object_values[path] = new_obj_entry
 
+    def _clean_values(self, value_dict: dict, is_array: bool):
+        def get_edam_type(path: str, ref_info: dict):
+            for key, values in ref_info.items():
+                if key.startswith("EDAM") and path in values:
+                    return key
+            return None
+
+        new_dict = {
+            path: test_dict
+            for path, test_dict in value_dict.items()
+            if not any(
+                get_edam_type('/'.join(path.split('/')[:i]), self.ref_info)
+                for i in range(1, len(path.split('/')) + 1)
+            )
+        }
+        edge_case_paths = [path for path in value_dict.keys() if path in EDGE_CASE_PATHS.keys()]
+        for edge_case_path in edge_case_paths:
+            new_val = [EDGE_CASE_PATHS[edge_case_path]] if is_array else EDGE_CASE_PATHS[edge_case_path]
+            new_dict[edge_case_path] = new_val
+        return new_dict
+
     def alter_tool(self, input_tool: dict, path: list, new_value):
         """
         Description:    Wrapper for updating a tool value.
@@ -83,6 +108,9 @@ class ValueFactory:
         Description:    Modifies the parsing_object in-place by replacing the value at the path with new_value.
                         Returns the value before replacement (if any).
         """
+        if not parsing_object:
+            return
+
         key = path[0]
 
         if len(path) == 1:
@@ -105,12 +133,3 @@ class ValueFactory:
             next_object = parsing_object.get(key)
 
         return self._update_tool_value(next_object, path[1:], new_value)
-
-
-def main():
-    fac = ValueFactory()
-    fac.create_values_by_level()
-
-
-if __name__ == "__main__":
-    main()

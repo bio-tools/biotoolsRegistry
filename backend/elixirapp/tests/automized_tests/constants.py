@@ -55,10 +55,6 @@ DEFAULT_KVP = {DEFAULT_KEY: DEFAULT_VALUE}
 VALID_EDAM_DATA = {
     "uri": "http://edamontology.org/data_3917",
     "term": "Count matrix"
-},
-VALID_EDAM_FORMAT = {
-    "uri": "http://edamontology.org/format_3989",
-    "term": "GZIP format"
 }
 
 INVALID_EDAM_DATA = {
@@ -66,9 +62,45 @@ INVALID_EDAM_DATA = {
     "term": "INVALID DATA"
 }
 
+VALID_EDAM_FORMAT = {
+    "uri": "http://edamontology.org/format_3989",
+    "term": "GZIP format"
+}
+
 INVALID_EDAM_FORMAT = {
     "uri": "http://edamontology.org/format_3989",
     "term": "INVALID FORMAT"
+}
+
+VALID_EDAM_OPERATION = {
+    "uri": "http://edamontology.org/operation_3800",
+    "term": "RNA-Seq quantification"
+}
+
+INVALID_EDAM_OPERATION = {
+    "uri": "http://edamontology.org/operation_3800",
+    "term": "INVALID OPERATION"
+}
+
+VALID_EDAM_TOPIC = {
+    "uri": "http://edamontology.org/topic_0659",
+    "term": "Functional, regulatory and non-coding RNA"
+}
+
+INVALID_EDAM_TOPIC = {
+    "uri": "http://edamontology.org/topic_0659",
+    "term": "INVALID TOPIC"
+}
+
+EDGE_CASE_PATHS = {
+    'function/operation': {
+        VALID: VALID_EDAM_OPERATION,
+        INVALID: INVALID_EDAM_OPERATION
+    },
+    'topic': {
+        VALID: VALID_EDAM_TOPIC,
+        INVALID: INVALID_EDAM_TOPIC
+    }
 }
 
 # ---------- OBJECT ATTRIBUTES ----------

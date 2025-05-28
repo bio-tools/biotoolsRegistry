@@ -10,7 +10,6 @@ class ObjectTester:
         """
         Description:    Method for creating valid and invalid values for the objects based on schema restrictions.
         """
-
         properties = obj_restrictions[PROPERTIES]
         object_restrictions = copy.deepcopy(VALUE_DICT_BASE)
 
