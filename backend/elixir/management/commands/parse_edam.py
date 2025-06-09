@@ -69,6 +69,7 @@ def flatten(lst, node, prev):
 	tmp['uri'] = node['data']['uri']
 	tmp['exact_synonyms'] = node['exact_synonyms']
 	tmp['narrow_synonyms'] = node['narrow_synonyms']
+	tmp['old_labels'] = node.get('old_labels', [])
 
 	tmp['children'] = []
 	if not(tmp.get('children')):
@@ -82,7 +83,7 @@ def flatten(lst, node, prev):
 	return None
 
 
-def listify(input_list):
+def listify(input_list, previous_index_data=None):
 	obj_list = []
 	for el in input_list:
 		node = el['node']
@@ -104,9 +105,16 @@ def listify(input_list):
 				attrs['has_input'] = []
 				attrs['has_topic'] = []
 				attrs['has_output'] = []
+				attrs['old_labels'] = [] # new for historical labels
+
+				current_uri = ''
+				current_label = ''
+
 				for n2 in node.childNodes:
 					if n2.nodeName == 'rdfs:label':
+						current_label = n2.firstChild.nodeValue
 						attrs['text'] = n2.firstChild.nodeValue
+						current_uri = node.attributes['rdf:about'].value
 						attrs['data']['uri'] = node.attributes['rdf:about'].value
 					if n2.nodeName == 'rdfs:subClassOf':
 						if n2.attributes:
@@ -131,6 +139,25 @@ def listify(input_list):
 						attrs['consider'].append(n2.attributes['rdf:resource'].value)
 					if n2.nodeName == 'oboInOwl:hasDefinition':
 						attrs['definition'] = n2.firstChild.nodeValue
+
+				# Check for old terms in previous versions data
+				if current_uri and previous_index_data:
+
+					previous_term_key = current_uri.lower().replace('http://edamontology.org/','')
+
+					if previous_term_key in previous_index_data:
+						previous_entry = previous_index_data[previous_term_key]
+
+						previous_main_label = previous_entry.get('n')
+
+						if previous_main_label and previous_main_label != current_label:
+							attrs['old_labels'].append(previous_main_label)
+
+						previous_old_labels = previous_entry.get('ol', [])
+						for old_label in previous_old_labels:
+							if old_label not in attrs['old_labels'] and old_label != current_label:
+								attrs['old_labels'].append(old_label)
+				
 				obj_list.append(attrs)
 				el['remove'] = 1
 	return obj_list
@@ -166,7 +193,8 @@ def treefy(node, o):
 							"definition": el["definition"],
 							'has_input': el.get('has_input', []),
 							'has_output': el.get('has_output', []),
-							'has_topic': el.get('has_topic', [])
+							'has_topic': el.get('has_topic', []),
+							'old_labels': el.get('old_labels', [])
 						}
 					)
 	for ch in node["children"]:
@@ -184,6 +212,7 @@ def minify_tree(data):
 		.replace('"has_input":','"hi":')
 		.replace('"has_topic":','"ht":')
 		.replace('"has_output":','"ho":')
+		.replace('"old_labels":','"ol":')
 	)
 
 def indexify(flat_data):
@@ -221,6 +250,7 @@ def minify_flat_data(flat_data):
 		n['hi'] = e.get('has_input')
 		n['ht'] = e.get('has_topic')
 		n['ho'] = e.get('has_output')
+		n['ol'] = e.get('old_labels')
 		
 		new_flat_data.append(n)
 
@@ -247,6 +277,8 @@ def minify_index_data(index_data):
 		new_index_data[k]['hi'] = index_data[k].get('has_input', [])
 		new_index_data[k]['ho'] = index_data[k].get('has_output', [])
 		new_index_data[k]['ht'] = index_data[k].get('has_topic', [])
+		new_index_data[k]['ol'] = index_data[k].get('old_labels', [])
+
 	
 	return new_index_data
 
@@ -507,6 +539,20 @@ class Command(BaseCommand):
 		self.stdout.write('------------------------------------')
 		self.stdout.write('Regenerating the EDAM version '+ version)
 
+		previous_categories = ['EDAM_Topic', 'EDAM_Operation', 'EDAM_Data', 'EDAM_Format', 'EDAM_obsolete']
+		previous_index_data = {}
+
+		for category in previous_categories:
+			previous_index_file  = os.path.join(path_edam_json, 'current',  f'min_index_{category}.json')
+
+			if os.path.exists(previous_index_file):
+				with open(previous_index_file, 'r') as f:
+					loaded_data = json.load(f)
+					previous_index_data.update(loaded_data)
+				self.stdout.write(f'Loaded previous EDAM index data for {category}.')
+			else:
+				self.stdout.write(f'No previous EDAM index data found for {category}.')
+		
 		xmldoc = minidom.parse(path_edam_data + '/owl/EDAM_' + version + '.owl')
 		il = xmldoc.getElementsByTagName('owl:Class')
 
@@ -551,7 +597,7 @@ class Command(BaseCommand):
 			"exact_synonyms": [],
 			'children': []
 		}
-		treefy(obsolete_tree, listify(obsolete_list))
+		treefy(obsolete_tree, listify(obsolete_list, previous_index_data))
 		
 		topic_tree = {
 			'text': 'Topic',
@@ -564,7 +610,7 @@ class Command(BaseCommand):
 			'children': []
 
 		}
-		treefy(topic_tree, listify(topic_list))
+		treefy(topic_tree, listify(topic_list, previous_index_data))
 
 		operation_tree = {
 			'text': 'Operation',
@@ -576,7 +622,7 @@ class Command(BaseCommand):
 			'narrow_synonyms': ['Computational procedure', 'Computational subroutine', 'Computational tool', 'Computational operation', 'Function (programming)', 'Lambda abstraction', 'sumo:Function', 'Mathematical function', 'Process', 'Mathematical operation', 'Function', 'Computational method'],
 			'children': []
 		}
-		treefy(operation_tree, listify(operation_list))
+		treefy(operation_tree, listify(operation_list, previous_index_data))
 
 		data_tree = {
 			'text': 'Data',
@@ -588,7 +634,7 @@ class Command(BaseCommand):
 			'narrow_synonyms': ["Data set","Datum"],
 			'children': []
 		}
-		treefy(data_tree, listify(data_list))
+		treefy(data_tree, listify(data_list, previous_index_data))
 
 		format_tree = {
 			'text': 'Format',
@@ -600,7 +646,7 @@ class Command(BaseCommand):
 			'narrow_synonyms': ["File format"],
 			'children': []
 		}
-		treefy(format_tree, listify(format_list))
+		treefy(format_tree, listify(format_list, previous_index_data))
 
 
 		############################### Dirs

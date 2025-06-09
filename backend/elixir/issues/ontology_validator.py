@@ -10,12 +10,19 @@ class IssueOntologyValidator(object):
 			n_s = {}
 			if 'narrow_synonyms' in node:
 				n_s = {x.lower():x for x in node['narrow_synonyms']}
+			o_l = {}
+			if 'old_labels' in node:
+				o_l.update({x.lower():x for x in node['old_labels']})
+			
 			if node['text'].lower() == name_or_uri.lower() or node['data']['uri'].lower() == name_or_uri.lower():
 				return node
 			elif name_or_uri.lower() in e_s:
 				return {'data': {'uri': node['data']['uri']},'text':e_s[name_or_uri.lower()]}
 			elif name_or_uri.lower() in n_s:
 				return {'data': {'uri': node['data']['uri']},'text':n_s[name_or_uri.lower()]}
+			elif name_or_uri.lower() in o_l:
+				# If it matches an old label, return the current node's URI and the *matched old label*
+				return {'data': {'uri': node['data']['uri']}, 'text': o_l[name_or_uri.lower()]}			
 			else:
 				if len(node['children']) > 0:
 					for child in node['children']:
