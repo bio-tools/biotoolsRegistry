@@ -160,24 +160,12 @@ angular.module('elixir_front.controllers', [])
 		}
 	});
 
-	// check if cookie info was disabled for this user
-	if ('cookie_alert' in localStorage) {
-		$scope.cookie_alert = (localStorage.cookie_alert === 'true');
-	} else {
-		$scope.cookie_alert = true;
-	}
-
 	// check if welcome message was disabled for this user
 	if ('welcome_message' in localStorage) {
 		$scope.welcome_message = (localStorage.welcome_message === 'true');
 	} else {
 		$scope.welcome_message = true;
 	}
-
-	$scope.closeCookieInfoButtonClick = function() {
-		$scope.cookie_alert = false;
-		localStorage.cookie_alert = false;
-	};
 
 	$scope.closeWelcomeMessageButtonClick = function() {
 		$scope.welcome_message = false;
