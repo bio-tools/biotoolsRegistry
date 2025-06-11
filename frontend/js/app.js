@@ -98,18 +98,6 @@ var elixir_front = angular.module('elixir_front', [
 		},
 		resolve: {}
 	})
-	.state('cookies', {
-		url: "/cookies",
-		templateUrl: "partials/cookie-policy.html",
-		data: {
-			meta: {
-				'title': 'Cookies',
-				'description': 'bio.tools cookies policy'
-			},
-			roles: []
-		},
-		resolve: {}
-	})
 	.state('schema', {
 		url: "/schema",
 		templateUrl: "partials/schema.html",
