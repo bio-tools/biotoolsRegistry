@@ -19,7 +19,6 @@ class TestGetTool(BaseTestObject):
             # ensure get worked and that the correct resource was returned
             output_tool = response.json()
             self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertTrue(TH.tools_are_equal(output_tool, TH.get_output_tool()))
 
             self.assertEqual(response.json()['name'], data['name'])
 

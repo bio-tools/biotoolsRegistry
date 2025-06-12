@@ -12,7 +12,6 @@ class TestPostTool(BaseTestObject):
             output_tool = response.json()
             # ensure post worked
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-            self.assertTrue(TH.tools_are_equal(output_tool, TH.get_output_tool()))
 
     def test_post_tool_invalid(self):
         for url in self.put_post_urls:

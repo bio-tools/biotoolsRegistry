@@ -1,45 +1,41 @@
 import copy
 from .constants import INVALID, VALID, VALUE_DICT_BASE, PROPERTIES, DEFAULT_KEY, DEFAULT_VALUE, ADDITIONAL_PROPERTIES, \
-    REQUIRED, EDAM_DATA, EDAM_FORMAT, VALID_EDAM_DATA, VALID_EDAM_FORMAT, INVALID_EDAM_DATA, INVALID_EDAM_FORMAT
+    REQUIRED
 
 
 class ObjectTester:
     @staticmethod
     def create_object_values(obj_restrictions: dict, ref_info: dict, path: str, string_values: dict,
-                             object_values: dict):
+                             object_values: dict, arr_values: dict):
         """
         Description:    Method for creating valid and invalid values for the objects based on schema restrictions.
         """
         properties = obj_restrictions[PROPERTIES]
         object_restrictions = copy.deepcopy(VALUE_DICT_BASE)
 
-        edam_type = ObjectTester.get_edam_type(path, ref_info)
-        if edam_type:
-            object_restrictions[VALID] = VALID_EDAM_DATA if edam_type == EDAM_DATA else VALID_EDAM_FORMAT
-            object_restrictions[INVALID] = [INVALID_EDAM_DATA if edam_type == EDAM_DATA else INVALID_EDAM_FORMAT]
-        else:
-            object_restrictions[VALID], object_restrictions[INVALID] = ObjectTester.mess_with_properties(properties,
+        object_restrictions[VALID], object_restrictions[INVALID] = ObjectTester.mess_with_properties(properties,
                                                                                                      ref_info, path,
                                                                                                      string_values,
-                                                                                                     object_values)
-            if ADDITIONAL_PROPERTIES in obj_restrictions:
-                extended_object = ObjectTester.get_additionalProperties_test_value(object_restrictions[VALID])
-                if obj_restrictions[ADDITIONAL_PROPERTIES]:  # additional properties are allowed
-                    if not isinstance(object_restrictions[VALID], list):
-                        object_restrictions[VALID] = [object_restrictions[VALID]]
-                    object_restrictions[VALID].append(extended_object)
-                else:  # additional properties are not allowed
-                    object_restrictions[INVALID].append(extended_object)
+                                                                                                     object_values,
+                                                                                                     arr_values)
+        if ADDITIONAL_PROPERTIES in obj_restrictions:
+            extended_object = ObjectTester.get_additionalProperties_test_value(object_restrictions[VALID])
+            if obj_restrictions[ADDITIONAL_PROPERTIES]:  # additional properties are allowed
+                if not isinstance(object_restrictions[VALID], list):
+                    object_restrictions[VALID] = [object_restrictions[VALID]]
+                object_restrictions[VALID].append(extended_object)
+            else:  # additional properties are not allowed
+                object_restrictions[INVALID].append(extended_object)
 
-            if REQUIRED in obj_restrictions:
-                object_restrictions[INVALID].extend(
-                    ObjectTester.add_required_test_values(object_restrictions[VALID], obj_restrictions[REQUIRED]))
+        if REQUIRED in obj_restrictions:
+            object_restrictions[INVALID].extend(
+                ObjectTester.add_required_test_values(object_restrictions[VALID], obj_restrictions[REQUIRED]))
 
         return object_restrictions
 
     # TEST OBJECT PROPERTIES -------------------------------------------------------------------------------------------
     @staticmethod
-    def mess_with_properties(properties: list, ref_info: dict, path: str, string_values: dict, object_values: dict):
+    def mess_with_properties(properties: list, ref_info: dict, path: str, string_values: dict, object_values: dict, arr_values: dict):
         """
         Description:    Uses property list and restriction information to create valid and invalid objects and adds them
                         to the given obj_rest dictionary.
@@ -47,26 +43,20 @@ class ObjectTester:
         valid_object, invalid_values = {}, []  # instantiate
         for item_name in properties:  # get valid value for each item using other dictionaries
             path_to_item = f"{path}/{item_name}"  # assemble path
-            [path_to_item.split('/')[-1]]
-
-            item_values = string_values[path_to_item] if path_to_item in string_values else object_values[path_to_item]
+            item_values = None
 
             if path_to_item in string_values:
-                valid_object[item_name] = item_values[VALID]
+                item_values = string_values[path_to_item]
+                valid_object[item_name] = item_values[VALID] if path_to_item not in arr_values else [item_values[VALID]]
             elif path_to_item in object_values:
-                valid_object[item_name] = item_values[VALID]
+                item_values = object_values[path_to_item]
+                valid_object[item_name] = item_values[VALID] if path_to_item not in arr_values else [item_values[VALID]]
 
-            invalid_values.extend(
-                ObjectTester.perturbate_object(valid_object, item_name, item_values[INVALID]))
+            if item_values and INVALID in item_values:
+                invalid_values.extend(
+                    ObjectTester.perturbate_object(valid_object, item_name, item_values[INVALID]))
 
         return valid_object, invalid_values
-
-    @staticmethod
-    def get_edam_type(path: str, ref_info: dict):
-        for key, values in ref_info.items():
-            if key.startswith("EDAM") and path in values:
-                return key
-        return None
 
     @staticmethod
     def perturbate_object(valid_object: dict, prop_name: str, invalid_values: list):
@@ -100,11 +90,11 @@ class ObjectTester:
         for req_prop in required_props:
             test_value = copy.deepcopy(base_object)
 
-            if isinstance(test_value, list):
-                for item in test_value:
-                    item.pop(req_prop)
-            else:
+            if isinstance(test_value, list) and test_value:
+                test_value[:-1].pop(req_prop)
+                test_values.append(test_value)
+            elif req_prop in test_value:
                 test_value.pop(req_prop)
-            test_values.append(test_value)
+                test_values.append(test_value)
 
         return test_values

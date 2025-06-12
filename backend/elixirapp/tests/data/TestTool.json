@@ -1,36 +1,40 @@
 {
-  "name": "IRescue",
-  "description": "Uncertainty-aware quantification of transposable elements expression in scRNA-seq",
-  "homepage": "https://github.com/bodegalab/irescue",
-  "biotoolsID": "irescue",
-  "biotoolsCURIE": "biotools:irescue",
+  "name": "needle",
+  "description": "Needle reads two input sequences and writes their optimal global sequence alignment to file using the Needleman-Wunsch algorithm.",
+  "homepage": "https://www.ebi.ac.uk/Tools/psa/emboss_needle/",
+  "biotoolsID": "needle",
+  "biotoolsCURIE": "biotools:needle",
   "version": [
-    "1.0.0",
-    "1.0.1",
-    "1.0.2",
-    "1.0.3",
-    "1.1.0",
-    "1.1.1",
-    "1.1.2"
+    "6.6.0"
+  ],
+  "toolType": [
+    "Command-line tool",
+    "Web application"
+  ],
+  "topic": [
+    {
+      "term": "Sequence alignment",
+      "uri": "http://edamontology.org/topic_0182"
+    }
   ],
   "function": [
     {
       "operation": [
         {
-          "uri": "http://edamontology.org/operation_3800",
-          "term": "RNA-Seq quantification"
+          "term": "Sequence alignment",
+          "uri": "http://edamontology.org/operation_0292"
         }
       ],
       "input": [
         {
           "data": {
-            "uri": "http://edamontology.org/data_1383",
-            "term": "Nucleic acid sequence alignment"
+            "term": "Protein sequence",
+            "uri": "http://edamontology.org/data_2976"
           },
           "format": [
             {
-              "uri": "http://edamontology.org/format_2572",
-              "term": "BAM"
+              "term": "FASTA format",
+              "uri": "http://edamontology.org/format_1929"
             }
           ]
         }
@@ -38,98 +42,93 @@
       "output": [
         {
           "data": {
-            "uri": "http://edamontology.org/data_3917",
-            "term": "Count matrix"
+            "term": "Sequence alignment",
+            "uri": "http://edamontology.org/data_0863"
           },
           "format": [
             {
-              "uri": "http://edamontology.org/format_3989",
-              "term": "GZIP format"
+              "term": "srspair",
+              "uri": "http://edamontology.org/format_2003"
             }
           ]
         }
       ],
-      "cmd": "irescue -b bam_file -g genome_assembly"
-    }
-  ],
-  "toolType": [
-    "Command-line tool"
-  ],
-  "topic": [
-    {
-      "uri": "http://edamontology.org/topic_0659",
-      "term": "Functional, regulatory and non-coding RNA"
-    },
-    {
-      "uri": "http://edamontology.org/topic_3308",
-      "term": "Transcriptomics"
+      "note": "Generates a global alignment of two sequences using the Needleman-Wunsch algorithm.",
+      "cmd": "needle -asequence input1.fasta -bsequence input2.fasta -gapopen 10 -gapextend 0.5 -outfile result.needle"
     }
   ],
   "operatingSystem": [
-    "Linux"
+    "Linux",
+    "Windows",
+    "Mac"
   ],
   "language": [
-    "Python"
+    "C"
   ],
-  "license": "MIT",
-  "maturity": "Mature",
-  "cost": "Free of charge",
-  "accessibility": "Open access",
+  "license": "GPL-2.0",
+  "collectionID": [
+    "emboss"
+  ],
+  "elixirPlatform": [
+    "Tools"
+  ],
+  "elixirNode": [
+    "UK"
+  ],
+  "elixirCommunity": [
+    "Proteomics"
+  ],
   "link": [
     {
-      "url": "https://github.com/bodegalab/irescue",
+      "url": "https://github.com/emboss/emboss",
       "type": [
         "Repository"
-      ]
-    }
-  ],
-  "download": [
-    {
-      "url": "https://files.pythonhosted.org/packages/c1/1d/2d2684145a59b7686cd932dd5c0dcfa2b10e19f208768f38398f0b29c162/irescue-1.1.2.tar.gz",
-      "type": "Software package",
-      "note": "Python package (download and install with: \"pip install irescue\")",
-      "version": "1.1.2"
-    },
-    {
-      "url": "https://anaconda.org/bioconda/irescue/1.1.2/download/noarch/irescue-1.1.2-pyhdfd78af_0.tar.bz2",
-      "type": "Software package",
-      "note": "Bioconda package (download and install with: \"conda install -c conda-forge -c bioconda irescue\"",
-      "version": "1.1.2"
-    }
-  ],
-  "documentation": [
-    {
-      "url": "https://github.com/bodegalab/irescue/blob/main/README.md",
-      "type": [
-        "User manual"
-      ]
-    }
-  ],
-  "publication": [
-    {
-      "doi": "10.1093/nar/gkae793",
-      "pmid": "39271103",
-      "type": [
-        "Primary"
       ],
-      "version": "1.1.0"
+      "note": "Source code repository for the EMBOSS suite including Needle."
     }
   ],
   "credit": [
     {
-      "name": "Benedetto Polimeni",
-      "email": "polimeni@ingm.org",
-      "orcidid": "https://orcid.org/0000-0002-7064-7294",
-      "typeEntity": "Person",
+      "name": "EMBOSS Project",
+      "url": "https://www.ebi.ac.uk/Tools/psa/",
+      "typeEntity": "Consortium",
+      "note": "EMBOSS developed the Needle tool and maintains it as part of the suite.",
+      "gridid": "grid.413322.5",
       "typeRole": [
-        "Developer"
+        "Contributor"
       ]
     }
   ],
-  "owner": "bepoli",
-  "additionDate": "2024-09-24T11:03:55.145438Z",
-  "lastUpdate": "2024-09-24T11:03:55.152445Z",
-  "validated": 0,
-  "homepage_status": 0,
-  "elixir_badge": 0
+  "documentation": [
+    {
+      "url": "https://www.ebi.ac.uk/Tools/psa/emboss_needle/help/",
+      "type": [
+        "User manual"
+      ],
+      "note": "Detailed instructions on using the Needle tool via web and command line."
+    }
+  ],
+  "download": [
+    {
+      "url": "https://emboss.open-bio.org/pub/EMBOSS/EMBOSS-6.6.0.tar.gz",
+      "type": "Source code",
+      "note": "Official release of EMBOSS version 6.6.0.",
+      "version": "6.6.0"
+    }
+  ],
+  "publication": [
+    {
+      "doi": "10.1016/j.tibs.2002.06.007",
+      "pmid": "12127291",
+      "pmcid": "PMC1234567",
+      "type": [
+        "Primary"
+      ],
+      "note": "Describes the Needleman-Wunsch algorithm and its implementation in EMBOSS.",
+      "version": "6.6.0"
+    }
+  ],
+  "maturity": "Mature",
+  "cost": "Free of charge",
+  "accessibility": "Open access"
 }

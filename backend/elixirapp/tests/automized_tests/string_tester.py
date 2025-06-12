@@ -4,23 +4,15 @@ import random
 import copy
 import re
 from .object_tester import ObjectTester
-from .constants import INVALID, VALID, PATTERN, MIN_LENGTH, MAX_LENGTH, ENUM, VALUE_DICT_BASE, DEFAULT_BASE_STRING,\
-                       ANY_OF, EXAMPLES
+from .constants import INVALID, VALID, PATTERN, MIN_LENGTH, MAX_LENGTH, ENUM, VALUE_DICT_BASE, DEFAULT_BASE_STRING, \
+    ANY_OF, EXAMPLES
 
 
 class StringTester:
     @staticmethod
-    def create_string_values(path: str, constraint_dict: dict, ref_info: dict):
+    def create_string_values(path: str, constraint_dict: dict):
         value_dict = copy.deepcopy(VALUE_DICT_BASE)
         base_string = StringTester.get_example_string(constraint_dict)
-
-        path_parts = path.split('/')
-        has_edam_type = any(
-            ObjectTester.get_edam_type('/'.join(path_parts[:i]), ref_info)
-            for i in range(1, len(path_parts) + 1)
-        )
-        if has_edam_type:  # edam string values are tested as implicit object
-            return
 
         if PATTERN in constraint_dict:
             pattern = constraint_dict[PATTERN]
@@ -102,17 +94,17 @@ class StringTester:
         valid_string = base_str * multiplication_factor
         value_dict[VALID].append(valid_string)
 
-        invalid_string = base_str[:min_length-1]
+        invalid_string = base_str[:min_length - 1]
         value_dict[INVALID].append(invalid_string)
 
     # MAX LENGTH -------------------------------------------------------------------------------------------------------
     @staticmethod
     def create_maxLength_test_values(max_length: int, base_str: str, value_dict: dict):
-        multiplication_factor = int(max_length/len(base_str))
+        multiplication_factor = int(max_length / len(base_str))
         invalid_string = base_str * (multiplication_factor + 1)
         value_dict[INVALID].append(invalid_string)
 
-        valid_string = invalid_string[:max_length-1]
+        valid_string = invalid_string[:(max_length-1)]
         value_dict[VALID].append(valid_string)
 
     # CHECK -----------------------------------------------------------------------------------------------------------

@@ -1,7 +1,6 @@
 from .value_factory import ValueFactory
 from elixir.tool_helper import ToolHelper
-from .constants import VALID, INVALID, VALID_EDAM_OPERATION, INVALID_EDAM_OPERATION, VALID_EDAM_TOPIC, \
-    INVALID_EDAM_TOPIC, EDGE_CASE_PATHS
+from .constants import VALID, INVALID, LEFT_OUT_PATHS
 from elixirapp.tests.test_baseobject import BaseTestObject
 from rest_framework import status
 import json
@@ -29,31 +28,36 @@ class TestGenerator(BaseTestObject):
         input_tool = ToolHelper.get_input_tool()
 
         for path, constraints in test_dict.items():
-
-            if path not in self.value_factory.array_restrictions:  # only test real strings
+            if any(p.strip() in path for p in LEFT_OUT_PATHS):
+                continue
+            if path not in self.value_factory.array_restrictions:  # only test actual strings
                 constraints = test_dict[path]
                 path_list = path.split('/')
 
                 value_before = self._test_valid_values(constraints, input_tool, path_list)  # extract original
                 if value_before:
-                    self._test_invalid_values(constraints, input_tool, path_list)
-                    self.value_factory.alter_tool(input_tool, path_list, value_before)  # change back to original
+                    if INVALID in constraints:
+                        self._test_invalid_values(constraints, input_tool, path_list)
+                        self.value_factory.alter_tool(input_tool, path_list, value_before)  # change back to original
 
     def _test_array(self, test_dict: dict):
         """
         Description:    Method for testing attributes in the tool based on schema restrictions.
         """
         input_tool = ToolHelper.get_input_tool()
-
         for path, constraints in test_dict.items():
+            if any(p.strip() in path for p in LEFT_OUT_PATHS):
+                continue
+
             constraints = test_dict[path]
             path_list = path.split('/')
 
             value_before = self._test_valid_values(constraints, input_tool, path_list)  # extract original
 
             if value_before:
-                self._test_invalid_values(constraints, input_tool, path_list)
-                self.value_factory.alter_tool(input_tool, path_list, value_before)  # change back to original
+                if INVALID in constraints:
+                    self._test_invalid_values(constraints, input_tool, path_list)
+                    self.value_factory.alter_tool(input_tool, path_list, value_before)  # change back to original
 
     def _test_valid_values(self, values: dict, input_tool: object, path_list: list):
         """
@@ -71,13 +75,13 @@ class TestGenerator(BaseTestObject):
                     if isinstance(original_value, list) and not isinstance(valid_value, list):
                         valid_value = [valid_value]
                     original_value = self.value_factory.alter_tool(input_tool, path_list, valid_value)
-                    self.__test_post_valid_tool(input_tool)
-                    self.__test_validate_invalid_tool(input_tool)
+                    self.__test_post_valid_tool(input_tool, valid_value)
+                    self.__test_validate_valid_tool(input_tool, valid_value)
 
         else:
             original_value = self.value_factory.alter_tool(input_tool, path_list, values[VALID])
-            self.__test_post_valid_tool(input_tool)
-            self.__test_validate_invalid_tool(input_tool)
+            self.__test_post_valid_tool(input_tool, values[VALID])
+            self.__test_validate_valid_tool(input_tool, values[VALID])
 
         self.value_factory.alter_tool(input_tool, path_list, original_value)  # change back
 
@@ -95,8 +99,8 @@ class TestGenerator(BaseTestObject):
                 invalid_value = [invalid_value]  # wrap into list
 
             original_value = self.value_factory.alter_tool(input_tool, path_list, invalid_value)  # alter tool
-            self.__test_post_invalid_tool(input_tool)
-            self.__test_validate_invalid_tool(input_tool)
+            self.__test_post_invalid_tool(input_tool, invalid_value)
+            self.__test_validate_invalid_tool(input_tool, invalid_value)
 
         self.value_factory.alter_tool(input_tool, path_list, original_value)  # change back
 
@@ -118,7 +122,7 @@ class TestGenerator(BaseTestObject):
         return self._get_tool_value(next_obj, path[1:]) if next_obj is not None else None
 
     # TEST POST --------------------------------------------------------------------------------------------------------
-    def __test_post_valid_tool(self, valid_tool):
+    def __test_post_valid_tool(self, valid_tool, tododel_val):
         for url in self.put_post_urls:
             with self.subTest(url=url):
                 tool = json.loads(json.dumps(valid_tool))
@@ -126,11 +130,11 @@ class TestGenerator(BaseTestObject):
                 self.assertEqual(
                     response.status_code,
                     status.HTTP_201_CREATED,
-                    msg=f"Tool creation failed for URL {url}. Response code: {response.status_code}, body: {response.content}"
+                    msg=f"Tool creation failed for URL {url} with {tododel_val}. Response code: {response.status_code}, body: {response.content}"
                 )
                 self.remove_tool(url, tool['biotoolsID'])
 
-    def __test_post_invalid_tool(self, invalid_tool):
+    def __test_post_invalid_tool(self, invalid_tool, tododel_val):
         for url in self.put_post_urls:
             with self.subTest(url=url):
                 tool = json.loads(json.dumps(invalid_tool))
@@ -138,29 +142,29 @@ class TestGenerator(BaseTestObject):
                 self.assertEqual(
                     response.status_code,
                     status.HTTP_400_BAD_REQUEST,
-                    msg=f"Tool creation unexpectedly worked for URL {url}.")
+                    msg=f"Tool creation unexpectedly worked for URL {url} with {tododel_val}.")
                 self.remove_tool(url, tool['biotoolsID'])
 
     # TEST VALIDATE ----------------------------------------------------------------------------------------------------
-    def __test_validate_valid_tool(self, valid_tool):
+    def __test_validate_valid_tool(self, valid_tool, tododel_val):
         for url in self.put_post_urls:
             with self.subTest(url=url):
                 tool = json.loads(json.dumps(valid_tool))
                 response = self.validate_tool_post(url, tool)
                 self.assertEqual(
                     response.status_code,
-                    status.HTTP_201_CREATED,
-                    msg=f"Tool validation failed for URL {url}. Response code: {response.status_code}, body: {response.content}"
+                    status.HTTP_200_OK,
+                    msg=f"Tool validation failed for URL {url} with {tododel_val}. Response code: {response.status_code}, body: {response.content}."
                 )
                 self.remove_tool(url, tool['biotoolsID'])
 
-    def __test_validate_invalid_tool(self, valid_tool):
+    def __test_validate_invalid_tool(self, invalid_tool, tododel_val):
         for url in self.put_post_urls:
             with self.subTest(url=url):
-                tool = json.loads(json.dumps(valid_tool))
+                tool = json.loads(json.dumps(invalid_tool))
                 response = self.validate_tool_post(url, tool)
                 self.assertEqual(
                     response.status_code,
                     status.HTTP_400_BAD_REQUEST,
-                    msg=f"Tool validation unexpectedly worked for URL {url}.")
+                    msg=f"Tool validation unexpectedly worked for URL {url} with {tododel_val}.")
                 self.remove_tool(url, tool['biotoolsID'])

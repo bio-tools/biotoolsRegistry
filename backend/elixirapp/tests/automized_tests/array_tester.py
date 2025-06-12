@@ -12,10 +12,11 @@ class ArrayTester:
         source = (string_dict if path in string_dict else obj_dict)[path]
 
         valid_value = source[VALID]
-        invalid_value = random.choice(source[INVALID]) if source[INVALID] else None  # choose an invalid value
-
         ArrayTester.create_values_for_constraints(valid_value, True, constraint_dict, value_dict)
-        ArrayTester.create_values_for_constraints(invalid_value, False, constraint_dict, value_dict)
+
+        if INVALID in source:
+            invalid_value = random.choice(source[INVALID]) if source[INVALID] else None  # choose an invalid value
+            ArrayTester.create_values_for_constraints(invalid_value, False, constraint_dict, value_dict)
 
         return value_dict
 
