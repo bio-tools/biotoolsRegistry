@@ -122,7 +122,7 @@ class TestGenerator(BaseTestObject):
         return self._get_tool_value(next_obj, path[1:]) if next_obj is not None else None
 
     # TEST POST --------------------------------------------------------------------------------------------------------
-    def __test_post_valid_tool(self, valid_tool, tododel_val):
+    def __test_post_valid_tool(self, valid_tool):
         for url in self.put_post_urls:
             with self.subTest(url=url):
                 tool = json.loads(json.dumps(valid_tool))
@@ -130,11 +130,11 @@ class TestGenerator(BaseTestObject):
                 self.assertEqual(
                     response.status_code,
                     status.HTTP_201_CREATED,
-                    msg=f"Tool creation failed for URL {url} with {tododel_val}. Response code: {response.status_code}, body: {response.content}"
+                    msg=f"Tool creation failed for URL {url}. Response code: {response.status_code}, body: {response.content}"
                 )
                 self.remove_tool(url, tool['biotoolsID'])
 
-    def __test_post_invalid_tool(self, invalid_tool, tododel_val):
+    def __test_post_invalid_tool(self, invalid_tool):
         for url in self.put_post_urls:
             with self.subTest(url=url):
                 tool = json.loads(json.dumps(invalid_tool))
@@ -142,11 +142,11 @@ class TestGenerator(BaseTestObject):
                 self.assertEqual(
                     response.status_code,
                     status.HTTP_400_BAD_REQUEST,
-                    msg=f"Tool creation unexpectedly worked for URL {url} with {tododel_val}:\n\t{tool}.")
+                    msg=f"Tool creation unexpectedly worked for URL {url}.")
                 self.remove_tool(url, tool['biotoolsID'])
 
     # TEST VALIDATE ----------------------------------------------------------------------------------------------------
-    def __test_validate_valid_tool(self, valid_tool, tododel_val):
+    def __test_validate_valid_tool(self, valid_tool):
         for url in self.put_post_urls:
             with self.subTest(url=url):
                 tool = json.loads(json.dumps(valid_tool))
@@ -154,11 +154,11 @@ class TestGenerator(BaseTestObject):
                 self.assertEqual(
                     response.status_code,
                     status.HTTP_200_OK,
-                    msg=f"Tool validation failed for URL {url} with {tododel_val}. Response code: {response.status_code}, body: {response.content}."
+                    msg=f"Tool validation failed for URL {url}. Response code: {response.status_code}, body: {response.content}."
                 )
                 self.remove_tool(url, tool['biotoolsID'])
 
-    def __test_validate_invalid_tool(self, invalid_tool, tododel_val):
+    def __test_validate_invalid_tool(self, invalid_tool):
         for url in self.put_post_urls:
             with self.subTest(url=url):
                 tool = json.loads(json.dumps(invalid_tool))
@@ -166,5 +166,5 @@ class TestGenerator(BaseTestObject):
                 self.assertEqual(
                     response.status_code,
                     status.HTTP_400_BAD_REQUEST,
-                    msg=f"Tool validation unexpectedly worked for URL {url} with {tododel_val}.")
+                    msg=f"Tool validation unexpectedly worked for URL {url}.")
                 self.remove_tool(url, tool['biotoolsID'])
