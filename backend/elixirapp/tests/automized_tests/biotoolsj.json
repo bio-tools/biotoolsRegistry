@@ -603,7 +603,7 @@
             "description": "A tag which assigns the software to a collection in bio.tools.",
             "type": "string",
             "minLength": 1,
-            "maxLength": 100,
+            "maxLength": 50,
             "pattern": "^([ \\(-\\)\\+-\\.0-;A-Z_a-z  ᠎ -   　]*)$",
             "examples": [
               "emboss"
@@ -1100,6 +1100,7 @@
                 "title": "Tool credit email",
                 "description": "Email address of the entity that is credited.",
                 "type": "string",
+                "maxLength": 300,
                 "pattern": "^([0-9A-Z_a-z]+(['\\+\\--\\.][0-9A-Z_a-z]+)*@[0-9A-Z_a-z]+([\\--\\.][0-9A-Z_a-z]+)*\\.[0-9A-Z_a-z]+([\\--\\.][0-9A-Z_a-z]+)*)$"
               },
               "url": {

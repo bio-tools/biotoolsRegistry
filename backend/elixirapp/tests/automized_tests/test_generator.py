@@ -75,13 +75,13 @@ class TestGenerator(BaseTestObject):
                     if isinstance(original_value, list) and not isinstance(valid_value, list):
                         valid_value = [valid_value]
                     original_value = self.value_factory.alter_tool(input_tool, path_list, valid_value)
-                    self.__test_post_valid_tool(input_tool, valid_value)
-                    self.__test_validate_valid_tool(input_tool, valid_value)
+                    self.__test_post_valid_tool(input_tool)
+                    self.__test_validate_valid_tool(input_tool)
 
         else:
             original_value = self.value_factory.alter_tool(input_tool, path_list, values[VALID])
-            self.__test_post_valid_tool(input_tool, values[VALID])
-            self.__test_validate_valid_tool(input_tool, values[VALID])
+            self.__test_post_valid_tool(input_tool)
+            self.__test_validate_valid_tool(input_tool)
 
         self.value_factory.alter_tool(input_tool, path_list, original_value)  # change back
 
@@ -99,8 +99,8 @@ class TestGenerator(BaseTestObject):
                 invalid_value = [invalid_value]  # wrap into list
 
             original_value = self.value_factory.alter_tool(input_tool, path_list, invalid_value)  # alter tool
-            self.__test_post_invalid_tool(input_tool, invalid_value)
-            self.__test_validate_invalid_tool(input_tool, invalid_value)
+            self.__test_post_invalid_tool(input_tool)
+            self.__test_validate_invalid_tool(input_tool)
 
         self.value_factory.alter_tool(input_tool, path_list, original_value)  # change back
 

@@ -31,7 +31,6 @@ class TestPermissions(BaseTestObject):
     }
 
     # BASE -------------------------------------------------------------------------------------------------------------
-
     def post_tool_with_permissions(self, data, permissions):
         data[self.editPermission_field] = permissions
         self.post_tool_checked(data)
