@@ -142,7 +142,7 @@ class TestGenerator(BaseTestObject):
                 self.assertEqual(
                     response.status_code,
                     status.HTTP_400_BAD_REQUEST,
-                    msg=f"Tool creation unexpectedly worked for URL {url} with {tododel_val}.")
+                    msg=f"Tool creation unexpectedly worked for URL {url} with {tododel_val}:\n\t{tool}.")
                 self.remove_tool(url, tool['biotoolsID'])
 
     # TEST VALIDATE ----------------------------------------------------------------------------------------------------

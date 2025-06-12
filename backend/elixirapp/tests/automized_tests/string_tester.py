@@ -36,7 +36,7 @@ class StringTester:
             patterns = constraint_dict[ANY_OF]
             StringTester.create_anyOf_test_values(patterns, value_dict, base_string)
 
-        return StringTester.trim_value_dict(value_dict)
+        return StringTester.trim_value_dict(path, value_dict)
 
     # PATTERN ----------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -106,15 +106,19 @@ class StringTester:
 
         valid_string = invalid_string[:(max_length-1)]
         value_dict[VALID].append(valid_string)
+        value_dict[VALID] = [val for val in value_dict[VALID] if len(val) < max_length]
 
     # CHECK -----------------------------------------------------------------------------------------------------------
     @staticmethod
-    def trim_value_dict(value_dict: dict):
+    def trim_value_dict(path: str, value_dict: dict):
         valid_values = value_dict[VALID]
 
         if not valid_values:  # use default if no restrictions were specified
             value_dict[VALID] = DEFAULT_BASE_STRING
         else:  # choose one valid value
-            value_dict[VALID] = random.choice(valid_values)
+            value_dict[VALID] = valid_values[0]
+
+        if path == 'download/version' and '' in value_dict[INVALID]:
+            value_dict[INVALID].remove('')
 
         return value_dict

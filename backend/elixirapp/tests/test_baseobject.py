@@ -1,6 +1,7 @@
 from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+import time
 from elixir.views import Ontology, User
 from django.test import TestCase
 from elasticsearch import Elasticsearch
@@ -155,6 +156,15 @@ class BaseTestObject(TestCase):
         es.indices.create(settings.ELASTIC_SEARCH_INDEX)
         mapping = BaseTestObject.read_schema()
         es.indices.put_mapping(index=settings.ELASTIC_SEARCH_INDEX, body=mapping)
+        self.wait_for_es()
+
+    def wait_for_es(self, timeout=30):
+        es = Elasticsearch("http://elasticsearch:9200")
+        for _ in range(timeout):
+            if es.ping():
+                return
+            time.sleep(1)
+        raise RuntimeError("Elasticsearch did not start in time")
 
     @classmethod
     def setUpClass(cls):
