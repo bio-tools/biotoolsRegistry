@@ -6,6 +6,8 @@ on:
       - master
       - main
       - develop
+  pull_request:
+    branches: [main, develop, master]
 
 jobs:
   test-compose:
