@@ -2,7 +2,7 @@
 # - mysql
 # - elasticsearch
 # - backend: depends on mysql and elasticsearch
-# - frontnend: depends on backend
+# - frontend: depends on backend
 
 # This file is meant to aid local development and testing. It *must not* be
 # used for production deployment.
@@ -39,7 +39,12 @@ services:
       - "9300:9300"
     networks:
       - net
-      
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -fs http://localhost:9200 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   backend:
     container_name: biotools-backend
     image: biotools/backend:latest
@@ -48,7 +53,7 @@ services:
     environment:
       - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
       - BIOTOOLS_MYSQL_DB=elixir
-      - BIOTOOLS_MYSQL_HOST=mysql
+      - BIOTOOLS_MYSQL_HOST=biotools-mysql
       - BIOTOOLS_MYSQL_PASSWORD=123
       - BIOTOOLS_MYSQL_USER=elixir
     ports:
@@ -56,8 +61,10 @@ services:
     networks:
       - net
     depends_on:
-      - mysql
-      - elasticsearch
+      mysql:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
     links:
       - mysql
       - elasticsearch
@@ -74,7 +81,7 @@ services:
     networks:
       - net
     depends_on:
-       - backend
+      - backend
     volumes:
       - ./frontend:/home/biotools/frontend:consistent
       - biotools_node_modules:/home/biotools/frontend/node_modules
@@ -86,7 +93,7 @@ networks:
     name: biotools-net
 
 volumes:
-  data-mysql: {}
-  data-elasticsearch: {}
-  biotools_node_modules: {}
-  biotools_bower_components: {}
+  data-mysql: { }
+  data-elasticsearch: { }
+  biotools_node_modules: { }
+  biotools_bower_components: { }
