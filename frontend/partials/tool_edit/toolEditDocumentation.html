@@ -11,7 +11,13 @@
 			<div class="panel panel-default" ng-repeat="documentation in software.documentation track by $index" ng-class="{'no-margin-bottom': $last};">
 				<ng-form name="documentationDetailForm">
 					<div class="panel-body" style="position: relative;">
-						<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('documentation', software, $index)"></i>
+
+						<div class="reorder-icons">
+							<i class="fa fa-arrow-up pointer" ng-click="moveItem('documentation', $index, -1)" ng-show="$index > 0"></i>
+							<i class="fa fa-arrow-down pointer" ng-click="moveItem('documentation', $index, 1)" ng-show="$index < software.documentation.length - 1"></i>
+							<i class="fa fa-times highlight-icon" ng-click="removeButtonClick('documentation', software, $index)"></i>
+						</div>
+
 						<div>
 							<!-- URL -->
 							<div class="form-group" style="margin-top:8px;" ng-class="{'has-error': registrationErrorPayload.documentation[$index].url}">
@@ -23,18 +29,7 @@
 								</div>
 							</div>
 							
-							<!-- Documentation type
-							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.documentation[$index].type}">
-								<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.documentationType.description}}">Documentation type <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#documentationtype"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
-								<span style="color:#ff0000;position: absolute; right: 5px;"><b>*</b></span></span></label>
-								<div class="col-sm-9">
-									<select class="form-control select-btn-group" ng-options="item.value as item.text for item in documentationTypeOptions" ng-model="software.documentation[$index].type" name="type" validate-edit-resource-field index={{$index}}>
-									</select>
-									<label class="help-block" ng-repeat="error in documentationDetailForm.type.errorMessages" bo-text="error"></label>
-								</div>
-							</div> -->
-
-							<!-- New Documentation type -->
+							<!-- Documentation type -->
 							<div class="form-group">
 								<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.documentationType.description}}">Documentation type <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#documentationtype"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
 									<span style="color:#ff0000;position: absolute; right: 5px;"><b>*</b></span>

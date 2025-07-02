@@ -31,7 +31,7 @@ RUN pip install -r requirements.txt && rm -f requirements.txt
 
 COPY runtime/apache.conf /etc/apache2/sites-available/elixir.conf
 
-RUN a2enmod wsgi && a2enmod ssl && a2enmod rewrite && a2enmod proxy_http && a2ensite elixir.conf && service apache2 restart
+RUN a2enmod headers && a2enmod wsgi && a2enmod ssl && a2enmod rewrite && a2enmod proxy_http && a2ensite elixir.conf && service apache2 restart
 
 RUN apt-get update -y && apt-get install curl
 

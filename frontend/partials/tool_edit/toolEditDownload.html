@@ -11,7 +11,13 @@
 			<div class="panel panel-default" ng-repeat="link in software.download track by $index" ng-class="{'no-margin-bottom': $last};">
 				<ng-form name="downloadDetailForm">
 					<div class="panel-body" style="position: relative;">
-						<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('download', software, $index)"></i>
+
+						<div class="reorder-icons">
+							<i class="fa fa-arrow-up pointer" ng-click="moveItem('download', $index, -1)" ng-show="$index > 0"></i>
+							<i class="fa fa-arrow-down pointer" ng-click="moveItem('download', $index, 1)" ng-show="$index < software.download.length - 1"></i>
+							<i class="fa fa-times highlight-icon" ng-click="removeButtonClick('download', software, $index)"></i>
+						</div>
+
 						<div>
 							<!-- URL -->
 							<div class="form-group" style="margin-top:8px;" ng-class="{'has-error': registrationErrorPayload.download[$index].url}">

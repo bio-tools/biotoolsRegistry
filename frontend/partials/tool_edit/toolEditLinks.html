@@ -1,9 +1,9 @@
 <br>
 <div class="panel panel-info">
-					<div class="panel-heading" style="position: relative;"><label align="justify">Miscellaneous links of relevance to the tool.
-					<br>We recommend you specify at least the repository, issue tracker and mailing list URLs, if available. See the <a target="_blank" ng-href="http://biotools.readthedocs.io/en/latest/curators_guide.html#links-group">Curation Guidelines <i class="fa fa-external-link"></i></a>.</label>
-					</div>
-				</div>
+	<div class="panel-heading" style="position: relative;"><label align="justify">Miscellaneous links of relevance to the tool.
+		<br>We recommend you specify at least the repository, issue tracker and mailing list URLs, if available. See the <a target="_blank" ng-href="http://biotools.readthedocs.io/en/latest/curators_guide.html#links-group">Curation Guidelines <i class="fa fa-external-link"></i></a>.</label>
+	</div>
+</div>
 <form name="form.linksForm" class="form-horizontal" novalidate>
 	<div class="form-group">
 		<div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 no-side-padding">
@@ -11,7 +11,13 @@
 			<div class="panel panel-default" ng-repeat="link in software.link track by $index" ng-class="{'no-margin-bottom': $last};">
 				<ng-form name="linkDetailForm">
 					<div class="panel-body" style="position: relative;">
-						<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('link', software, $index)"></i>
+
+						<div class="reorder-icons">
+							<i class="fa fa-arrow-up pointer" ng-click="moveItem('link', $index, -1)" ng-show="$index > 0"></i>
+							<i class="fa fa-arrow-down pointer" ng-click="moveItem('link', $index, 1)" ng-show="$index < software.link.length - 1"></i>
+							<i class="fa fa-times highlight-icon" ng-click="removeButtonClick('link', software, $index)"></i>
+						</div>
+
 						<div>
 							<!-- URL -->
 							<div class="form-group" style="margin-top:8px;" ng-class="{'has-error': registrationErrorPayload.link[$index].url}">
@@ -23,8 +29,6 @@
 									<label class="help-block" ng-repeat="error in linkDetailForm.url.errorMessages" bo-text="error"></label>
 								</div>
 							</div>
-
-							
 
 							<!-- New Link type -->
 							<div class="form-group">
@@ -70,6 +74,7 @@
 					</div>
 				</ng-form>
 			</div>
+
 			<!-- Add link -->
 			<div class="form-group" style="padding-top:7px;">
 				<a href="" ng-show="!meta.function.visibility" ng-click="addButtonClick('link', software, true, true)">Add link</a>
