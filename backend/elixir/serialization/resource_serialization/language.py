@@ -20,6 +20,6 @@ class LanguageSerializer(serializers.ModelSerializer):
 		# checking if blank
 		IsNotBlankValidator(data)
 		# checking if within enum
-		enum = ENUMValidator(['ActionScript', 'Ada', 'AppleScript', 'Assembly language', 'AWK', 'Bash', 'C', 'C#', 'C++', 'COBOL', 'ColdFusion', 'CWL', 'D', 'Delphi', 'Dylan', 'Eiffel', 'Elm', 'Forth', 'Fortran', 'Groovy', 'Haskell', 'Icarus', 'Java', 'JavaScript', 'JSP', 'Julia', 'LabVIEW', 'Lisp', 'Lua', 'Maple', 'Mathematica', 'MATLAB', 'MLXTRAN', 'NMTRAN', 'OCaml', 'Pascal', 'Perl', 'PHP', 'Prolog', 'PyMOL', 'Python', 'R', 'Racket', 'REXX', 'Ruby', 'SAS', 'Scala', 'Scheme', 'Shell', 'Smalltalk', 'SQL', 'Turing', 'Verilog', 'VHDL', 'Visual Basic', 'XAML', 'Other'])
+		enum = ENUMValidator(['ActionScript', 'Ada', 'AppleScript', 'Assembly language', 'AWK', 'Bash', 'C', 'C#', 'C++', 'COBOL', 'ColdFusion', 'CWL', 'D', 'Delphi', 'Dylan', 'Eiffel', 'Elm', 'Forth', 'Fortran', 'Groovy', 'Haskell', 'Icarus', 'Java', 'JavaScript', 'JSP', 'Julia', 'LabVIEW', 'Lisp', 'Lua', 'Maple', 'Mathematica', 'MATLAB', 'MLXTRAN', 'NMTRAN', 'OCaml', 'Pascal', 'Perl', 'PHP', 'Prolog', 'PyMOL', 'Python', 'R', 'Racket', 'REXX', 'Ruby', 'Rust', 'SAS', 'Scala', 'Scheme', 'Shell', 'Smalltalk', 'SQL', 'Turing', 'Verilog', 'VHDL', 'Visual Basic', 'XAML', 'Other'])
 		data = enum(data)
 		return {'name': data}

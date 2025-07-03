@@ -6,7 +6,7 @@
 }
 
 .details-bar-container {
-	height: 90px; 
+	height: 90px;
 }
 
 .details-bar-container-empty {
@@ -76,4 +76,17 @@
 	background-color: #C7D9E6 !important; 
 	border-color: #C7D9E6 !important;
 	box-shadow: none;
+}
+
+@media screen and (max-width: 768px) {
+	.details-bar-text {
+		font-size: 12px;
+	}
+	.details-bar-container {
+		height: 150px; 
+	}
+	.details-bar-default {
+		height: 150px; 
+	}
+	
 }

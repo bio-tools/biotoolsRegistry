@@ -1,0 +1,134 @@
+{
+  "name": "needle",
+  "description": "Needle reads two input sequences and writes their optimal global sequence alignment to file using the Needleman-Wunsch algorithm.",
+  "homepage": "https://www.ebi.ac.uk/Tools/psa/emboss_needle/",
+  "biotoolsID": "needle",
+  "biotoolsCURIE": "biotools:needle",
+  "version": [
+    "6.6.0"
+  ],
+  "toolType": [
+    "Command-line tool",
+    "Web application"
+  ],
+  "topic": [
+    {
+      "term": "Sequence alignment",
+      "uri": "http://edamontology.org/topic_0182"
+    }
+  ],
+  "function": [
+    {
+      "operation": [
+        {
+          "term": "Sequence alignment",
+          "uri": "http://edamontology.org/operation_0292"
+        }
+      ],
+      "input": [
+        {
+          "data": {
+            "term": "Protein sequence",
+            "uri": "http://edamontology.org/data_2976"
+          },
+          "format": [
+            {
+              "term": "FASTA format",
+              "uri": "http://edamontology.org/format_1929"
+            }
+          ]
+        }
+      ],
+      "output": [
+        {
+          "data": {
+            "term": "Sequence alignment",
+            "uri": "http://edamontology.org/data_0863"
+          },
+          "format": [
+            {
+              "term": "srspair",
+              "uri": "http://edamontology.org/format_2003"
+            }
+          ]
+        }
+      ],
+      "note": "Generates a global alignment of two sequences using the Needleman-Wunsch algorithm.",
+      "cmd": "needle -asequence input1.fasta -bsequence input2.fasta -gapopen 10 -gapextend 0.5 -outfile result.needle"
+    }
+  ],
+  "operatingSystem": [
+    "Linux",
+    "Windows",
+    "Mac"
+  ],
+  "language": [
+    "C"
+  ],
+  "license": "GPL-2.0",
+  "collectionID": [
+    "emboss"
+  ],
+  "elixirPlatform": [
+    "Tools"
+  ],
+  "elixirNode": [
+    "UK"
+  ],
+  "elixirCommunity": [
+    "Proteomics"
+  ],
+  "link": [
+    {
+      "url": "https://github.com/emboss/emboss",
+      "type": [
+        "Repository"
+      ],
+      "note": "Source code repository for the EMBOSS suite including Needle."
+    }
+  ],
+  "credit": [
+    {
+      "name": "EMBOSS Project",
+      "url": "https://www.ebi.ac.uk/Tools/psa/",
+      "typeEntity": "Consortium",
+      "note": "EMBOSS developed the Needle tool and maintains it as part of the suite.",
+      "gridid": "grid.413322.5",
+      "typeRole": [
+        "Contributor"
+      ]
+    }
+  ],
+  "documentation": [
+    {
+      "url": "https://www.ebi.ac.uk/Tools/psa/emboss_needle/help/",
+      "type": [
+        "User manual"
+      ],
+      "note": "Detailed instructions on using the Needle tool via web and command line."
+    }
+  ],
+  "download": [
+    {
+      "url": "https://emboss.open-bio.org/pub/EMBOSS/EMBOSS-6.6.0.tar.gz",
+      "type": "Source code",
+      "note": "Official release of EMBOSS version 6.6.0.",
+      "version": "6.6.0"
+    }
+  ],
+  "publication": [
+    {
+      "doi": "10.1016/j.tibs.2002.06.007",
+      "pmid": "12127291",
+      "pmcid": "PMC1234567",
+      "type": [
+        "Primary"
+      ],
+      "note": "Describes the Needleman-Wunsch algorithm and its implementation in EMBOSS.",
+      "version": "6.6.0"
+    }
+  ],
+  "maturity": "Mature",
+  "cost": "Free of charge",
+  "accessibility": "Open access"
+}

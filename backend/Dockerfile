@@ -46,7 +46,7 @@ RUN . /opt/venv/bin/activate
 
 COPY runtime/apache.conf /etc/apache2/sites-available/elixir.conf
 
-RUN a2enmod wsgi && a2enmod ssl && a2enmod rewrite && a2enmod proxy_http && a2ensite elixir.conf && service apache2 restart
+RUN a2enmod headers && a2enmod wsgi && a2enmod ssl && a2enmod rewrite && a2enmod proxy_http && a2ensite elixir.conf && service apache2 restart
 
 EXPOSE 80
 

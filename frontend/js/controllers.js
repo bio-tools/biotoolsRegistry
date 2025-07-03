@@ -45,7 +45,7 @@ angular.module('elixir_front.controllers', [])
 		}
 	};
 	$scope.tableHeight = function() {
-		return {"height": ((Math.min($scope.ToolList.count, 10) * $scope.gridOptions.rowHeight) + 33) + "px"};
+		return {"height": ((Math.min($scope.ToolList.count, 4) * $scope.gridOptions.rowHeight) + 33) + "px"};
 	}
 }])
 .controller('ToolGridCellController', ['$scope', function ($scope) {
@@ -160,24 +160,12 @@ angular.module('elixir_front.controllers', [])
 		}
 	});
 
-	// check if cookie info was disabled for this user
-	if ('cookie_alert' in localStorage) {
-		$scope.cookie_alert = (localStorage.cookie_alert === 'true');
-	} else {
-		$scope.cookie_alert = true;
-	}
-
 	// check if welcome message was disabled for this user
 	if ('welcome_message' in localStorage) {
 		$scope.welcome_message = (localStorage.welcome_message === 'true');
 	} else {
 		$scope.welcome_message = true;
 	}
-
-	$scope.closeCookieInfoButtonClick = function() {
-		$scope.cookie_alert = false;
-		localStorage.cookie_alert = false;
-	};
 
 	$scope.closeWelcomeMessageButtonClick = function() {
 		$scope.welcome_message = false;
@@ -439,6 +427,14 @@ angular.module('elixir_front.controllers', [])
 		}
 	}
 	
+	// reset success flags when changes are made
+	$scope.$watch('software', function(newVal, oldVal) {
+		if (newVal !== oldVal) {
+			$scope.savingProgress.success = false;
+			$scope.validationProgress.success = false;
+		}
+	}, true);
+	
 	// used terms (biotoolsID) for searching in relations
 	function getBiotoolsIDs(){
 		var d = $q.defer();
@@ -559,6 +555,16 @@ angular.module('elixir_front.controllers', [])
 			}
 		}
 	};	
+
+	$scope.moveItem = function(key, index, direction) {
+		var array = $scope.software[key];
+  		var newIndex = index + direction;
+  		if (newIndex < 0 || newIndex >= array.length) return;
+		// Swap the elements
+  		var temp = array[newIndex];
+		array[newIndex] = array[index];
+		array[index] = temp;
+	};	  
 
 	// create connections between entries
 	$scope.errorConnections = {
@@ -1270,15 +1276,18 @@ angular.module('elixir_front.controllers', [])
 		{value: "very low", text: "very low"},
 	];
 
-	$scope.$watch('software.license', function(newValue) {
-        if (newValue === "") {
-            // Remove the license property if the empty option is selected
-            delete $scope.software.license;
-        }
-    });
+	
+	$scope.$watch('software', function() {
+        angular.forEach($scope.software, function(value, key) {
+			if (value === null || value === "") {
+				delete $scope.software[key];
+			}
+		});
+    }, true);
+
 
 }])
-.controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', 'Covid', 'CommunityCollection', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator, Covid, CommunityCollection) {
+.controller('ToolUpdateController', ['$scope', '$controller','$timeout','$state', '$stateParams', 'Tool', 'ToolUpdateValidator', 'CommunityCollection', function($scope, $controller, $timeout, $state, $stateParams, Tool, ToolUpdateValidator, CommunityCollection) {
 	// inherit common controller
 	$controller('ToolEditController', {$scope: $scope});
 
@@ -1287,7 +1296,6 @@ angular.module('elixir_front.controllers', [])
 
 	// set the ID to not autoupdate when name is changed
 	$scope.autoUpdateId = false;
-	$scope.Covid = Covid;
 	$scope.CommunityCollection = CommunityCollection;
 	$scope.validateButtonClick = function() {
 		$timeout(function() {
@@ -1328,7 +1336,7 @@ angular.module('elixir_front.controllers', [])
 	// })
 
 }])
-.controller('ToolCreateController', ['$scope', '$controller', '$timeout', 'ToolListConnection', 'ToolCreateValidator', 'User', '$stateParams', 'Covid', 'CommunityCollection',function($scope, $controller, $timeout, ToolListConnection, ToolCreateValidator, User, $stateParams, Covid, CommunityCollection){
+.controller('ToolCreateController', ['$scope', '$controller', '$timeout', 'ToolListConnection', 'ToolCreateValidator', 'User', '$stateParams',  'CommunityCollection',function($scope, $controller, $timeout, ToolListConnection, ToolCreateValidator, User, $stateParams, CommunityCollection){
 	// inherit common controller
 	$controller('ToolEditController', {$scope: $scope});
 	$scope.orderby = 'text';
@@ -1338,7 +1346,6 @@ angular.module('elixir_front.controllers', [])
 	// initially set the ID to change automatically when name is modified
 	$scope.biotoolsIDDisabled = true;
 	$scope.editIdButtonText = 'Edit ID';
-	$scope.Covid = Covid;
 	$scope.CommunityCollection = CommunityCollection;
 	// remove or replace all URL unsafe characters and set software.id
 	$scope.makeIdURLSafe = function(value) {
@@ -1532,7 +1539,7 @@ angular.module('elixir_front.controllers', [])
 		$scope.loading = true;
 		djangoAuth.resetPassword($scope.credentials.email)
 		.then(function (response) {
-			$scope.success_message = response.success;
+			$scope.success_message = 'If this email is linked to an account, a reset link will be sent.';
 			$scope.loading = false;
 		}, function (response) {
 			$scope.error_message = response;

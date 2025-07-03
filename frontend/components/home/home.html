@@ -1,72 +1,70 @@
 <div ng-controller="HomeController">
 	
+	<div class="container">
 	
-	
-	<div  class="jumbotron home-summary home-text" >
-		<h1>bio.tools</h1>
-		<p>Essential scientific and technical information about software tools, databases and services for bioinformatics and the life sciences.</p>
-		<div home-search ng-cloak></div>
+		<div class="jumbotron home-summary home-text" >
+			<h1>bio.tools</h1>
+			<p>Essential scientific and technical information about software tools, databases and services for bioinformatics and the life sciences.</p>
+			<div home-search ng-cloak></div>
 
-		<p class="description-text">
-			Explore <em>bio.tools</em> by the most popular bioinformatics concepts, or <a href="/t?page=1"><span class="bolder-text">view all tools</span></a>.</p>
-		<p class="description-text">
-		Concepts are defined in the <a href="https://github.com/edamontology/edamontology" target="_blank"><span class="bolder-text">EDAM ontology</span></a> 
-		which you can browse at <a href="https://www.ebi.ac.uk/ols/ontologies/edam/" target="_blank"><span class="bolder-text">OLS</span></a>, 
-		<a href="https://bioportal.bioontology.org/ontologies/EDAM/?p=classes&conceptid=root" target="_blank"><span class="bolder-text">BioPortal</span></a> 
-		or in the <a href="https://ifb-elixirfr.github.io/edam-browser/" target="_blank"><span class="bolder-text">EDAM Browser</span></a>. 
-		</p>
-		
-	</div>
+			<p class="description-text">
+				Explore <em>bio.tools</em> by the most popular bioinformatics concepts, or <a href="/t?page=1"><span class="bolder-text">view all tools</span></a>.</p>
+			<p class="description-text">
+			Concepts are defined in the <a href="https://github.com/edamontology/edamontology" target="_blank"><span class="bolder-text">EDAM ontology</span></a> 
+			which you can browse at <a href="https://www.ebi.ac.uk/ols/ontologies/edam/" target="_blank"><span class="bolder-text">OLS</span></a>, 
+			<a href="https://bioportal.bioontology.org/ontologies/EDAM/?p=classes&conceptid=root" target="_blank"><span class="bolder-text">BioPortal</span></a> 
+			or in the <a href="https://ifb-elixirfr.github.io/edam-browser/" target="_blank"><span class="bolder-text">EDAM Browser</span></a>. 
+			</p>
 
-	<div class="row equal-height-row">
-	<div class="col-lg-6 col-md-12">
+		</div>
 
-	<div  class="jumbotron home-text">
-		<h2>What is bio.tools?</h2>
-		<p class="description-text">
-			<em>bio.tools</em> is a community-driven registry of bioinformatics software and data resources. It provides detailed information about 
-			software tools, databases, analysis workflows, and services that are used in bioinformatics and the life sciences.
-		</p>
-		<p class="description-text">
-			Each <em>bio.tools</em> entry has a unique identifier based on the resource name, e.g., <a href="/signalp" target="_blank"><span class="bolder-text">biotools:signalp</span></a>.
-		</p>
+		<div  class="jumbotron home-summary home-text">
+			<h2>What is bio.tools?</h2>
+			<p class="description-text">
+				<em>bio.tools</em> is a community-driven registry of bioinformatics software and data resources. It provides detailed information about 
+				software tools, databases, analysis workflows, and services that are used in bioinformatics and the life sciences.
+			</p>
+			<p class="description-text">
+				Each <em>bio.tools</em> entry has a unique identifier based on the resource name, e.g., <a href="/signalp" target="_blank"><span class="bolder-text">biotools:signalp</span></a>.
+			</p>
+			<p class="description-text">
+				All the <em>bio.tools</em> data and technical components are available under <span class="bolder-text">open license</span> and we warmly welcome 
+				you to <a href="https://biotools.readthedocs.io/en/latest/what_is_biotools.html#getting-involved-a-quick-start-guide" target="_blank">
+					<span class="bolder-text">get involved</span></a>.
+			</p>
+			<p class="description-text">
+				Find out more in <a href="https://biotools.readthedocs.io/en/latest/" target="_blank"><span class="bolder-text">bio.tools documentation</span></a> 
+				and in the <a href="/about"><span class="bolder-text">About section</span></a>.
+			</p>
+			<div class="supported-by">
+			<p>
+				<a href="" target="_blank" ng-href="https://www.elixir-europe.org/">
+					<img src="img/ELIXIR_logo_white_background.png" alt="ELIXIR" title="ELIXIR" width="50px">
+				</a>
+				<em>bio.tools is supported by ELIXIR Europe</em>
+			</p>
+			</div>
+		</div>
 
-		<p class="description-text">
-			All the <em>bio.tools</em> data and technical components are available under <span class="bolder-text">open license</span> and we warmly welcome 
-			you to <a href="https://biotools.readthedocs.io/en/latest/what_is_biotools.html#getting-involved-a-quick-start-guide" target="_blank">
-				<span class="bolder-text">get involved</span></a>.
-		</p>
+		<div class="jumbotron home-summary home-text" role="alert">
+			<h2>Communities in bio.tools</h2>
+			<p class="description-text">
+				Explore <b><a ng-href="/communities">communities</a></b> in <em>bio.tools</em> and see what resources are used by different scientific communities.
+			</p>
+			<p class="description-text">
+				We strongly encourage everyone to take part in the community effort and contribute. <a href="mailto:support-bio-tools@sdu.dk">Email us</a> for more info.
+			</p>
 
-		<p class="description-text">
-			Find out more in <a href="https://biotools.readthedocs.io/en/latest/" target="_blank"><span class="bolder-text">bio.tools documentation</span></a> 
-			and in the <a href="/about"><span class="bolder-text">About section</span></a>.
-		</p>
-	</div>
-	</div>
-
-	<div class="col-lg-6 col-md-12">
-	<div class="jumbotron home-text" role="alert">
-		<h2>Communities in bio.tools</h2>
-		<p class="description-text">
-			Explore <b><a ng-href="/communities">communities</a></b> in <em>bio.tools</em> and see what resources are used by different scientific communities.
-		</p>
-		<p class="description-text">
-			We strongly encourage everyone to take part in the community effort and contribute. <a href="mailto:support-bio-tools@sdu.dk">Email us</a> for more info.
-		</p>
-		
-		<h4>Communities and domains</h4>
-		<p class="description-text">
-			In bio.tools we try, with the help of the community, to create content domains or "slices" relevant to a specific community, research area or task 
-			(e.g. <a ng-href="/t?domain=proteomics">Proteomics</a>, and <a ng-href="/t?domain=rare-diseases">Rare diseases</a>).
-		</p>
-		<p class="description-text">
-			Explore and search <em>bio.tools</em> <a ng-href="/domains">domains</a> and <a ng-href="/domain-manager">manage</a> your own domains. Read more about bio.tools 
-			domains <a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html" target="_blank">here</a>.
-		</p>
-
-	</div>
-	</div>
-	
+			<h4>Communities and domains</h4>
+			<p class="description-text">
+				In <em>bio.tools</em> we try, with the help of the community, to create content domains or "slices" relevant to a specific community, research area or task 
+				(e.g. <a ng-href="/t?domain=proteomics">Proteomics</a>, and <a ng-href="/t?domain=rare-diseases">Rare diseases</a>).
+			</p>
+			<p class="description-text">
+				Explore and search <em>bio.tools</em> <a ng-href="/domains">domains</a> and <a ng-href="/domain-manager">manage</a> your own domains. Read more about <em>bio.tools</em> 
+				domains <a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html" target="_blank">here</a>.
+			</p>
+		</div>
 	</div>
 
 
@@ -98,13 +96,11 @@
 						</a>
 					</div>
 
-
 					<div class="new-logo-item">
 						<a href="" target="_blank" ng-href="https://www.en.aau.dk/">
 							<img class="img-responsive" src="img/logos/aalborg-uni.png" alt="Aalborg University" title="Aalborg University">
 						</a>
 					</div>
-
 
 					<div class="new-logo-item">
 						<a href="" target="_blank" ng-href="https://www.sdu.dk/en">
@@ -112,20 +108,17 @@
 						</a>
 					</div>
 
-					
 					<div class="new-logo-item">
 						<a href="" target="_blank" ng-href="https://www.pasteur.fr/en">
 							<img class="img-responsive" src="img/logos/institut-pasteur.png" alt="Institut Pasteur" title="Institut Pasteur">
 						</a>
 					</div>
 
-
 					<div class="new-logo-item">
 						<a href="" target="_blank" ng-href="https://www.uib.no/en">
 							<img class="img-responsive" src="img/logos/bergen.jpg" alt="University of Bergen" title="University of Bergen">
 						</a>
 					</div>
-
 
 					<div class="new-logo-item">
 						<a href="" target="_blank" ng-href="https://www.bsc.es/">
@@ -139,13 +132,11 @@
 						</a>
 					</div>
 
-
 					<div class="new-logo-item">
 						<a href="" target="_blank" ng-href="https://www.ut.ee/en">
 							<img class="img-responsive" src="img/logos/tartu.png" alt="University of Tartu" title="University of Tartu">
 						</a>
 					</div>
-
 
 					<div class="new-logo-item">
 						<a href="" target="_blank" ng-href="https://www.embl.org/">
@@ -153,7 +144,6 @@
 						</a>
 					</div>
 
-					
 					<div class="new-logo-item">
 						<a href="" target="_blank" ng-href="https://www.sib.swiss/">
 							<img class="img-responsive" src="img/logos/sib.png" alt="SIB Swiss Institute of Bioinformatics" title="SIB Swiss Institute of Bioinformatics">
@@ -183,6 +173,6 @@
 							<img class="img-responsive" src="img/logos/OIP.jpeg" alt="Leiden University Medical Center " title="Leiden University Medical Center">
 						</a>
 					</div>
+			</div>
 	</div>
-</div>
 </div>

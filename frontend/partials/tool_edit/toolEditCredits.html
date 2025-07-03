@@ -11,7 +11,13 @@
 			<div class="panel panel-default" ng-repeat="link in software.credit track by $index" ng-class="{'no-margin-bottom': $last};">
 				<ng-form name="creditDetailForm">
 					<div class="panel-body" style="position: relative;">
-						<i class="fa fa-times remove-icon highlight-icon" ng-click="removeButtonClick('credit', software, $index)"></i>
+
+						<div class="reorder-icons">
+							<i class="fa fa-arrow-up pointer" ng-click="moveItem('credit', $index, -1)" ng-show="$index > 0"></i>
+							<i class="fa fa-arrow-down pointer" ng-click="moveItem('credit', $index, 1)" ng-show="$index < software.credit.length - 1"></i>
+							<i class="fa fa-times highlight-icon" ng-click="removeButtonClick('credit', software, $index)"></i>
+						</div>
+
 						<div>
 							<!-- ORCID ID -->
 							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.credit[$index].orcidid}">

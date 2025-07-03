@@ -7,7 +7,7 @@
 		<form role="form" novalidate name="login_form">
 			<div class="form-group has-feedback" ng-class="{'has-error': loginErrors || login_form.username.$dirty && login_form.username.$invalid, 'has-success': !loginErrors && login_form.username.$dirty && login_form.username.$valid}">
 				<label>Username</label>
-				<input type="text" name="username" class="form-control" placeholder="Your username" ng-model="credentials.username" required>
+				<input type="text" name="username" class="form-control" placeholder="Your Username" ng-model="credentials.username" required>
 				<span ng-show="login_form.username.$valid && !loginErrors" class="glyphicon glyphicon-ok form-control-feedback"></span>
 				<span ng-show="login_form.username.$dirty && (login_form.username.$invalid || loginErrors)" class="glyphicon glyphicon-remove form-control-feedback"></span>
 				<span class="help-block" ng-show="login_form.username.$error.email && login_form.username.$dirty">Email address is invalid.</span>
@@ -15,7 +15,7 @@
 			</div>
 			<div class="form-group has-feedback" ng-class="{'has-error': loginErrors || login_form.password.$dirty && login_form.password.$invalid, 'has-success': !loginErrors && login_form.password.$dirty && login_form.password.$valid}">
 				<label>Password</label>
-				<input type="password" name="password" class="form-control" placeholder="Your password" ng-model="credentials.password" required>
+				<input type="password" name="password" class="form-control" placeholder="Your Password" ng-model="credentials.password" required>
 				<span ng-show="login_form.password.$valid && !loginErrors" class="glyphicon glyphicon-ok form-control-feedback"></span>
 				<span ng-show="login_form.password.$dirty && (login_form.password.$invalid || loginErrors)" class="glyphicon glyphicon-remove form-control-feedback"></span>
 				<span class="help-block" ng-show="login_form.password.$error.required && login_form.password.$dirty">Password is required.</span>

@@ -111,7 +111,7 @@ img.biotools-logo:hover{
 .pill-tag-third-background
 {
 	color: white;
-	background-color: #F6A623;
+	background-color:  rgb(0, 84, 114);
 }
 
 .pill-tag-fourth-background
@@ -569,8 +569,6 @@ a.link-element, a.documentation-element{
 
 .domain-container{
     margin-bottom: 2em;
-    margin-left: 2em;
-    margin-right: 2em;
     border: 1px solid #c9c6c6;
     border-radius: 6px;
     background-color: #FFF;
@@ -611,7 +609,7 @@ a.link-element, a.documentation-element{
     border-radius: 50%;
     border-style: solid;
     border-width: 3px;
-    border-color: orange;
+    border-color:  rgb(0, 84, 114);
     background-color: rgba(0, 0, 0, 0);
     position: absolute;
     left: -2em;

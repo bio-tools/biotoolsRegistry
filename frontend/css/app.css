@@ -491,19 +491,19 @@ tags-input .autocomplete .filter-list > .selected {
 	content: "⚠ "
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 991px) {
 	.container {
 		width: 735px;
 	}
 }
-@media (min-width: 992px) {
+@media (min-width: 992px) and (max-width: 1199px) {
 	.container {
 		width: 970px;
 	}
 }
 @media (min-width: 1200px) {
 	.container {
-		width: 90%;
+		max-width: 1200px;
 	}
 }
 
@@ -524,8 +524,8 @@ tags-input .autocomplete .filter-list > .selected {
 	}
 
 	body {
-		padding-left:0;
-		padding-right:0;
+		padding-left:2px;
+		padding-right:2px;
 	}
 
 	.navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top {
