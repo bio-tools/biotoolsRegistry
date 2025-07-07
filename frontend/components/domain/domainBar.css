@@ -8,19 +8,6 @@
 	border: 1px solid #d3d3d3;
 }
 
-
-@media (min-width: 100px) {
-    .domain-bar-container {
-        /* width: 96%; */
-    }
-}
-
-@media (min-width: 1200px) {
-    .domain-bar-container {
-        /* width: 91%; */
-    }
-}
-
 .domain-bar-title {
 	color: #4A4A4A;
 	font-family: 'Roboto' !important;
