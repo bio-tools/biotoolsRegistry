@@ -181,6 +181,7 @@ class ResourceRequestView(APIView):
 	def put(self, request, format=None):
 		serializerData = request.data
 		serializerData['username'] = request.user.username
+		serializerData['email'] = request.user.email
 		serializerData['requestId'] = str(uuid.uuid4())
 		serializer = ResourceRequestSerializer(data=serializerData)
 		if serializer.is_valid():
@@ -214,7 +215,7 @@ class ProcessResourceRequest(APIView):
 		try:
 			resourceRequest = ResourceRequest.objects.get(requestId=request.data['requestId'])
 		except:
-   			return Response({"detail": "No active requests with a specified 'requestId' could be found."}, status=status.HTTP_404_NOT_FOUND)
+			return Response({"detail": "No active requests with a specified 'requestId' could be found."}, status=status.HTTP_404_NOT_FOUND)
 		self.check_object_permissions(self.request, resourceRequest)
 		if resourceRequest.completed == True: 
 			return Response({"detail": "Request has already been concluded."}, status=status.HTTP_400_BAD_REQUEST)
