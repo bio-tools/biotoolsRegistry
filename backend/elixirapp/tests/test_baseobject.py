@@ -180,6 +180,7 @@ class BaseTestObject(TestCase):
     def setUp(self):
         self.tokens = {}
         self.client = APIClient()
+        self.client.credentials()
         self.switch_user(superuser_registration_data, True)
         self.assert_mail_empty()  # Make sure mail queue is empty before every test
 
