@@ -2,6 +2,7 @@ from rest_framework import status
 from elixir.serializers import *
 from backend.elixirapp.tests.test_baseobject import BaseTestObject
 from elixir.tool_helper import ToolHelper as TH
+import re
 from backend.elixirapp.tests.login_data import valid_user_registration_data, user_registration_data_invalid_p2, \
     user_registration_data_missing_email, user_registration_data_missing_username, user_registration_data_missing_p1, \
     user_registration_data_missing_p2, valid_user_login_data, invalid_user_login_data, \
@@ -145,6 +146,7 @@ class TestAuthorization(BaseTestObject):
         response = self.checked_login(invalid_user_login_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    # TODO Fix
     # def test_user_change_password_valid(self):
     #     token = self.checked_registration()
     #     self.checked_login(valid_user_login_data)
@@ -162,14 +164,36 @@ class TestAuthorization(BaseTestObject):
     #     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_password_reset(self):
-        self.checked_registration()
+        user_token = self.checked_registration()
 
         response = self.client.post(self.password_reset_url, {
             'email': valid_user_registration_data['email'],
         }, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.pop_email("test@user.com", "Password reset on example.com")
+        mail = self.pop_email("test@user.com", "Password reset on example.com")
+
+        match = re.search("uid=([^&]+)&token=(\w+-\w+)", str(mail.message()))
+        uid = match.group(1).strip()
+        token = match.group(2).strip()
+
+        print(uid, token)
+        response = self.client.post(self.password_reset_confirm_url, {
+            'uid': uid,
+            'token': token,
+            'new_password1': "NewSecurePassword",
+            'new_password2': "NewSecurePassword",
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.logout_user(user_token)
+        self.client.credentials() # Otherwise there is a dangling auth token in checked login request
+
+        response = self.checked_login({
+            "username": valid_user_registration_data['username'],
+            "password": "NewSecurePassword",
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     # todo others
     # todo find out what i meant to say with 'others'

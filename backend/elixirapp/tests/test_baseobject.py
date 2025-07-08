@@ -30,6 +30,7 @@ class BaseTestObject(TestCase):
     user_info_url = f"{auth_url}user/"
     change_password_url = f"{auth_url}password/change/"
     password_reset_url = f"{auth_url}password/reset/"
+    password_reset_confirm_url = f"{auth_url}password/reset/confirm/"
 
     # BASE METHODS -----------------------------------------------------------------------------------------------------
 
@@ -38,13 +39,13 @@ class BaseTestObject(TestCase):
         return [f"`{message.to[0]}`: `{message.subject}`" for message in mail.outbox]
 
     def pop_email(self, email_recipient, email_subject):
-        # Pop email from queue if it has the expected recipient and subject
+        # Pop (and return) email from queue if it has the expected recipient and subject
         self.assertNotEquals(len(mail.outbox), 0, f"Mail queue should not be empty")
         self.assertEqual(mail.outbox[0].to, [email_recipient],
                          f"Mail with recipient {email_recipient} was not found in mail queue. Current content: {self._mail_to_str()}")
         self.assertEqual(mail.outbox[0].subject, email_subject,
                          f"Mail with subject {email_subject} was not found in mail queue. Current content: {self._mail_to_str()}")
-        mail.outbox.pop(0)
+        return mail.outbox.pop(0)
 
     def assert_mail_empty(self):
         # Make sure the mail queue is empty
@@ -182,6 +183,7 @@ class BaseTestObject(TestCase):
         self.switch_user(superuser_registration_data, True)
         self.assert_mail_empty()  # Make sure mail queue is empty before every test
 
+        # TODO Maybe reset `self.client.credentials` ?
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
