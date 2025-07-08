@@ -184,6 +184,7 @@ class BaseTestObject(TestCase):
         self.switch_user(superuser_registration_data, True)
         self.assert_mail_empty() # Make sure mail queue is empty before every test
 
+        # TODO Maybe reset `self.client.credentials` ?
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
