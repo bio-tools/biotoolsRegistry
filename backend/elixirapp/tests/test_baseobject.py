@@ -2,7 +2,8 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from elixir.views import Ontology, User
-from django.test import TestCase
+from django.core import mail
+from django.test import TestCase, override_settings
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as ESExceptions
 from django.conf import settings
@@ -11,8 +12,8 @@ from elixirapp.tests.login_data import superuser_registration_data
 from elixir.management.commands.parse_edam import Command
 
 
+@override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
 class BaseTestObject(TestCase):
-
     # TOKENS -----------------------------------------------------------------------------------------------------------
     tokens = {}
 
@@ -27,8 +28,27 @@ class BaseTestObject(TestCase):
     login_url = f"{auth_url}login/"
     logout_url = f"{auth_url}logout/"
     user_info_url = f"{auth_url}user/"
+    change_password_url = f"{auth_url}password/change/"
+    password_reset_url = f"{auth_url}password/reset/"
 
     # BASE METHODS -----------------------------------------------------------------------------------------------------
+
+    def _mail_to_str(self):
+        # Helper for debugging
+        return [f"`{message.to[0]}`: `{message.subject}`" for message in mail.outbox]
+
+    def pop_email(self, email_recipient, email_subject):
+        # Pop email from queue if it has the expected recipient and subject
+        self.assertNotEquals(len(mail.outbox), 0, f"Mail queue should not be empty")
+        self.assertEqual(mail.outbox[0].to, [email_recipient],
+                         f"Mail with recipient {email_recipient} was not found in mail queue. Current content: {self._mail_to_str()}")
+        self.assertEqual(mail.outbox[0].subject, email_subject,
+                         f"Mail with subject {email_subject} was not found in mail queue. Current content: {self._mail_to_str()}")
+        mail.outbox.pop(0)
+
+    def assert_mail_empty(self):
+        # Make sure the mail queue is empty
+        self.assertEquals(len(mail.outbox), 0, f"Mail queue should have been empty. Current contents: {self._mail_to_str()}")
 
     def post_tool(self, url, data):
         return self.client.post(url, data, format='json', HTTP_ACCEPT='application/json')
@@ -76,7 +96,7 @@ class BaseTestObject(TestCase):
 
     def remove_tool(self, url, id):
         return self.client.delete(f"{url}{id}", format='json',
-                           HTTP_AUTHORIZATION=f"Token {self.tokens[self.user.username]}")
+                                  HTTP_AUTHORIZATION=f"Token {self.tokens[self.user.username]}")
 
     def remove_all_tools(self, id_list):
         for id in id_list:
@@ -111,14 +131,14 @@ class BaseTestObject(TestCase):
     def create_user(self, registration_data, isSuperuser):
         if isSuperuser:
             return User.objects.create_superuser(registration_data['username'],
-                                                      password=registration_data['password1'],
-                                                      email=registration_data['email']
-                                                      )
+                                                 password=registration_data['password1'],
+                                                 email=registration_data['email']
+                                                 )
         else:
             return User.objects.create_user(registration_data['username'],
-                                          password=registration_data['password1'],
-                                          email=registration_data['email']
-                                          )
+                                            password=registration_data['password1'],
+                                            email=registration_data['email']
+                                            )
 
     def switch_user(self, registration_data, isSuperuser=False):
         username = registration_data['username']
@@ -147,14 +167,20 @@ class BaseTestObject(TestCase):
             raise Exception(f"Token not found for user {self.user.username}")
 
     # SETUP ------------------------------------------------------------------------------------------------------------
-    def setUp(self):
-        self.tokens = {}
-        self.client = APIClient()
-        self.switch_user(superuser_registration_data, True)
+    @classmethod
+    def setUpTestData(cls):
+        # Ran once to set up non-modified data
+        # This should be run once globally not once per BaseTestObject, but it does double the speed of tests
         es = BaseTestObject._initialize_ES()
         es.indices.create(settings.ELASTIC_SEARCH_INDEX)
         mapping = BaseTestObject.read_schema()
         es.indices.put_mapping(index=settings.ELASTIC_SEARCH_INDEX, body=mapping)
+
+    def setUp(self):
+        self.tokens = {}
+        self.client = APIClient()
+        self.switch_user(superuser_registration_data, True)
+        self.assert_mail_empty()  # Make sure mail queue is empty before every test
 
     @classmethod
     def setUpClass(cls):
@@ -173,6 +199,8 @@ class BaseTestObject(TestCase):
             return json.load(schema_file)
 
     def tearDown(self):
+        self.assert_mail_empty()  # Make sure mail queue is empty after every test.
+        # This also means every test needs to empty its mail queue
         BaseTestObject._reset_ES()
 
     @staticmethod
@@ -196,4 +224,3 @@ class BaseTestObject(TestCase):
                 raise TE
         settings.ELASTIC_SEARCH_INDEX = 'elixir'
         return es
-

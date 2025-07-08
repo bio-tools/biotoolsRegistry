@@ -6,7 +6,8 @@ from backend.elixirapp.tests.login_data import valid_user_registration_data, use
     user_registration_data_missing_email, user_registration_data_missing_username, user_registration_data_missing_p1, \
     user_registration_data_missing_p2, valid_user_login_data, invalid_user_login_data, \
     other_valid_user_1_registration_data, other_valid_user_1_login_data, other_valid_user_2_registration_data, \
-    other_valid_user_2_login_data, superuser_registration_data, superuser_login_data
+    other_valid_user_2_login_data, superuser_registration_data, superuser_login_data, valid_change_password_change_data, \
+    valid_user_registration_data_post_change
 
 
 class TestAuthorization(BaseTestObject):
@@ -33,6 +34,7 @@ class TestAuthorization(BaseTestObject):
         if response.status_code != status.HTTP_201_CREATED:
             raise RuntimeError(
                 f"Post did not succeed: attempt to post to {self.registration_url} returned {response.status_code}.")
+        self.pop_email(valid_user_registration_data['email'], "[example.com] Please Confirm Your E-mail Address")
         return response.json()['key']  # return token
 
     def register_user(self, data):
@@ -60,6 +62,12 @@ class TestAuthorization(BaseTestObject):
         """
         return self.client.get(self.user_info_url, HTTP_AUTHORIZATION=f'Token {token}', HTTP_ACCEPT='application/json')
 
+    def change_password_user(self, token, data):
+        """
+        Description: Queries user information.
+        """
+        return self.client.post(self.change_password_url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
+
     # TESTS ------------------------------------------------------------------------------------------------------------
 
     def test_user_authorization_valid(self):
@@ -70,6 +78,7 @@ class TestAuthorization(BaseTestObject):
         """
         self.register_user(valid_user_registration_data)
         self.assertTrue(self.check_user_exists())
+        self.pop_email(valid_user_registration_data['email'], "[example.com] Please Confirm Your E-mail Address")
 
     def test_user_authorization_invalid_p2(self):
         """
@@ -135,6 +144,32 @@ class TestAuthorization(BaseTestObject):
         self.checked_registration()
         response = self.checked_login(invalid_user_login_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    # def test_user_change_password_valid(self):
+    #     token = self.checked_registration()
+    #     self.checked_login(valid_user_login_data)
+    #
+    #
+    #     print(token, valid_change_password_change_data, self.change_password_url)
+    #     response = self.change_password_user(token, valid_change_password_change_data)
+    #     print(response.__dict__)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #
+    #     response = self.logout_user(token)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #
+    #     response = self.checked_login(valid_user_registration_data_post_change)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_password_reset(self):
+        self.checked_registration()
+
+        response = self.client.post(self.password_reset_url, {
+            'email': valid_user_registration_data['email'],
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.pop_email("test@user.com", "Password reset on example.com")
 
     # todo others
     # todo find out what i meant to say with 'others'
