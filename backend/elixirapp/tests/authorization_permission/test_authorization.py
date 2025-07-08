@@ -65,7 +65,7 @@ class TestAuthorization(BaseTestObject):
 
     def change_password_user(self, token, data):
         """
-        Description: Queries user information.
+        Description: Changes user's password
         """
         return self.client.post(self.change_password_url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
 
@@ -185,7 +185,7 @@ class TestAuthorization(BaseTestObject):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.logout_user(user_token)
-        self.client.credentials() # Otherwise there is a dangling auth token in checked login request
+        self.client.credentials()
 
         response = self.checked_login({
             "username": valid_user_registration_data['username'],

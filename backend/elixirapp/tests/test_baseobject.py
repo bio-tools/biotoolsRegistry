@@ -34,10 +34,6 @@ class BaseTestObject(TestCase):
 
     # BASE METHODS -----------------------------------------------------------------------------------------------------
 
-    def _mail_to_str(self):
-        # Helper for debugging
-        return [f"`{message.to[0]}`: `{message.subject}`" for message in mail.outbox]
-
     def pop_email(self, email_recipient, email_subject):
         # Pop (and return) email from queue if it has the expected recipient and subject
         self.assertNotEquals(len(mail.outbox), 0, f"Mail queue should not be empty")
@@ -127,6 +123,10 @@ class BaseTestObject(TestCase):
         data = TH.get_input_tool()
         self.post_tool_checked(data)
 
+    def _mail_to_str(self):
+        # Helper for debugging
+        return [f"`{message.to[0]}`: `{message.subject}`" for message in mail.outbox]
+
     # USER MANAGEMENT --------------------------------------------------------------------------------------------------
 
     def create_user(self, registration_data, isSuperuser):
@@ -182,9 +182,8 @@ class BaseTestObject(TestCase):
         self.client = APIClient()
         self.client.credentials()
         self.switch_user(superuser_registration_data, True)
-        self.assert_mail_empty()  # Make sure mail queue is empty before every test
+        self.assert_mail_empty() # Make sure mail queue is empty before every test
 
-        # TODO Maybe reset `self.client.credentials` ?
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
