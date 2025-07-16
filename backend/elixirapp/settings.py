@@ -264,6 +264,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 
 OLD_PASSWORD_FIELD_ENABLED = True
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 ACCOUNT_ADAPTER = 'elixir.adapters.CustomDefaultAccountAdapter'

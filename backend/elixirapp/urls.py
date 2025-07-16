@@ -14,12 +14,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path, re_path
+from django.views.generic import TemplateView
 
 urlpatterns = [
+    re_path(r'^password-reset/$', TemplateView.as_view(template_name="password_reset.html"), name='password-reset'),
+    
+	# this url is used to generate email content
+    re_path(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$', TemplateView.as_view(template_name="password_reset_confirm.html"), name='password_reset_confirm'),
+
 	re_path(r'^admin/', admin.site.urls),
-	# url(r'^', include('django.contrib.auth.urls')),
-	# url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-	# url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
 	path('rest-auth/', include('dj_rest_auth.urls')),
 	path('rest-auth/registration/',
 		 include('dj_rest_auth.registration.urls')),
