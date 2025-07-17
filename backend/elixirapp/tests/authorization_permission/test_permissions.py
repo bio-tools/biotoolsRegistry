@@ -211,7 +211,7 @@ class TestPermissions(BaseTestObject):
 
         # ensure resource was updated
         get_response = self.get_tool(self.base_url, data['biotoolsID'])
-        self.assertEquals(get_response.json()['name'], new_name)
+        self.assertEqual(get_response.json()['name'], new_name)
 
     def test_update_public_tool_superuser(self):
         """
@@ -344,7 +344,7 @@ class TestPermissions(BaseTestObject):
 
         # ensure resource was updated
         get_response = self.get_tool(self.base_url, data['biotoolsID'])
-        self.assertEquals(get_response.json()['name'], new_name)
+        self.assertEqual(get_response.json()['name'], new_name)
 
     def test_update_group_permission_tool_other_user_not_in_group(self):
         """

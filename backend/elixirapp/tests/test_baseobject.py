@@ -45,7 +45,7 @@ class BaseTestObject(TestCase):
 
     def assert_mail_empty(self):
         # Make sure the mail queue is empty
-        self.assertEquals(len(mail.outbox), 0, f"Mail queue should have been empty. Current contents: {self._mail_to_str()}")
+        self.assertEqual(len(mail.outbox), 0, f"Mail queue should have been empty. Current contents: {self._mail_to_str()}")
 
     def post_tool(self, url, data):
         return self.client.post(url, data, format='json', HTTP_ACCEPT='application/json')
