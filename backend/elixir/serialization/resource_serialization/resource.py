@@ -18,9 +18,7 @@ from elixir.serialization.resource_serialization.collection import *
 from elixir.serialization.resource_serialization.contact import *
 from elixir.serialization.resource_serialization.version import *
 from elixir.issues import EDAMTopicIssue, EDAMOperationIssue, EDAMDataIssue, EDAMFormatIssue, NoLicenseIssue, NoContactIssue, NoTOSIssue
-from random import randint
 from rest_framework.validators import UniqueValidator
-from collections import OrderedDict
 
 def issue_function(resource, user):
 	pass
@@ -385,7 +383,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 	# creating the resource
 	def create(self, validated_data):
 		pop = lambda l, k: l.pop(k) if k in list(l.keys()) else []
-		uniq = lambda l, k: [dict(t) for t in OrderedDict([tuple(d.items()) for d in pop(l, k)])]
+		uniq = lambda l, k: [dict(t) for t in set([tuple(d.items()) for d in pop(l, k)])]
 
 		# nested attributes need to be popped from resource and added after resource has been saved
 		# otherwise nothing will work
