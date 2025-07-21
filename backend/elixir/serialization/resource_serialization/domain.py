@@ -120,7 +120,7 @@ class DomainSerializer(serializers.ModelSerializer):
 
 	def create(self, validated_data):
 		pop = lambda l, k: l.pop(k) if k in list(l.keys()) else []
-		uniq = lambda l, k: [dict(t) for t in OrderedDict([tuple(d.items()) for d in pop(l, k)])]
+		uniq = lambda l, k: [dict(t) for t in set([tuple(d.items()) for d in pop(l, k)])]
 
 		# domain resource unique list
 		resources_list = pop(validated_data, 'resource') if 'resource' in list(validated_data.keys()) else []
