@@ -29,9 +29,6 @@ jobs:
     - name: list containers
       run: docker compose ps
 
-    - name: install dependencies for patterns
-      run: docker exec biotools-backend pip install rstr
-
     - name: grant mysql privileges
       run: docker exec -i biotools-mysql mysql -u root -pelixirroot -e "GRANT ALL PRIVILEGES ON *.* TO 'elixir'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
     
