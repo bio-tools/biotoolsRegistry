@@ -80,7 +80,7 @@ class TestPermissions(BaseTestObject):
 
         # ensure resource was not updated
         get_response = self.get_tool(self.base_url, data['biotoolsID'])
-        self.assertNotEquals(get_response.json()['name'], new_name)
+        self.assertNotEqual(get_response.json()['name'], new_name)
 
     def test_update_private_tool_superuser(self):
         """
