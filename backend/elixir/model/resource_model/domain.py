@@ -17,7 +17,7 @@ class Domain(models.Model):
     is_private = models.BooleanField(default=False)
     
     owner = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
-    editors = models.ManyToManyField(User, related_name='editable_domains', blank=True, null=True)
+    editors = models.ManyToManyField(User, related_name='editable_domains', blank=True)
 
     visibility = models.IntegerField(choices=YES_NO_CHOICES, default=1) 
 
