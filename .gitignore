@@ -16,4 +16,4 @@ backend/data/edam/owl/*
 /logs/*
 *__secret_settings__.py*
 backend/elixir/ecosystem/__secret_settings__.py
-
+.idea

@@ -1,58 +1,44 @@
-FROM ubuntu:24.04
+FROM python:3.13 AS builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libmariadb-dev-compat \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /elixir/application/backend
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy all files
+COPY . .
+
+
+# Second stage
+# Uses packages and binaries from builder, but is smaller and runs as a non-root user
+FROM python:3.13-slim
 
 LABEL maintainer="Hans-Ioan Ienasescu <hans@bio.tools>"
 
-# Disable buffering for logs.
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 
-# Set up working directory and files.
-WORKDIR /elixir/application/backend
-RUN mkdir data/ elixir/ elixirapp/ runtime/ templates/
-COPY requirements.txt EDAM_obsolete.json imports.sql manage.py /elixir/application/backend/
-COPY data data/
-COPY elixir elixir/
-COPY elixirapp elixirapp/
-COPY runtime runtime/
-COPY templates templates/
+RUN useradd -m -r appuser
 
-
-# Install system dependencies
-RUN apt-get update -y && \
-    apt-get upgrade -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    software-properties-common \
-    apache2 \
-    apache2-utils \
-    ssl-cert \
-    libapache2-mod-wsgi-py3 \
-    python3-dev \
-    default-libmysqlclient-dev \
-    build-essential \
-    python3-pip \
-    python3-venv \
-    curl \
-    && apt-get clean \
+# Install MySql dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libmariadb3 \
     && rm -rf /var/lib/apt/lists/*
 
-# Create a virtual environment to avoid system package conflicts
-RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+# Copy the Python dependencies from the builder stage
+COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
+COPY --from=builder /usr/local/bin/ /usr/local/bin/
+COPY --from=builder /elixir/application/backend /elixir/application/backend
 
-RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir -r requirements.txt && \
-    rm -f requirements.txt
+RUN chown -R appuser:appuser /elixir/application/backend
+WORKDIR /elixir/application/backend
+USER appuser
 
-RUN . /opt/venv/bin/activate
+EXPOSE 8000
 
-COPY runtime/apache.conf /etc/apache2/sites-available/elixir.conf
-
-RUN a2enmod headers && a2enmod wsgi && a2enmod ssl && a2enmod rewrite && a2enmod proxy_http && a2ensite elixir.conf && service apache2 restart
-
-EXPOSE 80
-
-# remove default apache config from sites-enable so bio.tools subdomain redirect works
-RUN rm /etc/apache2/sites-enabled/000-default.conf
-
-RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && ln -sf /proc/self/fd/1 /var/log/apache2/error.log && ln -sf /proc/self/fd/1 /var/log/apache2/other_vhosts_access.log
-
-CMD /usr/sbin/apache2ctl -D FOREGROUND
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
