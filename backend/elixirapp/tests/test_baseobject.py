@@ -36,7 +36,7 @@ class BaseTestObject(TestCase):
 
     def pop_email(self, email_recipient, email_subject):
         # Pop (and return) email from queue if it has the expected recipient and subject
-        self.assertNotEquals(len(mail.outbox), 0, f"Mail queue should not be empty")
+        self.assertNotEqual(len(mail.outbox), 0, f"Mail queue should not be empty")
         self.assertEqual(mail.outbox[0].to, [email_recipient],
                          f"Mail with recipient {email_recipient} was not found in mail queue. Current content: {self._mail_to_str()}")
         self.assertEqual(mail.outbox[0].subject, email_subject,
