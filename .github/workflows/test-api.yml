@@ -1,0 +1,42 @@
+name: api tests
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - develop
+  pull_request:
+    branches: [main, develop, master]
+
+jobs:
+  test-compose:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@v4
+
+    - name: set up docker compose
+      uses: docker/setup-compose-action@v1
+
+    - name: build and run
+      run: docker compose up -d
+
+    - name: wait for services
+      run: sleep 15
+
+    - name: list containers
+      run: docker compose ps
+
+    - name: install dependencies for patterns
+      run: docker exec biotools-backend pip install rstr
+
+    - name: grant mysql privileges
+      run: docker exec -i biotools-mysql mysql -u root -pelixirroot -e "GRANT ALL PRIVILEGES ON *.* TO 'elixir'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+    
+    - name: run tests
+      run: docker exec biotools-backend python manage.py test
+
+    - name: tear down
+      run: docker compose down
