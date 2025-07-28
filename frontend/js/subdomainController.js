@@ -336,6 +336,8 @@ angular.module('elixir_front.controllers')
 		$scope.response.general = '';
 		var createResponse = DomainConnection.create(vm.subdomainQuery(), function(data) {
 			$scope.subdomain.exists = true;
+			$scope.subdomain.owner = data.owner;
+
 			$scope.response.general = "Domain '" + $scope.subdomain.domain + "' was created.";
 			$scope.updating = false;
 		}, function(error) {
@@ -370,12 +372,9 @@ angular.module('elixir_front.controllers')
 
 			$scope.subdomain.is_private = data.data.is_private;
 			
-			// Retrieve editors from backend
 			if (data.data.editors) {
 				$scope.subdomain.editors = data.data.editors;
 			}
-			
-			// Retrieve owner from backend
 			if (data.data.owner) {
 				$scope.subdomain.owner = data.data.owner;
 			}
