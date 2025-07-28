@@ -22,7 +22,7 @@
 					<!-- Name editing -->
 					<div ng-include="'/partials/subdomains/subdomainEditName.html'"></div>
 					<!-- Domain editors -->
-					<div class="panel panel-default content-page-panel" ng-if="subdomain.exists == true && subdomain.is_private == true && subdomain.owner_id == User.current.id">
+					<div class="panel panel-default content-page-panel" ng-if="subdomain.exists == true && subdomain.owner == User.current.username">
 						<div class="panel-body">
 							<div ng-include="'/partials/subdomains/subdomainEditEditors.html'"></div>
 						</div>

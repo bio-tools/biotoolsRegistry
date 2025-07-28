@@ -1,7 +1,8 @@
 // Controllers
 angular.module('elixir_front.controllers')
-.controller('SubdomainAdminController', ['$scope',  '$stateParams', 'DomainConnection', 'DomainDetailConnection', function($scope, $stateParams, DomainConnection, DomainDetailConnection) {
+.controller('SubdomainAdminController', ['$scope',  '$stateParams', 'DomainConnection', 'DomainDetailConnection', 'User', function($scope, $stateParams, DomainConnection, DomainDetailConnection, User) {
 	var vm = this;
+	$scope.User = User;
 	$scope.isLoadingSubdomains = true;
 	$scope.subdomains = [];
 
@@ -138,9 +139,10 @@ angular.module('elixir_front.controllers')
 
 
 }])
-.controller('SubdomainController', ['$scope', '$state',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', 'UserSuggestionsProvider', function($scope, $state, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms, UserSuggestionsProvider) {
+.controller('SubdomainController', ['$scope', '$state',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', 'UserSuggestionsProvider', 'User', function($scope, $state, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms, UserSuggestionsProvider, User) {
 	var vm = this;
 	$scope.ToolListOverviewConnection = ToolListOverviewConnection;
+	$scope.User = User;
 	$scope.updating = false;
 	$scope.loading = ($stateParams.id != "");
 	$scope.toolsPerPageCount = 10; 
@@ -208,7 +210,7 @@ angular.module('elixir_front.controllers')
 	};
 
 	$scope.isDomainOwner = function() {
-		if ($scope.subdomain.owner == $scope.User.getUsername()) {
+		if ($scope.subdomain.owner == User.current.username) {
 			return true;
 		}
 		return false;
@@ -367,6 +369,16 @@ angular.module('elixir_front.controllers')
 			}
 
 			$scope.subdomain.is_private = data.data.is_private;
+			
+			// Retrieve editors from backend
+			if (data.data.editors) {
+				$scope.subdomain.editors = data.data.editors;
+			}
+			
+			// Retrieve owner from backend
+			if (data.data.owner) {
+				$scope.subdomain.owner = data.data.owner;
+			}
 
 			$scope.loading = false;
 			$scope.updating = false;

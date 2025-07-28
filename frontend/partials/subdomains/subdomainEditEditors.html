@@ -1,5 +1,6 @@
 <!-- Domain editors -->
-<div class="panel-body" ng-controller="SubdomainController">
+<div class="panel-body">
+	<span class="content-page-input-title-label">Domain editors</span>
 	<input type="text"
 	ng-model="userSuggestion"
 	class="form-control"
@@ -12,7 +13,7 @@
 	<div>
 		<h5 class="edit-permission-user-table-vertical-space">Users that can edit the current domain:</h5>
 		<span ng-show="!subdomain.editors || subdomain.editors.length == 0">None</span>
-		<ul class="list-group" ng-show="users.length != 0">
+		<ul class="list-group" ng-show="subdomain.editors && subdomain.editors.length > 0">
 			<li class="list-group-item" ng-repeat="user in subdomain.editors track by $index">
 				<span>{{user}}</span>
 				<button class="btn btn-xs btn-danger pull-right" ng-click="deleteUser($index)">Remove</button>
