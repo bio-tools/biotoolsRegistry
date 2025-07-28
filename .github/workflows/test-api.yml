@@ -2,12 +2,7 @@ name: api tests
 
 on:
   push:
-    branches:
-      - master
-      - main
-      - develop
   pull_request:
-    branches: [main, develop, master]
 
 jobs:
   test-compose:
