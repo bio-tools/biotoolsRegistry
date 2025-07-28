@@ -71,6 +71,7 @@ services:
     volumes:
       - ./backend:/elixir/application/backend:consistent
       - ./frontend:/elixir/application/frontend
+      - backend_data:/elixir/application/backend/data # to avoid permission conflicts
 
   # dockerfile in frontend dir
   frontend:
@@ -116,3 +117,4 @@ volumes:
   biotools_bower_components:
   caddy_data:
   caddy_config:
+  backend_data:

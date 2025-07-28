@@ -2,7 +2,9 @@ FROM python:3.13 AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    libmariadb-dev-compat \
+    pkg-config \
+    libmariadb-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /elixir/application/backend
@@ -27,7 +29,7 @@ RUN useradd -m -r appuser
 
 # Install MySql dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libmariadb3 \
+    libmariadb3 curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the Python dependencies from the builder stage
