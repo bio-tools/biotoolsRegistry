@@ -37,7 +37,7 @@
 										<a ui-sref="edit-domain({id: entry.name})">
 											<button class="btn btn-xs btn-default content-page-control">Edit ›</button>
 										</a>
-										<button ng-show="entry.isOwner || User.current.is_superuser" class="btn btn-xs btn-danger content-page-control" ng-click="deleteSubdomainAtIndex($index)">Delete ›</button>
+										<button ng-show="entry.isOwner || User.current.is_superuser" class="btn btn-xs btn-danger content-page-control" ng-click="deleteSubdomain(entry.name)">Delete ›</button>
 									</td>
 								</tr>
 							</tbody>

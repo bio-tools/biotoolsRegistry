@@ -22,7 +22,7 @@
 					<!-- Name editing -->
 					<div ng-include="'/partials/subdomains/subdomainEditName.html'"></div>
 					<!-- Domain editors -->
-					<div class="panel panel-default content-page-panel" ng-if="subdomain.exists == true && subdomain.owner == User.current.username">
+					<div class="panel panel-default content-page-panel" ng-if="subdomain.exists == true && (subdomain.owner == User.current.username || User.current.is_superuser)">
 						<div class="panel-body">
 							<div ng-include="'/partials/subdomains/subdomainEditEditors.html'"></div>
 						</div>
@@ -46,6 +46,11 @@
 						</button>
 						<!-- Update button -->
 						<button ng-show="subdomain.exists" class="btn btn-default btn-sm content-page-control pull-right" ng-click="updateSubdomain()">Update 
+							<span ng-show="!errors.general">›</span>
+							<span ng-show="errors.general">›</span>
+						</button>
+						<!-- Delete button -->
+						<button ng-show="subdomain.exists && (subdomain.owner == User.current.username || User.current.is_superuser)" class="btn btn-default btn-sm btn-danger content-page-control pull-right" style="margin-right: 10px;" ng-click="deleteSubdomain(subdomain.domain)">Delete
 							<span ng-show="!errors.general">›</span>
 							<span ng-show="errors.general">›</span>
 						</button>
