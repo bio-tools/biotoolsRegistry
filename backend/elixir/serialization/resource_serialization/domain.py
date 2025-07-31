@@ -188,53 +188,6 @@ class DomainSerializer(serializers.ModelSerializer):
 
 		return domain
 	
-	# Update the domain
-	def update(self, instance, validated_data):
-		pop = lambda l, k: l.pop(k) if k in list(l.		keys	()) else []
-		uniq = lambda l, k: [dict(t) for t in 		OrderedSet	([tuple(d.items()) for d in pop		(l, k)])]
-		
-		# domain resource unique list
-		resources_list = pop(validated_data, 		'resource') 	if 'resource' in list		(validated_data.keys()) else 	[]
-		seen = set()
-		resources_list = [seen.add(obj['biotoolsID']) 		or 	obj for obj in resources_list if obj			['biotoolsID'] not in seen]
-		
-		# domain tags unique list
-		tag_list = uniq(validated_data, 'tag')
-		
-		# domain collection unique list
-		collection_list = uniq(validated_data, 			'collection')
-		editors_data = pop(validated_data, 		'editors')  # 	Get editors from validated 		data
-		
-		instance.name = validated_data.get('name', 			instance.name)
-		instance.title = validated_data.get		('title', 	instance.title)
-		instance.sub_title = validated_data.get			('sub_title', instance.sub_title)
-		instance.description = validated_data.get			('description', instance.description)
-		instance.is_private = validated_data.get			('is_private', instance.is_private)
-		instance.visibility = validated_data.get			('visibility', instance.visibility)
-		instance.editors.set(editors_data) # Update 		the 	editors
-		
-		instance.save()
-		
-		# delete old resources and create new ones
-		instance.resource.all().delete()
-		for r in resources_list:
-			tool_r = Resource.objects.filter	(visibility=1, biotoolsID = r['biotoolsID'])
-			if len(tool_r) == 1:
-				r['name'] = tool_r[0].name
-			DomainResource.objects.create	(domain=instance, **r)
-		
-		# delete old tags and create new ones
-		instance.tag.all().delete()
-		for tag in tag_list:
-		    DomainTag.objects.create(domain=instance, 	**tag)
-		
-		# delete old collections and create new ones
-		instance.collection.all().delete()
-		for collection in collection_list:
-		    DomainCollection.objects.create	(domain=instance, **collection)
-
-		return instance
-
 
 # Need this class to bypass the unique constraint on domain names enforced when POST ing
 class DomainUpdateSerializer(DomainSerializer):
