@@ -1,26 +1,28 @@
 // Controllers
 angular.module('elixir_front.controllers')
-.controller('SubdomainAdminController', ['$scope',  '$stateParams', 'DomainConnection', 'DomainDetailConnection', function($scope, $stateParams, DomainConnection, DomainDetailConnection) {
+.controller('SubdomainAdminController', ['$scope',  '$stateParams', 'DomainConnection', 'DomainDetailConnection', 'User', function($scope, $stateParams, DomainConnection, DomainDetailConnection, User) {
 	var vm = this;
+	$scope.User = User;
 	$scope.isLoadingSubdomains = true;
 	$scope.subdomains = [];
 
-	$scope.deleteSubdomainAtIndex = function(index){
+	$scope.deleteSubdomain = function(name){
 		if (confirm("Are you sure you want to remove this subdomain?")){
 			// COVID-19 subdomain hack
-			if ($scope.subdomains[index].name.toLowerCase() == 'covid-19'){
+			if (name.toLowerCase() == 'covid-19'){
 				alert('Cannot delete the covid-19 subdomain');
 				return;
 			}
-			var deleteSubdomain = $scope.subdomains[index];
-			$scope.subdomains.splice(index, 1);
-			var deleteResponse = DomainDetailConnection.delete({'domain': deleteSubdomain.name}, function(data) {
-				// TODO: Handle repsonses
+			
+			var deleteResponse = DomainDetailConnection.delete({'domain': name}, function(data) {
+				$scope.subdomains.splice($scope.subdomains.findIndex(function(d) { return d.domain === name; }), 1);
+				// TODO: Handle responses
 			}, function(error) {
-				// TODO: Handle errors
+				// TODO: Handle errorss
 			});
 		}
 	}
+	
 
 	vm.loadSubdomains = function() {
 		$scope.isLoadingSubdomains = true;
@@ -138,9 +140,10 @@ angular.module('elixir_front.controllers')
 
 
 }])
-.controller('SubdomainController', ['$scope', '$state',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', function($scope, $state, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms) {
+.controller('SubdomainController', ['$scope', '$state',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', 'UserSuggestionsProvider', 'User', function($scope, $state, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms, UserSuggestionsProvider, User) {
 	var vm = this;
 	$scope.ToolListOverviewConnection = ToolListOverviewConnection;
+	$scope.User = User;
 	$scope.updating = false;
 	$scope.loading = ($stateParams.id != "");
 	$scope.toolsPerPageCount = 10; 
@@ -160,6 +163,7 @@ angular.module('elixir_front.controllers')
 	$scope.subdomain.title = '';
 	$scope.subdomain.subtitle = '';
 	$scope.subdomain.description = '';
+	$scope.subdomain.editors = [];
 	$scope.subdomain.toolList = [];
 	$scope.subdomain.resources = [];
 	$scope.subdomain.tag = [];
@@ -184,6 +188,37 @@ angular.module('elixir_front.controllers')
 			$state.go('subdomain', {domain: d});
 		}
 		
+	}
+
+	// Handle users search
+	$scope.userSuggestions = function(prefix) {
+		return UserSuggestionsProvider.getSuggestions(prefix).then(function(data) {
+			var suggestions = _.map(data, function(obj){
+				return obj.username;
+			});
+			return _.difference(suggestions, $scope.subdomain.editors);
+		});
+	};
+
+	$scope.userSelected = function($item, $model, $label) {
+		// Initialize authors if not present.
+		if ($scope.subdomain.editors == undefined) {
+			$scope.subdomain.editors = [];
+		}
+		// Clear the input field on selection.
+		$scope.userSuggestion = '';
+		$scope.subdomain.editors.push($model);
+	};
+
+	$scope.isDomainOwner = function() {
+		if ($scope.subdomain.owner == User.current.username) {
+			return true;
+		}
+		return false;
+	}
+
+	$scope.deleteUser = function(index) {
+		$scope.subdomain.editors.splice(index, 1);
 	}
 
 	// Handle tool search
@@ -302,6 +337,8 @@ angular.module('elixir_front.controllers')
 		$scope.response.general = '';
 		var createResponse = DomainConnection.create(vm.subdomainQuery(), function(data) {
 			$scope.subdomain.exists = true;
+			$scope.subdomain.owner = data.owner;
+
 			$scope.response.general = "Domain '" + $scope.subdomain.domain + "' was created.";
 			$scope.updating = false;
 		}, function(error) {
@@ -310,6 +347,23 @@ angular.module('elixir_front.controllers')
 			$scope.updating = false;
 			$scope.errors.data = error.data;
 		});
+	}
+	
+	$scope.deleteSubdomain = function(name){
+		if (confirm("Are you sure you want to remove this subdomain?")){
+			// COVID-19 subdomain hack
+			if (name.toLowerCase() == 'covid-19'){
+				alert('Cannot delete the covid-19 subdomain');
+				return;
+			}
+			
+			var deleteResponse = DomainDetailConnection.delete({'domain': name}, function(data) {
+				$scope.response.general = "Domain '" + name + "' was deleted.";
+				$state.go('domains'); 
+			}, function(error) {
+				$scope.errors.general = error.data.detail || "Failed to delete domain.";
+			});
+		}
 	}
 
 	vm.fetchSubdomain = function() {
@@ -335,6 +389,13 @@ angular.module('elixir_front.controllers')
 			}
 
 			$scope.subdomain.is_private = data.data.is_private;
+			
+			if (data.data.editors) {
+				$scope.subdomain.editors = data.data.editors;
+			}
+			if (data.data.owner) {
+				$scope.subdomain.owner = data.data.owner;
+			}
 
 			$scope.loading = false;
 			$scope.updating = false;
@@ -395,7 +456,8 @@ angular.module('elixir_front.controllers')
 		'resources': $scope.subdomain.resources,
 		'tag': $scope.subdomain.tag,
 		'collection': $scope.subdomain.collection,
-		'is_private': $scope.subdomain.is_private
+		'is_private': $scope.subdomain.is_private,
+		'editors': $scope.subdomain.editors,
 	};
 }
 
@@ -405,3 +467,20 @@ angular.module('elixir_front.controllers')
 	}
 }]);
 
+
+// Services and Factories
+angular.module('elixir_front').factory('UserSuggestionsProvider', ['$http', function ($http) {
+	return {
+		getSuggestions: function(prefix) {
+			return $http({
+				method: 'GET',
+				url: '/api/user-list',
+				params: {term: prefix}
+			}).then(function successCallback(response) {
+				return response.data;
+			}, function errorCallback(response) {
+				return {};
+			})
+		}
+	};
+}]);

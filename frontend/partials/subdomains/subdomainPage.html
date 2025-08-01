@@ -22,18 +22,22 @@
 								<tr>
 									<th style="padding-left: 15px;">Name</th>
 									<th style="width: 120px;">Resources</th>
-									<th style="width: 120px;"">Actions</th>
+									<th style="width: 120px;">Actions</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr ng-repeat="entry in subdomains track by $index">
-									<td style="padding-left: 15px;"><a ui-sref="subdomain({domain: entry.name})">{{ entry.name }} ›</a></td>
+									<td style="padding-left: 15px;">
+										<a ui-sref="subdomain({domain: entry.name})">{{ entry.name }} ›</a>
+										<span ng-if="entry.isOwner" class="label label-primary" style="margin-left: 5px;" title="You own this domain">Owner</span>
+										<span ng-if="entry.isEditor && !entry.isOwner" class="label label-info" style="margin-left: 5px;" title="You can edit this domain">Editor</span>
+									</td>
 									<td>{{ entry.resourcesCount }}</td>
 									<td >
 										<a ui-sref="edit-domain({id: entry.name})">
 											<button class="btn btn-xs btn-default content-page-control">Edit ›</button>
 										</a>
-										<button class="btn btn-xs btn-danger content-page-control" ng-click="deleteSubdomainAtIndex($index)">Delete ›</button>
+										<button ng-show="entry.isOwner || User.current.is_superuser" class="btn btn-xs btn-danger content-page-control" ng-click="deleteSubdomain(entry.name)">Delete ›</button>
 									</td>
 								</tr>
 							</tbody>

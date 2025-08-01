@@ -4,12 +4,11 @@ from elixir.validators import *
 from rest_framework.validators import UniqueValidator
 from orderedset import OrderedSet
 from django.http import Http404
+from django.contrib.auth.models import User
 
 
 
-
-# just get the names and the id's
-class SubdomainNameSerializer(serializers.ModelSerializer):
+class PublicSubdomainSerializer(serializers.ModelSerializer):
 	resourcesCount = serializers.SerializerMethodField()
 
 	class Meta:
@@ -18,6 +17,32 @@ class SubdomainNameSerializer(serializers.ModelSerializer):
 
 	def get_resourcesCount(self, obj):
 		return obj.resource.count()
+
+
+# Private serializer for authenticated users
+class SubdomainNameSerializer(serializers.ModelSerializer):
+	resourcesCount = serializers.SerializerMethodField()
+	isOwner = serializers.SerializerMethodField()
+	isEditor = serializers.SerializerMethodField()
+
+	class Meta:
+		model = Domain
+		fields = ('name', 'resourcesCount', 'isOwner', 'isEditor')
+
+	def get_resourcesCount(self, obj):
+		return obj.resource.count()
+	
+	def get_isOwner(self, obj):
+		request = self.context.get('request')
+		if request and request.user and not request.user.is_anonymous:
+			return obj.owner == request.user
+		return False
+	
+	def get_isEditor(self, obj):
+		request = self.context.get('request')
+		if request and request.user and not request.user.is_anonymous:
+			return request.user in obj.editors.all()
+		return False
 
 
 class DomainResourceSerializer(serializers.ModelSerializer):
@@ -86,10 +111,20 @@ class DomainSerializer(serializers.ModelSerializer):
 	resources = DomainResourceSerializer(source='resource', many=True, required=False, allow_empty=True, allow_null=False)
 	tag = DomainTagSerializer(many=True, required=False, allow_empty=True, allow_null=False)
 	collection = DomainCollectionSerializer(many=True, required=False, allow_empty=True, allow_null=False)
+	editors = serializers.SlugRelatedField(
+        many=True, 
+        queryset=User.objects.all(), 
+        slug_field='username',
+        required=False
+    )
+	owner = serializers.SlugRelatedField(
+		read_only=True,
+		slug_field='username'
+	)
 
 	class Meta:
 		model = Domain
-		fields = ('domain', 'title', 'sub_title', 'description', 'is_private', 'tag', 'collection', 'resources', )
+		fields = ('domain', 'title', 'sub_title', 'description', 'is_private', 'tag', 'collection', 'resources', 'editors', 'owner')
 
 	def get_domain(self, obj):
 		return obj.domain.lower()
@@ -133,8 +168,11 @@ class DomainSerializer(serializers.ModelSerializer):
 		
 		# domain collection unique list
 		collection_list = uniq(validated_data, 'collection')
+		editors_data = pop(validated_data, 'editors')
 
 		domain = Domain.objects.create(**validated_data)
+
+		domain.editors.set(editors_data) # Set the editors
 
 		for r in resources_list:
 			tool_r = Resource.objects.filter(visibility=1, biotoolsID = r['biotoolsID'])
@@ -149,7 +187,7 @@ class DomainSerializer(serializers.ModelSerializer):
 			DomainCollection.objects.create(domain=domain, **collection)
 
 		return domain
-
+	
 
 # Need this class to bypass the unique constraint on domain names enforced when POST ing
 class DomainUpdateSerializer(DomainSerializer):

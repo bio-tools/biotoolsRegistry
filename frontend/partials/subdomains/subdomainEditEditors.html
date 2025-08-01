@@ -1,0 +1,22 @@
+<!-- Domain editors -->
+<span class="content-page-input-title-label">Domain editors</span>
+<input type="text"	
+	ng-model="userSuggestion"
+	class="form-control"
+	placeholder="Search for users"
+	typeahead="suggestion for suggestion in userSuggestions($viewValue)"
+	typeahead-on-select="userSelected($item, $model, $label)"
+	typeahead-no-results="noResults">
+<h6 class="text-danger" ng-if="noResults">No users found. Try searching based on the username.</h6>
+<!-- Create a table to show users with editing rights -->
+<div>
+	<span class="content-page-input-title-label">Users that can edit the subdomain</span>
+	<br>
+	<span ng-show="!subdomain.editors || subdomain.editors.length == 0">None</span>
+	<ul class="list-group" ng-show="subdomain.editors && subdomain.editors.length > 0">
+		<li class="list-group-item" ng-repeat="user in subdomain.editors track by $index">
+			<span>{{user}}</span>
+			<button class="btn btn-xs btn-danger pull-right" ng-click="deleteUser($index)">Remove</button>
+		</li>
+	</ul>
+</div>
