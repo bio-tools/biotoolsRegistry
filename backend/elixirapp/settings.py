@@ -265,7 +265,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 OLD_PASSWORD_FIELD_ENABLED = True
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = getenv("EMAIL_BACKEND", 'django.core.mail.backends.smtp.EmailBackend')
 ACCOUNT_ADAPTER = 'elixir.adapters.CustomDefaultAccountAdapter'
 ACCOUNT_EMAIL_REQUIRED = getenv('ACCOUNT_EMAIL_REQUIRED', True, castf=bool)
 ACCOUNT_USERNAME_REQUIRED = getenv(
