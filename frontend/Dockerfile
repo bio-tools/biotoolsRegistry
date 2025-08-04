@@ -1,4 +1,4 @@
-FROM node:11.15.0
+FROM node:11.15.0-slim
 #FROM node:14.15.4
 #FROM node:4.7.2
 
