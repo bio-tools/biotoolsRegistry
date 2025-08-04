@@ -178,6 +178,13 @@ Purges (clears) any data in the Elasticsearch index. Executed in the `biotools-b
 
 Takes all the tools, subdomains annotations etc. in the DB  and creates the equivalent entries in the Elasticsearch index. Executed in the `biotools-backend` container.
 
+##### 3.2.10 Grant test privileges
+`docker exec -i biotools-mysql mysql -u root -pelixirroot -e "GRANT ALL PRIVILEGES ON *.* TO 'elixir'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"`
+
+Fixes `Access denied for user 'elixir'@'%' to database 'test_elixir'"` errors when running tests with `docker exec biotools-backend python manage.py test`.
+
+If it complains that the `elixir_test` database exists, run this command: `docker exec -i biotools-mysql mysql -u root -pelixirroot -e "DROP DATABASE test_elixir;"`
+
 ##### 3.1.10 Done
 At this point you can go to [http://localhost:8000](http://localhost:8000) to see the local bio.tools homepage.
 

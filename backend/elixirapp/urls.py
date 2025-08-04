@@ -12,6 +12,7 @@ Class-based views
 Including another URLconf
 	1. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from dj_rest_auth.views import PasswordResetView, PasswordResetConfirmView
 from django.contrib import admin
 from django.urls import include, path, re_path
 
@@ -23,6 +24,14 @@ urlpatterns = [
 	path('rest-auth/', include('dj_rest_auth.urls')),
 	path('rest-auth/registration/',
 		 include('dj_rest_auth.registration.urls')),
+	# Password reset
+	path('rest-auth/password/reset/',
+		 PasswordResetView.as_view(),
+		 name='rest_password_reset'
+		 ),
+	path('rest-auth/password/reset/confirm/<uidb64>/<token>/',
+		 PasswordResetConfirmView.as_view(),
+		 name='password_reset_confirm'),
 	path('accounts/', include('allauth.urls')),
 	path('', include('elixir.urls')),
 ]

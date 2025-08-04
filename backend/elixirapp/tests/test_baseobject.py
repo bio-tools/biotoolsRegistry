@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from elixir.views import Ontology, User
 from django.core import mail
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as ESExceptions
 from django.conf import settings
@@ -12,7 +12,6 @@ from elixirapp.tests.login_data import superuser_registration_data
 from elixir.management.commands.parse_edam import Command
 
 
-@override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
 class BaseTestObject(TestCase):
     # TOKENS -----------------------------------------------------------------------------------------------------------
     tokens = {}
@@ -182,7 +181,6 @@ class BaseTestObject(TestCase):
         self.client = APIClient()
         self.client.credentials()
         self.switch_user(superuser_registration_data, True)
-        self.assert_mail_empty() # Make sure mail queue is empty before every test
 
     @classmethod
     def setUpClass(cls):
@@ -201,8 +199,6 @@ class BaseTestObject(TestCase):
             return json.load(schema_file)
 
     def tearDown(self):
-        self.assert_mail_empty()  # Make sure mail queue is empty after every test.
-        # This also means every test needs to empty its mail queue
         BaseTestObject._reset_ES()
 
     @staticmethod

@@ -9,7 +9,7 @@ import re
 class CustomPasswordResetSerializer(PasswordResetSerializer):
 	def get_email_options(self):
 		return {
-			'html_email_template_name': 'registration/password_reset_email.html'
+			'html_email_template_name': 'registration/password_reset_key_message.html'
 		}
 
 
