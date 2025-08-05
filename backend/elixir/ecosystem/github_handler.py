@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from github import Github
 from github import GithubException
 from github import BadCredentialsException
@@ -91,7 +91,7 @@ class GithubToolHandler:
             m = method, 
             id = tool_id, 
             u = username,
-            at = datetime.utcnow().strftime('UTC time: %Y-%m-%d %H:%M:%S')
+            at = datetime.now(timezone.utc).strftime('UTC time: %Y-%m-%d %H:%M:%S')
         )
 
     def __file_exists(self, filepath, branch_name):
@@ -261,7 +261,7 @@ class GithubToolHandler:
             type=pr_type, 
             id=tool_id, 
             user=username, 
-            at = datetime.utcnow().strftime('UTC time: %Y-%m-%d %H:%M:%S')
+            at = datetime.now(timezone.utc).strftime('UTC time: %Y-%m-%d %H:%M:%S')
         )
         try: 
             pr = self.__repo.create_pull(
@@ -314,7 +314,7 @@ class GithubToolHandler:
         self.__bt = bt
         self.__branch = self.__get_branch_name(bt.username, bt.tool_id, delete)
         self.__filepath = self.__get_filepath(bt.tool_id)
-        self.__time = datetime.utcnow().strftime('UTC time: %Y-%m-%d %H:%M:%S')
+        self.__time = datetime.now(timezone.utc).strftime('UTC time: %Y-%m-%d %H:%M:%S')
 
     def create_tool(self, biotools_data):
         if not(self.__logged_in):
