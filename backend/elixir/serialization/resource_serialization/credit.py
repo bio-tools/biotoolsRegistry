@@ -94,7 +94,7 @@ class CreditSerializer(serializers.ModelSerializer):
 		return attrs
 
 	def validate(self, data):
-		if data.get("name") == None and data.get("url") == None and data.get("email") == None:
+		if data.get("name") is None and data.get("url") is None and data.get("email") is None:
 			raise serializers.ValidationError('At least one of credit name, credit email or credit URL is mandatory.')
 		return data
 

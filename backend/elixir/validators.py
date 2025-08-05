@@ -150,7 +150,7 @@ def IsCollectionIDValidator(value):
 		raise serializers.ValidationError(message)
 
 
-class LengthValidator():
+class LengthValidator:
 	def __init__(self, length):
 		self.length = length
 	
@@ -161,7 +161,7 @@ class LengthValidator():
 			raise serializers.ValidationError(message)
 
 
-class ENUMValidator():
+class ENUMValidator:
 	def __init__(self, enum):
 		self.enum = enum
 	
@@ -174,7 +174,7 @@ class ENUMValidator():
 		return check[0]
 
 
-class OntologyValidator():
+class OntologyValidator:
 	def find_term_or_uri_in_node(self, node, name_or_uri):
 		if len(name_or_uri) > 0:
 			e_s = {}
@@ -186,7 +186,7 @@ class OntologyValidator():
 			if node['text'].lower() == name_or_uri.lower() or node['data']['uri'].lower() == name_or_uri.lower():
 				# we are in the uri call where uri matches, perhaps the name might be a synonym, if the name even exists
 				# we shouldn't be looking at self.term which is kinda like a global here...best is to rewrite all the validation
-				if node['text'].lower() != name_or_uri.lower() and self.term != None:
+				if node['text'].lower() != name_or_uri.lower() and self.term is not None:
 					if self.term.lower() in e_s:
 						return {'data': {'uri': node['data']['uri']},'text':e_s[self.term.lower()], 'is_synonym':'True'}
 					elif self.term.lower() in n_s:
@@ -255,11 +255,11 @@ class OntologyValidator():
 		# if we have non-empty URI
 		if uri and len(uri) > 0:
 			found = self.check_if_term_or_uri_in_ontology(uri)
-			# URI takes precedense over term, so if URI matches the one found in EDAM
+			# URI takes precedence over term, so if URI matches the one found in EDAM
 			# we replace the term with the one from EDAM (EDAM is assumed to have the correct term)
 			if found['status'] == 'ok':
 				# make sure the term matches the URI
-				if (term and term.lower().strip() != found['data']['text'].lower() and found.get('is_synonym') != 'True'):
+				if term and term.lower().strip() != found['data']['text'].lower() and found.get('is_synonym') != 'True':
 					message = 'The term does not match the URI: ' + term + ', ' + uri + '.'
 					raise serializers.ValidationError(message)
 				self.uri = found['data']['data']['uri']

@@ -26,13 +26,13 @@ class EditPermissions(APIView):
 		try:
 			return {"id": query["id"]}
 		except Exception as e:
-			raise ParseError("This request requires the following pa rameter: 'id' (a resource id).")
+			raise ParseError("This request requires the following parameter: 'id' (a resource id).")
 
 	def extractPUTQueryParameters(self, query):
 		try:
 			return {"id": query["id"], "permission": query["permission"]}
 		except Exception as e:
-			raise ParseError("This request requires the following pa rameters: 'id' (a resource id), permission (a type of a permission to be assigned).")
+			raise ParseError("This request requires the following parameters: 'id' (a resource id), permission (a type of a permission to be assigned).")
 
 	def getResource(self, id):
 		obj = Resource.objects.filter(visibility=1).get(biotoolsID__iexact=id)
@@ -56,7 +56,7 @@ class EditPermissions(APIView):
 		permission = parameters["permission"]
 		# Update permissions in the database.
 		self.setEditPermission(resource, permission)
-		return Response({"detail": "Edit permissions changed sucessfully."})
+		return Response({"detail": "Edit permissions changed successfully."})
 
 	def get(self, request):
 		# Check and extract the required parameters.

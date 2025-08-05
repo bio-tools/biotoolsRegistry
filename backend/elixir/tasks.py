@@ -46,7 +46,7 @@ def backup_stats_with_date(upperDateLimit=datetime.today()):
     statsData.save()
     statsData.date = upperDateLimit
     statsData.save()
-    return "Statistics for " + str(statsData.totalEntries) + " entries saved sucessfully."
+    return "Statistics for " + str(statsData.totalEntries) + " entries saved successfully."
 
 # @shared_task
 def backup_stats():

@@ -72,7 +72,7 @@ def rdfize(entry):
                 if "typeEntity" in credit.keys() and credit["typeEntity"]:
                     if "Funding agency" in credit["typeEntity"]:
                         sType = "schema:Organization"
-                        if "orcidid" in credit.keys() and credit["orcidid"] != None:
+                        if "orcidid" in credit.keys() and credit["orcidid"] is not None:
                             if not "funder" in tool.keys():
                                 tool["funder"] = {
                                     "@id": credit["orcidid"],
@@ -82,7 +82,7 @@ def rdfize(entry):
                                 tool["funder"].append(
                                     {"@id": credit["orcidid"], "@type": sType}
                                 )
-                        elif "name" in credit.keys() and credit["name"] != None:
+                        elif "name" in credit.keys() and credit["name"] is not None:
                             if not "funder" in tool.keys():
                                 tool["funder"] = [credit["name"]]
                             else:
@@ -98,7 +98,7 @@ def rdfize(entry):
                                 sType = "schema:Person"
                             else:
                                 sType = "schema:Organization"
-                            if "orcidid" in credit.keys() and credit["orcidid"] != None:
+                            if "orcidid" in credit.keys() and credit["orcidid"] is not None:
                                 if not "author" in tool.keys():
                                     tool["author"] = {
                                         "@id": credit["orcidid"],
@@ -108,13 +108,13 @@ def rdfize(entry):
                                     tool["author"].append(
                                         {"@id": credit["orcidid"], "@type": sType}
                                     )
-                            elif "name" in credit.keys() and credit["name"] != None:
+                            elif "name" in credit.keys() and credit["name"] is not None:
                                 if not "author" in tool.keys():
                                     tool["author"] = [credit["name"]]
                                 else:
                                     tool["author"].append(credit["name"])
                         else:
-                            if "name" in credit.keys() and credit["name"] != None:
+                            if "name" in credit.keys() and credit["name"] is not None:
                                 if not "author" in tool.keys():
                                     tool["author"] = [credit["name"]]
                                 else:
@@ -129,7 +129,7 @@ def rdfize(entry):
                             else:
                                 sType = "schema:Organization"
 
-                            if "orcidid" in credit.keys() and credit["orcidid"] != None:
+                            if "orcidid" in credit.keys() and credit["orcidid"] is not None:
                                 if not "provider" in tool.keys():
                                     tool["provider"] = {
                                         "@id": credit["orcidid"],
@@ -139,13 +139,13 @@ def rdfize(entry):
                                     tool["provider"].append(
                                         {"@id": credit["orcidid"], "@type": sType}
                                     )
-                            elif "name" in credit.keys() and credit["name"] != None:
+                            elif "name" in credit.keys() and credit["name"] is not None:
                                 if not "provider" in tool.keys():
                                     tool["provider"] = [credit["name"]]
                                 else:
                                     tool["provider"].append(credit["name"])
                         else:
-                            if "name" in credit.keys() and credit["name"] != None:
+                            if "name" in credit.keys() and credit["name"] is not None:
                                 if not "provider" in tool.keys():
                                     tool["provider"] = [credit["name"]]
                                 else:
@@ -159,7 +159,7 @@ def rdfize(entry):
                             else:
                                 sType = "schema:Organization"
 
-                            if "orcidid" in credit.keys() and credit["orcidid"] != None:
+                            if "orcidid" in credit.keys() and credit["orcidid"] is not None:
                                 if not "contributor" in tool.keys():
                                     tool["contributor"] = {
                                         "@id": credit["orcidid"],
@@ -169,13 +169,13 @@ def rdfize(entry):
                                     tool["contributor"].append(
                                         {"@id": credit["orcidid"], "@type": sType}
                                     )
-                            elif "name" in credit.keys() and credit["name"] != None:
+                            elif "name" in credit.keys() and credit["name"] is not None:
                                 if not "contributor" in tool.keys():
                                     tool["contributor"] = [credit["name"]]
                                 else:
                                     tool["contributor"].append(credit["name"])
                         else:
-                            if "name" in credit.keys() and credit["name"] != None:
+                            if "name" in credit.keys() and credit["name"] is not None:
                                 if not "contributor" in tool.keys():
                                     tool["contributor"] = [credit["name"]]
                                 else:
@@ -188,7 +188,7 @@ def rdfize(entry):
                             else:
                                 sType = "schema:Organization"
 
-                            if "orcidid" in credit.keys() and credit["orcidid"] != None:
+                            if "orcidid" in credit.keys() and credit["orcidid"] is not None:
                                 if not "primaryContact" in tool.keys():
                                     tool["primaryContact"] = {
                                         "@id": credit["orcidid"],
@@ -198,13 +198,13 @@ def rdfize(entry):
                                     tool["primaryContact"].append(
                                         {"@id": credit["orcidid"], "@type": sType}
                                     )
-                            elif "name" in credit.keys() and credit["name"] != None:
+                            elif "name" in credit.keys() and credit["name"] is not None:
                                 if not "primaryContact" in tool.keys():
                                     tool["primaryContact"] = [credit["name"]]
                                 else:
                                     tool["primaryContact"].append(credit["name"])
                         else:
-                            if "name" in credit.keys() and credit["name"] != None:
+                            if "name" in credit.keys() and credit["name"] is not None:
                                 if not "primaryContact" in tool.keys():
                                     tool["primaryContact"] = [credit["name"]]
                                 else:

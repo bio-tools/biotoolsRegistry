@@ -190,7 +190,7 @@ def indexify(flat_data):
 	index_data = {}
 	for el in flat_data:
 		key = el['uri'].lower().replace('http://edamontology.org/','')
-		if index_data.get(key) == None:
+		if index_data.get(key) is None:
 			index_data[key] = el
 			index_data[key]['path'] = [index_data[key]['path']]
 		else:

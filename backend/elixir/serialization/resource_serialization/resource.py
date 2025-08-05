@@ -227,8 +227,8 @@ class ResourceSerializer(serializers.ModelSerializer):
 	biotoolsID = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[UniqueValidator(queryset=Resource.objects.filter(visibility=1), message="A resource with this ID already exists. bio.tools IDs need to be unique")])
 	#biotoolsCURIE = serializers.CharField(allow_blank=False, validators=[UniqueValidator(queryset=Resource.objects.filter(visibility=1), message="A resource with this ID already exists.")])
 	# biotoolsID = serializers.CharField(read_only=True);
-	biotoolsCURIE = serializers.CharField(read_only=True);
-	# name = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[IsStringTypeValidator, UniqueValidator(queryset=Resource.objects.filter(visibility=1), message="The resource ID (biotoolsID) generated from this name already exists; Use a different name.")])
+	biotoolsCURIE = serializers.CharField(read_only=True)
+    # name = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[IsStringTypeValidator, UniqueValidator(queryset=Resource.objects.filter(visibility=1), message="The resource ID (biotoolsID) generated from this name already exists; Use a different name.")])
 
 	name = serializers.CharField(min_length=1, max_length=100, allow_blank=False, validators=[IsStringTypeValidator])
 	homepage = serializers.CharField(max_length=300, min_length=1, allow_blank=False, validators=[is_blacklisted_url_validator])
@@ -346,7 +346,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 		if not p1.search(attrs):
 			raise serializers.ValidationError('The biotoolsID can only start with letters and numbers')
 		if attrs.endswith("."):
-			raise serializers.ValidationError('The biotoolsID cannnot end with a dot')
+			raise serializers.ValidationError('The biotoolsID cannot end with a dot')
 		return attrs
 
 	def validate_homepage(self, attrs):
@@ -606,7 +606,7 @@ class ResourceUpdateSerializer(ResourceSerializer):
 	# now technically they can change the tool name
 	# should we allow for name changes or not?
 	# currently we do and thus the unique constraint message reflects this
-	# if we don't allow change the unique constratnt name message
+	# if we don't allow change the unique constraint name message
 	def validate(self, data):
 		return data
 

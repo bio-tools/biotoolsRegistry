@@ -16,11 +16,11 @@ def extract_publication_data(response):
     try:
         journal = response['abstracts-retrieval-response']['coredata']['prism:publicationName']
     except:
-        print("Warning: Publication journal not avaliable for publication.")
+        print("Warning: Publication journal not available for publication.")
     try:
         date = dateutil.parser.parse(response['abstracts-retrieval-response']['coredata']['prism:coverDate'])
     except:
-        print("Warning: Publication date not avaliable for publication.")
+        print("Warning: Publication date not available for publication.")
     print()
     try:
         title = response['abstracts-retrieval-response']['coredata']['dc:title']
@@ -29,7 +29,7 @@ def extract_publication_data(response):
     try:
         abstract = response['abstracts-retrieval-response']['coredata']['dc:description']
     except:
-        print("Warning: Abstract not avaliable for publication.")
+        print("Warning: Abstract not available for publication.")
     try:
         for author in response['abstracts-retrieval-response']['authors']['author']:
             authors.append(author['ce:indexed-name'])
@@ -65,7 +65,7 @@ def fetch_publication_citation(identifier):
     return None
 
 def publication_metadata_needs_update(publication):
-    if publication.metadata != None:
+    if publication.metadata is not None:
         updated = publication.metadata.updated
         if updated:
             if (timezone.now() - updated).days < 30:
@@ -76,7 +76,7 @@ def publication_metadata_needs_update(publication):
     return True
 
 def save_publication_data(data, citation_count, publication):
-    if publication.metadata != None:
+    if publication.metadata is not None:
         metadata = publication.metadata
     else:
         metadata = PublicationMetadata()
@@ -118,7 +118,7 @@ def update_publication(publication):
             if publication_metadata_needs_update(publication):
                 count = fetch_publication_citation('pmid(' + publication.pmcid + ')')
                 data = fetch_publication_data('pubmed_id/' + publication.pmcid)
-        if data != None: 
+        if data is not None:
             save_publication_data(data, count, publication)
     except:
         print("Warning: Publication could not be processed.")

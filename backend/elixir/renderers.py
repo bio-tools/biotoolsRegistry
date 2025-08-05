@@ -48,7 +48,7 @@ class XMLSchemaRenderer(BaseRenderer):
         # raise AssertionError(stream.getvalue());
         generic_xml = stream.getvalue().encode("utf-8")
 
-        if data.get("count") != None and data.get("list") != None:
+        if data.get("count") is not None and data.get("list") is not None:
             # deal with multiple tools
             xmlfile = "multiple.xslt"
         else:
