@@ -97,9 +97,7 @@ class XMLSchemaRenderer(BaseRenderer):
             xml.characters(force_str(data))
 
 
-from rdflib import ConjunctiveGraph
 from elixir.biotools_to_bioschemas import rdfize
-from boltons.iterutils import remap
 import ast
 
 
