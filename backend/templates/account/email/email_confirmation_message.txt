@@ -1,7 +1,13 @@
-{% load account %}{% user_display user as user_display %}{% load i18n %}{% autoescape off %}{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Hello from {{ site_name }}!
-You're receiving this e-mail because user {{ user_display }} at {{ site_domain }} has given yours as an e-mail address to connect their account.
+{% load account %}
+{% user_display user as user_display %}
+{% load i18n %}{% autoescape off %}
+    {% blocktrans %}Dear {{ user_display }},{% endblocktrans %}
 
-To confirm this is correct, go to {{ activate_url }}
-{% endblocktrans %}{% endautoescape %}
-{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Thank you from {{ site_name }}!
-{{ site_domain }}{% endblocktrans %}
+    {% blocktrans %}Welcome to {{ site_name }}. To activate your account click the following link: {% endblocktrans %}
+    {% block activate_link %}
+        {{ domain }}signup/verify-email/{{ key }}
+    {% endblock %}
+
+    {% trans "Thanks for using our site," %}
+    {% blocktrans %}The {{ site_name }} team{% endblocktrans %}
+{% endautoescape %}
