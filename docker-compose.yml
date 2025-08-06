@@ -52,6 +52,7 @@ services:
       context: ./backend
     environment:
       - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
+      - BIOTOOLS_URL_FRONT=http://localhost/
       - BIOTOOLS_MYSQL_DB=elixir
       - BIOTOOLS_MYSQL_HOST=biotools-mysql
       - BIOTOOLS_MYSQL_PASSWORD=123
