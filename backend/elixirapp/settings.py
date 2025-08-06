@@ -20,6 +20,7 @@ import json
 # Prefix for environment variables settings.
 ENV_NAMESPACE = "BIOTOOLS"
 
+SITE_NAME = "bio.tools" # will fix email templates
 
 def getenv(key, default=None, castf=str, ns=ENV_NAMESPACE):
     """Helper function to retrieve namespaced environment variables."""
