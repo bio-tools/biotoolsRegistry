@@ -21,7 +21,7 @@ COPY . .
 # Uses packages and binaries from builder, but is smaller and runs as a non-root user
 FROM python:3.13-slim
 
-LABEL maintainer="Hans-Ioan Ienasescu <hans@bio.tools>"
+LABEL maintainer="SDU <support-bio-tools@sdu.dk>"
 
 ENV PYTHONUNBUFFERED=1
 

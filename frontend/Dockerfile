@@ -1,8 +1,7 @@
 FROM node:11.15.0-slim
 #FROM node:14.15.4
-#FROM node:4.7.2
 
-LABEL maintainer="Hans-Ioan Ienasescu <hans@bio.tools>"
+LABEL maintainer="SDU <support-bio-tools@sdu.dk>"
 
 RUN addgroup app && adduser --system --group app
 
