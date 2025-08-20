@@ -2,7 +2,7 @@ from elixir.models import *
 from django.utils import timezone
 import dateutil.parser
 import requests
-import json
+
 
 ############################################################################
 # Publication Metadata
@@ -13,66 +13,59 @@ def extract_publication_data(response):
     journal = ''
     authors = []
     date = None
+    citation = None
+    
+    doi = response.get('doi', None)
+    pmid = response.get('pmid', None)
+    pmcid = response.get('pmcid', None)
+
     try:
-        journal = response['abstracts-retrieval-response']['coredata']['prism:publicationName']
+        journal = response['journalInfo']['journal']['title']
     except:
         print("Warning: Publication journal not available for publication.")
     try:
-        date = dateutil.parser.parse(response['abstracts-retrieval-response']['coredata']['prism:coverDate'])
+        date = dateutil.parser.parse(response['journalInfo']['printPublicationDate'])
     except:
         print("Warning: Publication date not available for publication.")
-    print()
     try:
-        title = response['abstracts-retrieval-response']['coredata']['dc:title']
+        title = response['title']
     except:
-        print("Warning: Title not avaliable for publication.")
+        print("Warning: Title not available for publication.")
     try:
-        abstract = response['abstracts-retrieval-response']['coredata']['dc:description']
+        abstract = response['abstractText']
     except:
         print("Warning: Abstract not available for publication.")
     try:
-        for author in response['abstracts-retrieval-response']['authors']['author']:
-            authors.append(author['ce:indexed-name'])
+        for author in response['authorList']['author']:
+            authors.append(author['fullName'])
     except:
-        print("Warning: Authors not avaliable for publication.")
-    return {"title": title, "abstract": abstract, "authors": authors, "date": date, "journal": journal}
-
-def extract_publication_citation(response):
-    citation = None
+        print("Warning: Authors not available for publication.")
     try:
-        citation = response['search-results']['entry'][0]['citedby-count']
+        citation = response['citedByCount']
     except:
-        print("Warning: Citations not avaliable for publication.")
-    return citation
+        print("Warning: Cited by count not available for publication.")
+    return {"doi": doi, "pmid": pmid, "pmcid": pmcid, "title": title, "abstract": abstract, "authors": authors, "date": date, "journal": journal, "citation": citation}
+
     
-def fetch_publication_data(identifier):
-    url = 'http://api.elsevier.com/content/abstract/' + identifier
-    headers = {'Accept': 'application/json', 'X-ELS-APIKey': 'ddd4165bfdfe4dc9d3fb4b289aa321fe'}
+def fetch_publication_data(id_type, identifier, result_type):
+    url = f'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={id_type}:{identifier}&format=json&resultType={result_type}'
+    headers = {'Accept': 'application/json'}
     request = requests.get(url, headers=headers)
+
     if request.status_code == 200:
-        return extract_publication_data(request.json())
-    #print("failed")
+        results = request.json().get('resultList', {}).get('result', [])
+        result = results[0] if results else None  
+        return extract_publication_data(result) if result else None
+    
     return None
 
-def fetch_publication_citation(identifier):
-    url = 'http://api.elsevier.com/content/search/scopus'
-    headers = {'Accept': 'application/json', 'X-ELS-APIKey': 'ddd4165bfdfe4dc9d3fb4b289aa321fe'}
-    params = {'query': identifier, 'field': 'citedby-count'}
-    request = requests.get(url, params=params, headers=headers)
-    if request.status_code == 200:
-        return extract_publication_citation(request.json())
-    #print("failed")
-    return None
 
 def publication_metadata_needs_update(publication):
     if publication.metadata is not None:
         updated = publication.metadata.updated
         if updated:
             if (timezone.now() - updated).days < 30:
-                #print("Updated: " + str((timezone.now() - updated).days) + " days ago. No need to update")
                 return False
-            #else:
-                #print("Updated: " + str((timezone.now() - updated).days) + " days ago. Updating...")
     return True
 
 def save_publication_data(data, citation_count, publication):
@@ -84,7 +77,7 @@ def save_publication_data(data, citation_count, publication):
     metadata.title = data['title']
     metadata.abstract = data['abstract']
     metadata.publication = publication
-    metadata.citationCount = citation_count
+    metadata.citationCount = data['citation']
     metadata.journal = data['journal']
     metadata.date = data['date']
     metadata.updated = timezone.now()
@@ -95,31 +88,33 @@ def save_publication_data(data, citation_count, publication):
         pub_author.name = author
         pub_author.metadata = metadata
         pub_author.save()
+
+    # update missing identifiers
+    if not publication.doi and data['doi']:
+        publication.doi = data['doi']
+    if not publication.pmid and data['pmid']:
+        publication.pmid = data['pmid']
+    if not publication.pmcid and data['pmcid']:
+        publication.pmcid = data['pmcid']
+
     publication.save()
     metadata.save()
-    #print("saved")
+
 
 def update_publication(publication):
     try:
         data = None
         
         if publication.doi:
-            #print("Fetching metadata for: " + 'doi/' + publication.doi.replace('doi:',''))
             if publication_metadata_needs_update(publication):
-                count = fetch_publication_citation('doi(' + publication.doi.replace('doi:','') + ')')
-                data = fetch_publication_data('doi/' + publication.doi.replace('doi:',''))
+                data = fetch_publication_data('DOI', publication.doi.replace('doi:', ''), 'core')
         elif publication.pmid:
-            #print("Fetching metadata for: " + 'pubmed_id/' + publication.pmid)
             if publication_metadata_needs_update(publication):
-                count = fetch_publication_citation('pmid(' + publication.pmid + ')')
-                data = fetch_publication_data('pubmed_id/' + publication.pmid)
+                data = fetch_publication_data('EXT_ID', publication.pmid, 'core')
         elif publication.pmcid:
-            #print("Fetching metadata for: " + 'pubmed_id/' + publication.pmcid)
             if publication_metadata_needs_update(publication):
-                count = fetch_publication_citation('pmid(' + publication.pmcid + ')')
-                data = fetch_publication_data('pubmed_id/' + publication.pmcid)
-        if data is not None:
-            save_publication_data(data, count, publication)
-    except:
-        print("Warning: Publication could not be processed.")
-        
+                data = fetch_publication_data('PMC', publication.pmcid.replace('PMC', ''), 'core')
+        if data:
+            save_publication_data(data, publication)
+    except Exception as e:
+        print("Warning: Publication could not be processed.", e)
