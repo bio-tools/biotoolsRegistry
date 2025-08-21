@@ -1,5 +1,7 @@
 from .ecosystem_exceptions import BioToolsException
+from boltons.iterutils import remap
 import json
+
 # We can maybe add here a delete flag
 #   Because we don't technically need the bio.tools JSON data when we delete the tool
 #   But we still need the tool id
@@ -25,6 +27,8 @@ class BioToolsData(object):
 
         try:
             self.__tool = json.loads(tool_json_string)
+            self.__tool = remap(self.__tool, visit=lambda path, key, value: bool(value))
+            tool_json_string = json.dumps(self.__tool, indent=2)
         except ValueError as v:
             raise BioToolsException(username, tool_json_string, 'Invalid tool JSON structure. ' + str(v))
         
