@@ -4,7 +4,8 @@ FROM ubuntu:22.04
 LABEL maintainer="SDU <support-bio-tools@sdu.dk>"
 
 # Disable buffering for logs.
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
+ENV DEBIAN_FRONTEND=noninteractive
 
 
 # Set up working directory and files.
@@ -18,8 +19,8 @@ COPY runtime runtime/
 COPY templates templates/
 
 
-# Install Python 3.8
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y software-properties-common -y && add-apt-repository ppa:deadsnakes/ppa -y && apt-get update -y && apt-get -y install python3.8 python3-pip
+# Install Python 3
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y software-properties-common -y && add-apt-repository ppa:deadsnakes/ppa -y && apt-get update -y && apt-get -y install python3 python3-pip
 
 # make symlink for python3 to python
 RUN ln -sf /usr/bin/python3 /usr/bin/python && ln -sf /usr/bin/pip3 /usr/bin/pip

@@ -360,14 +360,7 @@ class GithubToolHandler:
             )
 
         if self.__file_exists(new_file_path, self.MASTER_BRANCH):
-            raise ToolCreationException(
-                'The file already exists on master branch: {b} at tool creation time.'.format(b=self.MASTER_BRANCH),
-                branch = new_branch_name,
-                filepath = new_file_path,
-                sha = None,
-                username = self.__bt.username,
-                tool_id = self.__bt.tool_id
-            )
+            return self.update_tool(biotools_data)
         
         # Create branch from master
         # Raises EcosystemException
