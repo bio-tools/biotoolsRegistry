@@ -1,3 +1,4 @@
+boltons==25
 defusedxml==0.6.0
 Django==5.2.4
 django-allauth==65.3.1
