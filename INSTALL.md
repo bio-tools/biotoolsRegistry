@@ -39,7 +39,7 @@ Go into the folder in which you cloned the bio.tools repo. By default it will be
 > **Note:** The Docker setup will require up to 5 GB of disk space. The bio.tools data will also add to this.
 
 ##### 3.0.1 Build the necessary Docker images
-`docker-compose build`
+`docker compose build`
 
 The above command will download / build all the Docker images required for bio.tools to run on your local machine. 
 
@@ -53,7 +53,7 @@ The images built can be seen by running: `docker image ls` and are:
 * `node` `(~ 650MB)`
 
 ##### 3.0.2 Create and run the Docker containers
-`docker-compose up`
+`docker compose up`
 
 The above command will create and run the required containers:
 
@@ -62,11 +62,11 @@ The above command will create and run the required containers:
 * `biotools-backend` (depends on `biotools-mysql` and `biotools-elasticsearch`)
 * `biotools-frontend`(depends on `biotools-backend`) 
 
-> **Note:** After running the `docker-compose up` command, the containers will start and will output log messages which you can see in your terminal window. In order for the containers to keep running this window needs to stay open. You will need to open new terminal windows/tabs for other operations.
+> **Note:** After running the `docker compose up` command, the containers will start and will output log messages which you can see in your terminal window. In order for the containers to keep running this window needs to stay open. You will need to open new terminal windows/tabs for other operations.
 
-> `docker-compose up` will also build the images if they do not exist, but in order to be sure your latest source code and image changes are running make sure you run `docker-compose build` beforehand
+> `docker compose up` will also build the images if they do not exist, but in order to be sure your latest source code and image changes are running make sure you run `docker compose build` beforehand
 
-Too see the running containers run: `docker container ls`
+Too see the running containers run: `docker container ls` or `docker ps`
 
 ## 3.1 The short(er) setup
 **Run the steps below in the root folder of the Git project (e.g. `biotoolsRegistry`)** 
@@ -97,7 +97,7 @@ Copies the `load_initial_db.sh` into the `biotools-mysql` container. This file w
 
 Executes the `load_initial_db.sh` file in the `biotools-mysql` container which loads the initial (seed) DB data.
 
-> **Note:** The initial DB contains 11 tool annotations, a superuser (username: `biotools`, password: `biotools`, an initial `test` subdomain and the necessary EDAM files. See 3.1.8 for more.
+> **Note:** The initial DB contains 6 tool annotations, a superuser (username: `biotools`, password: `biotools`), an initial `test` subdomain and the necessary EDAM files. See 3.1.8 for more.
 
 
 ##### 3.1.6 Purge Elasticsearch
@@ -111,18 +111,18 @@ Purges (clears) any data in the Elasticsearch index. Executed in the `biotools-b
 Takes all the tools, subdomains annotations etc. in the DB  and creates the equivalent entries in the Elasticsearch index. Executed in the `biotools-backend` container.
 
 ##### 3.1.8 Done
-At this point you can go to [http://localhost:8000](http://localhost:8000]) to see the local bio.tools homepage.
+At this point you can go to [http://localhost](http://localhost]) to see the local bio.tools homepage.
 
-The `test` subdomain can be viewed at [http://test.localhost:8000](http://test.localhost:8000)
+The `test` subdomain can be viewed at [http://localhost/t?domain=test](http://localhost/t?domain=test)
 
 
 You can login with the existing superuser (user: `biotools`, password: `biotools`).
 
-All running Docker containers can be stopped by running: `docker-compose down` from the root Git folder. This will preserve the data in the MySQL database and Elasticsearch. To reinstantiate everything again run: `docker-compose up`. 
+All running Docker containers can be stopped by running: `docker compose down` from the root Git folder. This will preserve the data in the MySQL database and Elasticsearch. To reinstantiate everything again run: `docker compose up`. 
 
-Only need to run `docker-compose build` once at the beginning or if changes are made to the bio.tools Docker settings files.
+Only need to run `docker compose build` once at the beginning or if changes are made to the bio.tools Docker settings files.
 
-If you wish to remove the data along with the containers run: `docker-compose down -v` which will also remove the Docker volumes which preserve the MySQL and Elasticsearch data.
+If you wish to remove the data along with the containers run: `docker compose down -v` which will also remove the Docker volumes which preserve the MySQL and Elasticsearch data.
 
 
 
@@ -179,35 +179,35 @@ Purges (clears) any data in the Elasticsearch index. Executed in the `biotools-b
 Takes all the tools, subdomains annotations etc. in the DB  and creates the equivalent entries in the Elasticsearch index. Executed in the `biotools-backend` container.
 
 ##### 3.1.10 Done
-At this point you can go to [http://localhost:8000](http://localhost:8000) to see the local bio.tools homepage.
+At this point you can go to [http://localhost](http://localhost) to see the local bio.tools homepage.
 
 Login with the user created in **3.2.3**
 
-No tools or subdomains are available, add tools at [http://localhost:8000/register]([http://localhost:8000/register]) and subdomains at [http://localhost:8000/subdomain](http://localhost:8000/subdomain)
+No tools or subdomains are available, add tools at [http://localhost/register]([http://localhost/register]) and subdomains at [http://localhost/subdomain](http://localhost/subdomain)
 
-All running Docker containers can be stopped by running: `docker-compose down` from the root Git folder. This will preserve the data in the MySQL database and Elasticsearch. To reinstantiate everything again run: `docker-compose up`.
+All running Docker containers can be stopped by running: `docker compose down` from the root Git folder. This will preserve the data in the MySQL database and Elasticsearch. To reinstantiate everything again run: `docker compose up`.
 
-Only need to run `docker-compose build` once at the beginning or if changes are made to the bio.tools Docker settings files.
+Only need to run `docker compose build` once at the beginning or if changes are made to the bio.tools Docker settings files.
 
-If you wish to remove the data along with the containers run: `docker-compose down -v` which will also remove the Docker volumes which preserve the MySQL and Elasticsearch data.
+If you wish to remove the data along with the containers run: `docker compose down -v` which will also remove the Docker volumes which preserve the MySQL and Elasticsearch data.
 
 
 ## 4. Useful information
 ### 4.0 Basic usage
 After completing steps 1-3 above, the only required commands for basic use are
 
-`docker-compose up`
+`docker compose up`
 
 and
 
-`docker-compose down`
+`docker compose down`
 
 and perhaps
 
-`docker-compose down -v`
+`docker compose down -v`
 
 ### 4.1 Local dev
-After running `docker-compose up` you will see a number of log messages. These messages come from the running containers:
+After running `docker compose up` you will see a number of log messages. These messages come from the running containers:
 
 * `biotools-mysql` (MySQL logs)
 * `biotools-elasticsearch` (Elasticsearch logs)
@@ -217,7 +217,7 @@ After running `docker-compose up` you will see a number of log messages. These m
 #### 4.1.1 Backend dev
 The `biotools-backend` container is based on an image which uses an Apache server. The logs from `biotools-backend` come from Apache or sometimes from Python. 
 
-> **Note:** Changes in Python/Django/backend files will be reflected in the `biotools-backend` container, **BUT** because of how Apache works, the changes won't be reflected in your browser http://localhost:8000 until Apache is reloaded. In order to see the changes in the reflected in the browser you need to run: 
+> **Note:** Changes in Python/Django/backend files will be reflected in the `biotools-backend` container, **BUT** because of how Apache works, the changes won't be reflected in your browser http://localhost until Apache is reloaded. In order to see the changes in the reflected in the browser you need to run: 
 > 
 > `docker exec biotools-backend /etc/init.d/apache2 reload`
 
@@ -225,7 +225,7 @@ The `biotools-backend` container is based on an image which uses an Apache serve
 
 > Bringing the containers down and up again will also work, but this takes significantly longer. The above command is almost instant.
 
-Most issues with the backend code will be reflected in the browser at http://localhost:8000/api/{some_path}, e.g. [http://localhost:8000/api/tool](http://localhost:8000/api/tool) or [http://localhost:8000/api/jaspar](http://localhost:8000/api/jaspar) etc. 
+Most issues with the backend code will be reflected in the browser at http://localhost/api/{some_path}, e.g. [http://localhost/api/tool](http://localhost/api/tool) or [http://localhost/api/jaspar](http://localhost/api/jaspar) etc. 
 
 See [https://biotools.readthedocs.io/en/latest/api_reference.html](https://biotools.readthedocs.io/en/latest/api_reference.html) or Django route files (`urls.py`) for more API endpoints.
 
@@ -266,20 +266,21 @@ The easy way would be to make a Zoho email account and use that email informatio
 ### 4.4 Docker notes
 
 #### Build bio.tools Docker images
-`docker-compose build`
+`docker compose build`
 
 #### Run bio.tools containers
-`docker-compose up`
+`docker compose up`
 
 #### Stop bio.tools containers
-`docker-compose down`
+`docker compose down`
 
 #### Stop bio.tools containers and remove data
-`docker-compose down -v`
+`docker compose down -v`
 
 
 #### View running containers
 `docker container ls`
+`docker ps`
 
 #### View all containers
 `docker container ls -a`
