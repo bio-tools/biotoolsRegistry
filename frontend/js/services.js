@@ -126,7 +126,7 @@ angular.module('elixir_front.services', [])
 		}
 	})
 }])
-.service('ToolList', ['$stateParams', 'ToolListConnection', function($stateParams, ToolListConnection){
+.service('ToolList', ['$stateParams', 'ToolListConnection', 'ToolPaginator', function($stateParams, ToolListConnection, ToolPaginator){
 	var _this = this;
 	this.count = 0;
 	this.list = [];
@@ -136,8 +136,14 @@ angular.module('elixir_front.services', [])
 		// enable spinner
 		this.loading = true;
 
+		// prepare API parameters including per_page
+		var apiParams = angular.copy($stateParams);
+		if (ToolPaginator.pageSize && ToolPaginator.pageSize !== 50) {
+			apiParams.per_page = ToolPaginator.pageSize;
+		}
+
 		// get tools
-		var response = ToolListConnection.query($stateParams, function() {
+		var response = ToolListConnection.query(apiParams, function() {
 			// disable spinner
 			_this.loading = false;
 			_this.count = response.count;
@@ -260,6 +266,7 @@ angular.module('elixir_front.services', [])
 	// pagination settings
 	this.maxSize = 5;
 	this.pageSize = 50;
+	this.availablePageSizes = [10, 25, 50, 100]; // New option
 })
 .service('ToolSorter', function(){
 	var _this = this;

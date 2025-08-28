@@ -46,7 +46,8 @@ class ResourceList(APIView):
 	
 	def get(self, request, format=None):
 		query_dict = request.GET
-		size = api_settings.PAGE_SIZE
+		per_page = min(int(query_dict.get('per_page', api_settings.PAGE_SIZE)), 100)
+		size = per_page
 		page = int(query_dict.get('page', '1'))
 
 		searchLogger = elixir_logging.SearchLogger(query_dict)
