@@ -1,0 +1,51 @@
+.biotools-navbar {
+  background: linear-gradient(135deg, #1976d2, #1565c0);
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 64px;
+}
+
+.navbar-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.logo-button {
+  padding: 8px;
+  min-width: auto;
+
+  .biotools-logo {
+    height: 40px;
+    width: auto;
+  }
+}
+
+.search-container {
+  flex: 1;
+  margin: 0 24px;
+  max-width: 400px;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  button {
+    color: white;
+  }
+}
+
+// Make room for fixed navbar
+:host {
+  margin-bottom: 64px;
+}

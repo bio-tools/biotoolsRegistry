@@ -1,0 +1,45 @@
+<mat-toolbar class="biotools-navbar">
+  <div class="navbar-content">
+    <!-- Logo -->
+    <button mat-button class="logo-button" (click)="navigateToHome()">
+      <img src="/img/biotools_white.svg" alt="bio.tools" height="40" class="biotools-logo">
+    </button>
+
+    <!-- Search Bar (conditional) -->
+    <div class="search-container" *ngIf="showSearch">
+      <app-search-bar></app-search-bar>
+    </div>
+
+    <!-- Navigation Menu -->
+    <div class="nav-menu">
+      <button mat-button [matMenuTriggerFor]="exploreMenu">
+        Explore
+        <mat-icon>expand_more</mat-icon>
+      </button>
+      <mat-menu #exploreMenu="matMenu">
+        <button mat-menu-item (click)="navigateToSearch()">
+          <mat-icon>search</mat-icon>
+          <span>Tools</span>
+        </button>
+        <button mat-menu-item (click)="navigateToDomains()">
+          <mat-icon>category</mat-icon>
+          <span>Domains</span>
+        </button>
+        <button mat-menu-item (click)="navigateToCommunities()">
+          <mat-icon>group</mat-icon>
+          <span>Communities</span>
+        </button>
+        <button mat-menu-item (click)="navigateToAbout()">
+          <mat-icon>info</mat-icon>
+          <span>About bio.tools</span>
+        </button>
+      </mat-menu>
+
+      <!-- User menu placeholder -->
+      <button mat-button>
+        <mat-icon>account_circle</mat-icon>
+        Login
+      </button>
+    </div>
+  </div>
+</mat-toolbar>

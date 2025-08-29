@@ -1,0 +1,11 @@
+// Global app styles
+.main-content {
+  padding-top: 64px; // Make room for fixed navbar
+  min-height: calc(100vh - 64px);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}

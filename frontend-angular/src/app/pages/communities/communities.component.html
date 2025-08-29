@@ -1,0 +1,103 @@
+<div class="communities-page">
+  <div class="communities-header">
+    <div class="container">
+      <h1>Research Communities</h1>
+      <p>Connect with bioinformatics communities, organizations, and research groups worldwide</p>
+    </div>
+  </div>
+
+  <div class="communities-content">
+    <div class="container">
+      <div class="loading-container" *ngIf="loading">
+        <mat-spinner></mat-spinner>
+        <p>Loading communities...</p>
+      </div>
+
+      <div class="communities-grid" *ngIf="!loading">
+        <mat-card 
+          *ngFor="let community of communities" 
+          class="community-card"
+          (click)="onCommunityClick(community)">
+          
+          <mat-card-header>
+            <div class="community-avatar">
+              <mat-icon>group</mat-icon>
+            </div>
+            <mat-card-title>{{ community.name }}</mat-card-title>
+            <mat-card-subtitle>
+              {{ community.memberCount | number }} members • 
+              {{ community.toolCount | number }} tools
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="community-description">{{ community.description }}</p>
+            
+            <div class="community-meta">
+              <div class="meta-item" *ngIf="community.established">
+                <mat-icon>event</mat-icon>
+                <span>Established {{ community.established }}</span>
+              </div>
+              <div class="meta-item" *ngIf="community.website">
+                <mat-icon>language</mat-icon>
+                <span>{{ community.website | slice:8:50 }}</span>
+              </div>
+            </div>
+
+            <div class="community-tags" *ngIf="community.tags?.length">
+              <mat-chip-set>
+                <mat-chip *ngFor="let tag of community.tags">
+                  {{ tag }}
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button 
+              mat-button 
+              color="primary" 
+              (click)="onCommunityClick(community); $event.stopPropagation()">
+              <mat-icon>search</mat-icon>
+              View Tools
+            </button>
+            <button 
+              mat-button 
+              *ngIf="community.website"
+              (click)="onVisitWebsite(community); $event.stopPropagation()">
+              <mat-icon>launch</mat-icon>
+              Visit Site
+            </button>
+            <button 
+              mat-button 
+              *ngIf="community.contact"
+              (click)="onContactCommunity(community); $event.stopPropagation()">
+              <mat-icon>email</mat-icon>
+              Contact
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <div class="communities-stats" *ngIf="!loading">
+        <div class="container">
+          <h3>Community Impact</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-number">{{ communities.length }}</span>
+              <span class="stat-label">Active Communities</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{{ getTotalMembers() | number }}</span>
+              <span class="stat-label">Total Members</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{{ getTotalTools() | number }}</span>
+              <span class="stat-label">Community Tools</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

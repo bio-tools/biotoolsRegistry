@@ -1,0 +1,159 @@
+.search-page {
+  min-height: 100vh;
+  padding-top: 80px; // Account for fixed navbar
+}
+
+.search-header {
+  background: #f8f9fa;
+  padding: 40px 20px;
+  border-bottom: 1px solid #e0e0e0;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin: 0 0 16px 0;
+    font-weight: 300;
+  }
+
+  p {
+    color: #666;
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+.search-content {
+  padding: 40px 20px;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+.search-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 40px;
+
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.filters-sidebar {
+  .filter-section {
+    margin-bottom: 24px;
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #333;
+      margin: 0 0 12px 0;
+    }
+
+    mat-checkbox {
+      display: block;
+      margin-bottom: 8px;
+    }
+  }
+}
+
+.results-main {
+  .results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .results-count {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    mat-form-field {
+      min-width: 150px;
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  
+  mat-spinner {
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: #666;
+    font-size: 1.1rem;
+  }
+}
+
+.results-list {
+  .tool-card {
+    margin-bottom: 24px;
+
+    .tool-info {
+      margin-top: 16px;
+
+      .tool-topics {
+        margin-bottom: 12px;
+      }
+
+      .tool-meta {
+        display: flex;
+        gap: 16px;
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 8px;
+
+        span {
+          &:before {
+            content: '• ';
+            margin-right: 4px;
+          }
+
+          &:first-child:before {
+            content: '';
+            margin-right: 0;
+          }
+        }
+      }
+
+      .tool-os {
+        font-size: 0.85rem;
+        color: #888;
+      }
+    }
+  }
+}
+
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  
+  h3 {
+    color: #666;
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: #888;
+  }
+}
+
+mat-paginator {
+  margin-top: 40px;
+}

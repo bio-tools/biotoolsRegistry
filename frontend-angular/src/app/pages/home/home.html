@@ -1,0 +1,54 @@
+<div class="home-container">
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>bio.tools</h1>
+      <h2>Bioinformatics Tools and Services Discovery Portal</h2>
+      <p class="hero-description">
+        A registry of bioinformatics software resources including biological databases, 
+        analytical tools and data services.
+      </p>
+      
+      <div class="search-section">
+        <app-search-bar></app-search-bar>
+      </div>
+
+      <div class="stats-section">
+        <div class="stat-item">
+          <span class="stat-number">25,000+</span>
+          <span class="stat-label">Tools</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">150+</span>
+          <span class="stat-label">Domains</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">50+</span>
+          <span class="stat-label">Communities</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="features-section">
+    <div class="container">
+      <h3>Discover Bioinformatics Resources</h3>
+      <div class="features-grid">
+        <div class="feature-card" (click)="navigateToSearch()">
+          <mat-icon>search</mat-icon>
+          <h4>Search Tools</h4>
+          <p>Find the perfect bioinformatics tool for your research needs</p>
+        </div>
+        <div class="feature-card" (click)="navigateToDomains()">
+          <mat-icon>category</mat-icon>
+          <h4>Browse Domains</h4>
+          <p>Explore tools organized by scientific domains and disciplines</p>
+        </div>
+        <div class="feature-card" (click)="navigateToCommunities()">
+          <mat-icon>group</mat-icon>
+          <h4>Join Communities</h4>
+          <p>Connect with researchers and tool developers in your field</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
