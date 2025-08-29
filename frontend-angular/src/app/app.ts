@@ -1,13 +1,21 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navigation } from './components/navigation/navigation';
+import { PageFooter } from './components/page-footer/page-footer.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navigation],
-  templateUrl: './app.html',
+  standalone: true,
+  imports: [RouterOutlet, Navigation, PageFooter],
+  template: `
+    <app-navigation></app-navigation>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+    <app-page-footer></app-page-footer>
+  `,
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('bio.tools');
+  title = signal('bio.tools - Bioinformatics Tools Registry');
 }
