@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -44,6 +44,7 @@ export class Search implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private biotoolsApi: BiotoolsApiService
   ) {}
 
@@ -59,10 +60,9 @@ export class Search implements OnInit {
     this.loading = true;
     
     // Use mock data for now - switch to real API when ready
-    this.biotoolsApi.getMockTools().subscribe({
+    this.biotoolsApi.searchTools({}).subscribe({
       next: (result) => {
         this.tools = result.results;
-        this.totalResults = result.count;
         this.loading = false;
       },
       error: (error) => {
@@ -93,5 +93,9 @@ export class Search implements OnInit {
 
   getOperatingSystems(tool: Tool): string {
     return tool.operatingSystem?.join(', ') || '';
+  }
+
+  viewToolDetails(biotoolsID: string) {
+    this.router.navigate(['/tool', biotoolsID]);
   }
 }

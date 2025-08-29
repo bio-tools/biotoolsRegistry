@@ -104,6 +104,15 @@
   .tool-card {
     margin-bottom: 24px;
 
+    .clickable-title {
+      cursor: pointer;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        color: #1976d2;
+      }
+    }
+
     .tool-info {
       margin-top: 16px;
 

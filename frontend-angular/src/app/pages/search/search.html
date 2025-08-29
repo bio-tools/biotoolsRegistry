@@ -64,7 +64,9 @@
           <div class="results-list" *ngIf="!loading">
             <mat-card *ngFor="let tool of tools" class="tool-card">
               <mat-card-header>
-                <mat-card-title>{{ tool.name }}</mat-card-title>
+                <mat-card-title (click)="viewToolDetails(tool.biotoolsID)" class="clickable-title">
+                  {{ tool.name }}
+                </mat-card-title>
                 <mat-card-subtitle>{{ tool.description }}</mat-card-subtitle>
               </mat-card-header>
               <mat-card-content>
@@ -85,7 +87,7 @@
                 </div>
               </mat-card-content>
               <mat-card-actions>
-                <button mat-button color="primary">View Details</button>
+                <button mat-button color="primary" (click)="viewToolDetails(tool.biotoolsID)">View Details</button>
                 <button mat-button *ngIf="tool.homepage">
                   <a [href]="tool.homepage" target="_blank" style="text-decoration: none; color: inherit;">
                     Visit Tool
