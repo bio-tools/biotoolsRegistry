@@ -6,8 +6,56 @@
     </button>
 
     <!-- Search Bar (conditional) -->
-    <div class="search-container" *ngIf="showSearch">
-      <app-search-bar></app-search-bar>
+        <div class="nav-actions">
+      <!-- Search Bar -->
+      <app-search-bar *ngIf="showSearch" class="search-bar"></app-search-bar>
+      
+      <!-- Authentication Section -->
+      <div class="auth-section">
+        <!-- User is not authenticated -->
+        <ng-container *ngIf="!authService.isAuthenticated()">
+          <button mat-button (click)="navigateToLogin()" class="auth-button">
+            <mat-icon>login</mat-icon>
+            Sign In
+          </button>
+          <button mat-raised-button color="primary" (click)="navigateToRegister()" class="auth-button">
+            <mat-icon>person_add</mat-icon>
+            Sign Up
+          </button>
+        </ng-container>
+
+        <!-- User is authenticated -->
+        <ng-container *ngIf="authService.isAuthenticated()">
+          <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-menu-trigger">
+            <mat-icon>account_circle</mat-icon>
+          </button>
+          
+          <mat-menu #userMenu="matMenu" class="user-menu">
+            <div class="user-info" mat-menu-item disabled>
+              <mat-icon>person</mat-icon>
+              <span>{{ authService.currentUser()?.username }}</span>
+            </div>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="navigateToProfile()">
+              <mat-icon>settings</mat-icon>
+              Profile Settings
+            </button>
+            <button mat-menu-item>
+              <mat-icon>favorite</mat-icon>
+              My Tools
+            </button>
+            <button mat-menu-item>
+              <mat-icon>history</mat-icon>
+              Recent Activity
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="logout()">
+              <mat-icon>logout</mat-icon>
+              Sign Out
+            </button>
+          </mat-menu>
+        </ng-container>
+      </div>
     </div>
 
     <!-- Navigation Menu -->
@@ -34,12 +82,6 @@
           <span>About bio.tools</span>
         </button>
       </mat-menu>
-
-      <!-- User menu placeholder -->
-      <button mat-button>
-        <mat-icon>account_circle</mat-icon>
-        Login
-      </button>
     </div>
   </div>
 </mat-toolbar>

@@ -29,10 +29,58 @@
   }
 }
 
-.search-container {
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   flex: 1;
-  margin: 0 24px;
-  max-width: 400px;
+  justify-content: flex-end;
+}
+
+.search-bar {
+  flex: 1;
+  max-width: 500px;
+  margin-right: 2rem;
+}
+
+.auth-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auth-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  mat-icon {
+    font-size: 1.2rem;
+  }
+}
+
+.user-menu-trigger {
+  color: white;
+  
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.user-menu {
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #333;
+    
+    mat-icon {
+      color: #666;
+    }
+  }
 }
 
 .nav-menu {
