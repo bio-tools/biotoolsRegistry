@@ -1,0 +1,136 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.register-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+}
+
+.register-icon {
+  font-size: 2rem;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+mat-card-subtitle {
+  margin-top: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.register-form {
+  margin-top: 2rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.register-actions {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.register-button {
+  width: 100%;
+  height: 48px;
+  font-size: 1rem;
+  font-weight: 500;
+  position: relative;
+}
+
+.register-spinner {
+  margin-right: 0.5rem;
+}
+
+.register-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.register-links a {
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.register-links a:hover {
+  text-decoration: underline;
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .half-width {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 1rem;
+  }
+  
+  .register-card {
+    padding: 1.5rem;
+  }
+  
+  mat-card-title {
+    font-size: 1.3rem;
+  }
+}
+
+// Dark theme support
+@media (prefers-color-scheme: dark) {
+  .register-container {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  }
+  
+  mat-card-title {
+    color: #fff;
+  }
+  
+  mat-card-subtitle {
+    color: #bbb;
+  }
+  
+  .register-links {
+    border-top-color: #444;
+  }
+}

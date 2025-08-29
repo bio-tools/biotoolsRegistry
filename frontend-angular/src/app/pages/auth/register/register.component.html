@@ -1,0 +1,142 @@
+<div class="register-container">
+  <mat-card class="register-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon class="register-icon">person_add</mat-icon>
+        Create Account
+      </mat-card-title>
+      <mat-card-subtitle>
+        Join bio.tools to contribute and manage bioinformatics tools
+      </mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>First Name</mat-label>
+            <input 
+              matInput 
+              formControlName="firstName" 
+              placeholder="Enter your first name"
+              autocomplete="given-name"
+            >
+            <mat-icon matSuffix>person</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Last Name</mat-label>
+            <input 
+              matInput 
+              formControlName="lastName" 
+              placeholder="Enter your last name"
+              autocomplete="family-name"
+            >
+            <mat-icon matSuffix>person</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username *</mat-label>
+          <input 
+            matInput 
+            formControlName="username" 
+            placeholder="Choose a username"
+            autocomplete="username"
+          >
+          <mat-icon matSuffix>account_circle</mat-icon>
+          <mat-error *ngIf="registerForm.get('username')?.errors">
+            {{ getErrorMessage('username') }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email *</mat-label>
+          <input 
+            matInput 
+            type="email"
+            formControlName="email" 
+            placeholder="Enter your email address"
+            autocomplete="email"
+          >
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="registerForm.get('email')?.errors">
+            {{ getErrorMessage('email') }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password *</mat-label>
+          <input 
+            matInput 
+            [type]="hidePassword() ? 'password' : 'text'"
+            formControlName="password" 
+            placeholder="Create a password (min. 8 characters)"
+            autocomplete="new-password"
+          >
+          <button 
+            mat-icon-button 
+            matSuffix 
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePassword()"
+          >
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="registerForm.get('password')?.errors">
+            {{ getErrorMessage('password') }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirm Password *</mat-label>
+          <input 
+            matInput 
+            [type]="hideConfirmPassword() ? 'password' : 'text'"
+            formControlName="confirmPassword" 
+            placeholder="Confirm your password"
+            autocomplete="new-password"
+          >
+          <button 
+            mat-icon-button 
+            matSuffix 
+            type="button"
+            (click)="toggleConfirmPasswordVisibility()"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hideConfirmPassword()"
+          >
+            <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="registerForm.get('confirmPassword')?.errors">
+            {{ getErrorMessage('confirmPassword') }}
+          </mat-error>
+        </mat-form-field>
+
+        <div class="register-actions">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit"
+            [disabled]="!registerForm.valid || loading()"
+            class="register-button"
+          >
+            <mat-spinner 
+              *ngIf="loading()" 
+              diameter="20"
+              class="register-spinner"
+            ></mat-spinner>
+            <span *ngIf="!loading()">Create Account</span>
+            <span *ngIf="loading()">Creating Account...</span>
+          </button>
+        </div>
+
+        <div class="register-links">
+          <a routerLink="/login" mat-button color="primary">
+            Already have an account? Sign in
+          </a>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
