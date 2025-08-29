@@ -120,3 +120,178 @@
     margin: 0;
   }
 }
+
+// Info sections styling
+.info-section, .communities-section {
+  padding: 4rem 0;
+  background: #f8f9fa;
+  
+  &:nth-child(even) {
+    background: white;
+  }
+}
+
+.info-card {
+  max-width: 800px;
+  margin: 0 auto;
+  
+  h2 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  h4 {
+    color: #34495e;
+    font-size: 1.3rem;
+    margin: 2rem 0 1rem 0;
+  }
+  
+  .description-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    color: #555;
+    
+    em {
+      font-style: italic;
+      color: #2c3e50;
+    }
+    
+    strong, b {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    
+    a {
+      color: #3498db;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .supported-by {
+    margin-top: 3rem;
+    text-align: center;
+    padding: 2rem;
+    background: #ecf0f1;
+    border-radius: 8px;
+    
+    p {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin: 0;
+      font-size: 1.1rem;
+      color: #555;
+      
+      img {
+        border-radius: 4px;
+      }
+      
+      em {
+        font-style: italic;
+      }
+    }
+  }
+}
+
+// Logo container styling
+.logo-container {
+  background: #ffffff;
+  padding: 4rem 0;
+  color: white;
+  
+  .logos-text {
+    text-align: center;
+    margin-bottom: 3rem;
+    
+    h4 {
+      color: #ecf0f1;
+      font-size: 1.5rem;
+      font-weight: 300;
+      margin: 0;
+    }
+  }
+  
+  .inner-logo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    align-items: center;
+    justify-items: center;
+    
+    .new-logo-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+      
+      a {
+        display: block;
+        
+        img {
+          max-width: 120px;
+          max-height: 60px;
+          width: auto;
+          height: auto;
+          filter: brightness(0.9);
+          transition: filter 0.3s ease;
+          
+          &:hover {
+            filter: brightness(1.1);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive design updates
+@media (max-width: 768px) {
+  .info-card {
+    padding: 0 1rem;
+    
+    h2 {
+      font-size: 1.5rem;
+    }
+    
+    .description-text {
+      font-size: 1rem;
+    }
+    
+    .supported-by p {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+  
+  .logo-container {
+    .inner-logo-container {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 1rem;
+      
+      .new-logo-item {
+        padding: 0.5rem;
+        
+        img {
+          max-width: 80px;
+          max-height: 40px;
+        }
+      }
+    }
+  }
+}
