@@ -98,4 +98,5 @@ export class Search implements OnInit {
   viewToolDetails(biotoolsID: string) {
     this.router.navigate(['/tool', biotoolsID]);
   }
+
 }
