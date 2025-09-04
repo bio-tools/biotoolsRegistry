@@ -21,29 +21,15 @@
   <div *ngIf="software()?.biotoolsID && !loading()" class="container">
     <div class="tool-page-content">
       
-
-      <h2>
-        {{ software()?.name }}
-        <span matTooltip="Unique tool ID" class="biotools-curie">(biotools:{{ software()?.biotoolsID }})</span>
-
+      <!--
         <div data-widget-tooltip-position="left" data-widget-size="64" class="opeb pull-right" style=" margin-right: 10px;">
           <a href="" href="https://openebench.bsc.es/tool/{{ software()?.biotoolsID | lowercase }}" target="_blank">
             <img src="img/opeb_logo.gif" width="88" title="Monitoring and benchmarking information" alt="OpenEBench">
           </a>
         </div>
+      -->
 
-      </h2>
-
-      <!-- Topic list 
-
-      <div style="display: flex; flex-wrap: wrap;">
-	    <span ng-repeat="topic in software()?.topic" tooltips tooltip-content="Topic in the Life Sciences : click to find more tools with this topic.">
-		    <a ng-if="topic.term != 'N/A'" class="pill-tag-topic" href="" ng-click="topicNameClicked(topic)" target="_blank">{{ topic.term }} ›</a>
-		    <a ng-if="topic.term == 'N/A'" class="pill-tag-orange-background" href="{{ topic.uri }}" target="_blank">{{ software()?.name }} ›</a>
-	    </span>
-      </div>
-    -->
-
+      <!--TODO: add OpenEBench link-->
       <!-- Tool Header -->
       <div class="tool-header-section">
         <div class="header-content">
@@ -59,7 +45,8 @@
               <span *ngFor="let topic of software()?.topic" class="topic">{{ topic.term }}</span>
             </div>
             <hr class="pill-hr-divider">
-            <!-- maturity, license, cost, accessibility -->
+            <!-- maturity, license, cost, accessibility 
+             TODO: check if this works with chips instead-->
             <div class="pill-spacing">
               <span *ngIf="software()?.maturity" class="primary">{{ software()?.maturity }}</span>
               <span *ngIf="software()?.license" class="primary">{{ software()?.license }}</span>
