@@ -1,0 +1,945 @@
+// Original Tool Page Styles (based on tool_page.css)
+.original-tool-page {
+  padding-top: 80px; // Account for navbar
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.pill-tag-topic {
+  background-color: #b4cca1;
+  color: black;   
+  display: inline-block;
+}
+
+.pill-tag-operation {
+  background-color: #a3b0d1;
+  color: black;   
+  display: inline-block;
+}
+
+// Loading and Error States
+.loading-container, .error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  
+  .error-icon {
+    font-size: 4rem;
+    color: #f44336;
+    margin-bottom: 1rem;
+  }
+  
+  h2 {
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    color: #666;
+    margin-bottom: 2rem;
+  }
+}
+
+// Container
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tool-page-content {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 20px;
+  padding-bottom: 60px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+// Tool Header
+.tool-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e6e6e6;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .header-content {
+    flex: 1;
+
+    h2 {
+      margin: 0 0 1rem 0;
+      color: #333;
+    }
+
+    .biotools-curie {
+      font-size: 12px;
+      color: #575757;
+    }
+
+    .pill-hr-divider {
+      margin-top: 1em;
+      margin-bottom: 1em;
+      border-top: solid 1px #E6E6E6;
+    }
+
+    .tool-description { //TODO move to summary
+      color: #575757;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .pill-spacing {
+      margin-top: 0.45em;
+
+      span {
+        background-color: white;
+        padding: 0.3em;
+	padding-left: 0.75em;
+	padding-right: 0.75em;
+	margin-right: 0.25em;
+	margin-bottom: 0.25em;
+    margin-top: 0.25em;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #666;
+
+        &.version {
+          color: #7f7f7f;
+          font-weight: lighter;
+        }
+
+        &.topic {
+          background-color: #b4cca1;
+          color: #000000;
+        }
+
+        &.primary { // maturity, license, cost, accessibility
+          background-color: #b2d2e1;
+          color: #000000;
+        }
+
+        &.secondary { // tool type, language
+          background-color: #d8e9f3;
+          color: #000000;
+        }
+    }
+    }
+  }
+
+  .header-actions { //TODO homepage and back button
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+}
+
+
+.old-tool-function {
+ .label-outline {
+    background-color: transparent;
+    outline-color: grey;
+    /*border: 1px solid #CCCCCC;*/
+    color: #575757;
+}
+
+.label-outline[href]:hover,
+.label-outline[href]:focus {
+    background-color: #3071a9;
+}
+
+.badge-topic {
+    margin-top: -1em;
+    background-color: #ED7520;
+    border: 0px solid #CCCCCC;
+    border-radius: 3px;
+}
+
+span.tool-page-version-text {
+    color: #7f7f7f;
+    font-weight: lighter;
+    display: block;
+    font-size: 0.95em;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.elixir-info {
+    margin-bottom: 10px;
+}
+
+/*.tool-tag-divider {
+	color: #CCCCCC;
+}*/
+
+/*.tool-tag-divider::after { 
+	content: "|";
+	font-family: 'Open Sans';
+	font-size: 18px;
+	font-weight: 100;
+	margin-right: 4px;
+	margin-left: 0px;
+}*/
+
+.label-outline-orange {
+    background-color: transparent;
+    border: 1px solid #ED7520;
+    color: #ED7520;
+}
+
+.label-outline-orange[href]:hover,
+.label-outline-orange[href]:focus {
+    background-color: lightgrey;
+    color: #575757;
+    border: 1px solid white;
+}
+
+.tool-page-danger-text {
+    margin-bottom: 2em;
+    color: #d9534f;
+}
+
+
+.function-image-element {
+    background-color: #D0E0EB;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+    color: #575757;
+    /*font-weight: bold;*/
+    font-size: 90%;
+    border: 0px solid #CCCCCC;
+    padding: .5em 2em .5em 2em;
+}
+
+.function-arrow-element {
+    color: #575757;
+}
+
+.function-input-output-element {
+
+}
+
+.tool-page-function-comment-label {
+    text-align: center;
+    width: 100%;
+    margin-top: 7px;
+    font-weight: lighter;
+}
+
+.tool-page-grey-text {
+    color: #575757;
+}
+
+.tool-page-diver-label {
+    display: block;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-top: 40px;
+    margin-bottom: 4px;
+    color: #575757;
+    font-weight: bold;
+    font-size: 80%;
+}
+
+.tool-page-diver-label > span {
+    position: relative;
+    display: inline-block;
+}
+
+.tool-page-diver-label > span:before,
+.tool-page-diver-label > span:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 9999px;
+    border-top: 1px solid #E6E6E6;
+}
+
+.tool-page-diver-label > span:before {
+    right: 100%;
+    margin-right: 15px;
+}
+
+.tool-page-diver-label > span:after {
+    left: 100%;
+    margin-left: 15px;
+}
+
+/* Callouts */
+
+.tool-page-callout-header {
+    color: #428bca;
+    font-weight: lighter;
+    font-size: 90%;
+}
+
+
+.tool-page-callout-text {
+    color: #575757;
+    font-weight: lighter;
+    font-size: 90%;
+    margin-top: -0.25em;
+    display: block;
+    text-align: justify;
+}
+
+.tool-page-row {
+    width: 100%;
+    margin-left: 0px;
+    margin-top: 2em;
+}
+
+/* On mobile */
+@media (max-width: 767px) {
+    .flex-adaptive {
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        -webkit-box-align: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    /* Ensure the arrow only appears on the first input element */
+    .first-element .function-arrow-element {
+        display: block;
+    }
+
+    /* Hide the arrow for all other input elements */
+    .function-arrow-element {
+        display: none;
+    }
+
+    /* Make the arrow point down */
+    .fa-long-arrow-right::before {
+        content: "\f175";
+    }
+
+    .fa-long-arrow-right {
+        margin: .5em 0;
+    }
+}
+
+/* On desktop */
+@media (min-width: 768px) {
+    .flex-adaptive {
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        -webkit-box-align: center;
+        align-items: center;
+    }
+}
+
+}
+// Tool Summary
+.tool-summary-section {
+  margin-bottom: 2rem;
+
+  .summary-content {
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+
+      .summary-item {
+        h4 {
+          margin: 0 0 0.5rem 0;
+          color: #333;
+          font-size: 1rem;
+          font-weight: 500;
+        }
+
+        .tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.25rem;
+
+          .tag {
+            background-color: transparent;
+            border: 1px solid #cccccc;
+            color: #575757;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9px;
+            font-size: 0.85rem;
+            text-decoration: none;
+
+            &:hover {
+              background-color: #3071a9;
+              color: white;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Tool Operation Section
+.tool-operation-section {
+  margin-bottom: 2rem;
+
+  // Ensure all operation columns have consistent width across rows
+  .function-row .function-flow-desktop .operation-column {
+    width: 33.33% !important;
+    flex: 0 0 33.33% !important;
+  }
+
+  .function-row {
+    width: 100%;
+    margin-top: 2em;
+    margin-bottom: 2em;
+
+    // Desktop Flow Layout
+    .function-flow-desktop {
+      display: flex;
+      align-items: center; // Center align all sections vertically
+      justify-content: center;
+      gap: 1rem;
+      width: 100%;
+
+      @media (max-width: 768px) {
+        display: none;
+      }
+
+      .inputs-section,
+      .outputs-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        flex: 1;
+        min-width: 0; // Allow sections to shrink
+        max-width: calc(33.33% - 1rem); // Ensure they don't exceed 1/3 minus gap
+      }
+
+      .inputs-section {
+        .input-row {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          
+          .flow-box {
+            flex: 1;
+          }
+          
+          .arrow-container {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            .flow-arrow {
+              color: #575757;
+              font-size: 1.2rem;
+            }
+          }
+        }
+      }
+
+      .outputs-section {
+        .output-row {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          
+          .arrow-container {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            .flow-arrow {
+              color: #575757;
+              font-size: 1.2rem;
+            }
+          }
+          
+          .flow-box {
+            flex: 1;
+          }
+        }
+      }
+
+      .operation-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center; // Center align operation box horizontally
+        justify-content: center; // Center align operation box vertically
+        gap: 0.5rem;
+        flex: 0 0 33.33%; // Fixed width at exactly 1/3
+        max-width: 33.33%;
+        min-width: 200px; // Minimum width for readability
+      }
+    }
+
+    // Mobile Flow Layout
+    .function-flow-mobile {
+      display: none;
+
+      @media (max-width: 768px) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .mobile-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .mobile-arrow {
+        display: flex;
+        justify-content: center;
+        padding: 0.5rem 0;
+
+        .flow-arrow {
+          color: #575757;
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    // Flow Box Styles
+    .flow-box {
+      background-color: #d0e0eb;
+      border-radius: 5px;
+      min-height: 60px; //TODO
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%; // Take full width of the column
+      margin: 0 auto; // Center the box within its column
+
+      &.input-box {
+        background-color: #d0e0eb;
+      }
+
+      &.operation-box {
+        background-color: #d0e0eb;
+        font-weight: 500;
+      }
+
+      &.output-box {
+        background-color: #d0e0eb;
+      }
+
+      .box-content {
+        padding: 0.75rem 1rem;
+        width: 100%;
+
+        .data-term {
+          color: #575757;
+          font-size: 0.95rem;
+          font-weight: 500;
+          line-height: 1.2;
+        }
+
+        .data-format {
+          color: #575757;
+          font-size: 0.85rem;
+          font-weight: 400;
+          margin-top: 0.25rem;
+          line-height: 1.1;
+        }
+
+        .operation-term {
+          color: #575757;
+          font-size: 0.95rem;
+          font-weight: 500;
+          line-height: 1.2;
+          margin-bottom: 0.25rem;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+
+        .operation-note {
+          margin-top: 0.5rem;
+
+          .info-icon {
+            color: #666;
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+
+    // Command Display
+    .command-display {
+      margin-top: 0.5rem;
+      text-align: center;
+
+      code {
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.85rem;
+        color: #333;
+        display: inline-block;
+        font-family: 'Courier New', monospace;
+      }
+    }
+
+    // Function Note
+    .function-note {
+      text-align: center;
+      width: 100%;
+      margin-top: 1rem;
+      font-weight: lighter;
+      color: #666;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Section Divider (like original)
+.section-divider {
+  display: block;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-top: 40px;
+  margin-bottom: 4px;
+  color: #575757;
+  font-weight: bold;
+  font-size: 80%;
+
+  > span {
+    position: relative;
+    display: inline-block;
+
+    &:before,
+    &:after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 9999px;
+      border-top: 1px solid #e6e6e6;
+    }
+
+    &:before {
+      right: 100%;
+      margin-right: 15px;
+    }
+
+    &:after {
+      left: 100%;
+      margin-left: 15px;
+    }
+  }
+}
+
+// Secondary Sections Row
+.secondary-sections-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  .section-column {
+    .credits-content,
+    .documentation-content,
+    .downloads-content {
+      .credit-callout,
+      .doc-callout,
+      .download-callout {
+        background-color: #f9f9f9;
+        border: 1px solid #e6e6e6;
+        border-radius: 4px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+
+        .credit-header,
+        .doc-header,
+        .download-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 0.5rem;
+
+          .credit-links {
+            display: flex;
+            gap: 0.5rem;
+
+            .credit-link {
+              color: #87244c;
+              text-decoration: none;
+
+              mat-icon {
+                font-size: 1.2rem;
+              }
+            }
+          }
+
+          .doc-icon,
+          .download-icon {
+            color: #524656;
+            margin-right: 0.5rem;
+            margin-top: 0.25rem;
+          }
+
+          .doc-info,
+          .download-info {
+            flex: 1;
+
+            strong {
+              display: block;
+              color: #428bca;
+              font-weight: lighter;
+              font-size: 90%;
+              margin-bottom: 0.25rem;
+            }
+
+            .doc-link,
+            .download-link {
+              color: #575757;
+              text-decoration: none;
+              word-break: break-all;
+              font-weight: lighter;
+              font-size: 90%;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+
+        .credit-entity {
+          font-size: 0.9rem;
+          color: #666;
+          margin-bottom: 0.5rem;
+        }
+
+        .credit-roles {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.25rem;
+          margin-bottom: 0.5rem;
+
+          .role-tag {
+            background-color: #e6e6e6;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            color: #575757;
+          }
+        }
+
+        .credit-note,
+        .doc-note,
+        .download-note {
+          color: #575757;
+          font-weight: lighter;
+          font-size: 90%;
+          margin-top: 0.25em;
+          text-align: justify;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+// Publications Detail
+.publications-detail-section {
+  margin-bottom: 2rem;
+
+  .publications-content {
+    .publication-item {
+      background-color: #f9f9f9;
+      border: 1px solid #e6e6e6;
+      border-radius: 4px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+
+      .publication-header {
+        margin-bottom: 1rem;
+
+        .publication-type {
+          .type-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 500;
+
+            &.primary {
+              background-color: #ed7520;
+              color: white;
+            }
+
+            &.secondary {
+              background-color: #e6e6e6;
+              color: #575757;
+            }
+          }
+        }
+      }
+
+      .publication-ids {
+        .publication-id {
+          margin-bottom: 0.5rem;
+
+          strong {
+            margin-right: 0.5rem;
+            color: #428bca;
+          }
+
+          a {
+            color: #1976d2;
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+
+      .publication-note,
+      .publication-version {
+        color: #575757;
+        font-weight: lighter;
+        font-size: 90%;
+        margin: 0.5rem 0;
+      }
+    }
+  }
+}
+
+// ELIXIR Info
+.elixir-info-section {
+  margin-bottom: 2rem;
+
+  .elixir-content {
+    background-color: #f9f9f9;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .elixir-text {
+      flex: 1;
+
+      p {
+        color: #575757;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+      }
+
+      .elixir-metadata {
+        margin-bottom: 1rem;
+
+        .metadata-item {
+          margin-bottom: 0.5rem;
+          font-size: 0.9rem;
+          color: #575757;
+
+          strong {
+            margin-right: 0.5rem;
+            color: #428bca;
+          }
+        }
+      }
+
+      .elixir-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+    }
+
+    .elixir-logo {
+      .logo-image {
+        max-width: 120px;
+        height: auto;
+      }
+    }
+  }
+}
+
+// Community
+.community-section {
+  margin-bottom: 2rem;
+
+  .community-content {
+    background-color: #f9f9f9;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    padding: 1rem;
+
+    .community-text {
+      h4 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        color: #333;
+      }
+
+      p {
+        color: #575757;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+      }
+
+      .community-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+    }
+  }
+}
+
+// Responsive adjustments for mobile
+@media (max-width: 767px) {
+  .tool-page-content {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .secondary-sections-row {
+    grid-template-columns: 1fr;
+  }
+
+  .function-flow {
+    .function-inputs,
+    .function-outputs {
+      display: none !important;
+    }
+
+    .mobile-arrow {
+      display: block !important;
+    }
+  }
+}
