@@ -1,0 +1,86 @@
+<div class="tool-edit-form">
+  <div class="form-section">
+    <div class="section-description">
+      <p>
+        Basic information about the tool including name, description, homepage and version.
+        <strong>Name and description are required fields.</strong>
+      </p>
+    </div>
+  </div>
+
+  <form [formGroup]="form" class="summary-form">
+    
+    <!-- Tool Name -->
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-col">
+          <mat-form-field appearance="outline">
+            <mat-label>Tool Name *</mat-label>
+            <input matInput 
+                   formControlName="name" 
+                   placeholder="Enter tool name" 
+                   required>
+            <mat-error *ngIf="hasError('name')">
+              {{ getErrorMessage('name') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tool Description -->
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-col">
+          <mat-form-field appearance="outline">
+            <mat-label>Description *</mat-label>
+            <textarea matInput 
+                      formControlName="description" 
+                      placeholder="Enter tool description" 
+                      rows="4" 
+                      required></textarea>
+            <mat-error *ngIf="hasError('description')">
+              {{ getErrorMessage('description') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!-- Homepage -->
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-col">
+          <mat-form-field appearance="outline">
+            <mat-label>Homepage</mat-label>
+            <input matInput 
+                   formControlName="homepage" 
+                   placeholder="https://example.com" 
+                   type="url">
+            <mat-error *ngIf="hasError('homepage')">
+              {{ getErrorMessage('homepage') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!-- Version -->
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-col">
+          <mat-form-field appearance="outline">
+            <mat-label>Version</mat-label>
+            <input matInput 
+                   formControlName="version" 
+                   placeholder="e.g., 1.0.0">
+            <mat-error *ngIf="hasError('version')">
+              {{ getErrorMessage('version') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>

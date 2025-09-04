@@ -1,0 +1,240 @@
+<div class="tool-edit-container">
+  <!-- Loading spinner -->
+  <div *ngIf="loading()" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading tool...</p>
+  </div>
+
+  <!-- Not found error -->
+  <div *ngIf="notFound()" class="error-container">
+    <h1>Error 404</h1>
+    <p>Tool not found.</p>
+    <button mat-raised-button color="primary" routerLink="/search">
+      <mat-icon>search</mat-icon>
+      Back to Search
+    </button>
+  </div>
+
+  <!-- Permission denied -->
+  <div *ngIf="!loading() && !notFound() && !canEditTool() && !isCreateMode()" class="permission-denied">
+    <div class="permission-content">
+      <h1>You don't have permissions to update this resource</h1>
+      <button mat-raised-button color="primary" [routerLink]="['/tool', software()?.biotoolsID]">
+        <mat-icon>visibility</mat-icon>
+        View Tool
+      </button>
+    </div>
+  </div>
+
+  <!-- Main edit interface -->
+  <div class="edit-container">
+    
+    <!-- Header -->
+    <div class="edit-header">
+      <div class="header-left">
+        <h1>{{ pageTitle() }}</h1>
+      </div>
+      <div class="header-right">
+        <div class="action-buttons">
+          <!-- Success indicator -->
+          <span *ngIf="registrationSuccess()" class="success-indicator">
+            <mat-icon>check_circle</mat-icon>
+            Success
+          </span>
+
+          <!-- Delete button -->
+          <button *ngIf="!isCreateMode()" 
+                  mat-raised-button 
+                  color="warn"
+                  [disabled]="deletingProgress().inProgress"
+                  (click)="onDeleteClick()">
+            <mat-icon *ngIf="!deletingProgress().inProgress && !deletingProgress().success && !deletingProgress().error">delete</mat-icon>
+            <mat-spinner *ngIf="deletingProgress().inProgress" diameter="20"></mat-spinner>
+            <mat-icon *ngIf="deletingProgress().success" color="accent">check</mat-icon>
+            <mat-icon *ngIf="deletingProgress().error" color="warn">close</mat-icon>
+            Remove
+          </button>
+
+          <!-- Validate button -->
+          <button mat-raised-button 
+                  color="accent"
+                  [disabled]="validationProgress().inProgress"
+                  [class.error-border]="validationProgress().error"
+                  (click)="onValidateClick()">
+            <mat-icon *ngIf="!validationProgress().inProgress && !validationProgress().success && !validationProgress().error">check_circle_outline</mat-icon>
+            <mat-spinner *ngIf="validationProgress().inProgress" diameter="20"></mat-spinner>
+            <mat-icon *ngIf="validationProgress().success" color="accent">check</mat-icon>
+            <mat-icon *ngIf="validationProgress().error" color="warn">close</mat-icon>
+            Validate
+          </button>
+
+          <!-- Save button -->
+          <button mat-raised-button 
+                  color="primary"
+                  [disabled]="savingProgress().inProgress"
+                  [class.error-border]="savingProgress().error"
+                  (click)="onSaveClick()">
+            <mat-icon *ngIf="!savingProgress().inProgress && !savingProgress().success && !savingProgress().error">save</mat-icon>
+            <mat-spinner *ngIf="savingProgress().inProgress" diameter="20"></mat-spinner>
+            <mat-icon *ngIf="savingProgress().success" color="accent">check</mat-icon>
+            <mat-icon *ngIf="savingProgress().error" color="warn">close</mat-icon>
+            Save
+          </button>
+
+          <!-- Go to entry button -->
+          <button *ngIf="!isCreateMode() && software()?.biotoolsID" 
+                  mat-raised-button 
+                  color="primary"
+                  [disabled]="savingProgress().inProgress || validationProgress().inProgress || deletingProgress().inProgress"
+                  (click)="onGoToEntry()">
+            <mat-icon>visibility</mat-icon>
+            Go to entry
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Validation errors alert -->
+    <div *ngIf="registrationErrorPayload()" class="validation-errors">
+      <mat-icon color="warn">error</mat-icon>
+      <span>There are validation errors: please fix values shown in red. See the JSON tab for a list of all errors.</span>
+    </div>
+
+    <!-- Tab interface -->
+    <mat-tab-group class="edit-tabs" dynamicHeight="true">
+      
+      <!-- Summary tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [class.tab-error]="hasTabErrors('summary')">Summary</span>
+          <span class="required-indicator"> *</span>
+        </ng-template>
+        <app-tool-edit-summary 
+          [tool]="software()" 
+          [form]="summaryForm"
+          [errors]="registrationErrorPayload()">
+        </app-tool-edit-summary>
+      </mat-tab>
+
+      <!-- Function tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [class.tab-error]="hasTabErrors('function')">Function</span>
+        </ng-template>
+        <app-tool-edit-function 
+          [tool]="software()" 
+          [form]="functionForm"
+          [errors]="registrationErrorPayload()">
+        </app-tool-edit-function>
+      </mat-tab>
+
+      <!-- Labels tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [class.tab-error]="hasTabErrors('labels')">Labels</span>
+        </ng-template>
+        <app-tool-edit-labels 
+          [tool]="software()" 
+          [form]="labelsForm"
+          [errors]="registrationErrorPayload()">
+        </app-tool-edit-labels>
+      </mat-tab>
+
+      <!-- Links tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [class.tab-error]="hasTabErrors('links')">Links</span>
+        </ng-template>
+        <app-tool-edit-links 
+          [tool]="software()" 
+          [form]="linksForm"
+          [errors]="registrationErrorPayload()">
+        </app-tool-edit-links>
+      </mat-tab>
+
+      <!-- Download tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [class.tab-error]="hasTabErrors('download')">Download</span>
+        </ng-template>
+        <app-tool-edit-download 
+          [tool]="software()" 
+          [form]="downloadForm"
+          [errors]="registrationErrorPayload()">
+        </app-tool-edit-download>
+      </mat-tab>
+
+      <!-- Documentation tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [class.tab-error]="hasTabErrors('documentation')">Documentation</span>
+        </ng-template>
+        <app-tool-edit-documentation 
+          [tool]="software()" 
+          [form]="documentationForm"
+          [errors]="registrationErrorPayload()">
+        </app-tool-edit-documentation>
+      </mat-tab>
+
+      <!-- Publications tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [class.tab-error]="hasTabErrors('publications')">Publications</span>
+        </ng-template>
+        <app-tool-edit-publications 
+          [tool]="software()" 
+          [form]="publicationsForm"
+          [errors]="registrationErrorPayload()">
+        </app-tool-edit-publications>
+      </mat-tab>
+
+      <!-- Credits & Support tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [class.tab-error]="hasTabErrors('credits')">Credits & Support</span>
+        </ng-template>
+        <app-tool-edit-credits 
+          [tool]="software()" 
+          [form]="creditsForm"
+          [errors]="registrationErrorPayload()">
+        </app-tool-edit-credits>
+      </mat-tab>
+
+      <!-- Relations tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [class.tab-error]="hasTabErrors('relations')">Relations</span>
+        </ng-template>
+        <app-tool-edit-relations 
+          [tool]="software()" 
+          [form]="relationsForm"
+          [errors]="registrationErrorPayload()">
+        </app-tool-edit-relations>
+      </mat-tab>
+
+      <!-- JSON tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [class.tab-error]="hasTabErrors('json')">JSON</span>
+        </ng-template>
+        <app-tool-edit-json 
+          [tool]="software()" 
+          [form]="jsonForm"
+          [errors]="registrationErrorPayload()">
+        </app-tool-edit-json>
+      </mat-tab>
+
+      <!-- Permissions tab (only for owners/superusers) -->
+      <mat-tab *ngIf="showPermissionsTab()">
+        <ng-template mat-tab-label>
+          <span>Permissions</span>
+        </ng-template>
+        <app-tool-edit-permissions 
+          [tool]="software()"
+          [currentUser]="currentUser()">
+        </app-tool-edit-permissions>
+      </mat-tab>
+
+    </mat-tab-group>
+  </div>
+</div>

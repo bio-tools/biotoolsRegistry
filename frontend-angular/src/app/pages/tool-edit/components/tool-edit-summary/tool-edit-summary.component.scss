@@ -1,0 +1,30 @@
+.tool-edit-form {
+  .summary-form {
+    .form-section {
+      margin-bottom: 1.5rem;
+
+      .mat-mdc-form-field {
+        width: 100%;
+
+        &.mat-form-field-invalid {
+          .mat-mdc-form-field-outline {
+            color: #f44336;
+          }
+        }
+      }
+
+      .mat-mdc-input-element {
+        color: #333;
+
+        &::placeholder {
+          color: #999;
+        }
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+    }
+  }
+}
