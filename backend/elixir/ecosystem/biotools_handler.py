@@ -14,7 +14,7 @@ class BioToolsData(object):
 
         # We can look in bio.tools for this username if we really want to make sure
         #   but since this code is for now called from bio.tools backend we don't really have to
-        if not(username):
+        if not username:
             raise BioToolsException(username, tool_json_string, 'No valid bio.tools username was provided.')
 
         # TODO decide if we use the @delete parameter. If we use it we need to maybe also add a delete @property
@@ -22,7 +22,7 @@ class BioToolsData(object):
         
         self.__username = username
 
-        if not(tool_json_string):
+        if not tool_json_string:
             raise BioToolsException(username, tool_json_string, 'Missing tool JSON data.')
 
         try:
@@ -44,7 +44,7 @@ class BioToolsData(object):
         # This should already be valid since it gets called
         #   from bio.tools after validation has been done
         
-        if self.__tool.get(self.__ID_KEY) == None:
+        if self.__tool.get(self.__ID_KEY) is None:
             raise BioToolsException(self.__username, self.__tool_json_string, 'Missing tool id.')
 
         return True

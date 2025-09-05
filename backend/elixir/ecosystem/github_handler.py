@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from github import Github
 from github import GithubException
 from github import Auth
@@ -91,7 +91,7 @@ class GithubToolHandler:
             m = method, 
             id = tool_id, 
             u = username,
-            at = datetime.utcnow().strftime('UTC time: %Y-%m-%d %H:%M:%S')
+            at = datetime.now(timezone.utc).strftime('UTC time: %Y-%m-%d %H:%M:%S')
         )
 
     def __file_exists(self, filepath, branch_name):
@@ -258,7 +258,7 @@ class GithubToolHandler:
             type=pr_type, 
             id=tool_id, 
             user=username, 
-            at = datetime.utcnow().strftime('UTC time: %Y-%m-%d %H:%M:%S')
+            at = datetime.now(timezone.utc).strftime('UTC time: %Y-%m-%d %H:%M:%S')
         )
         try: 
             pr = self.__repo.create_pull(
@@ -311,14 +311,14 @@ class GithubToolHandler:
         self.__bt = bt
         self.__branch = self.__get_branch_name(bt.username, bt.tool_id, delete)
         self.__filepath = self.__get_filepath(bt.tool_id)
-        self.__time = datetime.utcnow().strftime('UTC time: %Y-%m-%d %H:%M:%S')
+        self.__time = datetime.now(timezone.utc).strftime('UTC time: %Y-%m-%d %H:%M:%S')
 
     def create_tool(self, biotools_data):
-        if not(self.__logged_in):
+        if not self.__logged_in:
             raise EcosystemLoginException(
                 self.__username, 
                 self.__repo_name, 
-                'Bad Github user credetials at tool create time.'
+                'Bad Github user credentials at tool create time.'
             )
 
         # Load some class level variables for convenience in Exception handling
@@ -327,7 +327,7 @@ class GithubToolHandler:
         new_branch_name = self.__branch
         new_file_path  = self.__filepath
 
-        # Exception brach already exists on tool creation time
+        # Exception branch already exists on tool creation time
         if self.__branch_exists(new_branch_name):
             raise ToolCreationException(
                 'Branch already exists at tool creation time.',
@@ -396,14 +396,14 @@ class GithubToolHandler:
             branch_name=new_branch_name
         )
 
-        return (c, pr)
+        return c, pr
 
     def update_tool(self, biotools_data):
-        if not(self.__logged_in):
+        if not self.__logged_in:
             raise EcosystemLoginException(
                 self.__username, 
                 self.__repo_name, 
-                'Bad Github user credetials at tool update time.'
+                'Bad Github user credentials at tool update time.'
             )
         
         # Load some class level variables for convenience in Exception handling
@@ -481,7 +481,7 @@ class GithubToolHandler:
                 issue.create_comment(comment_body)
 
         
-        return (u, pr)    
+        return u, pr
 
     # Same as update , need to check for existence of branches
     # One difference is that the branch name should contain the word 'delete'
@@ -489,14 +489,14 @@ class GithubToolHandler:
     #   In this way we also separate the deletion operations from create and update
     def delete_tool(self, biotools_data):
         """
-        Delete the tool from the GitHub ecosytem
+        Delete the tool from the GitHub ecosystem
         """
 
-        if not(self.__logged_in):
+        if not self.__logged_in:
             raise EcosystemLoginException(
                 self.__username, 
                 self.__repo_name, 
-                'Bad Github user credetials at tool delete time.'
+                'Bad Github user credentials at tool delete time.'
             )
 
         # Load some class level variables for convenience in Exception handling
@@ -506,7 +506,7 @@ class GithubToolHandler:
         delete_branch_name = self.__branch
         delete_file_path = self.__filepath
         
-        # Exception brach already exists on tool delete time
+        # Exception branch already exists on tool delete time
         if self.__branch_exists(delete_branch_name):
             raise ToolDeleteException(
                 'Branch already exists at tool delete time.',
@@ -622,7 +622,7 @@ class GithubToolHandler:
             branch_name=delete_branch_name
         )
 
-        return (d, pr)
+        return d, pr
 
     # This function should run once in a while and clean branches
     #   that are not associated with any PRs

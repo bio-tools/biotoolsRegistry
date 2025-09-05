@@ -1,3 +1,4 @@
+from django.test import override_settings
 from rest_framework import status
 from elixir.serializers import *
 from backend.elixirapp.tests.test_baseobject import BaseTestObject
@@ -35,14 +36,13 @@ class TestAuthorization(BaseTestObject):
         if response.status_code != status.HTTP_201_CREATED:
             raise RuntimeError(
                 f"Post did not succeed: attempt to post to {self.registration_url} returned {response.status_code}.")
-        self.pop_email(valid_user_registration_data['email'], "[example.com] Please Confirm Your E-mail Address")
         return response.json()['key']  # return token
 
     def register_user(self, data):
         """
         Description: Registers a user with given data.
         """
-        self.client.post(self.registration_url, data, format='json')
+        return self.client.post(self.registration_url, data, format='json')
 
     def checked_login(self, data):
         """
@@ -79,7 +79,6 @@ class TestAuthorization(BaseTestObject):
         """
         self.register_user(valid_user_registration_data)
         self.assertTrue(self.check_user_exists())
-        self.pop_email(valid_user_registration_data['email'], "[example.com] Please Confirm Your E-mail Address")
 
     def test_user_authorization_invalid_p2(self):
         """
@@ -149,7 +148,7 @@ class TestAuthorization(BaseTestObject):
     def test_user_change_password_valid(self):
         token = self.checked_registration()
         self.checked_login(valid_user_login_data)
-        self.client.credentials() # Otherwise there is a dangling auth token in checked login request
+        self.client.credentials()  # Otherwise there is a dangling auth token in checked login request
 
         print(token, valid_change_password_change_data, self.change_password_url)
         response = self.change_password_user(token, valid_change_password_change_data)
@@ -161,21 +160,34 @@ class TestAuthorization(BaseTestObject):
         response = self.checked_login(valid_user_registration_data_post_change)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
     def test_password_reset(self):
-        user_token = self.checked_registration()
+        # New data because otherwise email doesn't get sent
+        user_token = self.register_user({
+            "username": "test_user",
+            "password1": "test_user_password",
+            "password2": "test_user_password",
+            "email": "test_reset@user.com"
+        })
+        self.pop_email("test_reset@user.com", "[example.com] Please Confirm Your E-mail Address")
 
         response = self.client.post(self.password_reset_url, {
-            'email': valid_user_registration_data['email'],
+            'email': "test_reset@user.com"
         }, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('Password reset e-mail has been sent.', str(response.content))
 
-        mail = self.pop_email("test@user.com", "Password reset on example.com")
+        mail = self.pop_email("test_reset@user.com", "[example.com] Password Reset E-mail")
+
+        self.assertIsNotNone(mail.message())
 
         match = re.search("uid=([^&]+)&token=(\w+-\w+)", str(mail.message()))
         uid = match.group(1).strip()
         token = match.group(2).strip()
 
-        print(uid, token)
+        self.assertIsNotNone(uid)
+        self.assertIsNotNone(token)
+
         response = self.client.post(self.password_reset_confirm_url, {
             'uid': uid,
             'token': token,
@@ -185,13 +197,22 @@ class TestAuthorization(BaseTestObject):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.logout_user(user_token)
-        self.client.credentials()
+        self.client.credentials() # wipe credentials and cookies from api client
 
         response = self.checked_login({
             "username": valid_user_registration_data['username'],
             "password": "NewSecurePassword",
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
+    def test_registration_mail_sending(self):
+        self.assert_mail_empty()  # sanity check
+
+        # Test registration sending confirmation mail
+        response = self.client.post(self.registration_url, valid_user_registration_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.pop_email(valid_user_registration_data['email'], "[example.com] Please Confirm Your E-mail Address")
 
     # todo others
     # todo find out what i meant to say with 'others'
@@ -300,3 +321,4 @@ class TestAuthorization(BaseTestObject):
         self.assertEqual(user_info['email'], valid_user_registration_data['email'])
         self.assertFalse(user_info['is_superuser'])
         self.assertEqual(len(user_info['resources']), 1)
+

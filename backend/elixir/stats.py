@@ -7,7 +7,7 @@ from datetime import date
 import elixir.elixir_logging as elixir_logging
 import collections
 
-class StatsInfo():
+class StatsInfo:
 	# historic data handling
 	def statsDataForLast(self, days):
 		return StatsData.objects.filter(date__gte=datetime.now()-timedelta(days=days)).order_by('date')
@@ -176,10 +176,10 @@ class StatsInfo():
 
 	def topContributors(self, limit, upperDateLimit=datetime.today()):
 		emailsList = User.objects.filter(date_joined__lt=upperDateLimit).values('email')
-		emailsList = [data for data in emailsList if data['email'] != None and data['email'] != '' and '@' in data['email']] # discard empty emails
+		emailsList = [data for data in emailsList if data['email'] is not None and data['email'] != '' and '@' in data['email']] # discard empty emails
 		emailsList = [data['email'].split(".").pop() for data in emailsList] # extract domains
-		emailsList = collections.Counter(emailsList) # count occurences
-		emailsList = emailsList.most_common(limit) # sort and limit occurences
+		emailsList = collections.Counter(emailsList) # count occurrences
+		emailsList = emailsList.most_common(limit) # sort and limit occurrences
 		emailsList = [{ 'domain': data[0], 'count': data[1]} for data in emailsList] # format data
 		return emailsList
 

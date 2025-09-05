@@ -1,0 +1,23 @@
+:80 {
+    # Root directory for static files
+    root * /elixir/application/frontend
+
+    # Handle API requests - proxy to Django backend
+    handle /api/* {
+        uri strip_prefix /api
+        reverse_proxy biotools-backend:8000
+    }
+
+    # Serve files from frontend
+    handle {
+        try_files {path} /index.html
+        file_server {
+            browse
+        }
+    }
+
+    # CORS headers
+    header /* {
+        Access-Control-Allow-Origin "*"
+    }
+}

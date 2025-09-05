@@ -66,7 +66,7 @@ class IssueOntologyValidator(object):
 		# if we have non-empty URI
 		if uri and len(uri) > 0:
 			found = self.check_if_term_or_uri_in_ontology(uri)
-			# URI takes precedense over term, so if URI matches the one found in EDAM
+			# URI takes precedence over term, so if URI matches the one found in EDAM
 			# we replace the term with the one from EDAM (EDAM is assumed to have the correct term)
 			if found['status'] == 'ok':
 				# make sure the term matches the URI

@@ -32,7 +32,8 @@ es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 
 def check_update_confidence_flag(resource_confidence_flag, request_confidence_flag):
 	# cannot change confidence_flag to high, medium, low, very low once it's been set to None or 'tool'
-	if (resource_confidence_flag == 'tool' or resource_confidence_flag == None) and (request_confidence_flag != None and request_confidence_flag != 'tool'):
+	if (resource_confidence_flag == 'tool' or resource_confidence_flag is None) and (
+            request_confidence_flag is not None and request_confidence_flag != 'tool'):
 		return False			
 	return True
 
@@ -80,7 +81,7 @@ class ResourceList(APIView):
 		results = [el['_source'] for el in result['hits']['hits']]
 
 		# check if page is valid
-		if (not results and count > 0):
+		if not results and count > 0:
 			return Response({"detail": "Invalid page. That page contains no results."}, status=status.HTTP_404_NOT_FOUND)
 
 		# If subdomain is specified
@@ -131,12 +132,12 @@ class ResourceList(APIView):
 		serializer = ResourceSerializer(data=request.data, context={'request':request,"request_type":"POST"})
 
 		if serializer.is_valid():
-			if not(request.user.is_superuser) and request.data.get('confidence_flag') and request.data.get('confidence_flag') != 'tool':
+			if not request.user.is_superuser and request.data.get('confidence_flag') and request.data.get('confidence_flag') != 'tool':
 				return Response({"detail": 'Error: Only superusers can add entries with a confidence score other than \'tool\'.'}, status=status.HTTP_403_FORBIDDEN)
 			
 			right_now = datetime.now()
 
-			# there is a very small milisecond difference between additionDate now and auto_now from lastUpdate
+			# there is a very small millisecond difference between additionDate now and auto_now from lastUpdate
 			# if we ever do some analysis we need to make sure we keep that in mind
 			serializer.save(owner=request.user, additionDate=right_now)
 			# issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), request.user)
@@ -193,7 +194,7 @@ class ResourceRequestView(APIView):
 
 	def get(self, request, format=None):
 		my_requests = ResourceRequest.objects.filter(user=request.user)
-		if request.user.is_superuser == True:
+		if request.user.is_superuser:
 			received_requests = ResourceRequest.objects.all()
 		else:
 			received_requests = ResourceRequest.objects.filter(Q(resource__owner=request.user) | Q(completedBy=request.user))
@@ -218,7 +219,7 @@ class ProcessResourceRequest(APIView):
 		except:
 			return Response({"detail": "No active requests with a specified 'requestId' could be found."}, status=status.HTTP_404_NOT_FOUND)
 		self.check_object_permissions(self.request, resourceRequest)
-		if resourceRequest.completed == True: 
+		if resourceRequest.completed:
 			return Response({"detail": "Request has already been concluded."}, status=status.HTTP_400_BAD_REQUEST)
 		serializer = ResourceRequestConcludeSerializer(resourceRequest, data=request.data, context={'user': request.user})
 		if serializer.is_valid():
@@ -235,7 +236,7 @@ class ResourceDetail(APIView):
 	#if interested in the resource update response content (other than the status)
 	# then should add ?format=json or format=xml or format=yaml
 	# because otherwise it will be by default format=api
-	# to really make it clean, should have renderer for get() and rederers for put and delete
+	# to really make it clean, should have renderer for get() and renderers for put and delete
 	# best here is to use functions instead of classes, and have api_view decorators for functions
 	renderer_classes = (BrowsableAPIRenderer, JSONRenderer, XMLSchemaRenderer, YAMLRenderer, JSONLDRenderer)
 	parser_classes = (JSONParser, XMLSchemaParser, YAMLParser)
@@ -273,7 +274,7 @@ class ResourceDetail(APIView):
 
 	def process_request_for_otherID(self, request, rID):
 		# only works if not superuser, and otherID is present and a valid list
-		if not(request.user.is_superuser) and request.data.get('otherID') and isinstance(request.data['otherID'],list):
+		if not request.user.is_superuser and request.data.get('otherID') and isinstance(request.data['otherID'], list):
 			for oID in list(request.data['otherID']):
 				# we check for the "value" property on otherID
 				if oID.get("value") and oID["value"].lower().startswith("biotools:"): 
@@ -285,7 +286,7 @@ class ResourceDetail(APIView):
 		# and add them to the request object
 		o_objects = OtherID.objects.filter(resource_id=rID,value__startswith='biotools:')
 		if len(o_objects) > 0:
-			if not(request.user.is_superuser) and (not(request.data.get('otherID')) or not(isinstance(request.data['otherID'],list))):
+			if not request.user.is_superuser and (not(request.data.get('otherID')) or not(isinstance(request.data['otherID'], list))):
 				request.data['otherID'] = []
 
 			for o in o_objects:
@@ -314,8 +315,8 @@ class ResourceDetail(APIView):
 		isEditingPermissions = self.check_editing_permissions(request, resource)
 		if canEditPermissions == False and isEditingPermissions == True:
 			return Response({"detail": "Only the owner can edit permissions for a specified resource."}, status=status.HTTP_401_UNAUTHORIZED)
-		# Copy permissions from the esisting resource in case not specified.
-		if isEditingPermissions == False:
+		# Copy permissions from the existing resource in case not specified.
+		if not isEditingPermissions:
 			permissionSerializer = EditPermissionSerializer(resource.editPermission)
 			request.data['editPermission'] = permissionSerializer.data
 
@@ -325,7 +326,7 @@ class ResourceDetail(APIView):
 
 		if serializer.is_valid():
 			# only superusers can change confidence_flag from tool to something else
-			if not(request.user.is_superuser) and not(check_update_confidence_flag(resource.confidence_flag, request.data.get('confidence_flag'))):
+			if not request.user.is_superuser and not(check_update_confidence_flag(resource.confidence_flag, request.data.get('confidence_flag'))):
 				return Response({"detail": 'Error: Cannot change confidence_flag once it has been set to describe a tool.'}, status=status.HTTP_403_FORBIDDEN)
 			# setting the visibility of the current resource to 0
 			resource.visibility = 0
@@ -439,7 +440,7 @@ class ResourceCreateValidator(APIView):
 		# with context
 		serializer = ResourceSerializer(data=request.data, context={'request':request,"request_type":"POST"})
 		if serializer.is_valid():
-			if not(request.user.is_superuser) and request.data.get('confidence_flag') and request.data.get('confidence_flag') != 'tool':
+			if not request.user.is_superuser and request.data.get('confidence_flag') and request.data.get('confidence_flag') != 'tool':
 				return Response({"detail": 'Error: Only superusers can add entries with a confidence score other than \'tool\'.'}, status=status.HTTP_403_FORBIDDEN)
 			return Response(serializer.validated_data, status=status.HTTP_200_OK)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -466,7 +467,7 @@ class ResourceUpdateValidator(APIView):
 		serializer = ResourceUpdateSerializer(data=request.data, context={'request':request,"request_type":"PUT"})
 		if serializer.is_valid():
 			# only superusers can change confidence_flag from tool to something else
-			if not(request.user.is_superuser) and not(check_update_confidence_flag(resource.confidence_flag, request.data.get('confidence_flag'))):
+			if not request.user.is_superuser and not(check_update_confidence_flag(resource.confidence_flag, request.data.get('confidence_flag'))):
 				return Response({"detail": 'Error: Cannot change confidence_flag once it has been set to describe a tool.'}, status=status.HTTP_403_FORBIDDEN)
 			return Response(serializer.validated_data)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
