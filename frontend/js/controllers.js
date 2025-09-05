@@ -1182,6 +1182,7 @@ angular.module('elixir_front.controllers', [])
 		{value: "Method", text: "Method"},
 		{value: "Usage", text: "Usage"},
 		{value: "Review", text: "Review"},
+		{value: "Preprint", text: "Preprint"},
 		{value: "Other", text: "Other"}
 	];
 
@@ -1248,8 +1249,8 @@ angular.module('elixir_front.controllers', [])
 		{value: "Microbial Biotechnology", text: "Microbial Biotechnology", link: "microbial-biotechnology"},
 		{value: "Plant Sciences", text: "Plant Sciences", link: "plant-sciences"},
 		{value: "Proteomics", text: "Proteomics", link: "proteomics"},
-		{value: "Rare Diseases", text: "Rare Diseases", link: "rare-diseases"}
-		
+		{value: "Rare Diseases", text: "Rare Diseases", link: "rare-diseases"},
+		{value: "Systems Biology", text: "Systems Biology", link: "systems-biology"}
 	];
 
 	$scope.otherIdTypeOptions = [
