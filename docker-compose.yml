@@ -51,6 +51,7 @@ services:
     image: biotools/backend:latest
     build:
       context: ./backend
+      target: dev
     environment:
       - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
       - BIOTOOLS_URL_FRONT=http://localhost/
@@ -81,6 +82,7 @@ services:
     image: biotools/backend:latest
     build:
       context: ./backend
+      target: dev
     environment:
       - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
       - BIOTOOLS_MYSQL_DB=elixir
