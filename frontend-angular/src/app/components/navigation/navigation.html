@@ -10,6 +10,31 @@
       <!-- Search Bar -->
       <app-search-bar *ngIf="showSearch" class="search-bar"></app-search-bar>
       
+          <!-- Navigation Menu -->
+    <div class="nav-menu">
+      <button mat-button [matMenuTriggerFor]="exploreMenu">
+        Explore
+        <mat-icon>expand_more</mat-icon>
+      </button>
+      <mat-menu #exploreMenu="matMenu">
+        <button mat-menu-item (click)="navigateToSearch()">
+          <mat-icon>search</mat-icon>
+          <span>Tools</span>
+        </button>
+        <button mat-menu-item (click)="navigateToDomains()">
+          <mat-icon>category</mat-icon>
+          <span>Domains</span>
+        </button>
+        <button mat-menu-item (click)="navigateToCommunities()">
+          <mat-icon>group</mat-icon>
+          <span>Communities</span>
+        </button>
+        <button mat-menu-item (click)="navigateToAbout()">
+          <mat-icon>info</mat-icon>
+          <span>About bio.tools</span>
+        </button>
+      </mat-menu>
+    </div>  
       <!-- Authentication Section -->
       <div class="auth-section">
         <!-- User is not authenticated -->
@@ -56,32 +81,6 @@
           </mat-menu>
         </ng-container>
       </div>
-    </div>
-
-    <!-- Navigation Menu -->
-    <div class="nav-menu">
-      <button mat-button [matMenuTriggerFor]="exploreMenu">
-        Explore
-        <mat-icon>expand_more</mat-icon>
-      </button>
-      <mat-menu #exploreMenu="matMenu">
-        <button mat-menu-item (click)="navigateToSearch()">
-          <mat-icon>search</mat-icon>
-          <span>Tools</span>
-        </button>
-        <button mat-menu-item (click)="navigateToDomains()">
-          <mat-icon>category</mat-icon>
-          <span>Domains</span>
-        </button>
-        <button mat-menu-item (click)="navigateToCommunities()">
-          <mat-icon>group</mat-icon>
-          <span>Communities</span>
-        </button>
-        <button mat-menu-item (click)="navigateToAbout()">
-          <mat-icon>info</mat-icon>
-          <span>About bio.tools</span>
-        </button>
-      </mat-menu>
     </div>
   </div>
 </mat-toolbar>

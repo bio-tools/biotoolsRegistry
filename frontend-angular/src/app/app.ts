@@ -5,7 +5,6 @@ import { PageFooter } from './components/page-footer/page-footer.component';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [RouterOutlet, Navigation, PageFooter],
   template: `
     <app-navigation></app-navigation>
