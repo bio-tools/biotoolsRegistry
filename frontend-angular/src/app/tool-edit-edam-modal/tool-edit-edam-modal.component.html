@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Select EDAM term</h2>
+<mat-dialog-content>
+  <div *ngIf="vm.suggestions && vm.suggestions.length">
+    <div *ngFor="let suggestion of vm.suggestions; let i = index" style="display: flex; align-items: center; margin-bottom: 1em;">
+      <p *ngIf="i === 0" style="margin-right: 1em; margin-top: 10px;">Suggestions:</p>
+      <button mat-button (click)="applySuggestion(suggestion)">{{suggestion.term}}</button>
+    </div>
+  </div>
+
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ vm.type | titlecase }} picker
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div *ngIf="vm.type === 'data'">
+        <mat-form-field appearance="fill" style="width: 100%; margin:5px;">
+          <mat-label>Filter</mat-label>
+          <input matInput [(ngModel)]="predicate" placeholder="Filter">
+        </mat-form-field>
+        <!-- Tree for data -->
+        <app-edam-tree [treeData]="vm.onto" [filter]="predicate" (select)="vm.data.data.term = $event.text; vm.data.data.uri = $event.data.uri"></app-edam-tree>
+      </div>
+      <div *ngIf="vm.type === 'operation' || vm.type === 'format'">
+        <mat-form-field appearance="fill" style="width: 100%; margin:5px;">
+          <mat-label>Filter</mat-label>
+          <input matInput [(ngModel)]="predicate" placeholder="Filter">
+        </mat-form-field>
+        <!-- Tree for operation/format -->
+        <app-edam-tree [treeData]="vm.onto" [filter]="predicate" (select)="vm.data.term = $event.text; vm.data.uri = $event.data.uri"></app-edam-tree>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="saveData()">Save changes</button>
+  <button mat-button (click)="cancel()">Cancel</button>
+</mat-dialog-actions>

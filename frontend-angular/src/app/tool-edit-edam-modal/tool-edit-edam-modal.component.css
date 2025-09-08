@@ -1,0 +1,10 @@
+/* Add your modal-specific styles here */
+:host {
+  display: block;
+  padding: 15px;
+}
+
+.suggested {
+  font-weight: bold;
+  color: #1976d2;
+}

@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-page-footer',
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule
