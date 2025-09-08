@@ -5,7 +5,6 @@ import { Tool } from '../../../../models/tool.model';
 
 @Component({
   selector: 'app-tool-edit-documentation',
-  standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   template: `<div class="tool-edit-form"><p>Documentation editing component - Coming soon</p></div>`,
   styles: [`.tool-edit-form { padding: 2rem; }`]

@@ -10,7 +10,6 @@ import { Tool } from '../../../../models/tool.model';
 
 @Component({
   selector: 'app-tool-edit-summary',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

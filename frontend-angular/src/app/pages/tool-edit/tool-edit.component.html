@@ -1,30 +1,36 @@
 <div class="tool-edit-container">
   <!-- Loading spinner -->
-  <div *ngIf="loading()" class="loading-container">
-    <mat-spinner></mat-spinner>
-    <p>Loading tool...</p>
-  </div>
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Loading tool...</p>
+    </div>
+  }
 
   <!-- Not found error -->
-  <div *ngIf="notFound()" class="error-container">
-    <h1>Error 404</h1>
-    <p>Tool not found.</p>
-    <button mat-raised-button color="primary" routerLink="/search">
-      <mat-icon>search</mat-icon>
-      Back to Search
-    </button>
-  </div>
-
-  <!-- Permission denied -->
-  <div *ngIf="!loading() && !notFound() && !canEditTool() && !isCreateMode()" class="permission-denied">
-    <div class="permission-content">
-      <h1>You don't have permissions to update this resource</h1>
-      <button mat-raised-button color="primary" [routerLink]="['/tool', software()?.biotoolsID]">
-        <mat-icon>visibility</mat-icon>
-        View Tool
+  @if (notFound()) {
+    <div class="error-container">
+      <h1>Error 404</h1>
+      <p>Tool not found.</p>
+      <button mat-raised-button color="primary" routerLink="/search">
+        <mat-icon>search</mat-icon>
+        Back to Search
       </button>
     </div>
-  </div>
+  }
+
+  <!-- Permission denied -->
+  @if (!loading() && !notFound() && !canEditTool() && !isCreateMode()) {
+    <div class="permission-denied">
+      <div class="permission-content">
+        <h1>You don't have permissions to update this resource</h1>
+        <button mat-raised-button color="primary" [routerLink]="['/tool', software()?.biotoolsID]">
+          <mat-icon>visibility</mat-icon>
+          View Tool
+        </button>
+      </div>
+    </div>
+  }
 
   <!-- Main edit interface -->
   <div class="edit-container">
@@ -37,23 +43,34 @@
       <div class="header-right">
         <div class="action-buttons">
           <!-- Success indicator -->
-          <span *ngIf="registrationSuccess()" class="success-indicator">
-            <mat-icon>check_circle</mat-icon>
-            Success
-          </span>
+          @if (registrationSuccess()) {
+            <span class="success-indicator">
+              <mat-icon>check_circle</mat-icon>
+              Success
+            </span>
+          }
 
           <!-- Delete button -->
-          <button *ngIf="!isCreateMode()" 
-                  mat-raised-button 
-                  color="warn"
-                  [disabled]="deletingProgress().inProgress"
-                  (click)="onDeleteClick()">
-            <mat-icon *ngIf="!deletingProgress().inProgress && !deletingProgress().success && !deletingProgress().error">delete</mat-icon>
-            <mat-spinner *ngIf="deletingProgress().inProgress" diameter="20"></mat-spinner>
-            <mat-icon *ngIf="deletingProgress().success" color="accent">check</mat-icon>
-            <mat-icon *ngIf="deletingProgress().error" color="warn">close</mat-icon>
-            Remove
-          </button>
+          @if (!isCreateMode()) {
+            <button mat-raised-button 
+                    color="warn"
+                    [disabled]="deletingProgress().inProgress"
+                    (click)="onDeleteClick()">
+              @if (!deletingProgress().inProgress && !deletingProgress().success && !deletingProgress().error) {
+                <mat-icon>delete</mat-icon>
+              }
+              @if (deletingProgress().inProgress) {
+                <mat-spinner diameter="20"></mat-spinner>
+              }
+              @if (deletingProgress().success) {
+                <mat-icon color="accent">check</mat-icon>
+              }
+              @if (deletingProgress().error) {
+                <mat-icon color="warn">close</mat-icon>
+              }
+              Remove
+            </button>
+          }
 
           <!-- Validate button -->
           <button mat-raised-button 
@@ -61,10 +78,18 @@
                   [disabled]="validationProgress().inProgress"
                   [class.error-border]="validationProgress().error"
                   (click)="onValidateClick()">
-            <mat-icon *ngIf="!validationProgress().inProgress && !validationProgress().success && !validationProgress().error">check_circle_outline</mat-icon>
-            <mat-spinner *ngIf="validationProgress().inProgress" diameter="20"></mat-spinner>
-            <mat-icon *ngIf="validationProgress().success" color="accent">check</mat-icon>
-            <mat-icon *ngIf="validationProgress().error" color="warn">close</mat-icon>
+            @if (!validationProgress().inProgress && !validationProgress().success && !validationProgress().error) {
+              <mat-icon>check_circle_outline</mat-icon>
+            }
+            @if (validationProgress().inProgress) {
+              <mat-spinner diameter="20"></mat-spinner>
+            }
+            @if (validationProgress().success) {
+              <mat-icon color="accent">check</mat-icon>
+            }
+            @if (validationProgress().error) {
+              <mat-icon color="warn">close</mat-icon>
+            }
             Validate
           </button>
 
@@ -74,31 +99,42 @@
                   [disabled]="savingProgress().inProgress"
                   [class.error-border]="savingProgress().error"
                   (click)="onSaveClick()">
-            <mat-icon *ngIf="!savingProgress().inProgress && !savingProgress().success && !savingProgress().error">save</mat-icon>
-            <mat-spinner *ngIf="savingProgress().inProgress" diameter="20"></mat-spinner>
-            <mat-icon *ngIf="savingProgress().success" color="accent">check</mat-icon>
-            <mat-icon *ngIf="savingProgress().error" color="warn">close</mat-icon>
+            @if (!savingProgress().inProgress && !savingProgress().success && !savingProgress().error) {
+              <mat-icon>save</mat-icon>
+            }
+            @if (savingProgress().inProgress) {
+              <mat-spinner diameter="20"></mat-spinner>
+            }
+            @if (savingProgress().success) {
+              <mat-icon color="accent">check</mat-icon>
+            }
+            @if (savingProgress().error) {
+              <mat-icon color="warn">close</mat-icon>
+            }
             Save
           </button>
 
           <!-- Go to entry button -->
-          <button *ngIf="!isCreateMode() && software()?.biotoolsID" 
-                  mat-raised-button 
-                  color="primary"
-                  [disabled]="savingProgress().inProgress || validationProgress().inProgress || deletingProgress().inProgress"
-                  (click)="onGoToEntry()">
-            <mat-icon>visibility</mat-icon>
-            Go to entry
-          </button>
+          @if (!isCreateMode() && software()?.biotoolsID) {
+            <button mat-raised-button 
+                    color="primary"
+                    [disabled]="savingProgress().inProgress || validationProgress().inProgress || deletingProgress().inProgress"
+                    (click)="onGoToEntry()">
+              <mat-icon>visibility</mat-icon>
+              Go to entry
+            </button>
+          }
         </div>
       </div>
     </div>
 
     <!-- Validation errors alert -->
-    <div *ngIf="registrationErrorPayload()" class="validation-errors">
-      <mat-icon color="warn">error</mat-icon>
-      <span>There are validation errors: please fix values shown in red. See the JSON tab for a list of all errors.</span>
-    </div>
+    @if (registrationErrorPayload()) {
+      <div class="validation-errors">
+        <mat-icon color="warn">error</mat-icon>
+        <span>There are validation errors: please fix values shown in red. See the JSON tab for a list of all errors.</span>
+      </div>
+    }
 
     <!-- Tab interface -->
     <mat-tab-group class="edit-tabs" dynamicHeight="true">
@@ -225,15 +261,17 @@
       </mat-tab>
 
       <!-- Permissions tab (only for owners/superusers) -->
-      <mat-tab *ngIf="showPermissionsTab()">
-        <ng-template mat-tab-label>
-          <span>Permissions</span>
-        </ng-template>
-        <app-tool-edit-permissions 
-          [tool]="software()"
-          [currentUser]="currentUser()">
-        </app-tool-edit-permissions>
-      </mat-tab>
+      @if (showPermissionsTab()) {
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span>Permissions</span>
+          </ng-template>
+          <app-tool-edit-permissions 
+            [tool]="software()"
+            [currentUser]="currentUser()">
+          </app-tool-edit-permissions>
+        </mat-tab>
+      }
 
     </mat-tab-group>
   </div>

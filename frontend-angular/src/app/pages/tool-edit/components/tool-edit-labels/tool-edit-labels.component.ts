@@ -19,7 +19,6 @@ interface SelectOption {
 
 @Component({
   selector: 'app-tool-edit-labels',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

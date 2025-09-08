@@ -1,0 +1,23 @@
+<div class="tool-edit-form">
+  <div class="form-section">
+    <div class="section-description">
+      <p>
+        A tool can have one or more basic functions (modes of operation) described in terms from the
+        <a href="https://github.com/edamontology/edamontology/" target="_blank">
+          EDAM Ontology <mat-icon>open_in_new</mat-icon>
+        </a>.
+        Each function performs one or more specific operation(s), e.g. "Sequence alignment". An operation may have one or more primary inputs and outputs, each of a defined type of data, e.g. "Sequence", and listing supported format(s) e.g. "FASTA".
+        <br>
+        We recommend you specify at least the operation(s) for the primary function of the tool.
+        <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#function-group" target="_blank">
+          Curation Guidelines <mat-icon>open_in_new</mat-icon>
+        </a>.
+      </p>
+    </div>
+  </div>
+  <!-- Function list rendering will go here (reactive form implementation) -->
+  <div class="coming-soon">Function editing UI coming soon.</div>
+  <!-- Include modal for adding/editing functions -->
+  <button mat-button (click)="openModal()">Open Modal</button>
+  <app-tool-edit-demo></app-tool-edit-demo>
+</div>
