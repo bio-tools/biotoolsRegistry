@@ -25,8 +25,10 @@ RUN apt-get update -y && apt-get upgrade -y && apt-get install -y software-prope
 # make symlink for python3 to python
 RUN ln -sf /usr/bin/python3 /usr/bin/python && ln -sf /usr/bin/pip3 /usr/bin/pip
 
-
-RUN apt-get update && apt-get -y install apache2 apache2-utils ssl-cert libapache2-mod-wsgi-py3 && apt-get install -y python3-dev default-libmysqlclient-dev build-essential 
+RUN apt-get update && apt-get -y install \
+    apache2 apache2-utils ssl-cert libapache2-mod-wsgi-py3 \
+    python3-dev default-libmysqlclient-dev build-essential \
+    libxml2-dev libxslt1-dev zlib1g-dev
 
 RUN pip install -r requirements.txt && rm -f requirements.txt
 
