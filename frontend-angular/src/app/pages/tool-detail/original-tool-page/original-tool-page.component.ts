@@ -10,7 +10,6 @@ import { Tool } from '../../../models/tool.model';
 
 @Component({
   selector: 'app-original-tool-page',
-  standalone: true,
   imports: [
     CommonModule,
     MatButtonModule,
