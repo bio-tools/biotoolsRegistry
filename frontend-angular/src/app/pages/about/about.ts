@@ -7,7 +7,6 @@ import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-about',
-  standalone: true,
   imports: [
     CommonModule,
     MatCardModule,
