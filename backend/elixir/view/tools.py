@@ -1,14 +1,14 @@
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from elixir.permissions import IsOwnerOrReadOnly, HasEditPermissionToEditResourceOrReadOnly, CanConcludeResourceRequest, IsStaffOrReadOnly
-from elixir.models import *
+
 from elixir.serializers import *
+
 
 class ToolList(APIView):
 	"""
 	Get a compact list of tools.
 	"""
-	permission_classes = (IsAuthenticatedOrReadOnly, )
+	permission_classes = (IsAuthenticatedOrReadOnly,)
 
 	def get(self, request, format=None):
 		query = request.GET

@@ -12,6 +12,7 @@ urlpatterns = [
 	re_path(r'^user-list/?$', views.UserList.as_view()),
 	re_path(r'^edit-permissions/?$', edit_permissions.EditPermissions.as_view()),
 	re_path(r'^edit-permissions/(?P<pk>[0-9]+)/?$', edit_permissions.EditPermissions.as_view()),
+	re_path(r'^matrix/$', views.ToolMatrix.as_view()),
 	re_path(r'^t(ool)?/?$', views.ResourceList.as_view()),
 	re_path(r'^t(ool)?/validate/?$', views.ResourceCreateValidator.as_view()),
 	re_path(r'^t(ool)?/(biotools\:)?(?P<biotoolsID>[a-zA-Z0-9.~_-]+)/?$', views.ResourceDetail.as_view()),
