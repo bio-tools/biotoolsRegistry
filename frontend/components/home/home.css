@@ -379,6 +379,7 @@ div.fund-text > span > a {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     font-size: 20px;
     font-weight: bolder;
     background-color: #d9edf7;
@@ -386,7 +387,6 @@ div.fund-text > span > a {
     border-radius: 5px;
     padding: 5px;
     margin: 5px;
-    flex-direction: column;
 }
 
 .matrix-item span {
@@ -396,9 +396,17 @@ div.fund-text > span > a {
 .matrix-img {
     max-width: 80%;
     max-height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .matrix-img img {
     max-width: 100%;
     max-height: 100%;
+}
+
+.matrix-small {
+    color: orange;
 }

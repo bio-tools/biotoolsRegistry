@@ -85,25 +85,33 @@
             </p>
         </div>
 
-        <div class="jumbotron home-text p-1" role="alert">
-            <h2>Tool distribution</h2>
+        <div class="jumbotron home-text p-1" ng-controller="MatrixController" role="alert">
+            <h2>Tools categories</h2>
             <p class="description-text">
-                lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor,
-                dignissim
+                The following matrix summarises the contents of the bio.tools database divided according to the type of
+                data the tools work with.
             </p>
 
+            <div ng-if="fetchstatus == 'loading'">
+                Loading matrix...
+            </div>
 
-            <div class="matrix" ng-controller="MatrixController">
+            <div ng-if="fetchstatus == 'error'">
+                Error loading matrix
+            </div>
+
+            <div class="matrix" ng-if="fetchstatus == 'done'">
                 <tr ng-repeat="(query, count) in matrix">
                     <td>{{ query }}</td>
                     <td>{{ count }}</td>
                 </tr>
                 <!-- TODO hidden-xs on rows and cols -->
-                <div class="matrix-item matrix-empty hidden-xs" ng-controller="StatsController">
-                    <span>Total: {{statsDataSource.statsData.totalEntries}}</span>
-                </div>
+                <a class="matrix-item matrix-empty hidden-xs" href="/t" ng-controller="StatsController">
+                    <span>All services</span>
+                    <small class="matrix-small">{{statsDataSource.statsData.totalEntries}}</small>
+                </a>
 
-                <div class="matrix-item hidden-xs" ng-repeat="dim in ['1D', '2D', '3D', 'xD']">
+                <div class="matrix-item" ng-repeat="dim in ['1D', '2D', '3D', 'xD']">
                     <span>{{dim}}</span>
                 </div>
 
@@ -111,9 +119,9 @@
                     <span ng-show="row.head">{{row.name}}</span>
 
                     <a class="matrix-img" href="/t?page=1&q={{row.q}}" ng-show="!row.head">
-                        <img src="/img/matrix/{{row.image}}">
+                        <img alt="{{row.message}} image" src="/img/matrix/{{row.image}}">
+                        <small class="matrix-small" ng-show="!row.head">{{row.count}}</small>
                     </a>
-                    <small ng-show="!row.head">{{row.count}}</small>
                 </div>
             </div>
 

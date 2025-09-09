@@ -16,11 +16,14 @@ angular.module('elixir_front')
 
 angular.module('elixir_front').controller('MatrixController', ['$scope', 'MatrixService', function ($scope, MatrixService) {
     $scope.matrix = {};
+    $scope.fetchstatus = 'loading';
 
     MatrixService.getMatrix().then(function (data) {
         $scope.matrix = data;
+        $scope.fetchstatus = 'done';
     }).catch(function (error) {
         console.error('Error fetching matrix data:', error);
+        $scope.fetchstatus = 'error';
     });
 }]);
 
