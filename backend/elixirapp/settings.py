@@ -265,6 +265,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 
 OLD_PASSWORD_FIELD_ENABLED = True
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 EMAIL_BACKEND = getenv("EMAIL_BACKEND", 'django.core.mail.backends.smtp.EmailBackend')
 ACCOUNT_ADAPTER = 'elixir.adapters.CustomDefaultAccountAdapter'
@@ -311,4 +312,4 @@ BLACKLISTED_DOMAINS_LIST = getenv('BLACKLISTED_DOMAINS_LIST', [], castf=json.loa
 try:
     from elixir.blacklisted_domains import *
 except ImportError:
-    print ("Could not import deployment settings")
+    print ("Could not import blacklisted domains")
