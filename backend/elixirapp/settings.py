@@ -14,37 +14,17 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import datetime
 import json
-# import djcelery
-
 
 # Prefix for environment variables settings.
 ENV_NAMESPACE = "BIOTOOLS"
 
-SITE_NAME = "bio.tools" # will fix email templates
+SITE_NAME = "bio.tools"
 
 def getenv(key, default=None, castf=str, ns=ENV_NAMESPACE):
     """Helper function to retrieve namespaced environment variables."""
     value = os.environ.get('{ns}_{key}'.format(ns=ns, key=key), None)
     return castf(value) if value is not None else default
 
-
-# CELERY SETTINGS
-# REDIS_HOST = getenv('REDIS_HOST', 'localhost')
-# REDIS_PORT = getenv('REDIS_PORT', '6379')
-# REDIS_DB = getenv('REDIS_DB', '0')
-# BROKER_URL = 'redis://{host}:{port}/{db}'.format(
-#     host=REDIS_HOST,
-#     port=REDIS_PORT,
-#     db=REDIS_DB,
-# )
-# CELERY_ACCEPT_CONTENT = ['json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-
-# CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
-# CELERY_ALWAYS_EAGER = getenv('CELERY_ALWAYS_EAGER', True, castf=bool)
-
-# djcelery.setup_loader()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_URL = "/media/"
@@ -54,14 +34,12 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# NOTE: This setting is currently overwritten by deployment_settings import
 SECRET_KEY = getenv(
     'SECRET_KEY',
     '$a$$kkc_q040nqu&c9k=zshyc+x)%3-k3g7^ik8g$+lgx9#6!w'
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# NOTE: This setting is currently overwritten by deployment_settings import
 DEBUG = getenv('DEBUG', True, castf=bool)
 
 ALLOWED_HOSTS = ['*']
@@ -76,10 +54,8 @@ ELASTIC_SEARCH_URLS = getenv(
 )
 
 ELASTIC_SEARCH_INDEX = 'elixir'
-# Application definition
 
 INSTALLED_APPS = (
-    # 'super_inlines',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -97,21 +73,12 @@ INSTALLED_APPS = (
     'dj_rest_auth.registration',
     'django_extensions',
     'rest_framework_simplejwt',
-    # 'djcelery',
-    # 'kombu.transport.django',
     'background_task'
 )
 
 
 MIDDLEWARE_CLASSES = (
-#     'django.contrib.sessions.middleware.SessionMiddleware',
-#     'django.middleware.common.CommonMiddleware',
-#     'django.middleware.csrf.CsrfViewMiddleware',
-#     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-#     'django.contrib.messages.middleware.MessageMiddleware',
-#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-#     'django.middleware.security.SecurityMiddleware',
 )
 
 MIDDLEWARE = (
@@ -167,9 +134,6 @@ DATABASES = {
                 'NAME': getenv('MYSQL_DB', 'elixir'),
                 'USER': getenv('MYSQL_USER', 'elixir'),
                 'PASSWORD': getenv('MYSQL_PASSWORD', '123'),
-                # 'TEST': {
-                #     'CHARSET': 'utf8'
-                # },
                 'OPTIONS': {
                     'charset': 'utf8mb4' 
                 }
@@ -185,26 +149,14 @@ DB_COLLATION = {
     'CORRECT': 'utf8mb4_unicode_ci'
 }
 
-# Gmail Mail settings (don't usually work because Gmail requires extra security)
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = ''
-# EMAIL_HOST_PASSWORD = ''
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = 'no-reply@local-bio.tools'
-
-# Zoho Mail works (create an account)
-# EMAIL_HOST = 'smtp.zoho.com'
-# EMAIL_PORT = 465
-# EMAIL_USE_SSL = True
-# EMAIL_HOST_USER =  'zoho_email_here'
-# EMAIL_HOST_PASSWORD = ''
-# DEFAULT_FROM_EMAIL = 'no-reply@local-bio.tools'
+# Mail settings
+EMAIL_BACKEND = getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 
 EMAIL_HOST = getenv('EMAIL_HOST', 'smtp.zoho.com')
 EMAIL_PORT = getenv('EMAIL_PORT', 465, castf=int)
 EMAIL_USE_SSL = getenv('EMAIL_USE_SSL', True, castf=bool)
 EMAIL_HOST_USER = getenv('EMAIL_HOST_USER', 'support@bio.tools')
+EMAIL_HOST_PASSWORD = getenv('EMAIL_HOST_PASSWORD', 'your_password_here')
 DEFAULT_FROM_EMAIL = getenv('DEFAULT_FROM_EMAIL', 'support@bio.tools')
 
 # Internationalization
@@ -267,7 +219,6 @@ OLD_PASSWORD_FIELD_ENABLED = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-EMAIL_BACKEND = getenv("EMAIL_BACKEND", 'django.core.mail.backends.smtp.EmailBackend')
 ACCOUNT_ADAPTER = 'elixir.adapters.CustomDefaultAccountAdapter'
 ACCOUNT_EMAIL_REQUIRED = getenv('ACCOUNT_EMAIL_REQUIRED', True, castf=bool)
 ACCOUNT_USERNAME_REQUIRED = getenv(
@@ -284,17 +235,17 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = getenv(
     True,
     castf=bool,
 )
-# NOTE: This setting is currently overwritten by deployment_settings import
+
 URL_FRONT = getenv('URL_FRONT', 'http://localhost:8000/')
-# NOTE: This setting is currently overwritten by deployment_settings import
+
 DEPLOYMENT = getenv('DEPLOYMENT', 'dev')
 
 RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate', 'f', 'function', 'o', 'ontology', 'used-terms', 'stats', 'env', 'sitemap.xml', 'd', 'domain', 'request', 'tool-list', 'w', 'register', 'edit-subdomain', 'subdomain', 'login', 'signup', 'reset-password', 'profile', 'requests', 'workflows', '404', 'documentation', 'about', 'schema', 'governance', 'roadmap', 'events', 'mail', 'faq', 'apidoc', 'changelog', 'helpdesk', 'projects']
 
 
 # Settings for Github Ecosystem
-# Ecosystem is off by default
 GITHUB_ECOSYSTEM_ON = getenv('GITHUB_ECOSYSTEM_ON', False, castf=bool)
+
 ADMIN_EMAIL_LIST = getenv('ADMIN_EMAIL_LIST', [], castf=json.loads)
 
 # settings specific to deployment
@@ -304,11 +255,9 @@ except ImportError:
     print ("Could not import deployment settings")
 
 
-
 # settings for blacklisted domains
 BLACKLISTED_DOMAINS_LIST = getenv('BLACKLISTED_DOMAINS_LIST', [], castf=json.loads)
 
-# settings blacklisting
 try:
     from elixir.blacklisted_domains import *
 except ImportError:
