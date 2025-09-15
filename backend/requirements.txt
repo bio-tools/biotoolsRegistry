@@ -16,6 +16,7 @@ lxml==5.3.0
 mysqlclient==2.0.1
 oauthlib==3.3.1
 Pillow==11.3.0
+PyGithub==1.59.0
 pyparsing==3.2.3
 python-dateutil==2.9.0
 python3-openid==3.2.0
@@ -23,7 +24,8 @@ pytz==2025.2
 PyYAML==6.0.2
 requests==2.32.4
 requests-oauthlib==2.0.0
-six==1.17.0
-urllib3==1.26.20
-PyGithub==1.59.0
 rstr==3.2.2
+six==1.17.0
+tzdata==2025.2
+urllib3==1.26.20
+

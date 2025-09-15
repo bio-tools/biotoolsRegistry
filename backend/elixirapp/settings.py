@@ -151,12 +151,10 @@ DB_COLLATION = {
 
 # Mail settings
 EMAIL_BACKEND = getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-
 EMAIL_HOST = getenv('EMAIL_HOST', 'smtp.zoho.com')
 EMAIL_PORT = getenv('EMAIL_PORT', 465, castf=int)
 EMAIL_USE_SSL = getenv('EMAIL_USE_SSL', True, castf=bool)
 EMAIL_HOST_USER = getenv('EMAIL_HOST_USER', 'support@bio.tools')
-EMAIL_HOST_PASSWORD = getenv('EMAIL_HOST_PASSWORD', 'your_password_here')
 DEFAULT_FROM_EMAIL = getenv('DEFAULT_FROM_EMAIL', 'support@bio.tools')
 
 # Internationalization
