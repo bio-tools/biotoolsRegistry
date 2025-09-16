@@ -11,7 +11,7 @@ class IssueView(APIView):
 	permission_classes = (IsStaffOrReadOnly, )
 
 	def get(self, request, biotoolsID, issueId=None):
-		if not (biotoolsID):
+		if not biotoolsID:
 			return Response({'data': None, 'text': 'Missing id.'}, status=status.HTTP_400_BAD_REQUEST)
 
 		issue_qs = Issue.objects.filter(
@@ -31,7 +31,7 @@ class IssueView(APIView):
 		)
 
 	def post(self, request, biotoolsID, issueId=None):
-		if not (biotoolsID):
+		if not biotoolsID:
 			return Response({'data': None, 'text': 'Missing id.'}, status=status.HTTP_400_BAD_REQUEST)
 
 		if issueId:

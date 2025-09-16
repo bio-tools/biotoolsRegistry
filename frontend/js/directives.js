@@ -145,7 +145,7 @@ angular.module('elixir_front.directives', [])
 .directive('toolPaginator', ['ToolList', '$state','$stateParams', 'Query', '$timeout', 'ToolPaginator', function(ToolList, $state, $stateParams, Query, $timeout, ToolPaginator) {
 	return {
 		restrict: 'A',
-		template: '<div style="display: flex; align-items: center; margin-top: 25px; margin-bottom: 25px;"><ul uib-pagination total-items="ToolList.count" ng-model="ToolPaginator.currentPage" items-per-page="ToolPaginator.pageSize" max-size="ToolPaginator.maxSize" ng-change="pageChanged()" class="pagination-sm pagination-top" boundary-links="true" rotate="true" ng-disabled="ToolList.loading"></ul><div style="margin-left: 15px; display: flex; align-items: center;"><label for="pageInput" style="margin-right: 5px;">Go to page:</label><input type="number" id="pageInput" ng-model="inputPage" min="1" max="{{Math.ceil(ToolList.count / ToolPaginator.pageSize)}}" ng-keypress="handlePageInput($event)" style="width: 60px;" /></div></div>',
+		template: '<div style="display: flex; align-items: center; margin-top: 25px; margin-bottom: 25px;"><ul uib-pagination total-items="ToolList.count" ng-model="ToolPaginator.currentPage" items-per-page="ToolPaginator.pageSize" max-size="ToolPaginator.maxSize" ng-change="pageChanged()" class="pagination-sm pagination-top" boundary-links="true" rotate="true" ng-disabled="ToolList.loading"></ul><div style="margin-left: 15px; display: flex; align-items: center;"><label for="pageInput" style="margin-right: 5px;">Go to page:</label><input type="number" id="pageInput" ng-model="inputPage" min="1" max="{{Math.ceil(ToolList.count / ToolPaginator.pageSize)}}" ng-keypress="handlePageInput($event)" style="width: 60px;" /><label style="margin-left: 5px; margin-right: 5px;">Page size:</label><select ng-model="ToolPaginator.pageSize" ng-change="pageSizeChanged()"><option ng-repeat="size in ToolPaginator.availablePageSizes" ng-value="size">{{size}}</option></select></div></div>',
 		link: function(scope, element, attrs) {
 			// reference the Query in the scope
 			scope.Query = Query;
@@ -184,6 +184,16 @@ angular.module('elixir_front.directives', [])
                     }
                 }
             };
+
+			// page size 
+			scope.pageSizeChanged = function() {
+				ToolPaginator.currentPage = 1;
+				var params = $stateParams;
+				params['per_page'] = ToolPaginator.pageSize;
+				params['page'] = null;
+				$state.transitionTo('search', params, { notify: false });
+				ToolList.refresh();
+			};
 
 			// riddiculous hax, otherwise it keeps changing to 1
 			var initializing = true;

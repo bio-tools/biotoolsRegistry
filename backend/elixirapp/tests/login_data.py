@@ -68,3 +68,12 @@ other_valid_user_2_login_data = {
     "username": other_valid_user_2_registration_data['username'],
     "password": other_valid_user_2_registration_data['password1']
 }
+valid_change_password_change_data = {
+    "old_password": valid_user_registration_data['password1'],
+    "new_password1": "test_user_password2",
+    "new_password2": "test_user_password2"
+}
+valid_user_registration_data_post_change = {
+    "username": valid_user_registration_data['username'],
+    "password": valid_change_password_change_data['new_password1']
+}

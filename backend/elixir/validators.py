@@ -51,7 +51,7 @@ def IsURLValidator(value):
 		message = 'This field may not be blank.'
 		raise serializers.ValidationError(message)
 
-	p = re.compile('^https?:\/\/[^\s\/$.?#].[^\s]*$', re.IGNORECASE|re.UNICODE)
+	p = re.compile(r'^https?:\/\/[^\s\/$.?#].[^\s]*$', re.IGNORECASE|re.UNICODE)
 	if not p.search(value):
 		raise serializers.ValidationError(message)
 	return value
@@ -67,23 +67,23 @@ def IsURLFTPValidator(value):
 		message = 'This field may not be blank.'
 		raise serializers.ValidationError(message)
 	
-	p = re.compile('^(https?|s?ftp):\/\/[^\s\/$.?#].[^\s]*$', re.IGNORECASE|re.UNICODE)
+	p = re.compile(r'^(https?|s?ftp):\/\/[^\s\/$.?#].[^\s]*$', re.IGNORECASE|re.UNICODE)
 	if not p.search(value):
 		raise serializers.ValidationError(message)
 	return value
 
 #TODO: refactor the content to fit this
 def IsPMCIDValidator(value):
-	matchPMCID = re.compile('^PMC[1-9][0-9]{0,8}$', re.IGNORECASE)
-	matchNone = re.compile('^None$', re.IGNORECASE)
+	matchPMCID = re.compile(r'^PMC[1-9][0-9]{0,8}$', re.IGNORECASE)
+	matchNone = re.compile(r'^None$', re.IGNORECASE)
 
 	if not matchPMCID.search(value) and not matchNone.search(value):
 		message = 'This is not a valid PMCID: ' + value + '.'
 		raise serializers.ValidationError(message)
 
 def IsPMIDValidator(value):
-	matchPMID = re.compile('^[1-9][0-9]{0,8}$', re.IGNORECASE)
-	matchNone = re.compile('^None$', re.IGNORECASE)
+	matchPMID = re.compile(r'^[1-9][0-9]{0,8}$', re.IGNORECASE)
+	matchNone = re.compile(r'^None$', re.IGNORECASE)
 
 	if not matchPMID.search(value) and not matchNone.search(value):
 		message = 'This is not a valid PMID: ' + value + '.'
@@ -91,15 +91,15 @@ def IsPMIDValidator(value):
 
 def IsDOIValidator(value):
 	# 
-	#matchDOI = re.compile('^[0-9]{2}\.[0-9]{4,5}/.*$', re.IGNORECASE)
+	#matchDOI = re.compile(r'^[0-9]{2}\.[0-9]{4,5}/.*$', re.IGNORECASE)
 
 	# doi regexp (a bit modified) from 
 	# https://www.crossref.org/blog/dois-and-matching-regular-expressions/ 
 
 	# added matching for characters: '[', ']', '<' and '>'
 	# old regex was '^10\.[0-9]{4,9}\/[-\._;\(\)\/:a-zA-Z0-9]+$'
-	matchDOI = re.compile('^10\.[0-9]{4,9}\/[-\.\[\]<>_;\(\)\/:a-zA-Z0-9]+$', re.IGNORECASE)
-	matchNone = re.compile('^None$', re.IGNORECASE)
+	matchDOI = re.compile(r'^10\.[0-9]{4,9}\/[-\.\[\]<>_;\(\)\/:a-zA-Z0-9]+$', re.IGNORECASE)
+	matchNone = re.compile(r'^None$', re.IGNORECASE)
 
 	if not matchDOI.search(value) and not matchNone.search(value):
 		message = 'This is not a valid DOI: ' + value + '.'
@@ -123,7 +123,7 @@ def IsDOIValidator(value):
 
 def IsEmailValidator(value):
 	IsStringTypeValidator(value)
-	p = re.compile('^[A-Za-z0-9_]+([-+.\'][A-Za-z0-9_]+)*@[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*$', re.IGNORECASE|re.UNICODE)
+	p = re.compile(r'^[A-Za-z0-9_]+([-+.\'][A-Za-z0-9_]+)*@[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*$', re.IGNORECASE|re.UNICODE)
 	if not p.search(value):
 		message = 'This is not a valid email address: ' + str(value) + '.'
 		raise serializers.ValidationError(message)
@@ -135,7 +135,7 @@ def IsVersionValidator(value):
 	#p = re.compile('^(?!\p{Zs})[\p{Zs}A-Za-z0-9+\.,\-_:;()]*(?<!\p{Zs})$', re.IGNORECASE|re.UNICODE)
 	
 	#this is ok, only allow spaces
-	p = re.compile('^[ A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
+	p = re.compile(r'^[ A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
 	if not p.search(value):
 		message = 'This is not a valid version: ' + str(value) + '.'
 		raise serializers.ValidationError(message)
@@ -144,13 +144,13 @@ def IsCollectionIDValidator(value):
 	IsStringTypeValidator(value)
 	# this looks wrong
 	#p = re.compile('^(?!\p{Zs})[\p{Zs}A-Za-z0-9+\.,\-_:;()]*(?<!\p{Zs})$', re.IGNORECASE|re.UNICODE)
-	p = re.compile('^[ A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
+	p = re.compile(r'^[ A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
 	if not p.search(value):
 		message = 'This is not a valid collection ID: ' + str(value) + '.'
 		raise serializers.ValidationError(message)
 
 
-class LengthValidator():
+class LengthValidator:
 	def __init__(self, length):
 		self.length = length
 	
@@ -161,7 +161,7 @@ class LengthValidator():
 			raise serializers.ValidationError(message)
 
 
-class ENUMValidator():
+class ENUMValidator:
 	def __init__(self, enum):
 		self.enum = enum
 	
@@ -174,7 +174,7 @@ class ENUMValidator():
 		return check[0]
 
 
-class OntologyValidator():
+class OntologyValidator:
 	def find_term_or_uri_in_node(self, node, name_or_uri):
 		if len(name_or_uri) > 0:
 			e_s = {}
@@ -186,7 +186,7 @@ class OntologyValidator():
 			if node['text'].lower() == name_or_uri.lower() or node['data']['uri'].lower() == name_or_uri.lower():
 				# we are in the uri call where uri matches, perhaps the name might be a synonym, if the name even exists
 				# we shouldn't be looking at self.term which is kinda like a global here...best is to rewrite all the validation
-				if node['text'].lower() != name_or_uri.lower() and self.term != None:
+				if node['text'].lower() != name_or_uri.lower() and self.term is not None:
 					if self.term.lower() in e_s:
 						return {'data': {'uri': node['data']['uri']},'text':e_s[self.term.lower()], 'is_synonym':'True'}
 					elif self.term.lower() in n_s:
@@ -255,11 +255,11 @@ class OntologyValidator():
 		# if we have non-empty URI
 		if uri and len(uri) > 0:
 			found = self.check_if_term_or_uri_in_ontology(uri)
-			# URI takes precedense over term, so if URI matches the one found in EDAM
+			# URI takes precedence over term, so if URI matches the one found in EDAM
 			# we replace the term with the one from EDAM (EDAM is assumed to have the correct term)
 			if found['status'] == 'ok':
 				# make sure the term matches the URI
-				if (term and term.lower().strip() != found['data']['text'].lower() and found.get('is_synonym') != 'True'):
+				if term and term.lower().strip() != found['data']['text'].lower() and found.get('is_synonym') != 'True':
 					message = 'The term does not match the URI: ' + term + ', ' + uri + '.'
 					raise serializers.ValidationError(message)
 				self.uri = found['data']['data']['uri']

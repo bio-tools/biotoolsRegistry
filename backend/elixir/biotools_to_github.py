@@ -16,11 +16,11 @@ from elixir.ecosystem.github_handler import GithubToolHandler
 from django.core.mail import send_mail
 
 def init_ecosystem_logger():
-    if not(ecosystem_settings.ECO_LOG_ISSUE):
+    if not ecosystem_settings.ECO_LOG_ISSUE:
         return None
-    if not(ecosystem_settings.ECO_LOGGER_NAME):
+    if not ecosystem_settings.ECO_LOGGER_NAME:
         return None
-    if not (ecosystem_settings.ECO_LOG_FILE):
+    if not ecosystem_settings.ECO_LOG_FILE:
         return None
     try:
         logger = logging.getLogger(ecosystem_settings.ECO_LOGGER_NAME)
@@ -76,14 +76,14 @@ def get_pr_link(pr_number):
 
 
 def ecosytem_handle_tool_operations(biotools_user, tool, operation):
-    '''
+    """
     Makes a CREATE / UPDATE / DELETE (pull) request to the GitHub Ecosystem
-    
+
     Parameters:
     biotools_user (string): The bio.tools username
     tool (dict): The tool annotation
     operation (string): one of 'CREATE', 'UPDATE', 'DELETE'
-    '''
+    """
     CREATE = 'CREATE'
     UPDATE = 'UPDATE'
     DELETE = 'DELETE'
@@ -112,7 +112,7 @@ def ecosytem_handle_tool_operations(biotools_user, tool, operation):
         elif operation == DELETE:
             (_, pr) = gth.delete_tool(bt)
 
-        # Log sucessful creation
+        # Log successful creation
         if ecosystem_settings.ECO_LOG_ISSUE and logger:
             logger.info('Success! Tool {} PR: {} for tool with id: {} by bio.tools user: {}'.format(
                 operation,

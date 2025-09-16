@@ -45,7 +45,7 @@ class Resource(models.Model):
     biotoolsCURIE = models.CharField(blank=False, null=False, max_length=109) #because of biotools: prefix
 
     name = models.TextField()
-    # Version is it's own model now
+    # Version is its own model now
     #version = models.TextField(blank=True, null=True)
     
     # Keep versionId for now, will probably remove later, there is no real data one can use from it anyway...
@@ -93,7 +93,7 @@ class Resource(models.Model):
 
 class OtherID(models.Model):
     value = models.CharField(blank=False, null=False, max_length=1000, unique=False)
-    # TODO: make sure type is inferred from value, but still appears in the iterface
+    # TODO: make sure type is inferred from value, but still appears in the interface
     type = models.TextField(blank=True, null=True)
     version = models.TextField(blank=True, null=True)
     resource = models.ForeignKey(Resource, null=True, blank=True, related_name='otherID', on_delete=models.CASCADE)

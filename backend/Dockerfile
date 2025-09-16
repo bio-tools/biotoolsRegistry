@@ -1,45 +1,85 @@
-FROM ubuntu:20.04
+# BASE STAGE
+FROM python:3.13 AS builder
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    pkg-config \
+    libmariadb-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-LABEL maintainer="Hans-Ioan Ienasescu <hans@bio.tools>"
-
-# Disable buffering for logs.
-ENV PYTHONUNBUFFERED 1
-
-
-# Set up working directory and files.
 WORKDIR /elixir/application/backend
-RUN mkdir data/ elixir/ elixirapp/ runtime/ templates/
-COPY requirements.txt EDAM_obsolete.json imports.sql manage.py /elixir/application/backend/
-COPY data data/
-COPY elixir elixir/
-COPY elixirapp elixirapp/
-COPY runtime runtime/
-COPY templates templates/
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy all files
+COPY . .
 
 
-# Install Python 3.8
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y software-properties-common -y && add-apt-repository ppa:deadsnakes/ppa -y && apt-get update -y && apt-get -y install python3.8 python3-pip
+# DEV STAGE
+# Uses packages and binaries from builder, but is smaller and runs as a non-root user
+FROM python:3.13-slim AS dev
 
-# make symlink for python3 to python
-RUN ln -sf /usr/bin/python3 /usr/bin/python && ln -sf /usr/bin/pip3 /usr/bin/pip
+ENV PYTHONUNBUFFERED=1
+
+RUN useradd -m -r appuser
+
+# Install MySql dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libmariadb3 curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the Python dependencies from the builder stage
+COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
+COPY --from=builder /usr/local/bin/ /usr/local/bin/
+COPY --from=builder /elixir/application/backend /elixir/application/backend
+
+RUN chown -R appuser:appuser /elixir/application/backend
+WORKDIR /elixir/application/backend
+USER appuser
+
+EXPOSE 8000
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 
-RUN apt-get update && apt-get -y install apache2 apache2-utils ssl-cert libapache2-mod-wsgi-py3 && apt-get install -y python3-dev default-libmysqlclient-dev build-essential 
+# PROD STAGE
+# Apache + mod_wsgi
+FROM ubuntu:22.04 AS prod
 
+LABEL maintainer="SDU support-bio-tools@sdu.dk"
+ENV PYTHONUNBUFFERED=1
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /elixir/application/backend
+
+# Install Python + Apache + mod_wsgi
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa -y && \
+    apt-get update -y && \
+    apt-get install -y python3 python3-pip python3-dev default-libmysqlclient-dev build-essential \
+                       apache2 apache2-utils ssl-cert libapache2-mod-wsgi-py3 curl && \
+    ln -sf /usr/bin/python3 /usr/bin/python && \
+    ln -sf /usr/bin/pip3 /usr/bin/pip
+
+
+# Copy app from base stage
+COPY --from=builder /elixir/application/backend /elixir/application/backend
+
+# Install Python dependencies
 RUN pip install -r requirements.txt && rm -f requirements.txt
 
+# Apache config
 COPY runtime/apache.conf /etc/apache2/sites-available/elixir.conf
-
-RUN a2enmod headers && a2enmod wsgi && a2enmod ssl && a2enmod rewrite && a2enmod proxy_http && a2ensite elixir.conf && service apache2 restart
-
-RUN apt-get update -y && apt-get install curl
+RUN a2enmod headers wsgi ssl rewrite proxy_http && \
+    a2ensite elixir.conf && \
+    rm /etc/apache2/sites-enabled/000-default.conf && \
+    ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
+    ln -sf /proc/self/fd/1 /var/log/apache2/error.log && \
+    ln -sf /proc/self/fd/1 /var/log/apache2/other_vhosts_access.log
 
 EXPOSE 80
-
-# remove default apache config from sites-enable so bio.tools subdomain redirect works
-RUN rm /etc/apache2/sites-enabled/000-default.conf
-
-RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && ln -sf /proc/self/fd/1 /var/log/apache2/error.log && ln -sf /proc/self/fd/1 /var/log/apache2/other_vhosts_access.log
-
-CMD /usr/sbin/apache2ctl -D FOREGROUND
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

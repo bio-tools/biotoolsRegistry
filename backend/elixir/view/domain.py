@@ -1,12 +1,16 @@
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from elixir.permissions import IsDomainOwnerOrReadOnly, IsOwnerOrReadOnly, HasEditPermissionToEditResourceOrReadOnly, CanConcludeResourceRequest, IsStaffOrReadOnly
+from elixir.permissions import IsDomainOwnerOrEditorOrReadOnly
 from elixir.models import *
 from elixir.serializers import *
 from elixir.view.resource import es
 from django.http import Http404
 from rest_framework.validators import UniqueValidator
 from elasticsearch import NotFoundError as ESNotFoundError
+from django.db.models import Q
+
 
 # Perhaps there should be some domains that can't be deleted... or only deleted by superusers
 # Maybe add this in a settings file
@@ -20,23 +24,27 @@ class DomainView(APIView):
 	"""
 	Create or list domains.
 	"""
-	permission_classes = (IsAuthenticatedOrReadOnly, IsDomainOwnerOrReadOnly, )
-
+	permission_classes = (IsAuthenticatedOrReadOnly, IsDomainOwnerOrEditorOrReadOnly, )
 
 	# get a list of all domains (domain name/id and the number of resources in the domain)
 	# this is based on the type of user (anonymous, logged in, superuser)
 	def get(self, request, format=None):
 		if request.user and not request.user.is_anonymous and not(is_superuser(request.user)):
-			subdomains = Domain.objects.filter(owner=request.user, visibility=1)
-			serializer = SubdomainNameSerializer(instance=subdomains, many=True)
+			# Get domains owned by user OR where user is an editor
+			subdomains = Domain.objects.filter(
+				Q(owner=request.user) | Q(editors=request.user), 
+				visibility=1
+			).distinct()
+			# Use private serializer for authenticated users managing their domains
+			serializer = SubdomainNameSerializer(instance=subdomains, many=True, context={'request': request})
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		elif request.user and not request.user.is_anonymous and is_superuser(request.user):
 			subdomains = Domain.objects.filter(visibility=1)
-			serializer = SubdomainNameSerializer(instance=subdomains, many=True)
+			serializer = PublicSubdomainSerializer(instance=subdomains, many=True)
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		else:
 			subdomains = Domain.objects.filter(visibility=1)
-			serializer = SubdomainNameSerializer(instance=subdomains, many=True)
+			serializer = PublicSubdomainSerializer(instance=subdomains, many=True)
 			return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -60,11 +68,12 @@ class DomainView(APIView):
 
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class DomainResourceView(APIView):
 	"""
 	Add/remove or list tools for a domain.
 	"""
-	permission_classes = (IsAuthenticatedOrReadOnly, IsDomainOwnerOrReadOnly, )
+	permission_classes = (IsAuthenticatedOrReadOnly, IsDomainOwnerOrEditorOrReadOnly, )
 
 
 	def get_object(self, name):
@@ -143,7 +152,7 @@ class DomainResourceView(APIView):
 
 
 	def delete(self, request, domain, format=None):
-		if not(request.user.is_superuser) and domain.strip().lower() in NOT_DELETABLE_DOMAINS:
+		if not request.user.is_superuser and domain.strip().lower() in NOT_DELETABLE_DOMAINS:
 			return Response({"detail": "You do not have permission to delete this domain."}, status=status.HTTP_403_FORBIDDEN)
 
 		d = self.get_object(domain)

@@ -1,3 +1,9 @@
+[![zenodo](https://zenodo.org/badge/DOI/10.1093/nar/gkv1116.svg)](https://doi.org/10.1093/nar/gkv1116)
+[![github](https://img.shields.io/github/license/bio-tools/biotoolsRegistry)](https://github.com/bio-tools/biotoolsRegistry)
+[![readthedocs](https://readthedocs.org/projects/biotools/badge/?version=latest)](https://biotools.readthedocs.io/en/latest/?badge=latest)
+[![bio.tools](https://img.shields.io/badge/bio.tools-bio.tools-005472)](https://bio.tools/bio.tools)
+
+
 # What is biotoolsregistry?
 **biotoolsregistry** (bio.tools) is the Web application of the [ELIXIR Tools & Data Services Registry](https://bio.tools).  It allows the curation and discovery of bioinformatics resources including databases, tools, services and so on, available under a variety of interfaces. 
 

@@ -1,3 +1,4 @@
+import re
 from rest_framework import serializers
 from elixir.models import *
 from elixir.validators import *
@@ -65,11 +66,11 @@ class PublicationSerializer(serializers.ModelSerializer):
 	def validate_version(self, attrs):
 		# make sure the version matches the regular expression
 		# this is wrong in python, it doesn't work for spaces, 
-		#we shouldn't use other whitespace than spaces anway
+		#we shouldn't use other whitespace than spaces anyway
 		#p = re.compile('^[\p{Zs}A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
 
 		#this is ok, only allow spaces
-		p = re.compile('^[ A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
+		p = re.compile(r'^[ A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
 		
 		if not p.search(attrs):
 			raise serializers.ValidationError('This field can only contain letters, numbers, spaces or these characters: + . , - _ : ; ( )')

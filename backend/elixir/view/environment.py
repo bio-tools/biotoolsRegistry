@@ -5,11 +5,11 @@ from elixir.models import *
 from elixir.serializers import *
 
 class Environment(APIView):
-	"""
-	Returns the deployment info of the server.
-	"""	
+    """
+    Returns the deployment info of the server.
+    """
 
-	def get(self, request, format=None):
-		if settings.DEPLOYMENT == 'dev':
-			return Response("Development");
-		return Response("Production")
+    def get(self, request, format=None):
+        if settings.DEPLOYMENT == 'dev':
+            return Response("Development")
+        return Response("Production")

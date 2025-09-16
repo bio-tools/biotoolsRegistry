@@ -1,12 +1,15 @@
+from django.test import override_settings
 from rest_framework import status
 from elixir.serializers import *
 from backend.elixirapp.tests.test_baseobject import BaseTestObject
 from elixir.tool_helper import ToolHelper as TH
+import re
 from backend.elixirapp.tests.login_data import valid_user_registration_data, user_registration_data_invalid_p2, \
     user_registration_data_missing_email, user_registration_data_missing_username, user_registration_data_missing_p1, \
     user_registration_data_missing_p2, valid_user_login_data, invalid_user_login_data, \
     other_valid_user_1_registration_data, other_valid_user_1_login_data, other_valid_user_2_registration_data, \
-    other_valid_user_2_login_data, superuser_registration_data, superuser_login_data
+    other_valid_user_2_login_data, superuser_registration_data, superuser_login_data, valid_change_password_change_data, \
+    valid_user_registration_data_post_change
 
 
 class TestAuthorization(BaseTestObject):
@@ -39,7 +42,7 @@ class TestAuthorization(BaseTestObject):
         """
         Description: Registers a user with given data.
         """
-        self.client.post(self.registration_url, data, format='json')
+        return self.client.post(self.registration_url, data, format='json')
 
     def checked_login(self, data):
         """
@@ -59,6 +62,12 @@ class TestAuthorization(BaseTestObject):
         Description: Queries user information.
         """
         return self.client.get(self.user_info_url, HTTP_AUTHORIZATION=f'Token {token}', HTTP_ACCEPT='application/json')
+
+    def change_password_user(self, token, data):
+        """
+        Description: Changes user's password
+        """
+        return self.client.post(self.change_password_url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
 
     # TESTS ------------------------------------------------------------------------------------------------------------
 
@@ -135,6 +144,75 @@ class TestAuthorization(BaseTestObject):
         self.checked_registration()
         response = self.checked_login(invalid_user_login_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_user_change_password_valid(self):
+        token = self.checked_registration()
+        self.checked_login(valid_user_login_data)
+        self.client.credentials()  # Otherwise there is a dangling auth token in checked login request
+
+        print(token, valid_change_password_change_data, self.change_password_url)
+        response = self.change_password_user(token, valid_change_password_change_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.logout_user(token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.checked_login(valid_user_registration_data_post_change)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
+    def test_password_reset(self):
+        # New data because otherwise email doesn't get sent
+        user_token = self.register_user({
+            "username": "test_user",
+            "password1": "test_user_password",
+            "password2": "test_user_password",
+            "email": "test_reset@user.com"
+        })
+        self.pop_email("test_reset@user.com", "[example.com] Please Confirm Your E-mail Address")
+
+        response = self.client.post(self.password_reset_url, {
+            'email': "test_reset@user.com"
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('Password reset e-mail has been sent.', str(response.content))
+
+        mail = self.pop_email("test_reset@user.com", "[example.com] Password Reset E-mail")
+
+        self.assertIsNotNone(mail.message())
+
+        match = re.search("uid=([^&]+)&token=(\w+-\w+)", str(mail.message()))
+        uid = match.group(1).strip()
+        token = match.group(2).strip()
+
+        self.assertIsNotNone(uid)
+        self.assertIsNotNone(token)
+
+        response = self.client.post(self.password_reset_confirm_url, {
+            'uid': uid,
+            'token': token,
+            'new_password1': "NewSecurePassword",
+            'new_password2': "NewSecurePassword",
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.logout_user(user_token)
+        self.client.credentials() # wipe credentials and cookies from api client
+
+        response = self.checked_login({
+            "username": valid_user_registration_data['username'],
+            "password": "NewSecurePassword",
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
+    def test_registration_mail_sending(self):
+        self.assert_mail_empty()  # sanity check
+
+        # Test registration sending confirmation mail
+        response = self.client.post(self.registration_url, valid_user_registration_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.pop_email(valid_user_registration_data['email'], "[example.com] Please Confirm Your E-mail Address")
 
     # todo others
     # todo find out what i meant to say with 'others'
@@ -243,3 +321,4 @@ class TestAuthorization(BaseTestObject):
         self.assertEqual(user_info['email'], valid_user_registration_data['email'])
         self.assertFalse(user_info['is_superuser'])
         self.assertEqual(len(user_info['resources']), 1)
+
