@@ -18,7 +18,7 @@ angular.module('elixir_front.controllers')
 				$scope.subdomains.splice($scope.subdomains.findIndex(function(d) { return d.domain === name; }), 1);
 				// TODO: Handle responses
 			}, function(error) {
-				// TODO: Handle errorss
+				// TODO: Handle errors
 			});
 		}
 	}
