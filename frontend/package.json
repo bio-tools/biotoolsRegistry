@@ -14,7 +14,7 @@
   "license": "ISC",
   "devDependencies": {
     "del": "^2.0.2",
-    "gulp": "^3.9.0",
+    "gulp": "^5.0.1",
     "gulp-concat": "^2.6.0",
     "gulp-concat-css": "^2.2.0",
     "gulp-plumber": "^1.0.1",
@@ -26,6 +26,6 @@
     "gulp-sourcemaps": "~1.6.0"
   },
   "dependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^5.0.1"
   }
 }
