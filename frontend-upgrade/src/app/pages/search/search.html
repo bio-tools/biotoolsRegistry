@@ -1,0 +1,157 @@
+<p>search works!</p>
+<p>List of resources:</p>
+
+@for (resource of tools(); track resource.biotoolsID) {
+    <p>{{resource.biotoolsID}}</p>
+}
+
+
+<div class="search-page">
+  <div class="search-header">
+    <div class="container">
+      <h1>Search Tools</h1>
+      <!--<p *ngIf="searchQuery">Results for: <strong>{{ searchQuery }}</strong></p>
+      <p *ngIf="!searchQuery">Browse our comprehensive collection of bioinformatics tools</p>-->
+    </div>
+  </div>
+
+  <div class="search-content">
+    <div class="container">
+      <div class="search-layout">
+        <aside class="filters-sidebar">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Filters</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="filter-section">
+                <h4>Tool Type</h4>
+                <mat-checkbox>Command line tool</mat-checkbox>
+                <mat-checkbox>Web application</mat-checkbox>
+                <mat-checkbox>Desktop application</mat-checkbox>
+                <mat-checkbox>Database portal</mat-checkbox>
+              </div>
+              
+              <div class="filter-section">
+                <h4>Topic</h4>
+                <mat-checkbox>Sequence analysis</mat-checkbox>
+                <mat-checkbox>Phylogenetics</mat-checkbox>
+                <mat-checkbox>Structural biology</mat-checkbox>
+                <mat-checkbox>Genomics</mat-checkbox>
+              </div>
+
+              <div class="filter-section">
+                <h4>Operating System</h4>
+                <mat-checkbox>Linux</mat-checkbox>
+                <mat-checkbox>Windows</mat-checkbox>
+                <mat-checkbox>Mac</mat-checkbox>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </aside>
+
+        <main class="results-main">
+          <div class="results-header">
+            <span class="results-count">{{ tools().length }} tools found</span>
+            <!--<mat-form-field appearance="outline">
+              <mat-label>Sort by</mat-label>
+              <mat-select value="relevance" (selectionChange)="onSortChange($event.value)">
+                <mat-option value="relevance">Relevance</mat-option>
+                <mat-option value="name">Name</mat-option>
+                <mat-option value="lastUpdate">Last Updated</mat-option>
+                <mat-option value="additionDate">Date Added</mat-option>
+              </mat-select>
+            </mat-form-field>-->
+          </div>
+
+          @if (loading) {
+          <div class="loading-container">
+            <mat-spinner></mat-spinner>
+            <p>Loading tools...</p>
+          </div>
+          }
+          @else {
+          <div class="results-list">
+            @for (tool of tools(); track tool.biotoolsID) {
+            <mat-card class="tool-card">
+              <mat-card-header>
+                <!--<mat-card-title (click)="viewToolDetails(tool.biotoolsID)" class="clickable-title">
+                  {{ tool.name }}
+                </mat-card-title>-->
+                <mat-card-title>{{ tool.name }}</mat-card-title>
+                <mat-card-subtitle>{{ tool.description }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="tool-info">
+                  <div class="tool-topics">
+                    <mat-chip-set>
+                      @for (topic of getToolTopics(tool); track $index) {
+                        <mat-chip>{{ topic }}</mat-chip>
+                      }
+                    </mat-chip-set>
+                  </div>
+                  <div class="tool-operations">
+                    <mat-chip-set>
+                    @for (operation of getToolOperations(tool); track $index) {
+                      <mat-chip>{{ operation }}</mat-chip> 
+                    }
+                    </mat-chip-set>
+                  </div>
+                  <div class="tool-meta">
+                    @for (toolType of tool.toolType; track $index) {
+                      <span class="tool-type">{{ toolType }}</span>
+                    }
+                    <span class="tool-license">{{ tool.license }}</span>
+                    <!--<span class="tool-version">v{{ tool.version }}</span>-->
+                  </div>
+                  <div class="tool-os">
+                    @for (os of tool.operatingSystem; track $index) {
+                      @switch (os) {
+                        @case ('Linux') {
+                          <i class="fab fa-linux"></i>
+                        }
+                        @case ('Windows') {
+                          <i class="fab fa-windows"></i>
+                        }
+                        @case ('Mac') {
+                          <i class="fab fa-apple"></i>
+                        }
+                      }
+                    }
+                  </div>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-button color="primary">View Details</button>
+                <button mat-button>
+                  <a [href]="tool.homepage" target="_blank" style="text-decoration: none; color: inherit;">
+                    Visit Tool
+                  </a>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+            }
+          </div>
+
+          @if (tools().length > 0) {
+            <mat-paginator 
+            [length]="totalResults"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[10, 25, 50, 100]"
+            (page)="onPageChange($event)"
+            showFirstLastButtons>
+          </mat-paginator>
+          }
+          }
+
+          @if (!loading && tools().length === 0) {
+          <div class="no-results">
+            <h3>No tools found</h3>
+            <p>Try adjusting your search criteria or browse all tools.</p>
+          </div>
+          }
+        </main>
+      </div>
+    </div>
+  </div>
+</div>
