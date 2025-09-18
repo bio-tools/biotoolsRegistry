@@ -78,11 +78,32 @@
                 <!--<mat-card-title (click)="viewToolDetails(tool.biotoolsID)" class="clickable-title">
                   {{ tool.name }}
                 </mat-card-title>-->
-                <mat-card-title>{{ tool.name }}</mat-card-title>
-                <mat-card-subtitle>{{ tool.description }}</mat-card-subtitle>
+                <mat-card-subtitle>
+                  <span class="clickable-title">{{ tool.name }}</span>
+
+                  @if (tool.operatingSystem && tool.operatingSystem.length > 0) {
+                  <span class="os-icons">
+                    <span>  |  </span>
+                    @for (os of tool.operatingSystem; track $index) {
+                      @switch (os) {
+                        @case ('Linux') {
+                          <i class="fab fa-linux"></i>
+                        }
+                        @case ('Windows') {
+                          <i class="fab fa-windows"></i>
+                        }
+                        @case ('Mac') {
+                          <i class="fab fa-apple"></i>
+                        }
+                      }
+                    }
+                  </span>
+                  }
+                </mat-card-subtitle>
               </mat-card-header>
               <mat-card-content>
                 <div class="tool-info">
+                  <p class="tool-description">{{ tool.description }}</p>
                   <div class="tool-topics">
                     <mat-chip-set>
                       @for (topic of getToolTopics(tool); track $index) {
@@ -98,26 +119,16 @@
                     </mat-chip-set>
                   </div>
                   <div class="tool-meta">
+                    <mat-chip-set>
                     @for (toolType of tool.toolType; track $index) {
-                      <span class="tool-type">{{ toolType }}</span>
+                      <mat-chip>{{ toolType }}</mat-chip>
                     }
-                    <span class="tool-license">{{ tool.license }}</span>
-                    <!--<span class="tool-version">v{{ tool.version }}</span>-->
-                  </div>
-                  <div class="tool-os">
-                    @for (os of tool.operatingSystem; track $index) {
-                      @switch (os) {
-                        @case ('Linux') {
-                          <i class="fab fa-linux"></i>
-                        }
-                        @case ('Windows') {
-                          <i class="fab fa-windows"></i>
-                        }
-                        @case ('Mac') {
-                          <i class="fab fa-apple"></i>
-                        }
-                      }
+
+                    @if (tool.license) {
+                      <mat-chip>{{ tool.license }}</mat-chip>
                     }
+                    <!--<mat-chip>{{ tool.version }}</mat-chip>-->
+                    </mat-chip-set>
                   </div>
                 </div>
               </mat-card-content>

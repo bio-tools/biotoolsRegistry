@@ -6,6 +6,14 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+  @include mat.chips-overrides((
+    label-text-color: black,
+    outline-width: 0px,
+  ));
+}
+
 html {
   @include mat.theme((
     color: (

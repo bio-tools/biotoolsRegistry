@@ -65,6 +65,11 @@
 }
 
 .results-main {
+  .os-icons {
+    font-size: 0.9rem;
+    margin-left: 2px;
+  }
+
   .results-header {
     display: flex;
     justify-content: space-between;
@@ -117,7 +122,19 @@
       margin-top: 16px;
 
       .tool-topics {
-        margin-bottom: 12px;
+        margin-bottom: 6px;
+
+        mat-chip {
+          background: #55624b;
+        }
+      }
+      
+      .tool-operations {
+        margin-bottom: 6px;
+
+        mat-chip {
+          background: #423753;
+        }
       }
 
       .tool-meta {
@@ -127,23 +144,22 @@
         //color: #666;
         margin-bottom: 8px;
 
-        span {
-          &:before {
-            content: '• ';
-            margin-right: 4px;
-          }
+        mat-chip {
+          background: #3d525f;
 
-          &:first-child:before {
-            content: '';
-            margin-right: 0;
-          }
+          //TODO: this is nice somewhere else
+          //&:before {
+          //  content: '• ';
+          //  margin-right: 4px;
+          //}
+
+          //&:first-child:before {
+          //  content: '';
+          //  margin-right: 0;
+          //}
         }
       }
 
-      .tool-os {
-        font-size: 0.85rem;
-        //color: #ffffff;
-      }
     }
   }
 }
