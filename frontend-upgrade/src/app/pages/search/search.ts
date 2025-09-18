@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Resources } from '../../services/resources';
-import { Resource } from '../../model/resource.type';
+import { Resource } from '../../model/resource.model';
 import { catchError } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,10 +9,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
+import { Sidebar } from '../../components/sidebar/sidebar';
 
 @Component({
   selector: 'app-search',
   imports: [
+    Sidebar,
     // Angular Material
     MatCardModule,
     MatFormFieldModule,

@@ -1,12 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { Resource } from '../model/resource.type';
+import { Resource } from '../model/resource.model';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class Resources {
   
   private url = 'http://localhost:8000/t/';
