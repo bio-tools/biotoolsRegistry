@@ -185,7 +185,7 @@ angular.module('elixir_front.controllers', [])
 	$scope.orderby = 'text';
 	
 	$scope.registeringInProgress = false;
-	
+
 
 	// for storing validation and saving progess
 	$scope.validationProgress = {}, $scope.savingProgress = {}, $scope.deletingProgress = {};
@@ -206,6 +206,7 @@ angular.module('elixir_front.controllers', [])
 			}
 		}
 	}
+
 
 	// handle sending the resource to either validation or saving endpoints
 	$scope.sendResource = function(service, progress, isRemoval, action) {
@@ -671,6 +672,55 @@ angular.module('elixir_front.controllers', [])
 		_object[_index].term = _node.text;
 		_object[_index].uri = _node.data.uri;
 	}
+
+	// Fetch missing publication IDs
+		// Helper to fetch and update publication IDs
+		function fetchAndUpdatePublicationIDs(pub, idx) {
+			var id = pub.doi || pub.pmid || pub.pmcid;
+			if (!id) return;
+			var params = [];
+			if (pub.doi) params.push('ids=' + encodeURIComponent(pub.doi));
+			if (pub.pmid) params.push('ids=' + encodeURIComponent(pub.pmid));
+			if (pub.pmcid) params.push('ids=' + encodeURIComponent(pub.pmcid));
+			var url = 'https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/?' + params.join('&') + '&format=json';
+			fetch(url)
+				.then(function(response) { return response.json(); })
+				.then(function(data) {
+					if (data.records && data.records.length > 0) {
+						var rec = data.records[0];
+						if (rec.doi) pub.doi = rec.doi;
+						if (rec.pmid) pub.pmid = rec.pmid;
+						if (rec.pmcid) pub.pmcid = rec.pmcid;
+						$scope.$apply();
+					}
+				})
+				.catch(function(err) { /* Optionally handle error */ });
+		}
+
+		// Watch for changes in publication IDs and auto-fetch others
+		$scope.$watch('software.publication', function(newVal, oldVal) {
+			if (!newVal) return;
+			newVal.forEach(function(pub, idx) {
+				// Watch DOI
+				$scope.$watch(function() { return pub.doi; }, function(newDoi, oldDoi) {
+					if (newDoi && newDoi !== oldDoi) {
+						fetchAndUpdatePublicationIDs(pub, idx);
+					}
+				});
+				// Watch PMID
+				$scope.$watch(function() { return pub.pmid; }, function(newPmid, oldPmid) {
+					if (newPmid && newPmid !== oldPmid) {
+						fetchAndUpdatePublicationIDs(pub, idx);
+					}
+				});
+				// Watch PMCID
+				$scope.$watch(function() { return pub.pmcid; }, function(newPmcid, oldPmcid) {
+					if (newPmcid && newPmcid !== oldPmcid) {
+						fetchAndUpdatePublicationIDs(pub, idx);
+					}
+				});
+			});
+		}, true);
 
 	$scope.latestOptions = [
 		{value: 1, text: "Yes"},
