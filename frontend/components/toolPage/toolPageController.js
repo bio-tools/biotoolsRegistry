@@ -131,6 +131,13 @@ angular.module('elixir_front')
 		document.body.appendChild(script);
 	}
 
+	var initBipScripts = function() {
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = "https://cdn.jsdelivr.net/gh/athenarc/bip-plugin@main/embed.min.js";
+		document.body.appendChild(script);
+	}
+
 	var initDimensionsAI = function() {
 		var script = document.createElement('script');
 		script.type = 'text/javascript';
@@ -172,7 +179,8 @@ angular.module('elixir_front')
 	$scope.software = Tool.get($stateParams, function(response) {
 		// success handler
 		initAltmetricsScore();
-		//initDimensionsAI();
+		initBipScripts();
+		initDimensionsAI();
 		//window.__dimensions_embed.addBadges();
 		//window.__dimensions_embed.addBadges();
 		cleanNulls($scope.software);
