@@ -4,28 +4,58 @@
               <mat-card-title>Filters</mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <div class="filter-section">
-                <h4>Tool Type</h4>
-                <mat-checkbox>Command line tool</mat-checkbox>
-                <mat-checkbox>Web application</mat-checkbox>
-                <mat-checkbox>Desktop application</mat-checkbox>
-                <mat-checkbox>Database portal</mat-checkbox>
-              </div>
-              
-              <div class="filter-section">
-                <h4>Topic</h4>
-                <mat-checkbox>Sequence analysis</mat-checkbox>
-                <mat-checkbox>Phylogenetics</mat-checkbox>
-                <mat-checkbox>Structural biology</mat-checkbox>
-                <mat-checkbox>Genomics</mat-checkbox>
-              </div>
+              <mat-accordion>
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>Tool Type</mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="filter-section">
+                    @for (type of toolTypes; track $index) {
+                      <mat-checkbox>
+                        {{ type }}
+                      </mat-checkbox>
+                    }
+                  </div>
+                </mat-expansion-panel>
 
-              <div class="filter-section">
-                <h4>Operating System</h4>
-                <mat-checkbox>Linux</mat-checkbox>
-                <mat-checkbox>Windows</mat-checkbox>
-                <mat-checkbox>Mac</mat-checkbox>
-              </div>
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>Topic</mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="filter-section">
+                    <mat-checkbox>Sequence analysis</mat-checkbox>
+                    <mat-checkbox>Phylogenetics</mat-checkbox>
+                    <mat-checkbox>Structural biology</mat-checkbox>
+                    <mat-checkbox>Genomics</mat-checkbox>
+                  </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>Operating System</mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="filter-section">
+                    <mat-checkbox>Linux</mat-checkbox>
+                    <mat-checkbox>Mac</mat-checkbox>
+                    <mat-checkbox>Windows</mat-checkbox>
+                  </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>Programming Language</mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="filter-section">
+                    @for (lang of programmingLanguages; track $index) {
+                      <mat-checkbox
+                        [checked]="selectedLangs.has(lang)"
+                        (change)="toggleLang(lang, $event.checked)">
+                        {{ lang }}
+                      </mat-checkbox>
+                    }
+                  </div>
+                </mat-expansion-panel>
+              </mat-accordion>
             </mat-card-content>
           </mat-card>
         </aside>
