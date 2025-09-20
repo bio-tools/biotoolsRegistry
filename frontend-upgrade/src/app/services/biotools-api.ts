@@ -12,6 +12,11 @@ export interface APIResponse<T> {
   results: T[];
 }
 
+export interface SearchParams {
+  query?: string;
+  page?: number;
+  sort?: string;
+}
 
 @Injectable({
   providedIn: 'root'
