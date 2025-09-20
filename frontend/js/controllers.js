@@ -673,55 +673,40 @@ angular.module('elixir_front.controllers', [])
 		_object[_index].uri = _node.data.uri;
 	}
 
-	// Fetch missing publication IDs
-		// Helper to fetch and update publication IDs
-		function fetchAndUpdatePublicationIDs(pub, idx) {
-			var id = pub.doi || pub.pmid || pub.pmcid;
-			if (!id) return;
-			var params = [];
-			if (pub.doi) params.push('ids=' + encodeURIComponent(pub.doi));
-			if (pub.pmid) params.push('ids=' + encodeURIComponent(pub.pmid));
-			if (pub.pmcid) params.push('ids=' + encodeURIComponent(pub.pmcid));
-			var url = 'https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/?' + params.join('&') + '&format=json';
-			fetch(url)
-				.then(function(response) { return response.json(); })
-				.then(function(data) {
-					if (data.records && data.records.length > 0) {
-						var rec = data.records[0];
-						if (rec.doi) pub.doi = rec.doi;
-						if (rec.pmid) pub.pmid = rec.pmid;
-						if (rec.pmcid) pub.pmcid = rec.pmcid;
-						$scope.$apply();
-					}
-				})
-				.catch(function(err) { /* Optionally handle error */ });
-		}
+	// fetch data from Europe PMC and update the publication object
+	function fetchEuropePMCData(pub, id_type, identifier) {
+		var params = [];
 
-		// Watch for changes in publication IDs and auto-fetch others
-		$scope.$watch('software.publication', function(newVal, oldVal) {
-			if (!newVal) return;
-			newVal.forEach(function(pub, idx) {
-				// Watch DOI
-				$scope.$watch(function() { return pub.doi; }, function(newDoi, oldDoi) {
-					if (newDoi && newDoi !== oldDoi) {
-						fetchAndUpdatePublicationIDs(pub, idx);
-					}
-				});
-				// Watch PMID
-				$scope.$watch(function() { return pub.pmid; }, function(newPmid, oldPmid) {
-					if (newPmid && newPmid !== oldPmid) {
-						fetchAndUpdatePublicationIDs(pub, idx);
-					}
-				});
-				// Watch PMCID
-				$scope.$watch(function() { return pub.pmcid; }, function(newPmcid, oldPmcid) {
-					if (newPmcid && newPmcid !== oldPmcid) {
-						fetchAndUpdatePublicationIDs(pub, idx);
-					}
-				});
-			});
-		}, true);
+		if (id_type == 'doi') params.push('query=DOI:' + identifier);
+		else if (id_type == 'pmid') params.push('query=EXT_ID:' + identifier);
+		else if (id_type == 'pmcid') params.push('query=PMC:' + identifier);
+		else return;
 
+		var url = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?' + params.join('&') + '&format=json';
+		fetch(url)
+			.then(function(response) { return response.json(); })
+			.then(function(data) {
+				console.log("Europe PMC data fetched:", data);
+				if (data.resultList && data.resultList.result && data.resultList.result.length > 0) {
+					var rec = data.resultList.result[0];
+					console.log("Europe PMC record:", rec);
+					if (rec.doi) pub.doi = rec.doi;
+					if (rec.pmid) pub.pmid = rec.pmid;
+					if (rec.pmcid) pub.pmcid = rec.pmcid;
+					console.log("Updated publication:", pub);
+					$scope.$apply();
+				}
+			})
+			.catch(function(err) { /*  handle error */ });
+	}
+
+	$scope.onPublicationIdChange = function(idType, value, index) {
+    	if (value && value.trim() !== '') {
+        	console.log('Publication ID changed:', idType, value, 'at index:', index);
+        	fetchEuropePMCData($scope.software.publication[index], idType, value.trim());
+    	}
+	};
+	
 	$scope.latestOptions = [
 		{value: 1, text: "Yes"},
 		{value: 0, text: "No"}

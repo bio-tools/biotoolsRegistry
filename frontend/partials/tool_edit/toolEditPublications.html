@@ -28,7 +28,7 @@
 							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].doi}">
 								<label class="col-sm-4 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.publicationDOI.description}}">Digital Object ID <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#digital-object-id"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 								<div class="col-sm-8">
-									<input ng-model="software.publication[$index].doi" type="text" class="form-control" placeholder="e.g. 10.1093/nar/gkv1116" name="doi" validate-edit-resource-field index={{$index}}>
+									<input ng-model="software.publication[$index].doi" type="text" class="form-control" placeholder="e.g. 10.1093/nar/gkv1116" name="doi" validate-edit-resource-field index={{$index}} ng-blur="onPublicationIdChange('doi', software.publication[$index].doi, $index)">
 									<label class="help-block" ng-repeat="error in publicationDetailForm.doi.errorMessages" bo-text="error"></label>
 								</div>
 							</div>
@@ -37,7 +37,7 @@
 							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].pmid}">
 								<label class="col-sm-4 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.publicationPMID.description}}">PubMed ID <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#pubmed-id"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 								<div class="col-sm-8">
-									<input ng-model="software.publication[$index].pmid" type="text" class="form-control" placeholder="e.g. 26538599" name="pmid" validate-edit-resource-field index={{$index}}>
+									<input ng-model="software.publication[$index].pmid" type="text" class="form-control" placeholder="e.g. 26538599" name="pmid" validate-edit-resource-field index={{$index}} ng-blur="onPublicationIdChange('pmid', software.publication[$index].pmid, $index)">
 									<label class="help-block" ng-repeat="error in publicationDetailForm.pmid.errorMessages" bo-text="error"></label>
 								</div>
 							</div>
@@ -46,7 +46,7 @@
 							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.publication[$index].pmcid}">
 								<label class="col-sm-4 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.publicationPMCID.description}}">PubMed Central ID <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#pubmed-central-id"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 								<div class="col-sm-8">
-									<input ng-model="software.publication[$index].pmcid" type="text" class="form-control" placeholder="e.g. PMC4702812" name="pmcid" validate-edit-resource-field index={{$index}}>
+									<input ng-model="software.publication[$index].pmcid" type="text" class="form-control" placeholder="e.g. PMC4702812" name="pmcid" validate-edit-resource-field index={{$index}} ng-blur="onPublicationIdChange('pmcid', software.publication[$index].pmcid, $index)">
 									<label class="help-block" ng-repeat="error in publicationDetailForm.pmcid.errorMessages" bo-text="error"></label>
 								</div>
 							</div>
