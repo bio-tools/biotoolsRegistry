@@ -18,4 +18,5 @@ backend/data/edam/owl/*
 backend/elixir/ecosystem/__secret_settings__.py
 .idea
 frontend-upgrade/node_modules/
-
+frontend-upgrade/.angular
+*spec.ts
