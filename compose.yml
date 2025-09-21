@@ -118,6 +118,7 @@ services:
     container_name: biotools-caddy
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./backend/Caddyfile:/etc/caddy/Caddyfile:ro
       - ./frontend:/elixir/application/frontend:ro

@@ -1,6 +1,14 @@
-:80 {
+localhost {
     # Root directory for static files
     root * /elixir/application/frontend
+
+    # Instruct crawlers not to index search pages using headers
+    @search {
+        path /t /t/*
+    }
+    header @search {
+        X-Robots-Tag "noindex, follow"
+    }
 
     # Handle API requests - proxy to Django backend
     handle /api/* {
@@ -8,7 +16,7 @@
         reverse_proxy biotools-backend:8000
     }
 
-    # Serve files from frontend
+    # Serve files from frontend, also handles robots.txt
     handle {
         try_files {path} /index.html
         file_server {
