@@ -124,9 +124,7 @@ class ToolMatrix(APIView):
 
 	def get(self, request, format=None):
 		query = request.GET
-		# Note to self: the API is proxied behind /api/
 
-		# Create a copy
 		response = DATA
 
 		# Get count of tools for a query
@@ -149,5 +147,4 @@ class ToolMatrix(APIView):
 				x["head"] = False
 				flat.append(x)
 
-		# Return as JSON
 		return Response(flat)
