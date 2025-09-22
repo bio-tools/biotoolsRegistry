@@ -1,1 +1,17 @@
-<p>navigation works!</p>
+<div class="navbar">
+    
+    <button mat-button class="logo-button" routerLink="/">
+      <img src="/img/biotools_white.svg" alt="bio.tools" height="40" class="biotools-logo">
+    </button>
+
+    <!-- Search Bar (conditional) -->
+
+    
+    <a mat-button routerLink="/">Home</a>
+    <a mat-button routerLink="/domains">Domains</a>
+    <a mat-button routerLink="/communities">Communities</a>
+    <a mat-button routerLink="/about">About</a>
+    <a mat-icon-button routerLink="/t">
+        <mat-icon>search</mat-icon>
+    </a>
+</div>
