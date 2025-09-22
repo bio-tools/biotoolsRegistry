@@ -185,7 +185,7 @@ angular.module('elixir_front.controllers', [])
 	$scope.orderby = 'text';
 	
 	$scope.registeringInProgress = false;
-	
+
 
 	// for storing validation and saving progess
 	$scope.validationProgress = {}, $scope.savingProgress = {}, $scope.deletingProgress = {};
@@ -206,6 +206,7 @@ angular.module('elixir_front.controllers', [])
 			}
 		}
 	}
+
 
 	// handle sending the resource to either validation or saving endpoints
 	$scope.sendResource = function(service, progress, isRemoval, action) {
@@ -672,6 +673,40 @@ angular.module('elixir_front.controllers', [])
 		_object[_index].uri = _node.data.uri;
 	}
 
+	// fetch data from Europe PMC and update the publication object
+	function fetchEuropePMCData(pub, id_type, identifier) {
+		var params = [];
+
+		if (id_type == 'doi') params.push('query=DOI:' + identifier);
+		else if (id_type == 'pmid') params.push('query=EXT_ID:' + identifier);
+		else if (id_type == 'pmcid') params.push('query=PMC:' + identifier);
+		else return;
+
+		var url = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?' + params.join('&') + '&format=json';
+		fetch(url)
+			.then(function(response) { return response.json(); })
+			.then(function(data) {
+				console.log("Europe PMC data fetched:", data);
+				if (data.resultList && data.resultList.result && data.resultList.result.length > 0) {
+					var rec = data.resultList.result[0];
+					console.log("Europe PMC record:", rec);
+					if (rec.doi) pub.doi = rec.doi;
+					if (rec.pmid) pub.pmid = rec.pmid;
+					if (rec.pmcid) pub.pmcid = rec.pmcid;
+					console.log("Updated publication:", pub);
+					$scope.$apply();
+				}
+			})
+			.catch(function(err) { /*  handle error */ });
+	}
+
+	$scope.onPublicationIdChange = function(idType, value, index) {
+    	if (value && value.trim() !== '') {
+        	console.log('Publication ID changed:', idType, value, 'at index:', index);
+        	fetchEuropePMCData($scope.software.publication[index], idType, value.trim());
+    	}
+	};
+	
 	$scope.latestOptions = [
 		{value: 1, text: "Yes"},
 		{value: 0, text: "No"}
@@ -1182,6 +1217,7 @@ angular.module('elixir_front.controllers', [])
 		{value: "Method", text: "Method"},
 		{value: "Usage", text: "Usage"},
 		{value: "Review", text: "Review"},
+		{value: "Preprint", text: "Preprint"},
 		{value: "Other", text: "Other"}
 	];
 
@@ -1248,8 +1284,8 @@ angular.module('elixir_front.controllers', [])
 		{value: "Microbial Biotechnology", text: "Microbial Biotechnology", link: "microbial-biotechnology"},
 		{value: "Plant Sciences", text: "Plant Sciences", link: "plant-sciences"},
 		{value: "Proteomics", text: "Proteomics", link: "proteomics"},
-		{value: "Rare Diseases", text: "Rare Diseases", link: "rare-diseases"}
-		
+		{value: "Rare Diseases", text: "Rare Diseases", link: "rare-diseases"},
+		{value: "Systems Biology", text: "Systems Biology", link: "systems-biology"}
 	];
 
 	$scope.otherIdTypeOptions = [
