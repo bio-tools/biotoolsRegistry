@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Resource } from '../model/resource.model';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs';
+import { Domain } from '../model/domain.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,14 @@ export class Resources {
   // constructor() { }
 
   getResources() {
-    // return this.http.get<Array<Resource>>(this.url);
-
     return this.http.get<{ list: Array<Resource> }>(this.url).pipe(
       map(response => response.list)
+    );
+  }
+
+  getDomains() {
+    return this.http.get<{ data: Array<Domain> }>('http://localhost:8000/d/all').pipe(
+      map(response => response.data)
     );
   }
 }

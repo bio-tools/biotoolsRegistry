@@ -1,0 +1,71 @@
+<div class="domains-page">
+  <div class="domains-header">
+    <div class="container">
+      <h1>bio.tools domains list</h1>
+      <p>Domains are built by the community to organize bio.tools content into subsets of tools.</p>
+      <p>See the domains documentation for more information.</p>
+    </div>
+  </div>
+
+  <div class="domains-content">
+    <div class="container">
+      <div class="loading-container" *ngIf="loading">
+        <mat-spinner></mat-spinner>
+        <p>Loading domains...</p>
+      </div>
+
+      <div class="domains-grid" *ngIf="!loading">
+        @for (domain of domains(); track domain.domain) {
+          <mat-card class="domain-card">
+            <mat-card-header>
+              <!--<div class="domain-icon" [style.  background-color]="domain.color">
+                <mat-icon>{{ domains().icon }}</mat-icon>
+              </div>-->
+              <mat-card-title>{{ domain.title }}</  mat-card-title>
+              <mat-card-subtitle>{{ domain.resources.length }} tools</mat-card-subtitle>
+            </mat-card-header>
+          <mat-card-content>
+            <p class="domain-description">{{ domain.description }}</p>
+          </mat-card-content>
+
+          <!--           
+          <mat-card-actions>
+            <button 
+              mat-button 
+              color="primary" 
+              (click)="onExploreTools(domain); $event.stopPropagation()">
+              <mat-icon>search</mat-icon>
+              Explore Tools
+            </button>
+            <button 
+              mat-button 
+              (click)="onDomainClick(domain); $event.stopPropagation()">
+              View Details
+            </button>
+          </mat-card-actions>-->
+          </mat-card>
+        }     
+      </div>
+
+      <div class="domains-stats" *ngIf="!loading">
+        <div class="container">
+          <h3>Domain Statistics</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-number">455</span>
+              <span class="stat-label">Total Tools</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{{ domains().length }}</span>
+              <span class="stat-label">Scientific Domains</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">10</span>
+              <span class="stat-label">Subcategories</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
