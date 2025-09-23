@@ -97,4 +97,15 @@
       ></app-tool-edit-labels>
     </mat-tab>
 
+    <!-- JSON tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span>JSON</span>
+      </ng-template>
+      <app-tool-edit-json
+        [tool]="software()"
+        [errors]="registrationErrorPayload()"
+      ></app-tool-edit-json>
+    </mat-tab>
+
 </mat-tab-group>

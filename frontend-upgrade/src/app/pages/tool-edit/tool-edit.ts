@@ -4,6 +4,7 @@ import { MatTab, MatTabGroup, MatTabLabel, MatTabsModule } from '@angular/materi
 import { MatButton } from '@angular/material/button';
 import { ToolEditSummary } from './components/tool-edit-summary/tool-edit-summary';
 import { ToolEditFunction } from './components/tool-edit-function/tool-edit-function';
+import { ToolEditJson } from './components/tool-edit-json/tool-edit-json';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Resource, ToolFunction } from '../../model/resource.model';
 import { Router } from '@angular/router';
@@ -14,6 +15,7 @@ import { ToolEditLabels } from './components/tool-edit-labels/tool-edit-labels';
   imports: [
     ToolEditSummary,
     ToolEditFunction,
+    ToolEditJson,
     ToolEditLabels,
     ReactiveFormsModule,
     // Angular Material
@@ -48,11 +50,9 @@ export class ToolEdit implements OnInit {
       name: ['', []]
     });
 
-    this.labelsForm = this.fb.group({
-      toolType: [[]],
-      topic: [[]],
-      operatingSystem: [[]],  
-    });
+    // Start with an empty FormGroup for labels; the child `ToolEditLabels`
+    // component will add the required FormArray/FormControl entries.
+    this.labelsForm = this.fb.group({});
   }
 
   private initializeMockData() {

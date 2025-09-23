@@ -1,0 +1,40 @@
+<div class="panel panel-info">
+	<div class="panel-heading" style="position: relative;">
+		<label>
+			Here you can interactively edit the JSON representation of the tool annotation. Edits you make here will be reflected in the other editing tabs (Summary, Function etc.).
+			<br>
+			All validation errors will also appear below in JSON format.
+		</label>
+	</div>
+</div>
+
+<form class="json-editor-form" novalidate>
+    @if (errors) {
+	<div class="errors-area">
+		<mat-card class="error-card" appearance="outlined">
+			<mat-card-content>
+				<div class="errors-header">
+					<span>Following validation errors were detected.</span>
+					<button mat-icon-button color="primary" (click)="errorCollapsed = !errorCollapsed" aria-label="Toggle errors">
+						<mat-icon>{{ errorCollapsed ? 'expand_more' : 'expand_less' }}</mat-icon>
+					</button>
+				</div>
+                @if (!errorCollapsed) {
+				    <pre>{{ errors | json }}</pre>
+                }
+			</mat-card-content>
+		</mat-card>
+	</div>
+    }
+
+	<mat-form-field appearance="outline" class="json-field" [class.has-error]="jsonError">
+		<mat-label>Tool JSON</mat-label>
+		<textarea matInput rows="18" [(ngModel)]="jsonModel" name="jsonModel" (ngModelChange)="onJsonChange($event)"></textarea>
+		<mat-hint>{{ jsonError }}</mat-hint>
+	</mat-form-field>
+
+	<div class="actions">
+		<button mat-stroked-button color="primary" (click)="downloadTool(true)">Download pretty JSON</button>
+		<button mat-stroked-button color="primary" (click)="downloadTool(false)">Download JSON</button>
+	</div>
+</form>

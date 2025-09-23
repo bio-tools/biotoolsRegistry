@@ -1,0 +1,53 @@
+/* Layout for the JSON editor form */
+.json-editor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.errors-area {
+  width: 100%;
+}
+
+.json-field {
+  width: 100%;
+}
+
+.json-field textarea[matInput] {
+  /* Make the textarea use monospace font for JSON and ensure it expands */
+  font-family: Consolas, Monaco, 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.45;
+  resize: vertical;
+  min-height: 320px; /* roughly 18 rows */
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.error-card {
+  background: rgba(255, 235, 238, 0.6); /* subtle red-ish background */
+}
+
+.errors-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.has-error .mat-form-field-wrapper {
+  border-color: #f44336; /* Material red */
+}
+
+@media (min-width: 1024px) {
+  /* Give the editor more horizontal space on wide screens */
+  .json-editor-form {
+    max-width: 1100px;
+  }
+}
+
