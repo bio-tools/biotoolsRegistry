@@ -1,24 +1,27 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { MatTab, MatTabGroup, MatTabLabel, MatTabsModule } from '@angular/material/tabs';
 import { MatButton } from '@angular/material/button';
 import { ToolEditSummary } from './components/tool-edit-summary/tool-edit-summary';
 import { ToolEditFunction } from './components/tool-edit-function/tool-edit-function';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Resource, ToolFunction } from '../../model/resource.model';
 import { Router } from '@angular/router';
+import { ToolEditLabels } from './components/tool-edit-labels/tool-edit-labels';
 
 @Component({
   selector: 'app-tool-edit',
   imports: [
     ToolEditSummary,
     ToolEditFunction,
+    ToolEditLabels,
     ReactiveFormsModule,
     // Angular Material
     MatIcon,
     MatTabGroup,
     MatTab,
-    MatButton
+    MatButton,
+    MatTabLabel
   ],
   templateUrl: './tool-edit.html',
   styleUrl: './tool-edit.scss'
@@ -33,6 +36,7 @@ export class ToolEdit implements OnInit {
 
   // Form groups for each tab
   summaryForm!: FormGroup;
+  labelsForm!: FormGroup;
 
   ngOnInit() {
     this.initializeForms();
@@ -42,6 +46,12 @@ export class ToolEdit implements OnInit {
   private initializeForms() {
     this.summaryForm = this.fb.group({
       name: ['', []]
+    });
+
+    this.labelsForm = this.fb.group({
+      toolType: [[]],
+      topic: [[]],
+      operatingSystem: [[]],  
     });
   }
 

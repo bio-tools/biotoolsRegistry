@@ -1,0 +1,463 @@
+<div class="tool-edit-form">
+  
+  <!-- Description panel -->
+  <div class="form-section">
+    <div class="section-description">
+      <p>
+        Miscellaneous scientific, technical and administrative details of the tool, expressed in terms from controlled vocabularies.
+        <br>
+        We recommend you specify at least the tool type, license, and one or more topics. 
+        <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#labels-group" target="_blank">
+          See the Curation Guidelines <mat-icon>open_in_new</mat-icon>
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <form [formGroup]="form" class="labels-form">
+
+    <!-- Tool Type -->
+    <div class="form-section">
+      <h3 class="section-title">
+        Tool type
+        <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#tool-type" target="_blank" 
+           matTooltip="The type of application software: a discrete software entity can have more than one type.">
+          <mat-icon>help_outline</mat-icon>
+        </a>
+      </h3>
+      
+      <div formArrayName="toolType">
+        <div *ngFor="let toolTypeGroup of toolTypeArray.controls; let i = index" 
+             [formGroupName]="i" 
+             class="form-row"
+             [class.has-error]="hasError('toolType', i)">
+          <div class="form-col">
+            <mat-form-field appearance="outline">
+              <mat-label>Tool Type</mat-label>
+              <mat-select formControlName="term" required>
+                <mat-option value="Command-line tool">Command-line tool</mat-option>
+                <mat-option value="Web application">Web application</mat-option>
+                <mat-option value="Desktop application">Desktop application</mat-option>
+                <mat-option value="Library">Library</mat-option>
+                <mat-option value="Web service">Web service</mat-option>
+                <mat-option value="Database portal">Database portal</mat-option>
+                <mat-option value="Workflow">Workflow</mat-option>
+                <mat-option value="Plugin">Plugin</mat-option>
+                <mat-option value="SPARQL endpoint">SPARQL endpoint</mat-option>
+                <mat-option value="Web API">Web API</mat-option>
+                <mat-option value="Suite">Suite</mat-option>
+              </mat-select>
+              <mat-error *ngIf="hasError('toolType', i)">
+                {{ getErrorMessage('toolType', i) }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="form-actions">
+            <button mat-icon-button 
+                    type="button" 
+                    color="warn" 
+                    (click)="removeToolType(i)"
+                    class="remove-button">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <button mat-stroked-button 
+              type="button" 
+              (click)="addToolType()" 
+              class="add-button">
+        <mat-icon>add</mat-icon>
+        Add Tool type
+      </button>
+    </div>
+
+    <!-- Topic -->
+    <div class="form-section">
+      <h3 class="section-title">
+        Topic
+        <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#topic" target="_blank" 
+           matTooltip="General scientific domain the tool serves, defined in terms of the EDAM ontology.">
+          <mat-icon>help_outline</mat-icon>
+        </a>
+      </h3>
+      
+      <div formArrayName="topic">
+        <div *ngFor="let topicGroup of topicArray.controls; let i = index" 
+             [formGroupName]="i" 
+             class="form-row"
+             [class.has-error]="hasError('topic', i)">
+          <div class="form-col">
+            <mat-form-field appearance="outline">
+              <mat-label>Topic</mat-label>
+              <input matInput 
+                     formControlName="term" 
+                     placeholder="Enter topic" 
+                     required>
+              <mat-error *ngIf="hasError('topic', i)">
+                {{ getErrorMessage('topic', i) }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="form-actions">
+            <button mat-icon-button 
+                    type="button" 
+                    color="warn" 
+                    (click)="removeTopic(i)"
+                    class="remove-button">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <button mat-stroked-button 
+              type="button" 
+              (click)="addTopic()" 
+              class="add-button">
+        <mat-icon>add</mat-icon>
+        Add topic
+      </button>
+    </div>
+
+    <!-- Operating System -->
+    <!-- TODO: allow adding multiple operating systems with checkboxes-->
+
+    <div class="form-section">
+      <h3 class="section-title">
+        Operating system
+        <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#operating-system" target="_blank" 
+           matTooltip="Operating system supported by a downloadable software package.">
+          <mat-icon>help_outline</mat-icon>
+        </a>
+      </h3>
+      
+      <div formArrayName="operatingSystem">
+        <div *ngFor="let osControl of operatingSystemArray.controls; let i = index" 
+             class="form-row"
+             [class.has-error]="hasError('operatingSystem', i)">
+          <div class="form-col">
+            <mat-form-field appearance="outline">
+              <mat-label>Operating System</mat-label>
+              <mat-select [formControlName]="i">
+                <mat-option *ngFor="let option of operatingSystemOptions" [value]="option.value">
+                  {{ option.text }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="hasError('operatingSystem', i)">
+                {{ getErrorMessage('operatingSystem', i) }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="form-actions">
+            <button mat-icon-button 
+                    type="button" 
+                    color="warn" 
+                    (click)="removeOperatingSystem(i)"
+                    class="remove-button">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <button mat-stroked-button 
+              type="button" 
+              (click)="addOperatingSystem()" 
+              class="add-button">
+        <mat-icon>add</mat-icon>
+        Add operating system
+      </button>
+    </div>
+
+    <!-- Language -->
+    <div class="form-section">
+      <h3 class="section-title">
+        Language
+        <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#programming-language" target="_blank" 
+           matTooltip="Name of programming language the software source code was written in.">
+          <mat-icon>help_outline</mat-icon>
+        </a>
+      </h3>
+      
+      <div formArrayName="language">
+        <div *ngFor="let langControl of languageArray.controls; let i = index" 
+             class="form-row"
+             [class.has-error]="hasError('language', i)">
+          <div class="form-col">
+            <mat-form-field appearance="outline">
+              <mat-label>Programming Language</mat-label>
+              <mat-select [formControlName]="i">
+                <mat-option *ngFor="let option of languageOptions" [value]="option.value">
+                  {{ option.text }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="hasError('language', i)">
+                {{ getErrorMessage('language', i) }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="form-actions">
+            <button mat-icon-button 
+                    type="button" 
+                    color="warn" 
+                    (click)="removeLanguage(i)"
+                    class="remove-button">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <button mat-stroked-button 
+              type="button" 
+              (click)="addLanguage()" 
+              class="add-button">
+        <mat-icon>add</mat-icon>
+        Add language
+      </button>
+    </div>
+
+    <!-- Maturity -->
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-col">
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Maturity
+              <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#maturity" target="_blank" 
+                 matTooltip="How mature the software product is.">
+                <mat-icon>help_outline</mat-icon>
+              </a>
+            </mat-label>
+            <mat-select formControlName="maturity">
+              <mat-option value="">Select maturity</mat-option>
+              <mat-option *ngFor="let option of maturityOptions" [value]="option.value">
+                {{ option.text }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!-- License -->
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-col">
+          <mat-form-field appearance="outline">
+            <mat-label>
+              License
+              <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#license" target="_blank" 
+                 matTooltip="Software or data usage license.">
+                <mat-icon>help_outline</mat-icon>
+              </a>
+            </mat-label>
+            <mat-select formControlName="license">
+              <mat-option value="">Select license</mat-option>
+              <mat-option *ngFor="let option of licenseOptions" [value]="option.value">
+                {{ option.text }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cost -->
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-col">
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Cost
+              <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#cost" target="_blank" 
+                 matTooltip="Monetary cost of acquiring the software.">
+                <mat-icon>help_outline</mat-icon>
+              </a>
+            </mat-label>
+            <mat-select formControlName="cost">
+              <mat-option value="">Select cost</mat-option>
+              <mat-option *ngFor="let option of costOptions" [value]="option.value">
+                {{ option.text }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!-- Collection -->
+    <div class="form-section">
+      <h3 class="section-title">
+        Collection
+        <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#collection" target="_blank" 
+           matTooltip="Tag for a tool that has been assigned by the bio.tools system.">
+          <mat-icon>help_outline</mat-icon>
+        </a>
+      </h3>
+      
+      <div formArrayName="collectionID">
+        <div *ngFor="let collectionControl of collectionArray.controls; let i = index" 
+             class="form-row"
+             [class.has-error]="hasError('collectionID', i)">
+          <div class="form-col">
+            <mat-form-field appearance="outline">
+              <mat-label>Collection</mat-label>
+              <input matInput 
+                     [formControlName]="i" 
+                     placeholder="Enter collection ID">
+              <mat-error *ngIf="hasError('collectionID', i)">
+                {{ getErrorMessage('collectionID', i) }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="form-actions">
+            <button mat-icon-button 
+                    type="button" 
+                    color="warn" 
+                    (click)="removeCollection(i)"
+                    class="remove-button">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <button mat-stroked-button 
+              type="button" 
+              (click)="addCollection()" 
+              class="add-button">
+        <mat-icon>add</mat-icon>
+        Add collection
+      </button>
+    </div>
+
+    <!-- Accessibility -->
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-col">
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Accessibility
+              <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#accessibility" target="_blank" 
+                 matTooltip="Whether the software is freely available for use.">
+                <mat-icon>help_outline</mat-icon>
+              </a>
+            </mat-label>
+            <mat-select formControlName="accessibility">
+              <mat-option value="">Select accessibility</mat-option>
+              <mat-option *ngFor="let option of accessibilityOptions" [value]="option.value">
+                {{ option.text }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!--TODO:
+       ELIXIR Platform
+       ELIXIR Node
+       ELIXIR Community
+    -->
+    <!-- Tool Confidence -->
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-col">
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Tool Confidence score
+              <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#confidence" target="_blank" 
+                 matTooltip="Scientific confidence in, and quality of, the software description.">
+                <mat-icon>help_outline</mat-icon>
+              </a>
+            </mat-label>
+            <mat-select formControlName="confidence_flag">
+              <mat-option value="">Select confidence</mat-option>
+              <mat-option *ngFor="let option of confidenceOptions" [value]="option.value">
+                {{ option.text }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!-- Other ID -->
+    <div class="form-section">
+      <h3 class="section-title">
+        Other ID
+        <a href="https://biotools.readthedocs.io/en/latest/curators_guide.html#other-ids" target="_blank" 
+           matTooltip="A unique identifier of the software, typically assigned by an ID-assignment authority.">
+          <mat-icon>help_outline</mat-icon>
+        </a>
+      </h3>
+      
+      <div formArrayName="otherID">
+        <div *ngFor="let otherIdGroup of otherIdArray.controls; let i = index" 
+             [formGroupName]="i" 
+             class="other-id-panel"
+             [class.has-error]="hasError('otherID', i)">
+          
+          <div class="form-row">
+            <div class="form-col">
+              <mat-form-field appearance="outline">
+                <mat-label>ID Value</mat-label>
+                <input matInput 
+                       formControlName="value" 
+                       placeholder="Enter ID value" 
+                       required>
+              </mat-form-field>
+            </div>
+            <div class="form-col">
+              <mat-form-field appearance="outline">
+                <mat-label>ID Type</mat-label>
+                <mat-select formControlName="type" required>
+                  <mat-option value="doi">DOI</mat-option>
+                  <mat-option value="github">GitHub</mat-option>
+                  <mat-option value="sourceforge">SourceForge</mat-option>
+                  <mat-option value="bitbucket">Bitbucket</mat-option>
+                  <mat-option value="pypi">PyPI</mat-option>
+                  <mat-option value="bioconda">Bioconda</mat-option>
+                  <mat-option value="other">Other</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-col">
+              <mat-form-field appearance="outline">
+                <mat-label>Version</mat-label>
+                <input matInput 
+                       formControlName="version" 
+                       placeholder="Enter version (optional)">
+              </mat-form-field>
+            </div>
+            <div class="form-actions">
+              <button mat-icon-button 
+                      type="button" 
+                      color="warn" 
+                      (click)="removeOtherId(i)"
+                      class="remove-button">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          
+          <div *ngIf="hasError('otherID', i)" class="error-message">
+            {{ getErrorMessage('otherID', i) }}
+          </div>
+        </div>
+      </div>
+      
+      <button mat-stroked-button 
+              type="button" 
+              (click)="addOtherId()" 
+              class="add-button">
+        <mat-icon>add</mat-icon>
+        Add other ID
+      </button>
+    </div>
+
+  </form>
+</div>

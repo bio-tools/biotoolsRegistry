@@ -77,13 +77,24 @@
     <mat-tab>
       <ng-template mat-tab-label>
         <span>Function</span>
-        <span class="required-indicator"> *</span>
       </ng-template>
       <app-tool-edit-function
         [functions]="toolFunctions"
         [errors]="registrationErrorPayload"
         (functionsChange)="updateFunctions($event)">
       </app-tool-edit-function>
+    </mat-tab>
+
+        <!-- Labels tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span>Labels</span>
+      </ng-template>
+      <app-tool-edit-labels
+        [tool]="software()"
+        [form]="labelsForm"
+        [errors]="registrationErrorPayload"
+      ></app-tool-edit-labels>
     </mat-tab>
 
 </mat-tab-group>
