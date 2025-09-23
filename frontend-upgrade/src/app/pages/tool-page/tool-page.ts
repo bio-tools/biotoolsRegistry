@@ -46,7 +46,6 @@ export class ToolPage implements OnInit {
     this.biotoolsApi.getToolByID(id).subscribe({
       next: (tool) => {
         this.software.set(tool);
-        console.log('Loaded tool:', tool);
         this.loading.set(false);
       },
       error: (error) => {

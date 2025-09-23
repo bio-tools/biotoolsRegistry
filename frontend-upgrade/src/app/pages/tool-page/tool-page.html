@@ -6,7 +6,7 @@
     <p>Loading tool...</p>
   </div>
 
-  <!-- Not Found State -->
+  <!-- Not Found State: go back to search -->
   <div *ngIf="notFound()" class="error-container">
     <mat-icon class="error-icon">error_outline</mat-icon>
     <h2>Tool Not Found</h2>
@@ -94,66 +94,90 @@
       </div>
 
        <!-- Tool Operation Flow Diagram (Input → Function → Output) -->
-      <div *ngIf="software()?.function?.length" class="tool-operation-section">
-        <div *ngFor="let func of software()?.function" class="function-row">
+      @if (software()?.function?.length) {
+      <div class="tool-operation-section">
+
+        @for (func of software()?.function; track $index) {
+        <div class="function-row">
           
           <!-- Desktop Flow Layout -->
           <div class="function-flow-desktop">
             
             <!-- Inputs with Arrows -->
+            @if (func.input && func.input.length > 0) {
             <div class="inputs-section">
-              <div *ngFor="let input of func.input; let i = index" class="input-row">
+              @for(input of func.input; track $index) {
+                <div class="input-row">
                 <div class="flow-box input-box">
                   <div class="box-content">
-                    <div class="data-term">{{ input.term }}</div>
-                    <div *ngIf="input.format?.length" class="data-format">
-                      ( <span *ngFor="let format of input.format; let formatLast = last">{{ format.term }}<span *ngIf="!formatLast">, </span></span> )
+                    <div class="data-term">{{ input.data.term }}</div>
+                    @if (input.format && input.format.length > 0) {
+                    <div class="data-format">
+                      ( @for (format of input.format; track $index) {{{ format.term }}@if (!$last) {, }} )
                     </div>
+                    }
                   </div>
                 </div>
                 <div class="arrow-container">
                   <mat-icon class="flow-arrow">arrow_forward</mat-icon>
                 </div>
-              </div>
+                </div>
+              }
             </div>
+            }
 
             <!-- Function/Operation Column -->
             <div class="operation-column">
               <div class="flow-box operation-box">
                 <div class="box-content">
-                  <div *ngIf="!func.operation?.length" class="operation-term">
+                  @if (!func.operation || func.operation.length === 0) {
+                  <div class="operation-term">
                     {{ software()?.name }}
                   </div>
-                  <div *ngFor="let operation of func.operation" class="operation-term">
-                    {{ operation.term }}
-                  </div>
-                  <!-- TODO -->
-                  <div *ngIf="func.note" class="operation-note">
+                  }
+                  @if (func.operation && func.operation.length > 0) {
+                    @for (operation of func.operation; track $index) {
+                    <div class="operation-term">
+                      {{ operation.term }}
+                    </div>
+                    }
+                  }
+                  @if (func.note) {
+                  <div class="operation-note">
                     <mat-icon class="info-icon" [matTooltip]="func.note">help_outline</mat-icon>
                   </div>
-                  <div *ngIf="func.cmd" class="command-display">
+                  }
+                  @if (func.cmd) {
+                  <div class="command-display">
                     <code>{{ func.cmd }}</code>
                   </div>
+                  }
                 </div>
               </div>
             </div>
 
             <!-- Outputs with Arrows -->
+            @if (func.output && func.output.length > 0) {
             <div class="outputs-section">
-              <div *ngFor="let output of func.output; let i = index" class="output-row">
+              @for (output of func.output; track $index) {
+              <div class="output-row">
                 <div class="arrow-container">
                   <mat-icon class="flow-arrow">arrow_forward</mat-icon>
                 </div>
                 <div class="flow-box output-box">
                   <div class="box-content">
-                    <div class="data-term">{{ output.term }}</div>
-                    <div *ngIf="output.format?.length" class="data-format">
-                      ( <span *ngFor="let format of output.format; let formatLast = last">{{ format.term }}<span *ngIf="!formatLast">, </span></span> )
+                    <div class="data-term">{{ output.data.term }}</div>
+                    @if (output.format && output.format.length > 0) {
+                    <div class="data-format">
+                      ( @for (format of output.format; track $index) {{{ format.term }}@if (!$last) {, }} )
                     </div>
+                    }
                   </div>
                 </div>
               </div>
+              }
             </div>
+            }
 
           </div>
 
@@ -161,65 +185,91 @@
           <div class="function-flow-mobile">
             
             <!-- Inputs -->
-            <div *ngIf="func.input?.length" class="mobile-section">
-              <div *ngFor="let input of func.input; let i = index" class="flow-box input-box">
+            @if (func.input && func.input.length > 0) {
+            <div class="mobile-section">
+              @for (input of func.input; track $index) {
+              <div class="flow-box input-box">
                 <div class="box-content">
-                  <div class="data-term">{{ input.term }}</div>
-                  <div *ngIf="input.format?.length" class="data-format">
-                    ( <span *ngFor="let format of input.format; let formatLast = last">{{ format.term }}<span *ngIf="!formatLast">, </span></span> )
+                  <div class="data-term">{{ input.data.term}}</div>
+                  @if (input.format && input.format.length > 0) {
+                  <div class="data-format">
+                    ( @for (format of input.format; track $index) {{{ format.term }}@if (!$last) {, }} )
                   </div>
+                  }
                 </div>
               </div>
+              }
             </div>
 
             <!-- Arrow Down -->
-            <div class="mobile-arrow" *ngIf="func.input?.length">
+            <div class="mobile-arrow">
               <mat-icon class="flow-arrow">arrow_downward</mat-icon>
             </div>
+            }
 
             <!-- Function/Operation -->
             <div class="mobile-section">
               <div class="flow-box operation-box">
                 <div class="box-content">
-                  <div *ngIf="!func.operation?.length" class="operation-term">
+                  @if (!func.operation || func.operation.length === 0) {
+                  <div class="operation-term">
                     {{ software()?.name }}
                   </div>
-                  <div *ngFor="let operation of func.operation" class="operation-term">
-                    {{ operation.term }}
-                  </div>
-                  <div *ngIf="func.note" class="operation-note">
+                  }
+                  @if (func.operation && func.operation.length > 0) {
+                    @for (operation of func.operation; track $index) {
+                    <div class="operation-term">
+                      {{ operation.term }}
+                    </div>
+                    }
+                  }
+                  @if (func.note) {
+                  <div class="operation-note">
                     <mat-icon class="info-icon" [matTooltip]="func.note">help_outline</mat-icon>
                   </div>
+                  }
                 </div>
               </div>
-              <div *ngIf="func.cmd" class="command-display">
+              @if (func.cmd) {
+              <div class="command-display">
                 <code>{{ func.cmd }}</code>
               </div>
+              }
             </div>
 
             <!-- Arrow Down -->
-            <div class="mobile-arrow" *ngIf="func.output?.length">
+            @if (func.output && func.output.length > 0) {
+            <div class="mobile-arrow">
               <mat-icon class="flow-arrow">arrow_downward</mat-icon>
             </div>
 
             <!-- Outputs -->
-            <div *ngIf="func.output?.length" class="mobile-section">
-              <div *ngFor="let output of func.output; let i = index" class="flow-box output-box">
+            <div class="mobile-section">
+              @for (output of func.output; track $index) {
+              <div class="flow-box output-box">
                 <div class="box-content">
-                  <div class="data-term">{{ output.term }}</div>
-                  <div *ngIf="output.format?.length" class="data-format">
-                    ( <span *ngFor="let format of output.format; let formatLast = last">{{ format.term }}<span *ngIf="!formatLast">, </span></span> )
+                  <div class="data-term">{{ output.data.term }}</div>
+                  @if (output.format && output.format.length > 0) {
+                  <div class="data-format">
+                    ( @for (format of output.format; track $index) {{{ format.term }}@if (!$last) {, }} )
                   </div>
+                  }
                 </div>
               </div>
+              }
             </div>
+            }
 
           </div>
           
           <!-- Function Note -->
-          <p *ngIf="func.note" class="function-note">{{ func.note }}</p>
+          @if (func.note) {
+          <p class="function-note">{{ func.note }}</p>
+          }
         </div>
+        }
       </div>
+      }
 
       <!-- Secondary Sections Row -->
       <div class="secondary-sections-row">
