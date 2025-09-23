@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { Resource, ToolType, Topic } from '../../../../model/resource.model';
+import { Resource, TOOL_TYPES, Topic } from '../../../../model/resource.model';
 
 interface SelectOption {
   value: string;
@@ -42,6 +42,9 @@ export class ToolEditLabels implements OnInit {
 
   private fb = inject(FormBuilder);
 
+
+  toolTypes = TOOL_TYPES;
+  
   // Form arrays
   get toolTypeArray(): FormArray {
     return this.form.get('toolType') as FormArray;
@@ -81,8 +84,6 @@ export class ToolEditLabels implements OnInit {
 
   // Options for select fields
   // We can acyually fetch these options from Resource model
-
-
   maturityOptions: SelectOption[] = [
     { value: 'Mature', text: 'Mature' },
     { value: 'Emerging', text: 'Emerging' },
@@ -122,8 +123,6 @@ export class ToolEditLabels implements OnInit {
     { value: 'Linux', text: 'Linux' },
     { value: 'Windows', text: 'Windows' },
     { value: 'Mac', text: 'Mac' },
-    { value: 'BSD', text: 'BSD' },
-    { value: 'Solaris', text: 'Solaris' }
   ];
 
   // Programming language options
@@ -171,7 +170,7 @@ export class ToolEditLabels implements OnInit {
     // Populate tool types
     if (this.tool.toolType) {
       this.tool.toolType.forEach(toolType => {
-        this.toolTypeArray.push(this.createToolTypeFormGroup(toolType));
+        this.toolTypeArray.push(this.fb.control(toolType));
       });
     }
 
@@ -220,13 +219,6 @@ export class ToolEditLabels implements OnInit {
     }
   }
 
-  private createToolTypeFormGroup(toolType?: ToolType) {
-    return this.fb.group({
-      uri: [toolType?.uri || ''],
-      term: [toolType?.term || '', Validators.required]
-    });
-  }
-
   private createTopicFormGroup(topic?: Topic) {
     return this.fb.group({
       uri: [topic?.uri || ''],
@@ -244,7 +236,7 @@ export class ToolEditLabels implements OnInit {
 
   // Add/Remove methods
   addToolType() {
-    this.toolTypeArray.push(this.createToolTypeFormGroup());
+    this.toolTypeArray.push(this.fb.control(''));
   }
 
   removeToolType(index: number) {

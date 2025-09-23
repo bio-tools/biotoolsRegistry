@@ -25,27 +25,17 @@
           <mat-icon>help_outline</mat-icon>
         </a>
       </h3>
-      
       <div formArrayName="toolType">
-        <div *ngFor="let toolTypeGroup of toolTypeArray.controls; let i = index" 
-             [formGroupName]="i" 
+        <div *ngFor="let toolTypeControl of toolTypeArray.controls; let i = index" 
              class="form-row"
              [class.has-error]="hasError('toolType', i)">
           <div class="form-col">
             <mat-form-field appearance="outline">
               <mat-label>Tool Type</mat-label>
-              <mat-select formControlName="term" required>
-                <mat-option value="Command-line tool">Command-line tool</mat-option>
-                <mat-option value="Web application">Web application</mat-option>
-                <mat-option value="Desktop application">Desktop application</mat-option>
-                <mat-option value="Library">Library</mat-option>
-                <mat-option value="Web service">Web service</mat-option>
-                <mat-option value="Database portal">Database portal</mat-option>
-                <mat-option value="Workflow">Workflow</mat-option>
-                <mat-option value="Plugin">Plugin</mat-option>
-                <mat-option value="SPARQL endpoint">SPARQL endpoint</mat-option>
-                <mat-option value="Web API">Web API</mat-option>
-                <mat-option value="Suite">Suite</mat-option>
+              <mat-select [formControlName]="i">
+                <mat-option *ngFor="let option of toolTypes" [value]="option">
+                  {{ option }}
+                </mat-option>
               </mat-select>
               <mat-error *ngIf="hasError('toolType', i)">
                 {{ getErrorMessage('toolType', i) }}
@@ -69,7 +59,7 @@
               (click)="addToolType()" 
               class="add-button">
         <mat-icon>add</mat-icon>
-        Add Tool type
+        add tool type
       </button>
     </div>
 
