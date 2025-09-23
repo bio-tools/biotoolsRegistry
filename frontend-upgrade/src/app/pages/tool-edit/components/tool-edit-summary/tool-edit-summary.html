@@ -1,0 +1,19 @@
+<div class="tool-edit-form">
+    <form [formGroup]="form">
+        
+        <div class="form-section">
+            <mat-form-field appearance="outline">
+                <mat-label>Tool name</mat-label>
+                <input matInput
+                       formControlName="name"
+                       placeholder="Enter tool name"
+                       required/>
+
+                @if (hasError('name')) {
+                    <mat-error> {{ getErrorMessage('name') }}</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+    </form>
+</div>

@@ -1,0 +1,86 @@
+
+<p>Tool edit works!</p>
+<p>Tool edit works!</p>
+<p>Tool edit works!</p>
+<p>Tool edit works!</p>
+<p>Tool edit works!</p>
+<p>Tool edit works!</p>
+<p>Tool edit works!</p>
+<p>Tool edit works!</p>
+<p>Tool edit works!</p>
+
+@if (notFound()) {
+    <div class="error-container">
+        <h2>Tool Not Found</h2>
+        <p>The tool you are looking for does not exist or has been removed.</p>
+    </div>
+}
+
+@if (!notFound() && !canEditTool() && !isCreateMode()) {
+    <div class="error-container">
+        <h2>Access Denied</h2>
+        <p>You do not have permission to edit this tool.</p>
+    </div>
+}
+
+<div class="edit-header">
+    <div class="header-left">
+        <h1> page title </h1>
+    </div>
+    <div class="header-right">
+        <div class="action-buttons">
+            @if (registrationSuccess()) {
+                <span class="success-indicator">
+                    <mat-icon>check_circle</mat-icon>
+                    Success
+                </span>
+            }
+
+            <!-- Delete button -->
+            @if (!isCreateMode()) {
+                <button mat-raised-button color="warn">'
+                    Remove
+                </button>
+            }
+
+            <!-- Validate button -->
+            <button mat-raised-button color="primary" >
+                Validate
+            </button>
+
+            <!-- Save button -->
+            <button mat-raised-button color="primary" >
+                Save
+            </button>
+
+
+            <!-- Go to entry button -->
+            @if (!isCreateMode() && software()?.biotoolsID) {
+                <button mat-raised-button color="accent" (click)="viewToolDetails(software()?.biotoolsID)">
+                    Go to entry
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+<!--TODO Validation errors alert -->
+
+
+<!-- Tab interface -->
+
+<mat-tab-group class="edit-tabs" dynamicHeight="true">
+    <!-- Summary tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span>Summary</span> <!--TODO errors-->
+        <span class="required-indicator"> *</span>
+      </ng-template>
+      <app-tool-edit-summary 
+        [tool]="software()" 
+        [form]="summaryForm"
+        [errors]="registrationErrorPayload()">
+      </app-tool-edit-summary>
+    </mat-tab>
+
+</mat-tab-group>
