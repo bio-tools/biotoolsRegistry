@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { Resources } from '../../services/resources';
 import { Resource } from '../../model/resource.model';
 import { catchError } from 'rxjs';
@@ -36,6 +37,7 @@ export class Search implements OnInit {
   loading = false;
 
   resourcesService = inject(Resources);
+  router = inject(Router);
   tools = signal<Array<Resource>>([]); // signal to hold array of Resource objects
 
   ngOnInit(): void { // lifecycle hook, called after component's constructor, when component is initialized
@@ -69,6 +71,10 @@ export class Search implements OnInit {
   getToolOperations(tool: Resource): string[] {
     // Return array of operation terms
     return tool.function?.flatMap(f => f.operation.map(op => op.term)) ?? [];
+  }
+
+  viewToolDetails(biotoolsID: string) {
+    this.router.navigate(['/tool', biotoolsID]);
   }
 
 }
