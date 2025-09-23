@@ -1,5 +1,5 @@
 
-export interface Resource {
+export interface Tool {
   biotoolsID: string;
   biotoolsCURIE: string;
   name: string;
@@ -127,7 +127,7 @@ export interface Relation {
 
 
 export const TOOL_TYPES = [
-  'Bioinformatics portal','Command-line tool', 'Web application', 'Desktop application', 'Script', 'Suite', 'Workbench', 'Database portal', 'Ontology', 'Workflow', 'Plug-in', 'Library', 'Web API', 'Web service', 'SPARQL endpoint'
+  'Bioinformatics portal','Command-line tool', 'Database portal', 'Desktop application', 'Library', 'Ontology', 'Plug-in', 'Script', 'SPARQL endpoint', 'Suite', 'Web application', 'Web API', 'Web service', 'Workbench', 'Workflow'
 ] as const;
 
 export const PROGRAMMING_LANGUAGES = [
@@ -171,7 +171,7 @@ export const DOCUMENTATION_TYPES = [
 ] as const;
 
 export const PUBLICATION_TYPES = [
-  'Primary', 'Benchmarking study', 'Method', 'Usage', 'Review', 'Other'
+  'Primary', 'Benchmarking study', 'Method', 'Preprint', 'Usage', 'Review', 'Other'
 ] as const;
 
 export const ENTITY_TYPES = [

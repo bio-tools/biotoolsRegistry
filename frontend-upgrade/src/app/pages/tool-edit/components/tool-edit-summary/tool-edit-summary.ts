@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Resource } from '../../../../model/resource.model';
+import { Tool } from '../../../../model/resource.model';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,7 +18,7 @@ import { MatError } from '@angular/material/form-field';
 })
 export class ToolEditSummary {
 
-  @Input() tool: Resource | null = null;
+  @Input() tool: Tool | null = null;
   @Input() form!: FormGroup; // Replace 'any' with the actual type of your form if available
   @Input() errors: any = null;
 

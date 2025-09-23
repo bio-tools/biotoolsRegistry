@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, AfterViewInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Resources } from '../../services/resources';
-import { Resource } from '../../model/resource.model';
+import { Tool } from '../../model/resource.model';
 import { catchError, filter } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -38,7 +38,7 @@ export class Search implements OnInit, AfterViewInit {
 
   resourcesService = inject(Resources);
   router = inject(Router);
-  tools = signal<Array<Resource>>([]); // signal to hold array of Resource objects
+  tools = signal<Array<Tool>>([]); // signal to hold array of Resource objects
 
   ngOnInit(): void { // lifecycle hook, called after component's constructor, when component is initialized
     this.resourcesService.getResources()
@@ -85,12 +85,12 @@ export class Search implements OnInit, AfterViewInit {
     }, 1000);
   }
 
-  getToolTopics(tool: Resource): string[] {
+  getToolTopics(tool: Tool): string[] {
   // Return array of topic terms
     return tool.topic?.map(t => t.term) ?? [];
   }
 
-  getToolOperations(tool: Resource): string[] {
+  getToolOperations(tool: Tool): string[] {
     // Return array of operation terms
     return tool.function?.flatMap(f => f.operation.map(op => op.term)) ?? [];
   }

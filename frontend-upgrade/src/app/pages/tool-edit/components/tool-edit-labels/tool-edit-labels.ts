@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { Resource, TOOL_TYPES, Topic } from '../../../../model/resource.model';
+import { Tool, TOOL_TYPES, Topic } from '../../../../model/resource.model';
 
 interface SelectOption {
   value: string;
@@ -36,7 +36,7 @@ interface SelectOption {
   styleUrl: './tool-edit-labels.scss'
 })
 export class ToolEditLabels implements OnInit {
-  @Input() tool: Resource | null = null;
+  @Input() tool: Tool | null = null;
   @Input() form!: FormGroup;
   @Input() errors: any = null;
 

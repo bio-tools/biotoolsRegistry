@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Resource } from '../model/resource.model';
+import { Tool } from '../model/resource.model';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs';
 import { Domain } from '../model/domain.model';
@@ -16,7 +16,7 @@ export class Resources {
   // constructor() { }
 
   getResources() {
-    return this.http.get<{ list: Array<Resource> }>(this.url).pipe(
+    return this.http.get<{ list: Array<Tool> }>(this.url).pipe(
       map(response => response.list)
     );
   }

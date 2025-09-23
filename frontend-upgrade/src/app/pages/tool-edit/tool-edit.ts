@@ -1,12 +1,12 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { MatTab, MatTabGroup, MatTabLabel, MatTabsModule } from '@angular/material/tabs';
+import { MatTab, MatTabGroup, MatTabLabel } from '@angular/material/tabs';
 import { MatButton } from '@angular/material/button';
 import { ToolEditSummary } from './components/tool-edit-summary/tool-edit-summary';
 import { ToolEditFunction } from './components/tool-edit-function/tool-edit-function';
 import { ToolEditJson } from './components/tool-edit-json/tool-edit-json';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Resource, ToolFunction } from '../../model/resource.model';
+import { Tool, ToolFunction } from '../../model/resource.model';
 import { Router } from '@angular/router';
 import { ToolEditLabels } from './components/tool-edit-labels/tool-edit-labels';
 
@@ -31,10 +31,18 @@ import { ToolEditLabels } from './components/tool-edit-labels/tool-edit-labels';
 export class ToolEdit implements OnInit {
   private fb = inject(FormBuilder);
 
-  software = signal<Resource | null>(null);
+  software = signal<Tool | null>(null);
   toolFunctions = signal<ToolFunction[]>([]);
 
   registrationErrorPayload = signal<any>(null);
+
+  //TODO: differentiate between create and edit 
+  //TODO: get credit names for suggestions
+
+  //TODO: for storing validation and saving progress
+  validationProgress = {};
+  savingProgress = {};
+  deletingProgress = {};
 
   // Form groups for each tab
   summaryForm!: FormGroup;
@@ -43,6 +51,10 @@ export class ToolEdit implements OnInit {
   ngOnInit() {
     this.initializeForms();
     this.initializeMockData();
+  }
+
+  initializePermissions() {
+    //TODO fetch user permissions for the tool
   }
 
   private initializeForms() {
@@ -67,6 +79,14 @@ export class ToolEdit implements OnInit {
       }
     ]);
   }
+
+  //TODO send resource to validation or saving endpoins
+  sendResource(tool: Tool) {
+    this.software.set(tool);
+  }
+
+
+
 
   updateFunctions(functions: ToolFunction[]) {
     this.toolFunctions.set(functions);

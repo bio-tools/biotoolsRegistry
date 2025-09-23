@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Resource } from '../../../../model/resource.model';
+import { Tool } from '../../../../model/resource.model';
 import { JsonPipe } from '@angular/common';
 
 @Component({
@@ -25,7 +25,7 @@ import { JsonPipe } from '@angular/common';
   styleUrl: './tool-edit-json.scss'
 })
 export class ToolEditJson implements OnChanges {
-  @Input() tool: Resource | null = null;
+  @Input() tool: Tool | null = null;
   @Input() errors: any = null;
 
   jsonModel: string = '';

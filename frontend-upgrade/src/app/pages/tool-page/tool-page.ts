@@ -6,7 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BiotoolsApiService } from '../../services/biotools-api';
-import { Resource } from '../../model/resource.model';
+import { Tool } from '../../model/resource.model';
 
 @Component({
   selector: 'app-tool-page',
@@ -25,7 +25,7 @@ export class ToolPage implements OnInit {
   private router = inject(Router);
   private biotoolsApi = inject(BiotoolsApiService);
   
-  software = signal<Resource | null>(null);
+  software = signal<Tool | null>(null);
   loading = signal<boolean>(true);
   notFound = signal<boolean>(false);
 
