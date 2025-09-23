@@ -1,6 +1,6 @@
 .navbar {
   display: flex;
-  background: linear-gradient(135deg, #1976d2, #1565c0);
+  background: linear-gradient(135deg, #005472, #016387);
   color: white;
   position: fixed;
   top: 0;
@@ -19,12 +19,11 @@
     padding: 0 16px;
   }
 
-  .logo-button {
-    padding: 8px;
-    min-width: auto;
+  .logo-button { 
+    //min-width: auto;
 
     .biotools-logo {
-      height: 40px;
+      height: 64px;
       width: auto;
     }
   }
