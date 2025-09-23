@@ -1,77 +1,11 @@
+
 export interface Resource {
-
-    id?: number;
-    biotoolsID: string;
-    biotoolsCURIE: string;
-    name: string;
-    description: string;
-    homepage: string; //long
-    version?: string[];
-    otherID?: string[];
-    relation?: string[];
-    function?: {
-        operation: { uri: string; term: string }[];
-        input: { uri: string; term: string }[];
-        output: { uri: string; term: string }[];
-        note: string;
-        cmd: string;
-    }[];
-    toolType?: string[];
-    topic?: { uri: string; term: string }[];
-    operatingSystem?: string[];
-    language?: string[];
-    license?: string;
-    collectionID?: string[];
-    maturity?: string;
-    cost?: string;
-    accessibility?: string;
-    elixirPlatform?: string[];
-    elixirNode?: string[];
-    elixirCommunity?: string[];
-    link?: { url: string; type: string }[];
-    documentation?: { url: string; type: string }[];
-    download?: { url: string; type: string }[];
-    publication?: {
-        doi: string;
-        pmid: string;
-        pmcid: string;
-        type: string[];
-        version: string;
-        note: string;
-        //TODO metadata
-    }[];
-    credit?: { 
-        name: string;
-        email: string;
-        url: string;
-        orcidid: string;
-        gridid: string;
-        rorid: string;
-        fundrefid: string;
-        typeEntity: string;
-        typeRole: string[];
-        note: string;
-    }[];
-    owner: string;
-    additionDate: string;
-    lastUpdate: string;
-    editPermission: {
-        type: string;
-        authors: string[];
-    }[];
-    validated?: boolean;
-    homepageStatus?: number;
-    elixir_badge?: number; //TODO
-    confidence_flag?: string; //TODO
-}
-
-export interface Tool {
   biotoolsID: string;
+  biotoolsCURIE: string;
   name: string;
   description: string;
   homepage: string;
-  biotoolsCURIE: string;
-  version?: string;
+  version?: string[];
   otherID?: OtherID[];
   function?: ToolFunction[];
   toolType?: ToolType[];
@@ -83,14 +17,26 @@ export interface Tool {
   maturity?: Maturity;
   cost?: Cost;
   accessibility?: Accessibility[];
+  elixirPlatform?: string[];
+  elixirNode?: string[];
+  elixirCommunity?: string[];
   credit?: Credit[];
-  owner?: string;
-  additionDate?: string;
-  lastUpdate?: string;
+  owner: string;
+  additionDate: string;
+  lastUpdate: string;
   publication?: Publication[];
+  link?: Link[];
   download?: Download[];
   documentation?: Documentation[];
   relation?: Relation[];
+  editPermission: {
+    type: string;
+    authors: string[];
+  }[];
+  validated?: boolean;
+  homepageStatus?: number;
+  elixir_badge?: number;
+  confidence_flag?: string;
 }
 
 export interface ToolFunction {
@@ -107,8 +53,8 @@ export interface Operation {
 }
 
 export interface DataFormat {
-  uri: string;
-  term: string;
+  data: {  uri: string;
+  term: string; };
   format?: Format[];
 }
 
@@ -152,7 +98,13 @@ export interface Publication {
   pmcid?: string;
   type?: PublicationType[];
   note?: string;
-  version?: string;
+  // TODO metadata
+}
+
+export interface Link {
+  url: string;
+  type: LinkType;
+  note?: string;
 }
 
 export interface Download {
@@ -265,6 +217,7 @@ export type Accessibility = 'Open access' | 'Restricted access' | 'Proprietary';
 export type EntityType = 'Person' | 'Project' | 'Division' | 'Institute' | 'Consortium' | 'Funding agency';
 export type Role = 'Developer' | 'Maintainer' | 'Provider' | 'Documentor' | 'Contributor' | 'Support';
 export type PublicationType = 'Primary' | 'Method' | 'Usage' | 'Benchmarking study' | 'Review' | 'Other';
+export type LinkType = 'Repository' | 'Issue tracker' | 'Helpdesk' | 'Discussion forum' | 'Mailing list' | 'Service' | 'Galaxy service' | 'Software catalogue' | 'Social media' | 'Technical monitoring' | 'Mirror' | 'Other';
 export type DownloadType = 'Source code' | 'Binaries' | 'Container file' | 'CWL file' | 'Tool wrapper (galaxy)' | 'Tool wrapper (taverna)' | 'Tool wrapper (other)' | 'VM image' | 'Downloads page' | 'API specification' | 'Other';
 export type DocumentationType = 'General' | 'Manual' | 'Installation instructions' | 'User manual' | 'Quick start guide' | 'Tutorial' | 'FAQ' | 'Training material' | 'Other';
 export type RelationType = 'isNewVersionOf' | 'hasNewVersion' | 'usedBy' | 'uses' | 'includes' | 'includedIn';
