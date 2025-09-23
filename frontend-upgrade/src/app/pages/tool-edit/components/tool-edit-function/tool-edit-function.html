@@ -1,0 +1,261 @@
+<div class="function-container">
+  <!-- Description panel -->
+  <mat-card class="info-panel" appearance="outlined">
+    <mat-card-content>
+      <p class="info-text">
+        A tool can have one or more basic functions (modes of operation) described in terms from the 
+        <a href="https://github.com/edamontology/edamontology/" target="_blank" rel="noopener">
+          EDAM Ontology <mat-icon inline>open_in_new</mat-icon>
+        </a>. 
+        Each function performs one or more specific operation(s), e.g. "Sequence alignment". 
+        An operation may have one or more primary inputs and outputs, each of a defined type of data, 
+        e.g. "Sequence", and listing supported format(s) e.g. "FASTA".
+      </p>
+      <p class="info-text">
+        We recommend you specify at least the operation(s) for the primary function of the tool. 
+        See the <a href="http://biotools.readthedocs.io/en/latest/curators_guide.html#function-group" 
+                   target="_blank" rel="noopener">
+          Curation Guidelines <mat-icon inline>open_in_new</mat-icon>
+        </a>.
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Functions list -->
+  <div class="functions-list">
+    <div *ngFor="let functionItem of functions(); let functionIndex = index; trackBy: trackByFunction" 
+         class="function-row">
+      
+      <mat-card class="function-card" appearance="outlined">
+        <mat-card-content>
+          <!-- Remove function button -->
+          <button mat-icon-button 
+                  class="remove-function-btn"
+                  (click)="removeFunction(functionIndex)"
+                  matTooltip="Remove function">
+            <mat-icon>close</mat-icon>
+          </button>
+
+          <div class="function-content">
+            <!-- Inputs Column -->
+            <div class="inputs-column">
+              <h4 class="column-header">Inputs</h4>
+              
+              <!-- Input items -->
+              <div *ngFor="let input of functionItem.input; let inputIndex = index; trackBy: trackByDataFormat" 
+                   class="data-item">
+                <button mat-icon-button 
+                        class="remove-data-btn"
+                        (click)="removeInput(functionItem, inputIndex)"
+                        matTooltip="Remove input">
+                  <mat-icon>close</mat-icon>
+                </button>
+
+                <div class="data-content">
+                  <button mat-button 
+                          class="data-term-btn"
+                          (click)="editData(input)"
+                          matTooltip="Click to edit">
+                    {{ input.data.term }}
+                  </button>
+
+                  <!-- Error display for input data -->
+                  <div *ngFor="let error of getError('function.' + functionIndex + '.input.' + inputIndex + '.data')" 
+                       class="error-message">
+                    {{ error }}
+                  </div>
+
+                  <!-- Formats -->
+                  <div class="formats-section">
+                    <span class="formats-label">(</span>
+                    <span *ngFor="let format of input.format; let formatIndex = index; let isLast = last; trackBy: trackByFormat">
+                      <button mat-button 
+                              class="format-btn"
+                              (click)="removeFormat(input, formatIndex)"
+                              matTooltip="Click to remove">
+                        {{ format.term }}
+                      </button>
+                      <span *ngIf="!isLast">, </span>
+                    </span>
+                    <button mat-button 
+                            class="add-format-btn"
+                            (click)="addFormat(input)">
+                      Add format
+                    </button>
+                    <span class="formats-label">)</span>
+                  </div>
+
+                  <!-- Error display for formats -->
+                  <div *ngFor="let formatErrors of getError('function.' + functionIndex + '.input.' + inputIndex + '.format'); let formatIndex = index" 
+                       class="error-message">
+                    <div *ngFor="let error of formatErrors">
+                      {{ error }}
+                    </div>
+                  </div>
+                </div>
+
+                <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+              </div>
+
+              <!-- Add input button -->
+              <button mat-stroked-button 
+                      class="add-data-btn"
+                      (click)="addInput(functionItem)">
+                Add input
+              </button>
+            </div>
+
+            <!-- Operations Column -->
+            <div class="operations-column">
+              <h4 class="column-header">Operations</h4>
+              
+              <!-- Operation items -->
+              <div class="operations-list">
+                <div *ngFor="let operation of functionItem.operation; let operationIndex = index; trackBy: trackByOperation" 
+                     class="operation-item">
+                  <button mat-button 
+                          class="operation-btn"
+                          (click)="removeOperation(functionItem, operationIndex)"
+                          matTooltip="Click to remove">
+                    {{ operation.term }}
+                  </button>
+
+                  <!-- Error display for operation -->
+                  <div *ngFor="let error of getError('function.' + functionIndex + '.operation.' + operationIndex)" 
+                       class="error-message">
+                    {{ error }}
+                  </div>
+                </div>
+
+                <!-- Add operation button -->
+                <button mat-stroked-button 
+                        class="add-operation-btn"
+                        (click)="addOperation(functionItem)">
+                  Add operation
+                </button>
+
+                <!-- Error display for operations requirement -->
+                <div *ngFor="let error of getError('function.' + functionIndex + '.operation')" 
+                     class="error-message">
+                  {{ error }}
+                </div>
+              </div>
+
+              <!-- Command and Note fields -->
+              <div class="command-note-section">
+                <mat-form-field appearance="outline" class="command-field">
+                  <mat-label>Command</mat-label>
+                  <textarea matInput 
+                            [value]="functionItem.cmd || ''"
+                            (blur)="updateCommand(functionItem, $any($event.target).value)"
+                            placeholder="e.g. meme sequence.s -dna"
+                            rows="2"></textarea>
+                  <mat-icon matSuffix matTooltip="Command line example">help</mat-icon>
+                </mat-form-field>
+
+                <!-- Error display for command -->
+                <div *ngFor="let error of getError('function.' + functionIndex + '.cmd')" 
+                     class="error-message">
+                  {{ error }}
+                </div>
+
+                <mat-form-field appearance="outline" class="note-field">
+                  <mat-label>Note</mat-label>
+                  <textarea matInput 
+                            [value]="functionItem.note || ''"
+                            (blur)="updateNote(functionItem, $any($event.target).value)"
+                            placeholder="e.g. Run MEME on DNA sequences."
+                            rows="2"></textarea>
+                  <mat-icon matSuffix matTooltip="Function description note">help</mat-icon>
+                </mat-form-field>
+
+                <!-- Error display for note -->
+                <div *ngFor="let error of getError('function.' + functionIndex + '.note')" 
+                     class="error-message">
+                  {{ error }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Outputs Column -->
+            <div class="outputs-column">
+              <h4 class="column-header">Outputs</h4>
+              
+              <!-- Output items -->
+              <div *ngFor="let output of functionItem.output; let outputIndex = index; trackBy: trackByDataFormat" 
+                   class="data-item">
+                <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+
+                <div class="data-content">
+                  <button mat-icon-button 
+                          class="remove-data-btn"
+                          (click)="removeOutput(functionItem, outputIndex)"
+                          matTooltip="Remove output">
+                    <mat-icon>close</mat-icon>
+                  </button>
+
+                  <button mat-button 
+                          class="data-term-btn"
+                          (click)="editData(output)"
+                          matTooltip="Click to edit">
+                    {{ output.data.term }}
+                  </button>
+
+                  <!-- Error display for output data -->
+                  <div *ngFor="let error of getError('function.' + functionIndex + '.output.' + outputIndex + '.data')" 
+                       class="error-message">
+                    {{ error }}
+                  </div>
+
+                  <!-- Formats -->
+                  <div class="formats-section">
+                    <span class="formats-label">(</span>
+                    <span *ngFor="let format of output.format; let formatIndex = index; let isLast = last; trackBy: trackByFormat">
+                      <button mat-button 
+                              class="format-btn"
+                              (click)="removeFormat(output, formatIndex)"
+                              matTooltip="Click to remove">
+                        {{ format.term }}
+                      </button>
+                      <span *ngIf="!isLast">, </span>
+                    </span>
+                    <button mat-button 
+                            class="add-format-btn"
+                            (click)="addFormat(output)">
+                      Add format
+                    </button>
+                    <span class="formats-label">)</span>
+                  </div>
+
+                  <!-- Error display for formats -->
+                  <div *ngFor="let formatErrors of getError('function.' + functionIndex + '.output.' + outputIndex + '.format'); let formatIndex = index" 
+                       class="error-message">
+                    <div *ngFor="let error of formatErrors">
+                      {{ error }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Add output button -->
+              <button mat-stroked-button 
+                      class="add-data-btn"
+                      (click)="addOutput(functionItem)">
+                Add output
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Add function button -->
+    <div class="add-function-section">
+      <button mat-stroked-button 
+              class="add-function-btn"
+              (click)="addFunction()">
+        Add function
+      </button>
+    </div>
+  </div>
+</div>

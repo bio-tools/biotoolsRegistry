@@ -1,0 +1,119 @@
+<div class="edam-modal-container">
+  <h2 mat-dialog-title>Select EDAM term</h2>
+
+  <mat-dialog-content class="modal-content">
+    <!-- Suggestions section -->
+    <div *ngIf="data.suggestions && data.suggestions.length > 0" class="suggestions-section">
+      <div class="suggestions-container">
+        <span class="suggestions-label">Suggestions:</span>
+        <button *ngFor="let suggestion of data.suggestions"
+                mat-stroked-button
+                class="suggestion-btn"
+                (click)="applySuggestion(suggestion)">
+          {{ suggestion.term }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter input -->
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Filter</mat-label>
+      <input matInput
+             [(ngModel)]="predicate"
+             placeholder="Search terms...">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <!-- Tree view -->
+    <div class="tree-container">
+      <div class="tree-content">
+        <div *ngFor="let rootNode of getFilteredData()" class="tree-root">
+          <div class="tree-node"
+               [class.suggested]="isSuggested(rootNode)"
+               (click)="selectTerm(rootNode)"
+               [class.selected]="selectedTerm()?.uri === rootNode.data.uri">
+            <span class="node-text"
+                  [matTooltip]="rootNode.definition + (rootNode.exact_synonyms?.length ? ' (' + rootNode.exact_synonyms.join(', ') + ')' : '')"
+                  matTooltipPosition="above">
+              {{ rootNode.text }}
+            </span>
+            <a [href]="getInfoLink(rootNode.data.uri)"
+               target="_blank"
+               rel="noopener"
+               class="info-link"
+               (click)="$event.stopPropagation()"
+               matTooltip="More information">
+              ⓘ
+            </a>
+          </div>
+
+          <!-- Children nodes -->
+          <div *ngIf="rootNode.children" class="tree-children">
+            <div *ngFor="let childNode of rootNode.children" class="tree-child">
+              <div class="tree-node"
+                   [class.suggested]="isSuggested(childNode)"
+                   (click)="selectTerm(childNode)"
+                   [class.selected]="selectedTerm()?.uri === childNode.data.uri">
+                <span class="node-text"
+                      [matTooltip]="childNode.definition + (childNode.exact_synonyms?.length ? ' (' + childNode.exact_synonyms.join(', ') + ')' : '')"
+                      matTooltipPosition="above">
+                  {{ childNode.text }}
+                </span>
+                <a [href]="getInfoLink(childNode.data.uri)"
+                   target="_blank"
+                   rel="noopener"
+                   class="info-link"
+                   (click)="$event.stopPropagation()"
+                   matTooltip="More information">
+                  ⓘ
+                </a>
+              </div>
+
+              <!-- Grandchildren nodes -->
+              <div *ngIf="childNode.children" class="tree-grandchildren">
+                <div *ngFor="let grandchildNode of childNode.children" class="tree-grandchild">
+                  <div class="tree-node"
+                       [class.suggested]="isSuggested(grandchildNode)"
+                       (click)="selectTerm(grandchildNode)"
+                       [class.selected]="selectedTerm()?.uri === grandchildNode.data.uri">
+                    <span class="node-text"
+                          [matTooltip]="grandchildNode.definition + (grandchildNode.exact_synonyms?.length ? ' (' + grandchildNode.exact_synonyms.join(', ') + ')' : '')"
+                          matTooltipPosition="above">
+                      {{ grandchildNode.text }}
+                    </span>
+                    <a [href]="getInfoLink(grandchildNode.data.uri)"
+                       target="_blank"
+                       rel="noopener"
+                       class="info-link"
+                       (click)="$event.stopPropagation()"
+                       matTooltip="More information">
+                      ⓘ
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Selected term display -->
+    <div *ngIf="selectedTerm()" class="selected-term">
+      <h4>Selected: {{ selectedTerm()?.term }}</h4>
+      <p *ngIf="selectedTerm()?.definition" class="term-definition">
+        {{ selectedTerm()?.definition }}
+      </p>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-raised-button
+            color="primary"
+            [disabled]="!selectedTerm()"
+            (click)="saveData()">
+      Save changes
+    </button>
+  </mat-dialog-actions>
+</div>

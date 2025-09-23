@@ -1,14 +1,4 @@
 
-<p>Tool edit works!</p>
-<p>Tool edit works!</p>
-<p>Tool edit works!</p>
-<p>Tool edit works!</p>
-<p>Tool edit works!</p>
-<p>Tool edit works!</p>
-<p>Tool edit works!</p>
-<p>Tool edit works!</p>
-<p>Tool edit works!</p>
-
 @if (notFound()) {
     <div class="error-container">
         <h2>Tool Not Found</h2>
@@ -81,6 +71,19 @@
         [form]="summaryForm"
         [errors]="registrationErrorPayload()">
       </app-tool-edit-summary>
+    </mat-tab>
+
+    <!-- Function tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span>Function</span>
+        <span class="required-indicator"> *</span>
+      </ng-template>
+      <app-tool-edit-function
+        [functions]="toolFunctions"
+        [errors]="registrationErrorPayload"
+        (functionsChange)="updateFunctions($event)">
+      </app-tool-edit-function>
     </mat-tab>
 
 </mat-tab-group>
