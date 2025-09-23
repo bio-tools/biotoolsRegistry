@@ -1,0 +1,133 @@
+.about-container {
+  padding: 2rem;
+  margin: auto;
+
+  h2 {
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+}
+
+.about-section {
+  margin: 3rem 0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.about-summary-card {
+  border: 1px solid #5cacEE;
+  border-radius: 8px;
+  background: #fff;
+  height: 100%;
+
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+
+    mat-icon {
+      color: #005472;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    mat-card-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+
+  mat-card-content {
+    padding: 0 16px 16px 16px;
+
+    p {
+      font-size: 14px;
+      line-height: 1.4;
+      margin: 0;
+      color: #4A4A4A;
+      text-align: justify;
+    }
+  }
+}
+
+.description-text {
+  color: #4A4A4A;
+  font-family: 'Roboto';
+  font-size: 15px;
+  font-weight: 100;
+  text-align: justify;
+  line-height: 1.5;
+}
+
+.flags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+
+  .flag-item {
+    text-align: center;
+    max-width: 80px;
+
+    img {
+      border: 1px solid lightgrey;
+      max-width: 60px;
+      height: auto;
+      border-radius: 4px;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+
+    span {
+      font-size: 12px;
+      font-weight: bold;
+      display: block;
+      margin-top: 5px;
+      color: #4A4A4A;
+    }
+  }
+}
+
+// Links styling
+a {
+  color: #1976d2;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .about-container {
+    padding: 1rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1025px) {
+  .info-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
