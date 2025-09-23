@@ -51,8 +51,8 @@ export class BiotoolsApiService {
 
   /** GET TOOL BY ID */
   getToolByID(biotoolsID: string): Observable<Resource> {
-    return this.http.get<{ detail: Resource }>(`${this.baseUrl}/t/${biotoolsID}`).pipe(
-      map(response => response.detail)
+    return this.http.get<Resource>(`${this.baseUrl}/t/${biotoolsID}`).pipe(
+      catchError(this.handleError)
     );
   }
 
