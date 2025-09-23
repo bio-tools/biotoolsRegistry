@@ -56,5 +56,9 @@ export class ToolPage implements OnInit {
     });
   }
 
+  goBackToSearch() {
+    this.router.navigate(['/t']);
+  }
+
 
 }

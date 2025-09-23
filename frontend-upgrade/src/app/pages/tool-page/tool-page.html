@@ -22,6 +22,14 @@
   <div class="container">
     <div class="tool-page-content">
       
+      <!-- Back to Search Button -->
+      <div class="back-navigation">
+        <button mat-stroked-button (click)="goBackToSearch()" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+          Back to Search
+        </button>
+      </div>
+
       <!--
         <div data-widget-tooltip-position="left" data-widget-size="64" class="opeb pull-right" style=" margin-right: 10px;">
           <a href="" href="https://openebench.bsc.es/tool/{{ software()?.biotoolsID | lowercase }}" target="_blank">

@@ -1,8 +1,25 @@
 // Original Tool Page Styles (based on tool_page.css)
 .original-tool-page {
   padding-top: 80px; // Account for navbar
-  background-color: #f8f9fa;
+  //background-color: #f8f9fa;
   min-height: 100vh;
+}
+
+// Back Navigation Styles
+.back-navigation {
+  margin-bottom: 20px;
+  
+  .back-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
 }
 
 .pill-tag-topic {
@@ -33,12 +50,12 @@
   }
   
   h2 {
-    color: #333;
+    //color: #333;
     margin-bottom: 1rem;
   }
   
   p {
-    color: #666;
+    //color: #666;
     margin-bottom: 2rem;
   }
 }
@@ -54,7 +71,7 @@
   padding-right: 40px;
   padding-top: 20px;
   padding-bottom: 60px;
-  background-color: white;
+  //background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -78,12 +95,12 @@
 
     h2 {
       margin: 0 0 1rem 0;
-      color: #333;
+      //color: #333;
     }
 
     .biotools-curie {
       font-size: 12px;
-      color: #575757;
+      //color: #575757;
     }
 
     .pill-hr-divider {
@@ -166,7 +183,7 @@
 }
 
 span.tool-page-version-text {
-    color: #7f7f7f;
+    //color: #7f7f7f;
     font-weight: lighter;
     display: block;
     font-size: 0.95em;
@@ -624,7 +641,7 @@ span.tool-page-version-text {
   white-space: nowrap;
   margin-top: 40px;
   margin-bottom: 4px;
-  color: #575757;
+  //color: #575757;
   font-weight: bold;
   font-size: 80%;
 
