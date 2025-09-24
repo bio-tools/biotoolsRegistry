@@ -1,4 +1,5 @@
 html, body {
+    background: #F5F5F5;
 	height: 100%;
 	padding-bottom: -40px;
 	/* The html and body elements cannot have any padding or margin. */

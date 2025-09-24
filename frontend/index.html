@@ -9,16 +9,16 @@
 	<base href="/"></base>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="google-site-verification" content="Vk6bfzjuRdI3ej15jMi0_wW1pUoduExCekkrNpO9u2U" />
-	<!-- <title ng-bind="ngMeta.title"></title>
+	<title ng-bind="ngMeta.title"></title>
 	<meta name="description" content="{{ngMeta.description}}" />
 	<meta property="og:title" content="{{ngMeta['og:title']}}" />
 	<meta property="og:description" content="{{ngMeta['og:description']}}" />
-	<meta property="og:image" content="{{ngMeta['og:image']}}" /> -->
-	<title>bio.tools · Bioinformatics Tools and Services Discovery Portal</title>
-	<meta name="description" content="A registry of bioinformatics software resources including biological databases, analytical tools and data services." />
-	<meta property="og:title" content="bio.tools · Bioinformatics Tools and Services Discovery Portal" />
-	<meta property="og:description" content="A registry of bioinformatics software resources including biological databases, analytical tools and data services." />
 	<meta property="og:image" content="https://bio.tools/img/ELIXIR_logo_white_background_small.png" />
+    <meta property="datePublished" content="{{ngMeta['datePublished']}}" />
+    <meta property="article:published_time" content="{{ngMeta['datePublished']}}" />
+    <meta property="dateModified" content="{{ngMeta['dateModified']}}" />
+    <meta property="article:modified_time" content="{{ngMeta['dateModified']}}" />
+    <meta property="og:updated_time" content="{{ngMeta['dateModified']}}" />
 	<meta name="fragment" content="!">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
@@ -28,9 +28,6 @@
 	<link rel="icon" type="image/png" href="/img/favicon.ico">
 	<script defer data-domain="bio.tools" src="https://plausible.galaxyproject.eu/js/script.js"></script>
 </head>
-<style type="text/css">
-	body { background: #F5F5F5 !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
-</style>
 <body scroll-spy="" scroll-offset="120">
 	<div navigation-bar></div>
 	<div details-bar></div>
