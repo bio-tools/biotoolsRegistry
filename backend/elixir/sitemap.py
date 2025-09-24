@@ -4,6 +4,8 @@ import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape
 from rest_framework.decorators import renderer_classes
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from elixirapp import settings
 
 from rest_framework.response import Response
@@ -39,6 +41,7 @@ class GoogleSitemapRenderer(BaseRenderer):
         return ET.tostring(root)
 
 
+@method_decorator(cache_page(60 * 60 * 24), name='get')
 class Sitemap(APIView):
     """
     Generate the sitemap
