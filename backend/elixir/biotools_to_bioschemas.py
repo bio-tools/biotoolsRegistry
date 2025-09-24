@@ -1,6 +1,13 @@
 # Credit for this script to Alban Gaignard
 # https://github.com/albangaignard
-import json
+
+
+def as_list(x):
+    if x is None:
+        return []
+    if isinstance(x, list):
+        return x
+    return [x]
 
 
 def rdfize(entry):
@@ -8,329 +15,167 @@ def rdfize(entry):
     Transforms a biotools json entry into RDF, and returns a JSON-LD serialization. The following fields
     are covered: contact, publication, EDAM topic, EDAM operation, EDAM inputs & outputs.
     """
-    jsonld = {}
 
-    try:
-        ctx = {
-            "@context": {
+    ctx = {
+        "@context": [
+            "https://schema.org",
+            {
                 "@base": "https://bio.tools/",
+                "sc": "https://schema.org/",
                 "biotools": "https://bio.tools/ontology/",
                 "edam": "http://edamontology.org/",
                 "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                "sc": "http://schema.org/",
-                "dct": "http://purl.org/dc/terms/",
                 "bsc": "http://bioschemas.org/",
                 "bsct": "http://bioschemas.org/types/",
-                "description": "sc:description",
-                "name": "sc:name",
-                "identifier": "sc:identifier",
-                "sameAs": "sc:sameAs",
-                "homepage": "sc:url",
-                "toolType": "sc:additionalType",
                 "primaryContact": "biotools:primaryContact",
-                "author": "sc:author",
-                "provider": "sc:provider",
-                "contributor": "sc:contributor",
-                "funder": "sc:funder",
-                "hasPublication": "sc:citation",
-                "hasTopic": "sc:applicationSubCategory",
-                "hasOperation": "sc:featureList",
+                "hasPublication": "citation",
+                "hasTopic": "applicationSubCategory",
+                "hasOperation": "featureList",
                 "hasInputData": "bsc:input",
                 "hasOutputData": "bsc:output",
-                "license": "sc:license",
-                "version": "sc:softwareVersion",
-                "isAccessibleForFree": "sc:isAccessibleForFree",
-                "operatingSystem": "sc:operatingSystem",
-                "hasApiDoc": "sc:softwareHelp",
-                "hasGenDoc": "sc:softwareHelp",
-                "hasTermsOfUse": "sc:termsOfService",
-                "conformsTo": "dct:conformsTo",
-            }
+                "hasApiDoc": "softwareHelp",
+                "hasGenDoc": "softwareHelp",
+                "hasTermsOfUse": "termsOfService",
+                "conformsTo": "http://purl.org/dc/terms/conformsTo",
+                "version": "softwareVersion",
+            },
+        ]
+    }
+
+    biotools_id = str(entry["biotoolsID"])
+    name = str(entry["name"])
+    tool = {"@id": str(biotools_id) if biotools_id else None, "@type": "SoftwareApplication", "name": str(name),
+            "applicationCategory": "Computational science tool",
+            "conformsTo": "https://bioschemas.org/profiles/ComputationalTool/1.0-RELEASE", "author": [], "provider": [],
+            "contributor": [], "funder": [], "primaryContact": [], "description": entry.get("description"),
+            "url": entry.get("homepage"), "version": entry.get("version"), "license": entry.get("license"),
+            "operatingSystem": [os for os in as_list(entry.get("operatingSystem")) if os],
+            "toolType": as_list(entry.get("toolType")), "datePublished": entry.get("additionDate"),
+            "dateModified": entry.get("lastUpdate")}
+
+    if entry.get("homepage"):
+        tool["mainEntityOfPage"] = {"@type": "WebPage", "@id": entry["homepage"]}
+
+    if entry.get("version"):
+        tool["version"] = "".join(as_list(entry.get("version")))
+
+    # SameAs from otherID/link
+    same_as = []
+    for oid in as_list(entry.get("otherID")):
+        v = oid.get("value")
+        if v:
+            same_as.append(v)
+    for lnk in as_list(entry.get("link")):
+        if lnk.get("url"):
+            same_as.append(lnk["url"])
+    if same_as:
+        tool["sameAs"] = list(dict.fromkeys(same_as))  # de‑dupe
+
+    for credit in as_list(entry.get("credit")):
+        roles = set(as_list(credit.get("typeRole")))
+        ent = credit.get("typeEntity") or ""
+        is_person = "Person" in ent
+        sType = "sc:Person" if is_person else "sc:Organization"
+        node = {}
+        if credit.get("name"):
+            node |= {"name": credit["name"]}
+        if credit.get("orcidid"):
+            node |= {"@id": credit["orcidid"]}
+        if credit.get("url"):
+            node |= {"url": credit["url"]}
+
+        if not node:
+            continue
+
+        node |= {"@type": sType}
+
+        if "Funding agency" in (credit.get("typeEntity") or ""):
+            tool["funder"].append(node)
+        if "Developer" in roles:
+            tool["author"].append(node)
+        if "Provider" in roles:
+            tool["provider"].append(node)
+        if "Contributor" in roles:
+            tool["contributor"].append(node)
+        if "Primary contact" in roles:
+            tool["primaryContact"].append(node)
+
+    if entry.get("publication"):
+        pubs = []
+        for p in entry["publication"]:
+            if p.get("pmid"):
+                pubs.append("pubmed:" + str(p["pmid"]))
+            if p.get("pmcid"):
+                pubs.append("pmcid:" + str(p["pmcid"]))
+            if p.get("doi") and "<" not in p["doi"] and ">" not in p["doi"]:
+                pubs.append({"@id": "https://doi.org/" + p["doi"], "@type": "CreativeWork"})
+        if pubs:
+            tool["hasPublication"] = pubs
+
+    if entry.get("function"):
+        op_idx = 0
+        for fn in entry["function"]:
+            op_idx += 1
+            for op in as_list(fn.get("operation")):
+                if op and op.get("uri"):
+                    tool.setdefault("hasOperation", []).append({"@id": op["uri"]})
+            # inputs
+            in_idx = 0
+            for inp in as_list(fn.get("input")):
+                in_idx += 1
+                data = inp.get("data") or {}
+                term = data.get("term") or data.get("uri") or "Input"
+                uri = data.get("uri") or ""
+                input_object = {
+                    "@id": f"{tool['@id']}/op_{op_idx}/in_{in_idx}",
+                    "@type": "bsct:FormalParameter",
+                    "name": term,
+                    "identifier": uri,
+                    "sameAs": uri,
+                }
+                tool.setdefault("hasInputData", []).append(input_object)
+            # outputs
+            out_idx = 0
+            for outp in as_list(fn.get("output")):
+                out_idx += 1
+                data = outp.get("data") or {}
+                term = data.get("term") or data.get("uri") or "Output"
+                uri = data.get("uri") or ""
+                output_object = {
+                    "@id": f"{tool['@id']}/op_{op_idx}/out_{out_idx}",
+                    "@type": "bsct:FormalParameter",
+                    "name": term,
+                    "identifier": uri,
+                    "sameAs": uri,
+                }
+                tool.setdefault("hasOutputData", []).append(output_object)
+
+    if entry.get("topic"):
+        tool["hasTopic"] = [{"@id": t["uri"]} for t in entry["topic"] if t.get("uri")]
+
+    cost = entry.get("cost")
+    if cost == "Free of charge":
+        tool["isAccessibleForFree"] = True
+        # Google prefers 'offers', otherwise it might mark a tool's metadata as invalid
+        tool["offers"] = {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
         }
-        objects = []
-        graph = {"@graph": objects}
-        jsonld.update(ctx)
-        jsonld.update(graph)
 
-        tool = {}
-        tool["@id"] = str(entry["biotoolsID"])
-        tool["@type"] = ["sc:SoftwareApplication"]
-        tool["applicationCategory"] = "Computational science tool"
-        tool["primaryContact"] = []
-        tool["author"] = []
-        tool["contributor"] = []
-        tool["provider"] = []
-        tool["funder"] = []
-        tool[
-            "conformsTo"
-        ] = "https://bioschemas.org/profiles/ComputationalTool/1.0-RELEASE"
+    for doc in as_list(entry.get("documentation")):
+        url = (doc.get("url") or "").replace("|", "%7C")
+        if not url:
+            continue
+        types = as_list(doc.get("type"))
+        if any("API" in t for t in types):
+            tool.setdefault("hasApiDoc", []).append({"@id": url})
+        elif any("Terms" in t for t in types):
+            tool.setdefault("hasTermsOfUse", []).append({"@id": url})
+        else:
+            tool.setdefault("hasGenDoc", []).append({"@id": url})
 
-        if entry.get("credit"):
-            for credit in entry["credit"]:
-                # print(credit)
-                ## Retrieving FUNDERS
-                if "typeEntity" in credit.keys() and credit["typeEntity"]:
-                    if "Funding agency" in credit["typeEntity"]:
-                        sType = "schema:Organization"
-                        if "orcidid" in credit.keys() and credit["orcidid"] is not None:
-                            if not "funder" in tool.keys():
-                                tool["funder"] = {
-                                    "@id": credit["orcidid"],
-                                    "@type": sType,
-                                }
-                            else:
-                                tool["funder"].append(
-                                    {"@id": credit["orcidid"], "@type": sType}
-                                )
-                        elif "name" in credit.keys() and credit["name"] is not None:
-                            if not "funder" in tool.keys():
-                                tool["funder"] = [credit["name"]]
-                            else:
-                                tool["funder"].append(credit["name"])
-
-                # Retrieving CONTRIBUTORS, PROVIDERS, DEVELOPERS
-                if credit.get("typeRole"):
-                    if "Developer" in credit["typeRole"]:
-                        # print("**** DEVELOPER ****")
-                        # print(credit['name'])
-                        if "typeEntity" in credit.keys() and credit["typeEntity"]:
-                            if "Person" in credit["typeEntity"]:
-                                sType = "schema:Person"
-                            else:
-                                sType = "schema:Organization"
-                            if "orcidid" in credit.keys() and credit["orcidid"] is not None:
-                                if not "author" in tool.keys():
-                                    tool["author"] = {
-                                        "@id": credit["orcidid"],
-                                        "@type": sType,
-                                    }
-                                else:
-                                    tool["author"].append(
-                                        {"@id": credit["orcidid"], "@type": sType}
-                                    )
-                            elif "name" in credit.keys() and credit["name"] is not None:
-                                if not "author" in tool.keys():
-                                    tool["author"] = [credit["name"]]
-                                else:
-                                    tool["author"].append(credit["name"])
-                        else:
-                            if "name" in credit.keys() and credit["name"] is not None:
-                                if not "author" in tool.keys():
-                                    tool["author"] = [credit["name"]]
-                                else:
-                                    tool["author"].append(credit["name"])
-
-                    if "Provider" in credit["typeRole"]:
-                        # print("**** PROVIDER ****")
-                        # print(credit['name'])
-                        if "typeEntity" in credit.keys() and credit["typeEntity"]:
-                            if "Person" in credit["typeEntity"]:
-                                sType = "schema:Person"
-                            else:
-                                sType = "schema:Organization"
-
-                            if "orcidid" in credit.keys() and credit["orcidid"] is not None:
-                                if not "provider" in tool.keys():
-                                    tool["provider"] = {
-                                        "@id": credit["orcidid"],
-                                        "@type": sType,
-                                    }
-                                else:
-                                    tool["provider"].append(
-                                        {"@id": credit["orcidid"], "@type": sType}
-                                    )
-                            elif "name" in credit.keys() and credit["name"] is not None:
-                                if not "provider" in tool.keys():
-                                    tool["provider"] = [credit["name"]]
-                                else:
-                                    tool["provider"].append(credit["name"])
-                        else:
-                            if "name" in credit.keys() and credit["name"] is not None:
-                                if not "provider" in tool.keys():
-                                    tool["provider"] = [credit["name"]]
-                                else:
-                                    tool["provider"].append(credit["name"])
-
-                    if "Contributor" in credit["typeRole"]:
-
-                        if "typeEntity" in credit.keys() and credit["typeEntity"]:
-                            if "Person" in credit["typeEntity"]:
-                                sType = "schema:Person"
-                            else:
-                                sType = "schema:Organization"
-
-                            if "orcidid" in credit.keys() and credit["orcidid"] is not None:
-                                if not "contributor" in tool.keys():
-                                    tool["contributor"] = {
-                                        "@id": credit["orcidid"],
-                                        "@type": sType,
-                                    }
-                                else:
-                                    tool["contributor"].append(
-                                        {"@id": credit["orcidid"], "@type": sType}
-                                    )
-                            elif "name" in credit.keys() and credit["name"] is not None:
-                                if not "contributor" in tool.keys():
-                                    tool["contributor"] = [credit["name"]]
-                                else:
-                                    tool["contributor"].append(credit["name"])
-                        else:
-                            if "name" in credit.keys() and credit["name"] is not None:
-                                if not "contributor" in tool.keys():
-                                    tool["contributor"] = [credit["name"]]
-                                else:
-                                    tool["contributor"].append(credit["name"])
-
-                    if "Primary contact" in credit["typeRole"]:
-                        if "typeEntity" in credit.keys() and credit["typeEntity"]:
-                            if "Person" in credit["typeEntity"]:
-                                sType = "schema:Person"
-                            else:
-                                sType = "schema:Organization"
-
-                            if "orcidid" in credit.keys() and credit["orcidid"] is not None:
-                                if not "primaryContact" in tool.keys():
-                                    tool["primaryContact"] = {
-                                        "@id": credit["orcidid"],
-                                        "@type": sType,
-                                    }
-                                else:
-                                    tool["primaryContact"].append(
-                                        {"@id": credit["orcidid"], "@type": sType}
-                                    )
-                            elif "name" in credit.keys() and credit["name"] is not None:
-                                if not "primaryContact" in tool.keys():
-                                    tool["primaryContact"] = [credit["name"]]
-                                else:
-                                    tool["primaryContact"].append(credit["name"])
-                        else:
-                            if "name" in credit.keys() and credit["name"] is not None:
-                                if not "primaryContact" in tool.keys():
-                                    tool["primaryContact"] = [credit["name"]]
-                                else:
-                                    tool["primaryContact"].append(credit["name"])
-
-        if entry.get("publication"):
-            for publication in entry["publication"]:
-                if publication.get("pmid"):
-                    if not "hasPublication" in tool.keys():
-                        tool["hasPublication"] = ["pubmed:" + publication["pmid"]]
-                    else:
-                        tool["hasPublication"].append("pubmed:" + publication["pmid"])
-                if publication.get("pmcid"):
-                    if not "hasPublication" in tool.keys():
-                        tool["hasPublication"] = ["pmcid:" + publication["pmcid"]]
-                    else:
-                        tool["hasPublication"].append("pmcid:" + publication["pmcid"])
-                if publication.get("doi"):
-                    if not ("<" in publication["doi"] or ">" in publication["doi"]):
-                        if not "hasPublication" in tool.keys():
-                            tool["hasPublication"] = [
-                                {
-                                    "@id": "https://doi.org/" + publication["doi"],
-                                    "@type": "sc:CreativeWork",
-                                }
-                            ]
-                        else:
-                            tool["hasPublication"].append(
-                                {
-                                    "@id": "https://doi.org/" + publication["doi"],
-                                    "@type": "sc:CreativeWork",
-                                }
-                            )
-
-        if entry.get("function"):
-            counter_op = 0
-            for item in entry["function"]:
-                counter_op += 1
-                if item.get("operation"):
-                    for op in item["operation"]:
-                        if not "hasOperation" in tool.keys():
-                            tool["hasOperation"] = [{"@id": op["uri"]}]
-                        else:
-                            tool["hasOperation"].append({"@id": op["uri"]})
-
-                if item.get("input"):
-                    counter_in = 0
-                    for input in item["input"]:
-                        counter_in += 1
-                        input_object = {
-                            "@id": tool["@id"]
-                            + "/op_"
-                            + str(counter_op)
-                            + "/in_"
-                            + str(counter_in),
-                            "@type": "bsct:FormalParameter",
-                            "name": input["data"]["term"],
-                            "identifier": input["data"]["uri"],
-                            "sameAs": input["data"]["uri"],
-                        }
-                        if not "hasInputData" in tool.keys():
-                            tool["hasInputData"] = [input_object]
-                        else:
-                            tool["hasInputData"].append(input_object)
-
-                if item.get("output"):
-                    counter_out = 0
-                    for output in item["output"]:
-                        counter_out += 1
-                        output_object = {
-                            "@id": tool["@id"]
-                            + "/op_"
-                            + str(counter_op)
-                            + "/in_"
-                            + str(counter_out),
-                            "@type": "bsct:FormalParameter",
-                            "name": output["data"]["term"],
-                            "identifier": output["data"]["uri"],
-                            "sameAs": output["data"]["uri"],
-                        }
-                        if not "hasOutputData" in tool.keys():
-                            tool["hasOutputData"] = [output_object]
-                        else:
-                            tool["hasOutputData"].append(output_object)
-
-        if entry.get("topic"):
-            for item in entry["topic"]:
-                if not "hasTopic" in tool.keys():
-                    tool["hasTopic"] = [{"@id": item["uri"]}]
-                else:
-                    tool["hasTopic"].append({"@id": item["uri"]})
-
-        if entry.get("cost"):
-            for item in entry["cost"]:
-                if not "isAccessibleForFree" in tool.keys():
-                    if "Free" in entry["cost"]:
-                        tool["isAccessibleForFree"] = True
-                    else:
-                        tool["isAccessibleForFree"] = False
-
-        if entry.get("documentation"):
-            for item in entry["documentation"]:
-                if "type" in item.keys() and item["type"]:
-                    item["url"] = item["url"].replace("|", "%7C")
-                    if "API" in item["type"]:
-                        if not "hasApiDoc" in tool.keys():
-                            tool["hasApiDoc"] = [{"@id": item["url"]}]
-                        else:
-                            tool["hasApiDoc"].append({"@id": item["url"]})
-                    elif "Terms" in item["type"]:
-                        if not "hasTermsOfUse" in tool.keys():
-                            tool["hasTermsOfUse"] = [{"@id": item["url"]}]
-                        else:
-                            tool["hasTermsOfUse"].append({"@id": item["url"]})
-                    else:
-                        if not "hasGenDoc" in tool.keys():
-                            tool["hasGenDoc"] = [{"@id": item["url"]}]
-                        else:
-                            tool["hasGenDoc"].append({"@id": item["url"]})
-
-    except KeyError as e:
-        print(e)
-        pass
-
-    graph["@graph"] = tool
-    jsonld.update(graph)
-    # print(json.dumps(jsonld, indent=4, sort_keys=True))
-    # raw_jld = json.dumps(entry, indent=4, sort_keys=True)
+    jsonld = {}
+    jsonld.update(ctx)
+    jsonld["@graph"] = [tool]
     return jsonld
