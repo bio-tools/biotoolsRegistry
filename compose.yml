@@ -131,6 +131,15 @@ services:
       - net
     restart: unless-stopped
 
+  rendertron:
+    image: dockette/rendertron
+    container_name: biotools-rendertron
+    ports:
+      - "3000:3000"
+    networks:
+      - net
+    restart: unless-stopped
+
 networks:
   net:
     name: biotools-net
