@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'corsheaders', #TODO: rm
     'elixir',
     'rest_framework',
     'rest_framework.authtoken',
@@ -115,6 +116,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 MIDDLEWARE = (
+    'corsheaders.middleware.CorsMiddleware', #TODO: rm
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -143,6 +145,11 @@ TEMPLATES = [
         },
     },
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True #TODO: RM
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:4200",
+#]
 
 WSGI_APPLICATION = getenv('WSGI_APPLICATION', 'elixirapp.wsgi.application')
 
