@@ -15,6 +15,7 @@ Including another URLconf
 from dj_rest_auth.views import PasswordResetView, PasswordResetConfirmView
 from django.contrib import admin
 from django.urls import include, path, re_path
+from elixir import views
 
 urlpatterns = [
 	re_path(r'^admin/', admin.site.urls),
@@ -34,4 +35,10 @@ urlpatterns = [
 		 name='password_reset_confirm'),
 	path('accounts/', include('allauth.urls')),
 	path('', include('elixir.urls')),
+    
+	# Social auth
+    path('rest-auth/orcid/', views.OrcidLogin.as_view(), name='orcid_login'),
+    path('rest-auth/orcid/connect/', views.OrcidConnect.as_view(), name='orcid_connect'),
+    path('rest-auth/github/', views.GitHubLogin.as_view(), name='github_login'),
+    path('rest-auth/github/connect/', views.GitHubConnect.as_view(), name='github_connect'),
 ]
