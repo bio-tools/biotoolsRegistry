@@ -103,12 +103,19 @@ def rdfize(entry):
     if entry.get("publication"):
         pubs = []
         for p in entry["publication"]:
-            if p.get("pmid"):
-                pubs.append("pubmed:" + str(p["pmid"]))
-            if p.get("pmcid"):
-                pubs.append("pmcid:" + str(p["pmcid"]))
-            if p.get("doi") and "<" not in p["doi"] and ">" not in p["doi"]:
-                pubs.append({"@id": "https://doi.org/" + p["doi"], "@type": "CreativeWork"})
+            doi_url = "https://doi.org/" + p["doi"] if p.get("doi") else None
+            pmid_url = "https://pubmed.ncbi.nlm.nih.gov/" + p["pmid"] if p.get("pmid") else None
+            pmcid_url = "https://pubmed.ncbi.nlm.nih.gov/" + p["pmcid"] if p.get("pmcid") else None
+
+            if not (doi_url or pmid_url or pmcid_url):
+                continue
+
+            publication = {
+                "@id": doi_url or pmid_url or pmcid_url,
+                "@type": "ScholarlyArticle",
+                "sameAs": [id for id in [doi_url, pmid_url, pmcid_url] if id],
+            }
+            pubs.append(publication)
         if pubs:
             tool["hasPublication"] = pubs
 
