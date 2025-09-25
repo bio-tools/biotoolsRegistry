@@ -69,6 +69,8 @@ INSTALLED_APPS = (
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.orcid',
+    'allauth.socialaccount.providers.github',
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'django_extensions',
@@ -245,6 +247,29 @@ RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate
 GITHUB_ECOSYSTEM_ON = getenv('GITHUB_ECOSYSTEM_ON', False, castf=bool)
 
 ADMIN_EMAIL_LIST = getenv('ADMIN_EMAIL_LIST', [], castf=json.loads)
+
+SOCIALACCOUNT_PROVIDERS = {
+    'orcid': {
+        'BASE_DOMAIN': getenv('ORCID_BASE_DOMAIN', 'sandbox.orcid.org'),  # Use 'sandbox.orcid.org' for testing
+        'MEMBER_API': getenv('ORCID_MEMBER_API', False, castf=bool),  # Set to True for member API
+        'SCOPE': ['read-limited'],  # Standard scope for reading ORCID data
+        'APP': {
+            'client_id': getenv('ORCID_CLIENT_ID', 'APP-A964UH0MDGR37RWY'),
+            'secret': getenv('ORCID_CLIENT_SECRET', ''),
+        }
+    },
+
+    'github': {
+        'APP': {
+            'client_id': getenv('GITHUB_CLIENT_ID', ''),
+            'secret': getenv('GITHUB_CLIENT_SECRET', ''),
+        },
+        'SCOPE': [
+            'user',
+            'read:user',
+        ],
+    }
+}
 
 # settings specific to deployment
 try:
