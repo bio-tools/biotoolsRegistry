@@ -101,6 +101,86 @@ angular.module('angularDjangoRegistrationAuthApp')
 				$rootScope.$broadcast("djangoAuth.logged_in", data);
 			});
 		},
+		'orcidLogin': function(code){
+			// POST request at rest-auth/orcid/login/
+			var djangoAuth = this;
+			return this.request({
+				'method': "POST",
+				'url': "/orcid/",
+				'data': {
+					'code': code
+				}
+			}).then(function(data){
+				// Handle successful ORCID login
+				console.log(code);
+				console.log("ORCID login successful:", data);
+				if(!djangoAuth.use_session){
+					$http.defaults.headers.common.Authorization = 'Token ' + data.key;
+					localStorage.token = data.key;
+				}
+				djangoAuth.authenticated = true;
+				$rootScope.$broadcast("djangoAuth.logged_in", data);
+			}, function(error) {
+				console.log(code);
+				// Handle error
+				console.error("ORCID login failed:", error);
+			});
+		},
+		'orcidConnect': function(code){
+			var djangoAuth = this;
+			return this.request({
+				'method': "POST",
+				'url': "/orcid/connect/",
+				'data': {
+					'code': code
+				}
+			}).then(function(data){
+				// Handle successful ORCID connection
+				console.log("ORCID connection successful:", data);
+			}, function(error) {
+				// Handle error
+				console.error("ORCID connection failed:", error);
+			});
+		},
+		'githubLogin': function(code){
+			// POST request at rest-auth/github/login/
+			var djangoAuth = this;
+			return this.request({
+				'method': "POST",
+				'url': "/github/",
+				'data': {
+					'code': code,
+					'id_token': '',
+					'access_token': ''
+				}
+			}).then(function(data){
+				if(!djangoAuth.use_session){
+					$http.defaults.headers.common.Authorization = 'Token ' + data.key;
+					localStorage.token = data.key;
+				}
+				djangoAuth.authenticated = true;
+				$rootScope.$broadcast("djangoAuth.logged_in", data);
+			}, function(error) {
+				// Handle error
+				console.error("GitHub login failed:", error);
+			});
+		},
+		'githubConnect': function(code){
+			var djangoAuth = this;
+			return this.request({
+				'method': "POST",
+				'url': "/github/connect/",
+				'data': {
+					'code': code
+				}
+			}).then(function(data){
+				// Handle successful GitHub connection
+				console.log("GitHub connection successful:", data);
+			}, function(error) {
+				// Handle error
+				console.error("GitHub connection failed:", error);
+			});
+		},
 		'logout': function(){
 			var djangoAuth = this;
 			return this.request({
