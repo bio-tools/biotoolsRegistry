@@ -28,4 +28,22 @@ angular.module('elixir_front')
             controller: 'ChangePasswordController'
         });
     };
+
+	$scope.orcidConnect = function() {
+		console.log('Connecting to ORCID');
+        var client_id = 'APP-A964UH0MDGR37RWY';
+		var redirect_uri = 'http://127.0.0.1/orcid/callback/';
+
+		console.log('Redirecting to ORCID');
+		window.location.href = 'https://sandbox.orcid.org/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
+	};
+
+	$scope.githubConnect = function() {
+		console.log('Connecting to GitHub');
+		var client_id = 'Ov23liQxjwvSvDR3gUzX';
+		var redirect_uri = 'http://127.0.0.1/github/callback/';
+
+		console.log('Redirecting to GitHub');
+		window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + client_id + '&redirect_uri=' + redirect_uri;
+	};
 }]);
