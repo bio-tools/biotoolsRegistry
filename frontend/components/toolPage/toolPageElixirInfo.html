@@ -98,7 +98,7 @@
 	<div class="tool-page-diver-label">
 		<span tooltips tooltip-content="Tool has been assigned to the following collections">Tool collection(s)</span>
 	</div>
-	<span> <a ng-if="software.collectionID.length > 0" ng-repeat="collection in software.collectionID" class="pill-tag-secondary-background" href="" ng-click = collectionNameClicked(collection)>
+	<span> <a ng-if="software.collectionID.length > 0" ng-repeat="collection in software.collectionID" class="pill-tag-collection-background" href="" ng-click = collectionNameClicked(collection)>
 		{{ ::collection }}
 	</a></span>
 </div>

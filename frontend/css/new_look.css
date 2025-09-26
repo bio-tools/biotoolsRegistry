@@ -181,6 +181,20 @@ img.biotools-logo:hover{
 	margin-top: 0.45em
 }
 
+/* Collection tags for "unofficial" content */
+.pill-tag-collection-background {
+    background-color: transparent;
+    border: 1.5px dotted #868d94;
+    color: #4e5255;
+    text-decoration: none;
+}
+
+.pill-tag-collection-background:hover {
+    background-color: #e0e0e0;
+    color: #575757;
+    border-color: #575757;
+}
+
 .pill-tag-primary-background, 
 .pill-tag-secondary-background, 
 .pill-tag-third-background, 
@@ -191,7 +205,8 @@ img.biotools-logo:hover{
 .pill-tag-link-element,
 .pill-tag-verified,
 .pill-tag-documentation-element,
-.pill-tag-covid-element
+.pill-tag-covid-element,
+.pill-tag-collection-background
 {
 	border-radius: 8px;
 	font-family: 'Roboto';
