@@ -5,14 +5,14 @@ angular.module('elixir_front.controllers').controller('LoginMangerController', [
 	vm.openLoginModal = function() {
 		$uibModal.open({
 			templateUrl: 'partials/modals/loginModal.html',
-			controller: ['$uibModalInstance', 'djangoAuth', '$rootScope', '$state', LoginModalController],
+			controller: ['$uibModalInstance', 'djangoAuth', '$rootScope', '$state', 'AppConfig', LoginModalController],
 			controllerAs: 'vm',
 			windowClass: 'login-modal-window'
 		});
 	};
 }]);
 
-function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state) {
+function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state, AppConfig) {
 	var vm = this;
 	vm.error = {};
 
@@ -56,5 +56,22 @@ function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state)
 	vm.forgotButtonPressed = function() {
 		$uibModalInstance.close();
 		$state.go('reset-password');
+	}
+
+	vm.orcidLoginPressed = function() {
+		var client_id = AppConfig.ORCID_CLIENT_ID;
+		var redirect_uri = AppConfig.ORCID_REDIRECT_URI;
+
+		console.log('Redirecting to ORCID');
+		window.location.href = 'https://sandbox.orcid.org/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
+	}
+
+	vm.githubLoginPressed = function() {
+		var client_id = AppConfig.GITHUB_CLIENT_ID;
+		var redirect_uri = AppConfig.GITHUB_REDIRECT_URI;
+		var scope = AppConfig.GITHUB_SCOPE;
+
+		console.log('Redirecting to GitHub');
+		window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + client_id + '&redirect_uri=' + redirect_uri + '&scope=' + scope;
 	}
 }

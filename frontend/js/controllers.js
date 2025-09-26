@@ -1469,6 +1469,90 @@ angular.module('elixir_front.controllers', [])
 
 
 }])
+.controller('OrcidCallbackController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$location', function($scope, $state, djangoAuth, $rootScope, $location) {
+  	var code = $location.search().code;
+	console.log('in orcid callback');
+	console.log('ORCID code:', code);
+
+	// if user is authenticated call djangoAuth.orcidConnect
+	if (djangoAuth.authenticated) {
+		console.log('user is authenticated, connecting ORCID iD');
+		djangoAuth.orcidConnect(code)
+		.then(function (response) {
+			console.log("ORCID connection successful:", response);
+		}, function (error) {
+			console.error("ORCID connection failed:", error);
+		});
+	}
+	else {
+		djangoAuth.orcidLogin(code)
+		.then(function (response) {
+			console.log(code)
+			$state.go('search');
+			console.log('with rootScope');
+			console.log($rootScope.toState);
+		}, function (response) {
+			var error = $location.search().error;
+			var error_description = $location.search().error_description;
+
+			//TODO
+			$scope.loginErrors = error_description;
+			console.log("ORCID login failed");
+		});
+	}
+}])
+.controller('GitHubCallbackController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$location', function($scope, $state, djangoAuth, $rootScope, $location) {
+  	var code = $location.search().code;
+	console.log('in github callback');
+	console.log('GitHub code:', code);
+
+	// Check for errors in the callback
+	var error = $location.search().error;
+	var error_description = $location.search().error_description;
+	
+	if (error) {
+		console.log("GitHub callback error:", error, error_description);
+		$scope.loginErrors = error_description || "GitHub login failed";
+		$state.go('login');
+		return;
+	}
+
+	if (code) {
+		// if user is authenticated, try to connect GitHub account
+		if (djangoAuth.authenticated) {
+			console.log('user is authenticated, connecting GitHub account');
+			djangoAuth.githubConnect(code)
+			.then(function (response) {
+				console.log('GitHub account connected successfully');
+				$state.go('profile');
+			}, function (error) {
+				console.error('GitHub connection failed:', error);
+				$scope.loginErrors = "Failed to connect GitHub account";
+				$state.go('profile');
+			});
+		} else {
+			// Try to log in with GitHub
+			djangoAuth.githubLogin(code)
+			.then(function (response) {
+				console.log('GitHub login successful');
+				$state.go('search');
+				// go to states set before redirection to login
+				//if(typeof $rootScope.toState == 'undefined' || /signup/.test($rootScope.toState.name) || /reset-password/.test($rootScope.toState.//name)) {
+				//	$state.go('search');
+				//} else {
+				//	$state.go($rootScope.toState.name, $rootScope.toStateParams);
+				//}
+			}, function (response) {
+				console.error('GitHub login failed:', response);
+				$scope.loginErrors = response.non_field_errors || ["GitHub login failed"];
+				$state.go('login');
+			});
+		}
+	} else {
+		console.log("No code provided in GitHub callback");
+		$state.go('login');
+	}
+}])
 .controller('LoginController', ['$scope', '$state', 'djangoAuth', '$rootScope',function($scope, $state, djangoAuth, $rootScope) {
 	$scope.credentials = {};
 
