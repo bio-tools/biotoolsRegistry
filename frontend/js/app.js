@@ -46,6 +46,16 @@ var elixir_front = angular.module('elixir_front', [
 		},
 		resolve: {}
 	})
+	.state('orcid_callback', {
+		url: "/orcid/callback/",
+		templateUrl: "partials/orcidCallback.html",
+		controller: 'OrcidCallbackController'
+	})
+	.state('github_callback', {
+		url: "/github/callback/",
+		templateUrl: "partials/githubCallback.html",
+		controller: 'GitHubCallbackController'
+	})
 	.state('home', {
 		url: "/",
 		templateUrl: "components/home/home.html",
