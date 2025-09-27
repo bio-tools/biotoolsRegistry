@@ -1503,9 +1503,7 @@ angular.module('elixir_front.controllers', [])
 }])
 .controller('GitHubCallbackController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$location', function($scope, $state, djangoAuth, $rootScope, $location) {
   	var code = $location.search().code;
-	console.log('in github callback');
-	console.log('GitHub code:', code);
-
+	
 	// Check for errors in the callback
 	var error = $location.search().error;
 	var error_description = $location.search().error_description;
@@ -1534,7 +1532,6 @@ angular.module('elixir_front.controllers', [])
 			// Try to log in with GitHub
 			djangoAuth.githubLogin(code)
 			.then(function (response) {
-				console.log('GitHub login successful');
 				$state.go('search');
 				// go to states set before redirection to login
 				//if(typeof $rootScope.toState == 'undefined' || /signup/.test($rootScope.toState.name) || /reset-password/.test($rootScope.toState.//name)) {

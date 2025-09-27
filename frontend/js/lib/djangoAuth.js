@@ -112,8 +112,6 @@ angular.module('angularDjangoRegistrationAuthApp')
 				}
 			}).then(function(data){
 				// Handle successful ORCID login
-				console.log(code);
-				console.log("ORCID login successful:", data);
 				if(!djangoAuth.use_session){
 					$http.defaults.headers.common.Authorization = 'Token ' + data.key;
 					localStorage.token = data.key;
@@ -121,12 +119,11 @@ angular.module('angularDjangoRegistrationAuthApp')
 				djangoAuth.authenticated = true;
 				$rootScope.$broadcast("djangoAuth.logged_in", data);
 			}, function(error) {
-				console.log(code);
 				// Handle error
 				console.error("ORCID login failed:", error);
 			});
 		},
-		'orcidConnect': function(code){
+		'orcidConnect': function(code){ //TODO
 			var djangoAuth = this;
 			return this.request({
 				'method': "POST",
@@ -136,14 +133,12 @@ angular.module('angularDjangoRegistrationAuthApp')
 				}
 			}).then(function(data){
 				// Handle successful ORCID connection
-				console.log("ORCID connection successful:", data);
 			}, function(error) {
 				// Handle error
 				console.error("ORCID connection failed:", error);
 			});
 		},
 		'githubLogin': function(code){
-			// POST request at rest-auth/github/login/
 			var djangoAuth = this;
 			return this.request({
 				'method': "POST",
@@ -175,7 +170,6 @@ angular.module('angularDjangoRegistrationAuthApp')
 				}
 			}).then(function(data){
 				// Handle successful GitHub connection
-				console.log("GitHub connection successful:", data);
 			}, function(error) {
 				// Handle error
 				console.error("GitHub connection failed:", error);
