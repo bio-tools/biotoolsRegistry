@@ -1553,7 +1553,7 @@ angular.module('elixir_front.controllers', [])
 		$state.go('login');
 	}
 }])
-.controller('LoginController', ['$scope', '$state', 'djangoAuth', '$rootScope',function($scope, $state, djangoAuth, $rootScope) {
+.controller('LoginController', ['$scope', '$state', 'djangoAuth', '$rootScope', 'AppConfig',function($scope, $state, djangoAuth, $rootScope, AppConfig) {
 	$scope.credentials = {};
 
 	$scope.loginButtonClick = function() {
@@ -1577,6 +1577,22 @@ angular.module('elixir_front.controllers', [])
 			delete $scope.loginErrors;
 		}
 	}, true);
+
+	$scope.orcidLoginButtonClick = function() {
+		var client_id = AppConfig.ORCID_CLIENT_ID;
+		var redirect_uri = AppConfig.ORCID_REDIRECT_URI;
+
+		window.location.href = 'https://sandbox.orcid.org/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
+	}
+	
+	$scope.githubLoginButtonClick = function() {
+		var client_id = AppConfig.GITHUB_CLIENT_ID;
+		var redirect_uri = AppConfig.GITHUB_REDIRECT_URI;
+		var scope = AppConfig.GITHUB_SCOPE;
+
+		console.log('Redirecting to GitHub');
+		window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + client_id + '&redirect_uri=' + redirect_uri + '&scope=' + scope;
+	}
 }])
 .controller('SignupController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$timeout', function($scope, $state, djangoAuth, $rootScope, $timeout) {
 	$scope.credentials = {};
