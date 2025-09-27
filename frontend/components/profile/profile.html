@@ -32,9 +32,46 @@
 						</table>
 						<div class="panel-footer">
 							<button class="btn btn-primary" ng-click="openChangePasswordModal()">Change Password</button>
-							<button class="btn btn-primary" ng-click="orcidConnect()">Connect to ORCID</button>
-							<button class="btn btn-primary" ng-click="githubConnect()">Connect to GitHub</button>
+							<button class="btn btn-primary" ng-click="orcidConnect()" ng-if="!hasOrcidAccount()">Connect to ORCID</button>
+							<button class="btn btn-primary" ng-click="githubConnect()" ng-if="!hasGithubAccount()">Connect to GitHub</button>
 						</div>
+					</div>
+
+					<!-- Connected Accounts -->
+					<div class="panel panel-default" ng-if="profile.socialAccounts && profile.socialAccounts.length > 0">
+						<div class="panel-heading">
+							<h3 class="panel-title">Connected Accounts</h3>
+						</div>
+						<table class="table table-condensed table-hover">
+							<tbody>
+								<tr ng-repeat="account in profile.socialAccounts" ng-if="account.provider == 'github'">
+									<th>GitHub</th>
+									<td>
+										<div><strong>Username:</strong> {{account.extra_data.login}}</div>
+										<div ng-if="account.extra_data.name"><strong>Name:</strong> {{account.extra_data.name}}</div>
+										<div ng-if="account.extra_data.email"><strong>Email:</strong> {{account.extra_data.email}}</div>
+										<div ng-if="account.extra_data.html_url">
+											<strong>Profile:</strong> 
+											<a href="{{account.extra_data.html_url}}" target="_blank">{{account.extra_data.html_url}}</a>
+										</div>
+									</td>
+								</tr>
+								<tr ng-repeat="account in profile.socialAccounts" ng-if="account.provider == 'orcid'">
+									<th>ORCID</th>
+									<td>
+										<div><strong>ORCID ID:</strong> {{account.uid}}</div>
+										<div ng-if="account.extra_data.name"><strong>Name:</strong> {{account.extra_data.name}}</div>
+										<div ng-if="account.extra_data.given_names || account.extra_data.family_name">
+											<strong>Full Name:</strong> {{account.extra_data.given_names}} {{account.extra_data.family_name}}
+										</div>
+										<div ng-if="account.uid">
+											<strong>Profile:</strong> 
+											<a href="https://orcid.org/{{account.uid}}" target="_blank">https://orcid.org/{{account.uid}}</a>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					<!-- My resources -->
 					<div class="panel panel-default">

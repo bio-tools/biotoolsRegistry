@@ -1,0 +1,30 @@
+<!-- Callback page shows ORCID authentication status and errors-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">ORCID Login</h3>
+                </div>
+                <div class="panel-body">
+                    <div ng-if="!loginErrors">
+                        <div class="text-center">
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                            <p class="lead">Processing ORCID login...</p>
+                        </div>
+                    </div>
+                    <div ng-if="loginErrors" class="alert alert-danger">
+                        <h4>Login Failed</h4>
+                        <div ng-if="loginErrors.length">
+                            <div ng-repeat="error in loginErrors">{{error}}</div>
+                        </div>
+                        <div ng-if="!loginErrors.length && loginErrors">{{loginErrors}}</div>
+                        <p class="margin-top-20">
+                            <a href="" ui-sref="login" class="btn btn-primary">Try again</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

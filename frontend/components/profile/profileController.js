@@ -1,5 +1,5 @@
 angular.module('elixir_front')
-.controller('ProfileController', ['$scope', '$state', 'djangoAuth', 'DisownToolService', 'User', '$uibModal', function($scope, $state, djangoAuth, DisownToolService, User, $uibModal) {
+.controller('ProfileController', ['$scope', '$state', 'djangoAuth', 'DisownToolService', 'User', '$uibModal', 'AppConfig', function($scope, $state, djangoAuth, DisownToolService, User, $uibModal, AppConfig) {
 	$scope.profile = {};
 	$scope.loading = true;
 	$scope.User = User;
@@ -30,20 +30,31 @@ angular.module('elixir_front')
     };
 
 	$scope.orcidConnect = function() {
-		console.log('Connecting to ORCID');
-        var client_id = 'APP-A964UH0MDGR37RWY';
-		var redirect_uri = 'http://127.0.0.1/orcid/callback/';
+        var client_id = AppConfig.ORCID_CLIENT_ID;
+		var redirect_uri = AppConfig.ORCID_REDIRECT_URI;
 
-		console.log('Redirecting to ORCID');
 		window.location.href = 'https://sandbox.orcid.org/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
 	};
 
 	$scope.githubConnect = function() {
-		console.log('Connecting to GitHub');
-		var client_id = 'Ov23liQxjwvSvDR3gUzX';
-		var redirect_uri = 'http://127.0.0.1/github/callback/';
+		var client_id = AppConfig.GITHUB_CLIENT_ID;
+		var redirect_uri = AppConfig.GITHUB_REDIRECT_URI;
 
-		console.log('Redirecting to GitHub');
 		window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + client_id + '&redirect_uri=' + redirect_uri;
+	};
+
+	// check if social accounts are connected
+	$scope.hasGithubAccount = function() {
+		if (!$scope.profile.socialAccounts) return false;
+		return $scope.profile.socialAccounts.some(function(account) {
+			return account.provider === 'github';
+		});
+	};
+
+	$scope.hasOrcidAccount = function() {
+		if (!$scope.profile.socialAccounts) return false;
+		return $scope.profile.socialAccounts.some(function(account) {
+			return account.provider === 'orcid';
+		});
 	};
 }]);

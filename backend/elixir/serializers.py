@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.utils.urls import replace_query_param
 from allauth.account.adapter import get_adapter
+from allauth.socialaccount.models import SocialAccount
 from django.db.models.signals import pre_save, post_save
 from django.conf import settings
 from elixir.request_handling import ResourceRequestHandler
@@ -48,10 +49,11 @@ class UserSerializer(serializers.ModelSerializer):
 	sharedResources = serializers.SerializerMethodField('get_shared_resource')
 	# subdomains = serializers.SerializerMethodField()
 	requests_count = serializers.SerializerMethodField('get_resource_request_count')
+	socialAccounts = serializers.SerializerMethodField('get_social_accounts')
 
 	class Meta:
 		model = User
-		fields = ('username', 'email', 'resources', 'sharedResources', 'is_superuser', 'requests_count')
+		fields = ('username', 'email', 'resources', 'sharedResources', 'is_superuser', 'requests_count', 'socialAccounts')
 
 	def get_resource(self, user):
 		resources = Resource.objects.filter(visibility=1, owner=user)
@@ -67,6 +69,24 @@ class UserSerializer(serializers.ModelSerializer):
 		if user.is_superuser:
 			return ResourceRequest.objects.filter(completed=False).count()
 		return ResourceRequest.objects.filter(resource__owner=user, completed=False).count()
+
+	def get_social_accounts(self, user):
+		social_accounts = SocialAccount.objects.filter(user=user)
+		return [
+			{
+				'provider': account.provider,
+				'uid': account.uid,
+				'extra_data': {
+					'login': account.extra_data.get('login', ''),
+					'name': account.extra_data.get('name', ''),
+					'email': account.extra_data.get('email', ''),
+					'orcid': account.extra_data.get('orcid', ''),
+					'given_names': account.extra_data.get('given-names', ''),
+					'family_name': account.extra_data.get('family-name', ''),
+				}
+			}
+			for account in social_accounts
+		]
 
 	# def get_subdomains(self, user):
 	# 	subdomains = Domain.objects.filter(owner=user)
