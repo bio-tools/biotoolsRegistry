@@ -686,14 +686,11 @@ angular.module('elixir_front.controllers', [])
 		fetch(url)
 			.then(function(response) { return response.json(); })
 			.then(function(data) {
-				console.log("Europe PMC data fetched:", data);
 				if (data.resultList && data.resultList.result && data.resultList.result.length > 0) {
 					var rec = data.resultList.result[0];
-					console.log("Europe PMC record:", rec);
 					if (rec.doi) pub.doi = rec.doi;
 					if (rec.pmid) pub.pmid = rec.pmid;
 					if (rec.pmcid) pub.pmcid = rec.pmcid;
-					console.log("Updated publication:", pub);
 					$scope.$apply();
 				}
 			})
@@ -702,7 +699,6 @@ angular.module('elixir_front.controllers', [])
 
 	$scope.onPublicationIdChange = function(idType, value, index) {
     	if (value && value.trim() !== '') {
-        	console.log('Publication ID changed:', idType, value, 'at index:', index);
         	fetchEuropePMCData($scope.software.publication[index], idType, value.trim());
     	}
 	};
@@ -1471,12 +1467,9 @@ angular.module('elixir_front.controllers', [])
 }])
 .controller('OrcidCallbackController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$location', function($scope, $state, djangoAuth, $rootScope, $location) {
   	var code = $location.search().code;
-	console.log('in orcid callback');
-	console.log('ORCID code:', code);
 
 	// if user is authenticated call djangoAuth.orcidConnect
 	if (djangoAuth.authenticated) {
-		console.log('user is authenticated, connecting ORCID iD');
 		djangoAuth.orcidConnect(code)
 		.then(function (response) {
 			console.log("ORCID connection successful:", response);
@@ -1487,29 +1480,24 @@ angular.module('elixir_front.controllers', [])
 	else {
 		djangoAuth.orcidLogin(code)
 		.then(function (response) {
-			console.log(code)
 			$state.go('search');
-			console.log('with rootScope');
-			console.log($rootScope.toState);
 		}, function (response) {
 			var error = $location.search().error;
 			var error_description = $location.search().error_description;
 
-			//TODO
+			//TODO: handle errors
 			$scope.loginErrors = error_description;
-			console.log("ORCID login failed");
 		});
 	}
 }])
 .controller('GitHubCallbackController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$location', function($scope, $state, djangoAuth, $rootScope, $location) {
   	var code = $location.search().code;
-	
+
 	// Check for errors in the callback
 	var error = $location.search().error;
 	var error_description = $location.search().error_description;
 	
 	if (error) {
-		console.log("GitHub callback error:", error, error_description);
 		$scope.loginErrors = error_description || "GitHub login failed";
 		$state.go('login');
 		return;
@@ -1518,13 +1506,10 @@ angular.module('elixir_front.controllers', [])
 	if (code) {
 		// if user is authenticated, try to connect GitHub account
 		if (djangoAuth.authenticated) {
-			console.log('user is authenticated, connecting GitHub account');
 			djangoAuth.githubConnect(code)
 			.then(function (response) {
-				console.log('GitHub account connected successfully');
 				$state.go('profile');
 			}, function (error) {
-				console.error('GitHub connection failed:', error);
 				$scope.loginErrors = "Failed to connect GitHub account";
 				$state.go('profile');
 			});
@@ -1540,13 +1525,11 @@ angular.module('elixir_front.controllers', [])
 				//	$state.go($rootScope.toState.name, $rootScope.toStateParams);
 				//}
 			}, function (response) {
-				console.error('GitHub login failed:', response);
 				$scope.loginErrors = response.non_field_errors || ["GitHub login failed"];
 				$state.go('login');
 			});
 		}
 	} else {
-		console.log("No code provided in GitHub callback");
 		$state.go('login');
 	}
 }])
@@ -1587,7 +1570,6 @@ angular.module('elixir_front.controllers', [])
 		var redirect_uri = AppConfig.GITHUB_REDIRECT_URI;
 		var scope = AppConfig.GITHUB_SCOPE;
 
-		console.log('Redirecting to GitHub');
 		window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + client_id + '&redirect_uri=' + redirect_uri + '&scope=' + scope;
 	}
 }])
