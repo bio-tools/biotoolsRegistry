@@ -25,7 +25,7 @@ from elixir.tasks import notify_resource_request
 from elixir.tasks import create_ecosystem_tool, update_ecosystem_tool, delete_ecosystem_tool
 import json
 from django.core.mail import send_mail
-from datetime import datetime
+from django.utils import timezone
 
 es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 
@@ -140,7 +140,7 @@ class ResourceList(APIView):
 			if not request.user.is_superuser and request.data.get('confidence_flag') and request.data.get('confidence_flag') != 'tool':
 				return Response({"detail": 'Error: Only superusers can add entries with a confidence score other than \'tool\'.'}, status=status.HTTP_403_FORBIDDEN)
 			
-			right_now = datetime.now()
+			right_now = timezone.now()
 
 			# there is a very small millisecond difference between additionDate now and auto_now from lastUpdate
 			# if we ever do some analysis we need to make sure we keep that in mind
