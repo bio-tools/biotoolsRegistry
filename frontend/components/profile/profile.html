@@ -55,6 +55,9 @@
 											<a href="{{account.extra_data.html_url}}" target="_blank">{{account.extra_data.html_url}}</a>
 										</div>
 									</td>
+									<td>
+										<button class="btn btn-danger btn-sm" ng-click="disconnectSocial(account.provider, account.id)">Disconnect</button>
+									</td>
 								</tr>
 								<tr ng-repeat="account in profile.socialAccounts" ng-if="account.provider == 'orcid'">
 									<th>ORCID</th>
@@ -68,6 +71,9 @@
 											<strong>Profile:</strong> 
 											<a href="https://orcid.org/{{account.uid}}" target="_blank">https://orcid.org/{{account.uid}}</a>
 										</div>
+									</td>
+									<td>
+										<button class="btn btn-danger btn-sm" ng-click="disconnectSocial(account.provider, account.id)">Disconnect</button>
 									</td>
 								</tr>
 							</tbody>

@@ -43,6 +43,24 @@ angular.module('elixir_front')
 		window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + client_id + '&redirect_uri=' + redirect_uri;
 	};
 
+	$scope.disconnectSocial = function(provider, id) {
+		if (!confirm("Are you sure you want to disconnect your " + provider + " account?")){
+			return;
+		}
+		djangoAuth.disconnectSocial(id)
+		.then(function(response) {
+			console.log($scope.profile.socialAccounts);
+			// Remove the disconnected account from the profile.socialAccounts array
+			$scope.profile.socialAccounts = $scope.profile.socialAccounts.filter(function(account) {
+				return account.id !== id;
+			});
+			console.log("Successfully disconnected " + provider + " account.");
+			console.log($scope.profile.socialAccounts);
+		}, function(error) {
+			alert("Failed to disconnect your " + provider + " account. Please try again later.");
+		});
+	};
+
 	// check if social accounts are connected
 	$scope.hasGithubAccount = function() {
 		if (!$scope.profile.socialAccounts) return false;

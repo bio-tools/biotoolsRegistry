@@ -43,6 +43,6 @@ urlpatterns = [
     path('rest-auth/github/', views.GitHubLogin.as_view(), name='github_login'),
     path('rest-auth/github/connect/', views.GitHubConnect.as_view(), name='github_connect'),
     path('rest-auth/github/callback/', views.GitHubLoginCallback.as_view(), name='github_login_callback'),
-    path('socialaccounts/', SocialAccountListView.as_view(), name='social_account_list'),
-    path('socialaccounts/<int:pk>/disconnect/', SocialAccountDisconnectView.as_view(), name='social_account_disconnect'),
+    path('rest-auth/socialaccounts/', SocialAccountListView.as_view(), name='social_account_list'),
+    path('rest-auth/socialaccounts/<int:pk>/disconnect/', SocialAccountDisconnectView.as_view(), name='social_account_disconnect'),
 ]

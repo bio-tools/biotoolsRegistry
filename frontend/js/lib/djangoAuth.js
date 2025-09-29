@@ -175,6 +175,12 @@ angular.module('angularDjangoRegistrationAuthApp')
 				console.error("GitHub connection failed:", error);
 			});
 		},
+		'disconnectSocial': function(id){
+			return this.request({
+				'method': "POST",
+				'url': "/socialaccounts/"+id+"/disconnect/"
+			});
+		},
 		'logout': function(){
 			var djangoAuth = this;
 			return this.request({

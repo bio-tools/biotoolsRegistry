@@ -74,6 +74,7 @@ class UserSerializer(serializers.ModelSerializer):
 		social_accounts = SocialAccount.objects.filter(user=user)
 		return [
 			{
+				'id': account.id,
 				'provider': account.provider,
 				'uid': account.uid,
 				'extra_data': {
