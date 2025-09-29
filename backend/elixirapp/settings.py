@@ -75,7 +75,8 @@ INSTALLED_APPS = (
     'dj_rest_auth.registration',
     'django_extensions',
     'rest_framework_simplejwt',
-    'background_task'
+    'background_task',
+    'corsheaders'
 )
 
 
@@ -92,6 +93,7 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'elixirapp.urls'
@@ -124,6 +126,10 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SITE_ID = getenv('SITE_ID', 1, castf=int)
+
+# CORS settings for development
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -215,12 +221,16 @@ REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'elixir.serializers.UserRegisterSerializer'
 }
 
+# override social account serializers to bypass email validation
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
+}
+
 OLD_PASSWORD_FIELD_ENABLED = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 ACCOUNT_ADAPTER = 'elixir.adapters.CustomDefaultAccountAdapter'
-ACCOUNT_EMAIL_REQUIRED = getenv('ACCOUNT_EMAIL_REQUIRED', True, castf=bool)
 ACCOUNT_USERNAME_REQUIRED = getenv(
     'ACCOUNT_USERNAME_REQUIRED',
     True,
@@ -235,6 +245,13 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = getenv(
     True,
     castf=bool,
 )
+
+SOCIALACCOUNT_ADAPTER = 'elixir.adapters.CustomSocialAccountAdapter'
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_REQUIRED = False
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 
 URL_FRONT = getenv('URL_FRONT', 'http://localhost:8000/')
 
@@ -252,9 +269,9 @@ SOCIALACCOUNT_PROVIDERS = {
     'orcid': {
         'BASE_DOMAIN': getenv('ORCID_BASE_DOMAIN', 'sandbox.orcid.org'),  # Use 'sandbox.orcid.org' for testing
         'MEMBER_API': getenv('ORCID_MEMBER_API', False, castf=bool),  # Set to True for member API
-        'SCOPE': ['read-limited'],  # Standard scope for reading ORCID data
+        'SCOPE': ['read-limited'],
         'APP': {
-            'client_id': getenv('ORCID_CLIENT_ID', 'APP-A964UH0MDGR37RWY'),
+            'client_id': getenv('ORCID_CLIENT_ID', ''),
             'secret': getenv('ORCID_CLIENT_SECRET', ''),
         }
     },
@@ -264,13 +281,13 @@ SOCIALACCOUNT_PROVIDERS = {
             'client_id': getenv('GITHUB_CLIENT_ID', ''),
             'secret': getenv('GITHUB_CLIENT_SECRET', ''),
         },
-        'SCOPE': [
-            'user',
-            'read:user',
-        ],
+        'SCOPE': ['user:email'],
     }
 }
 
+ORCID_CALLBACK_URL = getenv('ORCID_CALLBACK_URL', 'http://127.0.0.1/orcid/callback/')
+GITHUB_CALLBACK_URL = getenv('GITHUB_CALLBACK_URL', 'http://127.0.0.1/github/callback/')
+                        
 # settings specific to deployment
 try:
     from elixirapp.deployment_settings import *
