@@ -23,6 +23,12 @@ class UserRegisterSerializer(RegisterSerializer):
 		# clean username using function built into allauth
 		attrs = get_adapter().clean_username(attrs)
 		return attrs
+	
+	def validate(self, attrs):
+		# Ensure email is provided for regular registration
+		if 'email' not in attrs or not attrs['email']:
+			raise serializers.ValidationError({'email': 'Email is required for registration.'})
+		return super().validate(attrs)
 
 
 # username list
@@ -32,3 +38,4 @@ class UserNameSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
 		fields = ('username',)
+		

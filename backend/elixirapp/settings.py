@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-import datetime
 import json
 
 # Prefix for environment variables settings.
@@ -214,6 +213,7 @@ REST_FRAMEWORK = {
 REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
     'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer',
+    'REGISTER_SERIALIZER': 'elixir.serializers.UserRegisterSerializer',
 }
 
 # necessary for custom user validation
@@ -250,7 +250,6 @@ SOCIALACCOUNT_ADAPTER = 'elixir.adapters.CustomSocialAccountAdapter'
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_EMAIL_REQUIRED = False
 SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 
 URL_FRONT = getenv('URL_FRONT', 'http://localhost:8000/')
