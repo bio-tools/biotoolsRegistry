@@ -49,13 +49,10 @@ angular.module('elixir_front')
 		}
 		djangoAuth.disconnectSocial(id)
 		.then(function(response) {
-			console.log($scope.profile.socialAccounts);
 			// Remove the disconnected account from the profile.socialAccounts array
 			$scope.profile.socialAccounts = $scope.profile.socialAccounts.filter(function(account) {
 				return account.id !== id;
 			});
-			console.log("Successfully disconnected " + provider + " account.");
-			console.log($scope.profile.socialAccounts);
 		}, function(error) {
 			alert("Failed to disconnect your " + provider + " account. Please try again later.");
 		});

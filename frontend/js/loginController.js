@@ -62,7 +62,6 @@ function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state,
 		var client_id = AppConfig.ORCID_CLIENT_ID;
 		var redirect_uri = AppConfig.ORCID_REDIRECT_URI;
 
-		console.log('Redirecting to ORCID');
 		window.location.href = 'https://sandbox.orcid.org/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
 	}
 
@@ -71,7 +70,6 @@ function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state,
 		var redirect_uri = AppConfig.GITHUB_REDIRECT_URI;
 		var scope = AppConfig.GITHUB_SCOPE;
 
-		console.log('Redirecting to GitHub');
 		window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + client_id + '&redirect_uri=' + redirect_uri + '&scope=' + scope;
 	}
 }
