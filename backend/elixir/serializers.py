@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.utils.urls import replace_query_param
 from allauth.account.adapter import get_adapter
+from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
 from django.db.models.signals import pre_save, post_save
 from django.conf import settings
@@ -50,10 +51,11 @@ class UserSerializer(serializers.ModelSerializer):
 	# subdomains = serializers.SerializerMethodField()
 	requests_count = serializers.SerializerMethodField('get_resource_request_count')
 	socialAccounts = serializers.SerializerMethodField('get_social_accounts')
+	email_verified = serializers.SerializerMethodField('get_email_verified')
 
 	class Meta:
 		model = User
-		fields = ('username', 'email', 'resources', 'sharedResources', 'is_superuser', 'requests_count', 'socialAccounts')
+		fields = ('username', 'email', 'resources', 'sharedResources', 'is_superuser', 'requests_count', 'socialAccounts', 'email_verified')
 
 	def get_resource(self, user):
 		resources = Resource.objects.filter(visibility=1, owner=user)
@@ -88,6 +90,17 @@ class UserSerializer(serializers.ModelSerializer):
 			}
 			for account in social_accounts
 		]
+
+	def get_email_verified(self, user):
+		"""
+		Check if the user's primary email address is verified
+		"""
+		try:
+			email_address = EmailAddress.objects.get(user=user, primary=True)
+			return email_address.verified
+		except EmailAddress.DoesNotExist:
+			# If no EmailAddress exists, consider it unverified
+			return False
 
 	# def get_subdomains(self, user):
 	# 	subdomains = Domain.objects.filter(owner=user)
