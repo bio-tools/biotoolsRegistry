@@ -211,7 +211,7 @@ REST_FRAMEWORK = {
 
 # REST Auth
 REST_AUTH = {
-    'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
+    'USER_DETAILS_SERIALIZER': 'elixir.serializers.CustomUserDetailsSerializer',
     'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer',
     'REGISTER_SERIALIZER': 'elixir.serializers.UserRegisterSerializer',
 }
@@ -223,7 +223,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 
 # override social account serializers to bypass email validation
 REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
+    'USER_DETAILS_SERIALIZER': 'elixir.serializers.CustomUserDetailsSerializer',
 }
 
 OLD_PASSWORD_FIELD_ENABLED = True
