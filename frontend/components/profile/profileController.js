@@ -30,9 +30,15 @@ angular.module('elixir_front')
     };
 
 	$scope.openChangeEmailModal = function() {
-		$uibModal.open({
+		var modalInstance = $uibModal.open({
 			templateUrl: 'components/profile/changeEmailModal.html',
 			controller: 'ChangeEmailController'
+		});
+		
+		modalInstance.result.then(function(updatedProfile) {
+			// Update the profile with new email
+			$scope.profile.email = updatedProfile.email;
+			$scope.profile.email_verified = updatedProfile.email_verified;
 		});
 	};
 

@@ -4,10 +4,9 @@ angular.module('elixir_front')
         djangoAuth.updateProfile({email: $scope.newEmail})
         .then(function(response) {
             alert('Email updated successfully!');
-            $uibModalInstance.close();
-            $scope.$emit('profile:updated');
+            $uibModalInstance.close(response);
         }, function(error) {
-            alert('Failed to update email: ' + error.data.message);
+            alert('Failed to update email: ' + error.email);
         });
     };
 }]);
