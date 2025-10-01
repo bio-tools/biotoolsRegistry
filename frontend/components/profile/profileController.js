@@ -29,6 +29,22 @@ angular.module('elixir_front')
         });
     };
 
+	$scope.openChangeEmailModal = function() {
+		$uibModal.open({
+			templateUrl: 'components/profile/changeEmailModal.html',
+			controller: 'ChangeEmailController'
+		});
+	};
+
+    $scope.resendVerificationEmail = function() {
+        djangoAuth.resendEmail($scope.profile.email)
+        .then(function(response) {
+            alert('Verification email sent successfully!');
+        }, function(error) {
+            alert('Failed to send verification email: ' + (error.data && error.data.message ? error.data.message : 'Please try again later.'));
+        });
+    };
+
 	$scope.orcidConnect = function() {
         var client_id = AppConfig.ORCID_CLIENT_ID;
 		var redirect_uri = AppConfig.ORCID_REDIRECT_URI;

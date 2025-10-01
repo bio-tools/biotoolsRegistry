@@ -23,17 +23,22 @@
 								<tr>
 									<th>Username</th>
 									<td>{{profile.username}}</td>
+									<td></td>
 								</tr>
 								<tr>
 									<th>Email</th>
 									<td>{{profile.email}}</td>
+									<td>{{profile.email_verified ? 'Verified' : 'Not verified'}} 
+										<button class="btn btn-default btn-sm" ng-if="!profile.email_verified && profile.email" ng-click="resendVerificationEmail()">Resend email</button>
+									</td>
 								</tr>
 							</tbody>
 						</table>
 						<div class="panel-footer">
 							<button class="btn btn-primary" ng-click="openChangePasswordModal()">Change Password</button>
-							<button class="btn btn-primary" ng-click="orcidConnect()" ng-if="!hasOrcidAccount()">Connect to ORCID</button>
-							<button class="btn btn-primary" ng-click="githubConnect()" ng-if="!hasGithubAccount()">Connect to GitHub</button>
+							<!-- <button class="btn btn-primary" ng-click="openChangeEmailModal()">Change Email</button> -->
+							<button class="btn btn-primary" ng-click="orcidConnect()" ng-if="!hasOrcidAccount()" style="background-color: green;">Connect to ORCID</button>
+							<button class="btn btn-primary" ng-click="githubConnect()" ng-if="!hasGithubAccount()" style="background-color: black;">Connect to GitHub</button>
 						</div>
 					</div>
 
