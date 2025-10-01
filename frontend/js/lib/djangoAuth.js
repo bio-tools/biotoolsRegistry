@@ -233,6 +233,13 @@ angular.module('angularDjangoRegistrationAuthApp')
 				'data': {'key': key} 
 			});            
 		},
+		'resendEmail': function(email){
+			return this.request({
+				'method': "POST",
+				'url': "/registration/resend-email/",
+				'data': {'email': email} 
+			});            
+		},
 		'confirmReset': function(uid,token,password1,password2){
 			return this.request({
 				'method': "POST",
