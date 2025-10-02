@@ -216,16 +216,6 @@ REST_AUTH = {
     'REGISTER_SERIALIZER': 'elixir.serializers.UserRegisterSerializer',
 }
 
-# necessary for custom user validation
-REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'elixir.serializers.UserRegisterSerializer'
-}
-
-# override social account serializers to bypass email validation
-REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': 'elixir.serializers.CustomUserDetailsSerializer',
-}
-
 OLD_PASSWORD_FIELD_ENABLED = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
