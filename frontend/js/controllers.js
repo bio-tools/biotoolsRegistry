@@ -1275,6 +1275,7 @@ angular.module('elixir_front.controllers', [])
 
 	$scope.elixirCommunityOptions = [
 		{value: "3D-BioInfo", text: "3D-BioInfo", link: "3d-bioinfo"},
+		{value: "Biodiversity", text: "Biodiversity", link: "biodiversity"},
 		{value: "Federated Human Data", text: "Federated Human Data", link: "human-data"},
 		{value: "Galaxy", text: "Galaxy", link: "galaxy"},
 		{value: "Human Copy Number Variation", text: "Human Copy Number Variation", link: "hcnv"},

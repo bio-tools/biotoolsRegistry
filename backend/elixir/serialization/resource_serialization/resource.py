@@ -154,7 +154,7 @@ class ElixirCommunitySerializer(serializers.ModelSerializer):
 		fields = ('elixirCommunity',)
 
 	def validate_elixirCommunity(self, attrs):
-		enum = ENUMValidator(['3D-BioInfo', 'Federated Human Data', 'Galaxy', 'Human Copy Number Variation', 'Intrinsically Disordered Proteins', 'Marine Metagenomics', 'Metabolomics', 'Microbial Biotechnology', 'Plant Sciences', 'Proteomics', 'Rare Diseases'])
+		enum = ENUMValidator(['3D-BioInfo', 'Biodiversity', 'Federated Human Data', 'Galaxy', 'Human Copy Number Variation', 'Intrinsically Disordered Proteins', 'Marine Metagenomics', 'Metabolomics', 'Microbial Biotechnology', 'Plant Sciences', 'Proteomics', 'Rare Diseases', 'Systems Biology'])
 		attrs = enum(attrs)
 		return attrs
 
@@ -166,7 +166,7 @@ class ElixirCommunitySerializer(serializers.ModelSerializer):
 		# checking if blank
 	
 		IsNotBlankValidator(data)
-		enum = ENUMValidator(['3D-BioInfo', 'Federated Human Data', 'Galaxy', 'Human Copy Number Variation', 'Intrinsically Disordered Proteins', 'Marine Metagenomics', 'Metabolomics', 'Microbial Biotechnology', 'Plant Sciences', 'Proteomics', 'Rare Diseases'])
+		enum = ENUMValidator(['3D-BioInfo', 'Biodiversity', 'Federated Human Data', 'Galaxy', 'Human Copy Number Variation', 'Intrinsically Disordered Proteins', 'Marine Metagenomics', 'Metabolomics', 'Microbial Biotechnology', 'Plant Sciences', 'Proteomics', 'Rare Diseases', 'Systems Biology'])
 		data = enum(data)
 
 		return {"elixirCommunity":data}

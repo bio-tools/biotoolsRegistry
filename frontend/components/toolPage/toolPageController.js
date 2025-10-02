@@ -10,6 +10,7 @@ angular.module('elixir_front')
 	$scope.User = User;
 	$scope.elixirCommunityIndex = {
 		"3D-BioInfo": "3d-bioinfo",
+		"Biodiversity": "biodiversity",	
 		"Federated Human Data": "human-data",
 		"Galaxy": "galaxy",
 		"Human Copy Number Variation": "hcnv",
@@ -19,7 +20,8 @@ angular.module('elixir_front')
 		"Microbial Biotechnology": "microbial-biotechnology",
 		"Plant Sciences": "plant-sciences",
 		"Proteomics": "proteomics",
-		"Rare Diseases": "rare-diseases"
+		"Rare Diseases": "rare-diseases",
+		"Systems Biology": "systems-biology"
 	}
 
 	$scope.hasRRID = function(){
