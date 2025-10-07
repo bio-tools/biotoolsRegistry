@@ -18,10 +18,15 @@
 							<span class="help-block">Forgot the password? <a href="" ng-click="vm.forgotButtonPressed()">Reset it</a>.</span>	
 						</div>
 						<br>
-						<button type="submit" class="btn btn-success btn-block" ng-click="vm.loginButtonPressed(credentials.username, credentials.password)">Login</button>
+						<button type="submit" class="btn btn-primary btn-block" ng-click="vm.loginButtonPressed(credentials.username, credentials.password)">Login</button>
 					</form>
-					<button type="button" class="btn btn-default btn-block" ng-click="vm.orcidLoginPressed()">Log in with ORCID</button>
-					<button type="button" class="btn btn-default btn-block" ng-click="vm.githubLoginPressed()">Log in with GitHub</button>
+					<div class="social-login-buttons" style="margin-top: 20px;">
+						<strong>Social Login:</strong>
+						<br>
+						<p>If you already have an account, login and go to <a href="/profile">your profile</a> to connect your existing account to ORCID.</p>
+						<button type="button" class="btn btn-success btn-block" ng-click="vm.orcidLoginPressed()">Log in with ORCID</button>
+						<!-- <button type="button" class="btn btn-default btn-block" ng-click="vm.githubLoginPressed()">Log in with GitHub</button> -->
+					</div>
 				</div>
 			</div>
 			<div class="col-xs-6">

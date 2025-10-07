@@ -43,6 +43,11 @@ angular.module('elixir_front')
 	};
 
     $scope.resendVerificationEmail = function() {
+		// If email ends with @biotools.local, do not attempt to resend
+		if ($scope.profile.email.endsWith('@biotools.local')) {
+			alert('Cannot send verification email to local test accounts.');
+			return;
+		}
         djangoAuth.resendEmail($scope.profile.email)
         .then(function(response) {
             alert('Verification email sent successfully!');

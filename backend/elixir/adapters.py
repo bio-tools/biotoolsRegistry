@@ -44,12 +44,12 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         if request.user.is_authenticated:
             # Check if GitHub provides an email
             if sociallogin.email_addresses:
-                github_email = sociallogin.email_addresses[0].email
+                social_email = sociallogin.email_addresses[0].email
                 user_email = request.user.email
             
                 # Warn if emails don't match (but still allow connection for now)
-                if github_email != user_email and not user_email.endswith('@github.local') and not user_email.endswith('@biotools.local'):
-                    print(f"WARNING: Email mismatch! User email ({user_email}) != GitHub email ({github_email})")
+                if social_email != user_email and not user_email.endswith('@biotools.local'):
+                    print(f"WARNING: Email mismatch! User email ({user_email}) != Social account email ({social_email})")
                     # could raise an exception here to prevent connection
                     # raise forms.ValidationError("GitHub email doesn't match your account email. Please use a GitHub account with the same email address.")
             
@@ -57,7 +57,7 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             sociallogin.connect(request, request.user)
             return
             
-        if not sociallogin.email_addresses: # e.g. private email
+        if not sociallogin.email_addresses:
             return
             
         email = sociallogin.email_addresses[0].email
@@ -98,9 +98,13 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         # If no email was provided, generate a unique placeholder email
         if not data.get('email') and hasattr(user, 'email'):
             username = data.get('username', 'user')
+            
             # Generate a unique placeholder email with timestamp to avoid conflicts
             import time
             timestamp = int(time.time())
-            placeholder_email = f"{username}.{timestamp}@github.local"
+            placeholder_email = f"{username}.{timestamp}@biotools.local"
+            
+            # Actually assign the placeholder email to the user
+            user.email = placeholder_email
 
         return user

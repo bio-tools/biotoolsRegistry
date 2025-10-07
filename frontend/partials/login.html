@@ -21,8 +21,11 @@
 				<span class="help-block" ng-show="login_form.password.$error.required && login_form.password.$dirty">Password is required.</span>
 			</div>
 			<button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="loginButtonClick()">Log in</button>
-			<button type="button" class="btn btn-default btn-lg btn-block" ng-click="orcidLoginButtonClick()">Log in with ORCID</button>
-			<button type="button" class="btn btn-default btn-lg btn-block" ng-click="githubLoginButtonClick()">Log in with GitHub</button>
+			<hr>
+			<!-- Social login buttons -->
+			<p>If you <strong>already have a bio.tools account</strong>, login and go to <a href="/profile">your profile</a> to connect your existing account to ORCID.</p>
+			<button type="button" class="btn btn-success btn-lg btn-block" ng-click="orcidLoginButtonClick()">Log in with ORCID</button>
+			<!--<button type="button" class="btn btn-default btn-lg btn-block" ng-click="githubLoginButtonClick()">Log in with GitHub</button>-->
 			<hr>
 			<div class="form-group has-error">
 				<span class="help-block" ng-repeat="error in loginErrors">{{ error }}</span>	
