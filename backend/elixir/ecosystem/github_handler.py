@@ -309,8 +309,12 @@ class GithubToolHandler:
    
     def __load_data(self, bt, delete = False):
         self.__bt = bt
-        self.__branch = self.__get_branch_name(bt.username, bt.tool_id, delete)
-        self.__filepath = self.__get_filepath(bt.tool_id)
+        # Normalize for paths and branches (lowercase)
+        normalized_username = bt.username.lower()
+        normalized_tool_id = bt.tool_id.lower()
+        
+        self.__branch = self.__get_branch_name(normalized_username, normalized_tool_id, delete)
+        self.__filepath = self.__get_filepath(normalized_tool_id)
         self.__time = datetime.now(timezone.utc).strftime('UTC time: %Y-%m-%d %H:%M:%S')
 
     def create_tool(self, biotools_data):
