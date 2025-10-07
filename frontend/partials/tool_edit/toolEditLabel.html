@@ -156,7 +156,7 @@
 						<ng-form name="collectionForm">
 							<div class="input-group">
 								<input class="form-control" name="collection" ng-model="software.collectionID[$index]" validate-edit-resource-field index={{$index}}
-								typeahead="collectionID for collectionID in loadCollectionIDs($viewValue)" typeahead-min-length="2">
+								uib-typeahead="collectionID for collectionID in loadCollectionIDs($viewValue)" uib-typeahead-min-length="2">
 							</input>
 							<span class="input-group-btn">
 								<button class="btn btn-default highlight-icon" type="button" ng-click="removeButtonClick('collectionID', software, $index)"><i class="fa fa-times remove-icon-button"></i> </button>

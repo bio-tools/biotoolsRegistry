@@ -172,7 +172,7 @@ angular.module('elixir_front.controllers', [])
 		localStorage.welcome_message = false;
 	};
 }])
-.controller('ToolEditController', ['$scope', '$controller', '$state', '$stateParams', 'Ontology', 'Attribute', 'CheckUserEditingRights', 'User', '$timeout', 'UsedTerms','$q','$modal', function($scope, $controller, $state, $stateParams, Ontology, Attribute, CheckUserEditingRights, User, $timeout, UsedTerms, $q, $modal ) {
+.controller('ToolEditController', ['$scope', '$controller', '$state', '$stateParams', 'Ontology', 'Attribute', 'CheckUserEditingRights', 'User', '$timeout', 'UsedTerms','$q','$uibModal', function($scope, $controller, $state, $stateParams, Ontology, Attribute, CheckUserEditingRights, User, $timeout, UsedTerms, $q, $uibModal ) {
 
 	// reference the service
 	$scope.Attribute = Attribute;
@@ -245,10 +245,10 @@ angular.module('elixir_front.controllers', [])
 		};
 		var onto = ontoMap[type] || $scope.EDAM_data;
 
-		var modalInstance = $modal.open({
+		var modalInstance = $uibModal.open({
 			templateUrl: 'partials/tool_edit/toolEditEdamModal.html',
 			controllerAs: 'vm',
-			controller: ['$modalInstance', 'edam', 'onto', 'type', 'suggestions', EdamModalCtrl],
+			controller: ['$uibModalInstance', 'edam', 'onto', 'type', 'suggestions', EdamModalCtrl],
 			resolve: {
 				edam: function () { return edam; },
 				onto: function () { return onto; },
@@ -1604,20 +1604,20 @@ angular.module('elixir_front.controllers', [])
 	}
 }]);
 
-function EdamModalCtrl($modalInstance, edam, onto, type, suggestions) {
+function EdamModalCtrl($uibModalInstance, edam, onto, type, suggestions) {
 	var vm = this;
 	vm.data = angular.copy(edam);
 	vm.onto = onto;
-	vm.self = $modalInstance;
+	vm.self = $uibModalInstance;
 	vm.type = type;
 	vm.suggestions = suggestions;
 
 	vm.saveData = function () {
 		if (isEmptyObject(vm.data)) {
-			$modalInstance.dismiss('cancel');
+			$uibModalInstance.dismiss('cancel');
 			return;
 		}
-		$modalInstance.close(vm.data);
+		$uibModalInstance.close(vm.data);
 	};
 
 	vm.apply_suggestion = function (suggestion) {
@@ -1638,7 +1638,7 @@ function EdamModalCtrl($modalInstance, edam, onto, type, suggestions) {
 	};
 
 	vm.cancel = function () {
-		$modalInstance.dismiss('cancel');
+		$uibModalInstance.dismiss('cancel');
 	};
 
 	function isEmptyObject(obj) {

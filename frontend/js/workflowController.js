@@ -1,6 +1,6 @@
 // Controllers
 angular.module('elixir_front.controllers')
-.controller('WorkflowController', ['$scope',  '$stateParams', '$modal', 'WorkflowProvider', function($scope, $stateParams, $modal, WorkflowProvider) {
+.controller('WorkflowController', ['$scope',  '$stateParams', '$uibModal', 'WorkflowProvider', function($scope, $stateParams, $uibModal, WorkflowProvider) {
 	var vm = this;
 	$scope.loading = true
 	$scope.filteredWorkflows = []
@@ -38,9 +38,9 @@ angular.module('elixir_front.controllers')
 	}
 
 	$scope.openModal = function(workflow) {
-		$modal.open({
+		$uibModal.open({
 			templateUrl: 'partials/workflows/modal.html',
-			controller: ['$modalInstance', 'workflow', WorkflowModalCtrl],
+			controller: ['$uibModalInstance', 'workflow', WorkflowModalCtrl],
 			controllerAs: 'vm',
 			windowClass: 'workflow-modal-window',
 			resolve: {
@@ -61,7 +61,7 @@ angular.module('elixir_front.controllers')
 	vm.loadRequests();
 }]);
 
-function WorkflowModalCtrl($modalInstance, workflow) {
+function WorkflowModalCtrl($uibModalInstance, workflow) {
 	var vm = this;
 	vm.workflow = workflow;
 	vm.currentTitle = "";
