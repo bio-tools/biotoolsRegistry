@@ -34,7 +34,7 @@
 								</label>
 								<div class="col-sm-9 autocomplete-container">
 									<input ng-model="software.relation[$index].biotoolsID" type="text" class="form-control" placeholder="biotoolsID" name="biotoolsID" validate-edit-resource-field index={{$index}}
-									typeahead="biotoolsID for biotoolsID in loadBiotoolsIDs($viewValue)" typeahead-min-length="2">
+									uib-typeahead="biotoolsID for biotoolsID in loadBiotoolsIDs($viewValue)" uib-typeahead-min-length="2">
 									<label class="help-block" ng-repeat="error in relationsDetailForm.biotoolsID.errorMessages" bo-text="error"></label>
 								</div>
 							</div>							

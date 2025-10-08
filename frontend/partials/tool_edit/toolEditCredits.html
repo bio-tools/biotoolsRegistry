@@ -32,7 +32,7 @@
 								<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.creditName.description}}">Name <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#name-credit"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>
 								<div class="col-sm-9">
 									<input ng-model="software.credit[$index].name" type="text" class="form-control" placeholder="e.g. Josiah Carberry" name="name" validate-edit-resource-field index={{$index}}
-									typeahead="creditName for creditName in loadCreditNames($viewValue)" typeahead-min-length="2">
+									uib-typeahead="creditName for creditName in loadCreditNames($viewValue)" uib-typeahead-min-length="2">
 									<label class="help-block" ng-repeat="error in creditDetailForm.name.errorMessages" bo-text="error"></label>
 								</div>
 							</div>

@@ -99,8 +99,8 @@
 		<div class="input-group">
 			<input type="text" class="form-control" placeholder="type a tag"
 				ng-model="subdomain.collection[$index]"
-				typeahead="collection for collection in loadCollectionIDs($viewValue)"
-				typeahead-min-length="2">
+				uib-typeahead="collection for collection in loadCollectionIDs($viewValue)"
+				uib-typeahead-min-length="2">
 			<span class="input-group-btn">
 				<button class="btn btn-default" type="button"
 					ng-click="removeButtonClick('collection', subdomain, $index)">

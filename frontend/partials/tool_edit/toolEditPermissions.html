@@ -27,9 +27,9 @@
 				ng-model="userSuggestion"
 				class="form-control"
 				placeholder="Search for users"
-				typeahead="suggestion for suggestion in userSuggestions($viewValue)"
-				typeahead-on-select="userSelected($item, $model, $label)"
-				typeahead-no-results="noResults">
+				uib-typeahead="suggestion for suggestion in userSuggestions($viewValue)"
+				uib-typeahead-on-select="userSelected($item, $model, $label)"
+				uib-typeahead-no-results="noResults">
 				<h6 class="text-danger" ng-if="noResults">No users found. Try searching based on the username.</h6>
 				<!-- Create a table to show users with editing rights -->
 				<div>
