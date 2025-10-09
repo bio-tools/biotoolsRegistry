@@ -10,6 +10,7 @@ angular.module('elixir_front')
 	$scope.User = User;
 	$scope.elixirCommunityIndex = {
 		"3D-BioInfo": "3d-bioinfo",
+		"Biodiversity": "biodiversity",	
 		"Federated Human Data": "human-data",
 		"Galaxy": "galaxy",
 		"Human Copy Number Variation": "hcnv",
@@ -19,7 +20,8 @@ angular.module('elixir_front')
 		"Microbial Biotechnology": "microbial-biotechnology",
 		"Plant Sciences": "plant-sciences",
 		"Proteomics": "proteomics",
-		"Rare Diseases": "rare-diseases"
+		"Rare Diseases": "rare-diseases",
+		"Systems Biology": "systems-biology"
 	}
 
 	$scope.hasRRID = function(){
@@ -131,6 +133,13 @@ angular.module('elixir_front')
 		document.body.appendChild(script);
 	}
 
+	var initBipScripts = function() {
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = "https://cdn.jsdelivr.net/gh/athenarc/bip-plugin@main/embed.min.js";
+		document.body.appendChild(script);
+	}
+
 	var initDimensionsAI = function() {
 		var script = document.createElement('script');
 		script.type = 'text/javascript';
@@ -172,7 +181,8 @@ angular.module('elixir_front')
 	$scope.software = Tool.get($stateParams, function(response) {
 		// success handler
 		initAltmetricsScore();
-		//initDimensionsAI();
+		initBipScripts();
+		initDimensionsAI();
 		//window.__dimensions_embed.addBadges();
 		//window.__dimensions_embed.addBadges();
 		cleanNulls($scope.software);

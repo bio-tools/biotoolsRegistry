@@ -34,7 +34,7 @@ class PublicationTypeSerializer(serializers.ModelSerializer):
 		# checking if blank
 		IsNotBlankValidator(data)
 		# checking if within enum
-		enum = enum = ENUMValidator(['Primary', 'Method', 'Usage', 'Benchmarking study', 'Review', 'Other'])
+		enum = enum = ENUMValidator(['Primary', 'Method', 'Usage', 'Benchmarking study', 'Review', 'Preprint','Other'])
 		data = enum(data)
 		return {'type': data}
 

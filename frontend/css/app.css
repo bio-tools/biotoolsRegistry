@@ -86,7 +86,7 @@ body {
 			border-radius:2px;
 		}
 
-		.typeahead.dropdown-menu {
+		.uib-typeahead.dropdown-menu {
 			z-index: 100001;
 		}
 
@@ -94,7 +94,7 @@ body {
 			overflow-y: visible
 		}
 
-		.typeahead {
+		.uib-typeahead {
 			max-height: 200px !important;
 			overflow-y: auto  !important;
 			overflow-x: hidden  !important;
