@@ -1,6 +1,36 @@
-:80 {
+{
+    # Debug connections
+    debug
+}
+
+localhost {
+    encode zstd gzip
+
     # Root directory for static files
     root * /elixir/application/frontend
+
+    # Match known bots, exclude assets and API.
+    @bot_html {
+        header_regexp UA User-Agent (?i)(googlebot|bingbot|duckduckbot|twitterbot|facebookexternalhit|linkedinbot|slackbot|discordbot|yandex|baiduspider|embedly|quora|pinterest|whatsapp|telegram|applebot)
+        not path /api/* /dist/* /static/* /img/* /css/* /js/* /fonts/* /favicon.ico /robots.txt /sitemap.xml
+    }
+    handle @bot_html {
+        # Make responses vary by UA so caches don’t mix bot/human content
+        header {
+            Vary "User-Agent"
+        }
+        # Rendertron expects /render/<absolute-url>
+        rewrite * /render/{scheme}://{host}{uri}
+        reverse_proxy rendertron:3000
+    }
+
+    # Instruct crawlers not to index search pages using headers
+    @search {
+        path /t /t/*
+    }
+    header @search {
+        X-Robots-Tag "noindex, follow"
+    }
 
     # Handle API requests - proxy to Django backend
     handle /api/* {
@@ -8,7 +38,7 @@
         reverse_proxy biotools-backend:8000
     }
 
-    # Serve files from frontend
+    # Serve files from frontend, also handles robots.txt
     handle {
         try_files {path} /index.html
         file_server {

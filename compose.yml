@@ -118,6 +118,7 @@ services:
     container_name: biotools-caddy
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./backend/Caddyfile:/etc/caddy/Caddyfile:ro
       - ./frontend:/elixir/application/frontend:ro
@@ -126,6 +127,15 @@ services:
     depends_on:
       - backend
       - frontend
+    networks:
+      - net
+    restart: unless-stopped
+
+  rendertron:
+    image: dockette/rendertron
+    container_name: biotools-rendertron
+    ports:
+      - "3000:3000"
     networks:
       - net
     restart: unless-stopped
