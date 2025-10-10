@@ -110,14 +110,14 @@
                     <small class="matrix-small">{{matrix.total}}</small>
                 </a>
 
-                <div class="matrix-item" ng-repeat="dim in ['1D sequence', '2D topology', '3D structure', 'xD omics']">
+                <div class="matrix-item" ng-repeat="dim in ['Sequence', 'Structure', 'Function', 'Quantification']">
                     <span>{{dim}}</span>
                 </div>
 
                 <div class="matrix-item" ng-class="{'hidden-xs': row.head}" ng-repeat="row in matrix.data">
                     <span ng-show="row.head">{{row.name}}</span>
 
-                    <a class="matrix-img" href="/t?page=1&q={{row.q}}" ng-show="!row.head">
+                    <a class="matrix-img" href="/t?page=1&{{row.link}}" ng-show="!row.head">
                         <img alt="{{row.message}} image" src="/img/matrix/{{row.image}}">
                         <small class="matrix-small" ng-show="!row.head">{{row.count}}</small>
                     </a>
