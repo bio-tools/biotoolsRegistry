@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 
 from elixir import search
 from elixir.serializers import *
+from elixir import stats
 
 es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 
@@ -147,4 +148,11 @@ class ToolMatrix(APIView):
 				x["head"] = False
 				flat.append(x)
 
-		return Response(flat)
+		# Append a 'total'
+		statsInfo = stats.StatsInfo()
+		response = {
+			"data": flat,
+			"total": statsInfo.totalEntries()
+		}
+
+		return Response(response)
