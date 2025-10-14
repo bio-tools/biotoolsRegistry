@@ -67,7 +67,7 @@
 								<tr ng-repeat="account in profile.socialAccounts" ng-if="account.provider == 'orcid'">
 									<th>ORCID</th>
 									<td>
-										<div><strong>ORCID ID:</strong> {{account.uid}}</div>
+										<div><strong>ORCID iD:</strong> {{account.uid}}</div>
 										<div ng-if="account.extra_data.name"><strong>Name:</strong> {{account.extra_data.name}}</div>
 										<div ng-if="account.extra_data.given_names || account.extra_data.family_name">
 											<strong>Full Name:</strong> {{account.extra_data.given_names}} {{account.extra_data.family_name}}
