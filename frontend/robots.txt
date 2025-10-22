@@ -1,6 +1,12 @@
 User-agent: *
 Allow: /
-Disallow: /t
+
+# Block edit pages
+Disallow: /*/edit
+
+# Block search pages
+Disallow: /t$
+Disallow: /t?
 Disallow: /t/
 
 Sitemap: https://bio.tools/api/sitemap.xml
