@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { TagInput } from '../../components/tag-input/tag-input';
 import type { TagItem } from '../../components/tag-input/tag-input';
 
+
 @Component({
   selector: 'app-home',
   imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, TagInput],
@@ -21,8 +22,25 @@ export class Home {
   // tags in legacy format: { text, filter }
   queryTags: TagItem[] = [];
 
-  //TODO: create object with logo names and titles for alt text
-   
+  // logos shown on the home page with personalized alt/title text
+  logos: { file: string; alt: string }[] = [
+    { file: 'dtu.png', alt: 'Technical University of Denmark' },
+    { file: 'ku.png', alt: 'University of Copenhagen' },
+    { file: 'aarhus-uni.jpg', alt: 'Aarhus University' },
+    { file: 'aalborg-uni.png', alt: 'Aalborg University' },
+    { file: 'sdu2.png', alt: 'University of Southern Denmark' },
+    { file: 'institut-pasteur.png', alt: 'Institut Pasteur' },
+    { file: 'bergen.jpg', alt: 'University of Bergen' },
+    { file: 'bsc.jpg', alt: 'Barcelona Supercomputing Center' },
+    { file: 'ceitec.jpg', alt: 'Central European Institute of Technology' },
+    { file: 'tartu.png', alt: 'University of Tartu' },
+    { file: 'embl.png', alt: 'EMBL-EBI' },
+    { file: 'sib.png', alt: 'Swiss Institute of Bioinformatics' },
+    { file: 'irb.jpeg', alt: 'Institute For Research In Biomedicine Barcelona' },
+    { file: 'inesc.png', alt: 'Instituto de Engenharia de Sistemas e Computadores - Investigação e Desenvolvimento' },
+    { file: 'cnrs.png', alt: 'Centre national de la recherche scientifique' },
+    { file: 'OIP.jpeg', alt: 'Leiden University Medical Center' }
+  ];
 
   doSearch() {
     const params: any = {};
