@@ -1,10 +1,14 @@
+
 export interface SearchParams {
   q?: string;
   topic?: string[];
+  operation?: string[];
+  input?: string[];
+  output?: string[];
   toolType?: string[];
-  operatingSystem?: string[];
+  language?: string[];
+  accessibility?: string[];
   license?: string;
-  maturity?: string;
   cost?: string;
   page?: number;
   pageSize?: number;

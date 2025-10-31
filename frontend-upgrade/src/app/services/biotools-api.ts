@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Resource } from '../model/resource.model';
+import { Tool } from '../model/resource.model';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { Domain } from '../model/domain.model';
@@ -41,7 +41,7 @@ export class BiotoolsApiService {
         httpParams = httpParams.set('page', params.page.toString());   
     }
 
-    return this.http.get<{ list: Array<Resource> }>(`${this.baseUrl}/t`, { params: httpParams })
+    return this.http.get<{ list: Array<Tool> }>(`${this.baseUrl}/t`, { params: httpParams })
     .pipe(
       map(response => response.list),
 
@@ -50,8 +50,8 @@ export class BiotoolsApiService {
   }
 
   /** GET TOOL BY ID */
-  getToolByID(biotoolsID: string): Observable<Resource> {
-    return this.http.get<Resource>(`${this.baseUrl}/t/${biotoolsID}`).pipe(
+  getToolByID(biotoolsID: string): Observable<Tool> {
+    return this.http.get<Tool>(`${this.baseUrl}/t/${biotoolsID}`).pipe(
       catchError(this.handleError)
     );
   }
@@ -67,6 +67,26 @@ export class BiotoolsApiService {
   getSlimDomains(): Observable<Domain[]> {
     return this.http.get<{ list: Domain[] }>(`${this.baseUrl}/domains`).pipe(
       map(response => response.list)
+    );
+  }
+
+  /** Used terms / autocomplete suggestions
+   *  usedTermName: one of 'all','topic','operation',... as in legacy API
+   *  params: optional query params (e.g. q, domain, page)
+   */
+  getUsedTerms(usedTermName: string, params?: {[k:string]: any}) {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(k => {
+        if (params[k] !== undefined && params[k] !== null) {
+          httpParams = httpParams.set(k, String(params[k]));
+        }
+      });
+    }
+
+    // Use relative path to match backend (/api/used-terms/:usedTermName)
+    return this.http.get<any[]>(`/api/used-terms/${usedTermName}`, { params: httpParams }).pipe(
+      catchError(this.handleError)
     );
   }
 

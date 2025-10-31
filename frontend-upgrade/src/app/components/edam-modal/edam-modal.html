@@ -33,7 +33,7 @@
                (click)="selectTerm(rootNode)"
                [class.selected]="selectedTerm()?.uri === rootNode.data.uri">
             <span class="node-text"
-                  [matTooltip]="rootNode.definition + (rootNode.exact_synonyms?.length ? ' (' + rootNode.exact_synonyms.join(', ') + ')' : '')"
+                  [matTooltip]="rootNode.definition + (rootNode.exact_synonyms?.length ? ' (' + (rootNode.exact_synonyms ?? []).join(', ') + ')' : '')"
                   matTooltipPosition="above">
               {{ rootNode.text }}
             </span>
@@ -55,7 +55,7 @@
                    (click)="selectTerm(childNode)"
                    [class.selected]="selectedTerm()?.uri === childNode.data.uri">
                 <span class="node-text"
-                      [matTooltip]="childNode.definition + (childNode.exact_synonyms?.length ? ' (' + childNode.exact_synonyms.join(', ') + ')' : '')"
+                      [matTooltip]="childNode.definition + (childNode.exact_synonyms?.length ? ' (' + (childNode.exact_synonyms ?? []).join(', ') + ')' : '')"
                       matTooltipPosition="above">
                   {{ childNode.text }}
                 </span>
@@ -77,7 +77,7 @@
                        (click)="selectTerm(grandchildNode)"
                        [class.selected]="selectedTerm()?.uri === grandchildNode.data.uri">
                     <span class="node-text"
-                          [matTooltip]="grandchildNode.definition + (grandchildNode.exact_synonyms?.length ? ' (' + grandchildNode.exact_synonyms.join(', ') + ')' : '')"
+                          [matTooltip]="grandchildNode.definition + (grandchildNode.exact_synonyms?.length ? ' (' + (grandchildNode.exact_synonyms ?? []).join(', ') + ')' : '')"
                           matTooltipPosition="above">
                       {{ grandchildNode.text }}
                     </span>
