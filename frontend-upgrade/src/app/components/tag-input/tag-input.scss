@@ -1,0 +1,15 @@
+.tag-input-root {
+  width: 100%;
+}
+.tag-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.filter-select { width: 160px; }
+.tag-input-field { flex: 1 1 auto; }
+.suggestions { background: #fff; border: 1px solid #e0e0e0; margin-top: 6px; border-radius: 4px; }
+.suggestions ul { list-style: none; margin: 0; padding: 8px; }
+.suggestions li { padding: 6px 8px; cursor: pointer; }
+.suggestions li:hover { background: #f0f7ff; }
+.chips { margin-top: 8px; }

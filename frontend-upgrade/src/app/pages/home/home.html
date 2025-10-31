@@ -1,1 +1,54 @@
-<p>home works!</p>
+<!-- Modernized home page derived from legacy templates -->
+
+<div class="container hero-content">
+	<mat-card class="hero-card">
+	    <h1>bio.tools</h1>
+	    <p>Essential scientific and technical information about software tools,     databases and services for bioinformatics and the life sciences.</p>
+			<div class="home-search">
+				<app-tag-input [(tags)]="queryTags"></app-tag-input>
+				<button mat-flat-button color="primary" class="search-button" (click)="doSearch()">Search</button>
+			</div>
+	    <p>Explore <em>bio.tools</em> by the most popular bioinformatics concepts, or <a routerLink="/t?page=1">view all tools</a>.</p>
+	</mat-card>
+</div>
+
+<div class="container hero-content">
+	<mat-card class="info-card">
+		<h2>What is bio.tools?</h2>
+		<p>bio.tools is a community-driven registry of bioinformatics software and data resources. Each entry has a unique identifier (e.g. <a routerLink="/signalp">biotools:signalp</a>).</p>
+		<p>All data and components are available under open license — <a href="https://biotools.readthedocs.io/en/latest/what_is_biotools.html#getting-involved-a-quick-start-guide" target="_blank">get involved</a>.</p>
+	</mat-card>
+</div>
+
+<div class="container hero-content">
+	<mat-card class="info-card">
+		<h2>Communities</h2>
+		<p>Explore <a routerLink="/communities">communities</a> and see what resources are used by different scientific groups. You can also browse <a routerLink="/domains">domains</a>.</p>
+	</mat-card>
+</div>
+
+<!-- Small topic examples to mimic earlier clickable topics -->
+<div class="container browse-topics">
+	<h3>Popular topics</h3>
+	<div class="topic-list">
+		<button mat-stroked-button color="primary" (click)="goToTopic('Proteomics')">Proteomics</button>
+		<button mat-stroked-button color="primary" (click)="goToTopic('Genomics')">Genomics</button>
+		<button mat-stroked-button color="primary" (click)="goToOperation('Alignment')">Alignment</button>
+		<button mat-stroked-button color="primary" (click)="goToOperation('Variant calling')">Variant calling</button>
+	</div>
+</div>
+
+<div class="container intro-sections logos-card">
+	<mat-card class="info-card">
+		<h4 class="text-center">Led by ELIXIR Denmark & partners</h4>
+			<div class="inner-logo-container">
+                @for (logo of ['dtu.png','ku.png','aarhus-uni.jpg','aalborg-uni.png','sdu2.png','institut-pasteur.png','bergen.jpg','bsc.jpg','ceitec.jpg','tartu.png','embl.png','sib.png','irb.jpeg','inesc.png','cnrs.png','OIP.jpeg']; track $index) {
+                    <div class="new-logo-item">
+                        <img [src]="'/img/logos/' + logo" [alt]="logo"/>
+                    </div>
+                }
+            </div>
+	</mat-card>
+</div>
+
+

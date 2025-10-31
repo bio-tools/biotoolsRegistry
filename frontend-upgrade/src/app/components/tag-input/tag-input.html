@@ -1,0 +1,32 @@
+<div class="tag-input-root">
+  <div class="tag-controls">
+    <mat-form-field appearance="outline" class="filter-select">
+      <mat-select [(ngModel)]="selectedFilter">
+        <mat-option *ngFor="let f of filterOptions" [value]="f">{{f}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="tag-input-field">
+      <input matInput placeholder="Add a tag or search term" [(ngModel)]="inputText" (ngModelChange)="onInputChange($event)" (keydown.enter)="addFromInput()" />
+    </mat-form-field>
+
+    <button mat-icon-button class="add-btn" (click)="addFromInput()" aria-label="Add tag">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  <div class="suggestions" *ngIf="suggestions && suggestions.length > 0">
+    <ul>
+      <li *ngFor="let s of suggestions" (click)="selectSuggestion(s)">{{s}}</li>
+    </ul>
+  </div>
+
+  <div class="chips">
+    <mat-chip-list>
+      <mat-chip *ngFor="let t of tags; let i = index" selectable="true" removable="true" (removed)="removeTag(i)">
+        {{t.filter}}: {{t.text}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+    </mat-chip-list>
+  </div>
+</div>
