@@ -5,8 +5,7 @@
 	    <h1>bio.tools</h1>
 	    <p>Essential scientific and technical information about software tools,     databases and services for bioinformatics and the life sciences.</p>
 			<div class="home-search">
-				<app-tag-input [(tags)]="queryTags"></app-tag-input>
-				<button mat-flat-button color="primary" class="search-button" (click)="doSearch()">Search</button>
+                <app-search-bar></app-search-bar>
 			</div>
 	    <p>Explore <em>bio.tools</em> by the most popular bioinformatics concepts, or <a routerLink="/t?page=1">view all tools</a>.</p>
 

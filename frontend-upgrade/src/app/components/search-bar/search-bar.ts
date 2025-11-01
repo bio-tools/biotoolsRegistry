@@ -36,4 +36,6 @@ export class SearchBar {
       this.onSearch();
     }
   }
+
+  
 }

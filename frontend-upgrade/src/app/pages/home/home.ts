@@ -8,11 +8,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { TagInput } from '../../components/tag-input/tag-input';
 import type { TagItem } from '../../components/tag-input/tag-input';
+import { SearchBar } from '../../components/search-bar/search-bar';
 
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, TagInput],
+  imports: [
+    SearchBar,
+    CommonModule, 
+    FormsModule, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatButtonModule, 
+    MatCardModule
+  ],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
