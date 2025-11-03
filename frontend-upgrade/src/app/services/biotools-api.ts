@@ -23,7 +23,8 @@ export interface SearchParams {
 })
 export class BiotoolsApiService {
 
-  private readonly baseUrl = 'http://localhost:8000/'; //TODO
+  // API server base URL (no trailing slash)
+  private readonly baseUrl = 'http://localhost:8000'; //TODO make configurable
 
   //http = inject(HttpClient);
  
@@ -45,7 +46,7 @@ export class BiotoolsApiService {
     .pipe(
       map(response => response.list),
 
-      catchError(this.handleError) //TODOs
+      catchError(this.handleError) //TODO
     );
   }
 
@@ -84,8 +85,10 @@ export class BiotoolsApiService {
       });
     }
 
-    // Use relative path to match backend (/api/used-terms/:usedTermName)
-    return this.http.get<any[]>(`/api/used-terms/${usedTermName}`, { params: httpParams }).pipe(
+    // Call the backend service using the configured baseUrl so requests go to the API server
+    return this.http.get<any>(`${this.baseUrl}/used-terms/${usedTermName}`, { params: httpParams }).pipe(
+      // the backend returns { data: [...] }
+      map(res => res && res.data ? res.data : res),
       catchError(this.handleError)
     );
   }
