@@ -185,7 +185,49 @@ angular.module('elixir_front.controllers', [])
 	$scope.orderby = 'text';
 	
 	$scope.registeringInProgress = false;
+			
+	// Populate from external URL or query param on load
+	$timeout(function() {
+        // Populate from external URL or query param ---
+        //  - ?json_url=https://example.com/tool.json
+        //  - ?json=<urlencoded JSON or base64-encoded JSON>
+        var search = $location.search();
+        if (search.json_url) {
+            $http.get(search.json_url).then(function(resp){
+                if (resp.data) {
+					// ensure digest cycle completes
+                    $timeout(function() {
+                        $scope.software = resp.data;
+                    }, 0);
+                }
+            }, function(err){
+                // ignore
+            });
+        } else if (search.json) {
+            var raw = search.json;
+            try {
+                // try decodeURIComponent first
+                var decoded = decodeURIComponent(raw);
+                var parsed = JSON.parse(decoded);
 
+				$timeout(function() {
+                    $scope.software = parsed;
+                }, 0);
+            } catch (e1) {
+                try {
+                    // fallback: base64
+                    var decodedB64 = atob(raw);
+                    var parsed = JSON.parse(decodedB64);
+
+					$timeout(function() {
+                        $scope.software = parsed;
+                    }, 0);
+                } catch (e2) {
+					// ignore
+                }
+            }
+        }
+    },100);
 
 	// for storing validation and saving progess
 	$scope.validationProgress = {}, $scope.savingProgress = {}, $scope.deletingProgress = {};
@@ -1373,56 +1415,13 @@ angular.module('elixir_front.controllers', [])
 	// })
 
 }])
-.controller('ToolCreateController', ['$scope', '$controller', '$timeout', 'ToolListConnection', 'ToolCreateValidator', 'User', '$stateParams',  'CommunityCollection', '$location', '$http',function($scope, $controller, $timeout, ToolListConnection, ToolCreateValidator, User, $stateParams, CommunityCollection, $location, $http){
+.controller('ToolCreateController', ['$scope', '$controller', '$timeout', 'ToolListConnection', 'ToolCreateValidator', 'User', '$stateParams',  'CommunityCollection',function($scope, $controller, $timeout, ToolListConnection, ToolCreateValidator, User, $stateParams, CommunityCollection){
 	// inherit common controller
 	$controller('ToolEditController', {$scope: $scope});
 	$scope.orderby = 'text';
 	// sets which controller is in use, so the HTML can adapt
 	$scope.controller = 'create';
 		
-	$timeout(function() {
-        // Populate from external URL or query param ---
-        //  - ?json_url=https://example.com/tool.json
-        //  - ?json=<urlencoded JSON or base64-encoded JSON>
-        var search = $location.search();
-        if (search.json_url) {
-            $http.get(search.json_url).then(function(resp){
-                if (resp.data) {
-					// ensure digest cycle completes
-                    $timeout(function() {
-                        $scope.software = resp.data;
-                    }, 0);
-                }
-            }, function(err){
-                // ignore
-            });
-        } else if (search.json) {
-            var raw = search.json;
-            try {
-                // try decodeURIComponent first
-                var decoded = decodeURIComponent(raw);
-                var parsed = JSON.parse(decoded);
-
-				$timeout(function() {
-                    $scope.software = parsed;
-                }, 0);
-            } catch (e1) {
-                try {
-                    // fallback: base64
-                    var decodedB64 = atob(raw);
-                    var parsed = JSON.parse(decodedB64);
-
-					$timeout(function() {
-                        $scope.software = parsed;
-                    }, 0);
-                } catch (e2) {
-					// ignore
-                }
-            }
-        }
-    },100);
-
-
 	// initially set the ID to change automatically when name is modified
 	$scope.biotoolsIDDisabled = true;
 	$scope.editIdButtonText = 'Edit ID';
