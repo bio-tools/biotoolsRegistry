@@ -88,7 +88,7 @@ gulp.task('bower', function() {
 	
 	gulp.src([
 		'bower_components/bootstrap/dist/css/bootstrap.min.css',
-		'bower_components/font-awesome/css/font-awesome.min.css',
+		'bower_components/font-awesome/css/all.min.css',
 		'bower_components/angular-tree-control/css/tree-control.css',
 		'bower_components/angular-tree-control/css/tree-control-attribute.css',
 		'bower_components/angular-tooltips/dist/angular-tooltips.min.css',
