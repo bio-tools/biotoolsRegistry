@@ -1,435 +1,388 @@
+import random
+import time
+from multiprocessing import Pool, cpu_count
+
 from django.conf import settings as app_settings
 from django.core.management.base import BaseCommand, CommandError
 from elasticsearch import Elasticsearch
-from elixir.models import *
-from elixir.serializers import *
-import random, time
-from multiprocessing import Pool, cpu_count
 from rest_framework.renderers import JSONRenderer
 
+from elixir.models import *
+from elixir.serializers import *
+
+
 def parallel_function(x):
-	resource = ResourceSerializer(Resource.objects.get(id=x[0]), many=False).data
-	return JSONRenderer().render(resource)
+    resource = ResourceSerializer(Resource.objects.get(id=x[0]), many=False).data
+    return JSONRenderer().render(resource)
+
 
 class Command(BaseCommand):
-	help = 'Regenerate the Elasticsearch index'
+    help = "Regenerate the Elasticsearch index"
 
-	def handle(self, *args, **options):
-		self.stdout.write('Regenerating the ES')
-		es = Elasticsearch(app_settings.ELASTIC_SEARCH_URLS)
-		resourceList = Resource.objects.filter(visibility=1)
-		self.stdout.write('--------------------\nid\t:\tname\n--------------------')
+    def handle(self, *args, **options):
+        self.stdout.write("Regenerating the ES")
+        es = Elasticsearch(app_settings.ELASTIC_SEARCH_URLS)
+        resourceList = Resource.objects.filter(visibility=1)
+        self.stdout.write("--------------------\nid\t:\tname\n--------------------")
 
-		settings_subdomains = {
-			"settings": {
-				"analysis": {
-					"normalizer": {
-						"my_normalizer": {
-							"type": "custom",
-							"filter": ["lowercase"]
-						}
-					}
-				}
-  			}
-		}
+        settings_subdomains = {
+            "settings": {
+                "analysis": {
+                    "normalizer": {
+                        "my_normalizer": {"type": "custom", "filter": ["lowercase"]}
+                    }
+                }
+            }
+        }
 
-		# if sending with curl you need to wrap the object below -> {"mappings": object}
-		mapping_subdomains = {
-			# "subdomains": {
-				"properties": {
-					"domain": {
-						"type": "text",
-						"fields": {
-							"raw": {
-								"type": "keyword",
-								"index": True
-							},
-							"normalize": {
-								"type": "keyword",
-								"normalizer": "my_normalizer"
-							}
-						}
-					},
-					"resources": {
-						"properties": {
-							"biotoolsID": {
-								"type": "text",
-								"fields": {
-									"raw": {
-										"type": "keyword",
-										"index": True
-									}
-								}
-							},
-							"versionId": {
-								"type": "text",
-								"fields": {
-									"raw": {
-										"type": "keyword",
-										"index": True
-									}
-								}
-							}
-						}
-					}
-				}
-			
-		}
-	
-		es.indices.create('elixir', ignore=400)
-		time.sleep(3)
+        # if sending with curl you need to wrap the object below -> {"mappings": object}
+        mapping_subdomains = {
+            # "subdomains": {
+            "properties": {
+                "domain": {
+                    "type": "text",
+                    "fields": {
+                        "raw": {"type": "keyword", "index": True},
+                        "normalize": {"type": "keyword", "normalizer": "my_normalizer"},
+                    },
+                },
+                "resources": {
+                    "properties": {
+                        "biotoolsID": {
+                            "type": "text",
+                            "fields": {"raw": {"type": "keyword", "index": True}},
+                        },
+                        "versionId": {
+                            "type": "text",
+                            "fields": {"raw": {"type": "keyword", "index": True}},
+                        },
+                    }
+                },
+            }
+        }
 
-		# ADD SETTINGS
-		settings = {
-			"analysis": {
-				"analyzer": {
-					"not_analyzed_case_insensitive":{
-						"tokenizer":"keyword",
-						"filter":"lowercase"
-					}
-				}
-			},
-			"index": {
-				"max_result_window": 50000
-			}
-		}
-		es.indices.close (index='elixir')
-		es.indices.put_settings (index='elixir', body=settings)
-		es.indices.open (index='elixir')
+        es.indices.create("elixir", ignore=400)
+        time.sleep(3)
 
-		# ADD MAPPING
-		mapping = {
-			# "tool" : {
-				"properties" : {
-					"collectionID" : {
-						"type" : "text",
-						"analyzer": "not_analyzed_case_insensitive",
-						"fielddata": True,
-						"fields": {
-							"raw": { 
-								"type":  "keyword"
-							}
-						}
-					},
-					"description" : {
-						"type" : "text",
-						"analyzer": "english",
-						"fielddata": True
-					},
-					"homepage" : {
-						"type" : "text",
-						"analyzer": "not_analyzed_case_insensitive",
-						"fielddata": True
-					},
-					"name" : {
-						"type" : "text",
-						"analyzer": "not_analyzed_case_insensitive",
-						"fielddata": True,
-						"fields": {
-							"raw": { 
-								"type":  "keyword"
-							}
-						}
-					},
-					"topic" : {
-						"properties" : {
-							"term" : {
-								"type" : "text",
-								"analyzer": "english",
-								"fielddata": True,
-								"fields": {
-									"raw": { 
-										"type":  "keyword"
-									}
-								}
-							}
-						}
-					},
-					"function": {
-						"properties": {
-							"note": {
-								"type": "text",
-								"analyzer": "english",
-								"fielddata": True
-							},
-							"cmd": {
-								"type": "text",
-								"analyzer": "english",
-								"fielddata": True
-							},
-							"input": {
-								"properties": {
-									"data": {
-										"properties": {
-											"term": {
-												"type": "text",
-												"analyzer": "english",
-												"fielddata": True,
-												"fields": {
-													"raw": { 
-														"type" : "text",
-														"analyzer": "not_analyzed_case_insensitive",
-														"fielddata": True
-													},
-													"keyword": {
-				                		"type": "keyword"
-				              		}
-												}
-											}
-										}
-									},
-									"format": {
-										"properties": {
-											"term": {
-												"type": "text",
-												"analyzer": "english",
-												"fielddata": True,
-												"fields": {
-													"raw": { 
-														"type" : "text",
-														"analyzer": "not_analyzed_case_insensitive",
-														"fielddata": True
-													},
-													"keyword": {
-				                		"type": "keyword"
-				              		}
-												}
-											}
-										}
-									}
-								}
-							},
-							"output": {
-								"properties": {
-									"data": {
-										"properties": {
-											"term": {
-												"type": "text",
-												"analyzer": "english",
-												"fielddata": True,
-												"fields": {
-													"raw": { 
-														"type" : "text",
-														"analyzer": "not_analyzed_case_insensitive",
-														"fielddata": True
-													},
-													"keyword": {
-				                		"type": "keyword"
-				              		}
-												}
-											}
-										}
-									},
-									"format": {
-										"properties": {
-											"term": {
-												"type": "text",
-												"analyzer": "english",
-												"fielddata": True,
-												"fields": {
-													"raw": { 
-														"type" : "text",
-														"analyzer": "not_analyzed_case_insensitive",
-														"fielddata": True
-													},
-													"keyword": {
-				                		"type": "keyword"
-				              		}
-												}
-											}
-										}
-									}
-								}
-							},
-							"operation": {
-								"properties": {
-									"term": {
-										"type": "text",
-										"analyzer": "english",
-										"fielddata": True,
-										"fields": {
-											"raw": { 
-												"type":  "keyword"
-											}
-										}
-									}
-								}
-							}
-						}
-					},
-					"credit" : {
-						"properties" : {
-							"note" : {
-								"type" : "text",
-								"analyzer": "english",
-								"fielddata": True
-							},
-							"name" : {
-								"type" : "text",
-								"analyzer": "english",
-								"fielddata": True,
-								"fields": {
-									"raw": { 
-										"type" : "text",
-										"analyzer": "not_analyzed_case_insensitive",
-										"fielddata": True
-									},
-									"keyword": {
-                		"type": "keyword"
-              		}
-								}
-							}
-						}
-					},
-					"documentation" : {
-						"properties" : {
-							"note" : {
-								"type" : "text",
-								"analyzer": "english",
-								"fielddata": True
-							}
-						}
-					},
-					"biotoolsID" : {
-						"type" : "text",
-						"analyzer": "not_analyzed_case_insensitive",
-						"fielddata": True
-					},
-					"id" : {
-						"type" : "text",
-						"analyzer": "not_analyzed_case_insensitive",
-						"fielddata": True
-					},
-					"language" : {
-						"type" : "text",
-						"fielddata": True,
-						"analyzer": "not_analyzed_case_insensitive",
-						"fields": {
-							"raw": { 
-								"type":  "keyword"
-							}
-						}
-					},
-					"license" : {
-						"type" : "text",
-						"analyzer": "not_analyzed_case_insensitive",
-						"fielddata": True,
-						"fields": {
-							"raw": { 
-								"type":  "keyword"
-							}
-						}
-					},
-					"operatingSystem" : {
-						"type" : "text",
-						"analyzer": "not_analyzed_case_insensitive",
-						"fielddata": True
-					},
-					# "otherID" : {
-					# 	"properties" : {
-					# 		"value" : {
-					# 			"type" : "text",
-					# 			"analyzer": "not_analyzed_case_insensitive",
-					# 			"fielddata": True
-					# 		},
-					# 		"type" : {
-					# 			"type" : "text",
-					# 			"analyzer": "not_analyzed_case_insensitive",
-					# 			"fielddata": True
-					# 		},
-					# 		"version" : {
-					# 			"type" : "text",
-					# 			"analyzer": "not_analyzed_case_insensitive",
-					# 			"fielddata": True
-					# 		}
-					# 	}
-					# },
-					"toolType" : {
-						"type" : "text",
-						"analyzer": "not_analyzed_case_insensitive",
-						"fielddata": True,
-						"fields": {
-							"raw": { 
-								"type":  "keyword"
-							}
-						}
-					},
-					"version" : {
-						"type" : "text",
-						"analyzer": "not_analyzed_case_insensitive",
-						"fielddata": True
-					},
-					# "version" : {
-					# 	"properties" : {
-					# 		"version" : {
-					# 			"type" : "text",
-					# 			"analyzer": "english",
-					# 			"fielddata": True
-					# 		}
-					# 	}
-					# },
-					"versionId" : {
-						"type" : "text",
-						"fielddata": True,
-						"analyzer": "not_analyzed_case_insensitive"
-					},
-					"maturity" : {
-						"type" : "text",
-						"fielddata": True,
-						"analyzer": "not_analyzed_case_insensitive"
-					},
-					"cost" : {
-						"type" : "text",
-						"fielddata": True,
-						"analyzer": "not_analyzed_case_insensitive",
-						"fields": {
-							"raw": { 
-								"type":  "keyword"
-							}
-						}
-					},
-					"owner" : {
-						"type" : "text",
-						"fielddata": True,
-						"analyzer": "not_analyzed_case_insensitive"
-					},
-					"lastUpdate":{
-						"type":"date"
-					},
-					"additionDate":{
-						"type":"date"
-					}
-				}
-			
-		}
-		# es.indices.put_mapping(index='elixir', doc_type='tool', body=mapping)
-		es.indices.put_mapping(index='elixir', body=mapping)
-		
-		es.indices.create('domains')
-		es.indices.close (index='domains')
-		es.indices.put_settings(index='domains', body=settings_subdomains)
-		es.indices.open (index='domains')
-		# es.indices.put_mapping(index='domains', doc_type='subdomains', body=mapping_subdomains)
-		es.indices.put_mapping(index='domains', body=mapping_subdomains)
+        # ADD SETTINGS
+        settings = {
+            "analysis": {
+                "analyzer": {
+                    "not_analyzed_case_insensitive": {
+                        "tokenizer": "keyword",
+                        "filter": "lowercase",
+                    }
+                }
+            },
+            "index": {"max_result_window": 50000},
+        }
+        es.indices.close(index="elixir")
+        es.indices.put_settings(index="elixir", body=settings)
+        es.indices.open(index="elixir")
 
-		rl_id = Resource.objects.filter(visibility=1).values_list('id')
-		pool = Pool(processes=cpu_count())
+        # ADD MAPPING
+        mapping = {
+            # "tool" : {
+            "properties": {
+                "collectionID": {
+                    "type": "text",
+                    "analyzer": "not_analyzed_case_insensitive",
+                    "fielddata": True,
+                    "fields": {"raw": {"type": "keyword"}},
+                },
+                "description": {
+                    "type": "text",
+                    "analyzer": "english",
+                    "fielddata": True,
+                },
+                "homepage": {
+                    "type": "text",
+                    "analyzer": "not_analyzed_case_insensitive",
+                    "fielddata": True,
+                },
+                "name": {
+                    "type": "text",
+                    "analyzer": "not_analyzed_case_insensitive",
+                    "fielddata": True,
+                    "fields": {"raw": {"type": "keyword"}},
+                },
+                "topic": {
+                    "properties": {
+                        "term": {
+                            "type": "text",
+                            "analyzer": "english",
+                            "fielddata": True,
+                            "fields": {"raw": {"type": "keyword"}},
+                        }
+                    }
+                },
+                "function": {
+                    "properties": {
+                        "note": {
+                            "type": "text",
+                            "analyzer": "english",
+                            "fielddata": True,
+                        },
+                        "cmd": {
+                            "type": "text",
+                            "analyzer": "english",
+                            "fielddata": True,
+                        },
+                        "input": {
+                            "properties": {
+                                "data": {
+                                    "properties": {
+                                        "term": {
+                                            "type": "text",
+                                            "analyzer": "english",
+                                            "fielddata": True,
+                                            "fields": {
+                                                "raw": {
+                                                    "type": "text",
+                                                    "analyzer": "not_analyzed_case_insensitive",
+                                                    "fielddata": True,
+                                                },
+                                                "keyword": {"type": "keyword"},
+                                            },
+                                        }
+                                    }
+                                },
+                                "format": {
+                                    "properties": {
+                                        "term": {
+                                            "type": "text",
+                                            "analyzer": "english",
+                                            "fielddata": True,
+                                            "fields": {
+                                                "raw": {
+                                                    "type": "text",
+                                                    "analyzer": "not_analyzed_case_insensitive",
+                                                    "fielddata": True,
+                                                },
+                                                "keyword": {"type": "keyword"},
+                                            },
+                                        }
+                                    }
+                                },
+                            }
+                        },
+                        "output": {
+                            "properties": {
+                                "data": {
+                                    "properties": {
+                                        "term": {
+                                            "type": "text",
+                                            "analyzer": "english",
+                                            "fielddata": True,
+                                            "fields": {
+                                                "raw": {
+                                                    "type": "text",
+                                                    "analyzer": "not_analyzed_case_insensitive",
+                                                    "fielddata": True,
+                                                },
+                                                "keyword": {"type": "keyword"},
+                                            },
+                                        }
+                                    }
+                                },
+                                "format": {
+                                    "properties": {
+                                        "term": {
+                                            "type": "text",
+                                            "analyzer": "english",
+                                            "fielddata": True,
+                                            "fields": {
+                                                "raw": {
+                                                    "type": "text",
+                                                    "analyzer": "not_analyzed_case_insensitive",
+                                                    "fielddata": True,
+                                                },
+                                                "keyword": {"type": "keyword"},
+                                            },
+                                        }
+                                    }
+                                },
+                            }
+                        },
+                        "operation": {
+                            "properties": {
+                                "term": {
+                                    "type": "text",
+                                    "analyzer": "english",
+                                    "fielddata": True,
+                                    "fields": {"raw": {"type": "keyword"}},
+                                }
+                            }
+                        },
+                    }
+                },
+                "credit": {
+                    "properties": {
+                        "note": {
+                            "type": "text",
+                            "analyzer": "english",
+                            "fielddata": True,
+                        },
+                        "name": {
+                            "type": "text",
+                            "analyzer": "english",
+                            "fielddata": True,
+                            "fields": {
+                                "raw": {
+                                    "type": "text",
+                                    "analyzer": "not_analyzed_case_insensitive",
+                                    "fielddata": True,
+                                },
+                                "keyword": {"type": "keyword"},
+                            },
+                        },
+                    }
+                },
+                "documentation": {
+                    "properties": {
+                        "note": {
+                            "type": "text",
+                            "analyzer": "english",
+                            "fielddata": True,
+                        }
+                    }
+                },
+                "biotoolsID": {
+                    "type": "text",
+                    "analyzer": "not_analyzed_case_insensitive",
+                    "fielddata": True,
+                },
+                "id": {
+                    "type": "text",
+                    "analyzer": "not_analyzed_case_insensitive",
+                    "fielddata": True,
+                },
+                "language": {
+                    "type": "text",
+                    "fielddata": True,
+                    "analyzer": "not_analyzed_case_insensitive",
+                    "fields": {"raw": {"type": "keyword"}},
+                },
+                "license": {
+                    "type": "text",
+                    "analyzer": "not_analyzed_case_insensitive",
+                    "fielddata": True,
+                    "fields": {"raw": {"type": "keyword"}},
+                },
+                "operatingSystem": {
+                    "type": "text",
+                    "analyzer": "not_analyzed_case_insensitive",
+                    "fielddata": True,
+                },
+                # "otherID" : {
+                # 	"properties" : {
+                # 		"value" : {
+                # 			"type" : "text",
+                # 			"analyzer": "not_analyzed_case_insensitive",
+                # 			"fielddata": True
+                # 		},
+                # 		"type" : {
+                # 			"type" : "text",
+                # 			"analyzer": "not_analyzed_case_insensitive",
+                # 			"fielddata": True
+                # 		},
+                # 		"version" : {
+                # 			"type" : "text",
+                # 			"analyzer": "not_analyzed_case_insensitive",
+                # 			"fielddata": True
+                # 		}
+                # 	}
+                # },
+                "toolType": {
+                    "type": "text",
+                    "analyzer": "not_analyzed_case_insensitive",
+                    "fielddata": True,
+                    "fields": {"raw": {"type": "keyword"}},
+                },
+                "version": {
+                    "type": "text",
+                    "analyzer": "not_analyzed_case_insensitive",
+                    "fielddata": True,
+                },
+                # "version" : {
+                # 	"properties" : {
+                # 		"version" : {
+                # 			"type" : "text",
+                # 			"analyzer": "english",
+                # 			"fielddata": True
+                # 		}
+                # 	}
+                # },
+                "versionId": {
+                    "type": "text",
+                    "fielddata": True,
+                    "analyzer": "not_analyzed_case_insensitive",
+                },
+                "maturity": {
+                    "type": "text",
+                    "fielddata": True,
+                    "analyzer": "not_analyzed_case_insensitive",
+                },
+                "cost": {
+                    "type": "text",
+                    "fielddata": True,
+                    "analyzer": "not_analyzed_case_insensitive",
+                    "fields": {"raw": {"type": "keyword"}},
+                },
+                "owner": {
+                    "type": "text",
+                    "fielddata": True,
+                    "analyzer": "not_analyzed_case_insensitive",
+                },
+                "lastUpdate": {"type": "date"},
+                "additionDate": {"type": "date"},
+            }
+        }
+        # es.indices.put_mapping(index='elixir', doc_type='tool', body=mapping)
+        es.indices.put_mapping(index="elixir", body=mapping)
 
-		# schema 3.0
-		res = pool.map_async(parallel_function, rl_id)
-		results = res.get(timeout=10000)
-		for el in results:
-			# es.index(index='elixir', doc_type='tool', body=el)
-			es.index(index='elixir', body=el)
+        es.indices.create("domains")
+        es.indices.close(index="domains")
+        es.indices.put_settings(index="domains", body=settings_subdomains)
+        es.indices.open(index="domains")
+        # es.indices.put_mapping(index='domains', doc_type='subdomains', body=mapping_subdomains)
+        es.indices.put_mapping(index="domains", body=mapping_subdomains)
 
+        rl_id = Resource.objects.filter(visibility=1).values_list("id")
+        pool = Pool(processes=cpu_count())
 
-		# for resourceItem in resourceList:
-		# 	resource = ResourceSerializer(resourceItem, many=False).data
-		# 	self.stdout.write('%s\t:\t%s' % (resource['id'], resource['name']))
-		# 	es.index(index='elixir', doc_type='tool', body=resource)
+        # schema 3.0
+        res = pool.map_async(parallel_function, rl_id)
+        results = res.get(timeout=10000)
+        for el in results:
+            # es.index(index='elixir', doc_type='tool', body=el)
+            es.index(index="elixir", body=el)
 
-		# this is not really correct because the there are multiple versions to a resource
-		# should probably be the same for domain resource , or just remove version and versionId
-		for domain in Domain.objects.filter(visibility=1):
-			es.index(index='domains', id=domain.name.lower(), body={'domain':domain.name, 'title': domain.title, 'sub_title': domain.sub_title, 'description': domain.description, 'is_private':domain.is_private, 'tag':[t.name for t in domain.tag.all()], 'collection': [c.name for c in domain.collection.all()] ,  'resources': list(map(lambda x: {'biotoolsID': x.biotoolsID,'name': x.name}, domain.resource.all()))})
-			self.stdout.write('%s' % domain.name)
+        # for resourceItem in resourceList:
+        # 	resource = ResourceSerializer(resourceItem, many=False).data
+        # 	self.stdout.write('%s\t:\t%s' % (resource['id'], resource['name']))
+        # 	es.index(index='elixir', doc_type='tool', body=resource)
+
+        # this is not really correct because the there are multiple versions to a resource
+        # should probably be the same for domain resource , or just remove version and versionId
+        for domain in Domain.objects.filter(visibility=1):
+            es.index(
+                index="domains",
+                id=domain.name.lower(),
+                body={
+                    "domain": domain.name,
+                    "title": domain.title,
+                    "sub_title": domain.sub_title,
+                    "description": domain.description,
+                    "is_private": domain.is_private,
+                    "tag": [t.name for t in domain.tag.all()],
+                    "collection": [c.name for c in domain.collection.all()],
+                    "resources": list(
+                        map(
+                            lambda x: {"biotoolsID": x.biotoolsID, "name": x.name},
+                            domain.resource.all(),
+                        )
+                    ),
+                },
+            )
+            self.stdout.write("%s" % domain.name)
