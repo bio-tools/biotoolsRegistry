@@ -14,8 +14,20 @@ TOOL = "tool"
 REF = "$ref"
 TYPE = "type"
 
-LEFT_OUT_PATHS = ["topic", "function", "rorid", "orcidid", "fundrefid", "otherID", "url", "credit/email",
-                  "relation", "publication", "homepage", "biotoolsCURIE"]
+LEFT_OUT_PATHS = [
+    "topic",
+    "function",
+    "rorid",
+    "orcidid",
+    "fundrefid",
+    "otherID",
+    "url",
+    "credit/email",
+    "relation",
+    "publication",
+    "homepage",
+    "biotoolsCURIE",
+]
 
 # --------- DICTIONARY TEMPLATES --------
 
@@ -24,7 +36,7 @@ VALUE_DICT_BASE = {VALID: [], INVALID: []}
 TYPE_DICT = {
     STRING: ["minLength", "maxLength", "enum", "pattern", "anyOf", "examples"],
     ARRAY: ["minItems", "maxItems"],
-    OBJECT: ["additionalProperties", "required"]
+    OBJECT: ["additionalProperties", "required"],
 }
 
 # ---------- STRING ATTRIBUTES ----------

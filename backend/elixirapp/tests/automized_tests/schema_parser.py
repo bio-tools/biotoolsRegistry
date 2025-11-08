@@ -1,6 +1,19 @@
-import os
 import json
-from .constants import STRING, ARRAY, OBJECT, DEFINITIONS, TOOL, PROPERTIES, ITEMS, TYPE, REF, TYPE_DICT, REF_INFO
+import os
+
+from .constants import (
+    ARRAY,
+    DEFINITIONS,
+    ITEMS,
+    OBJECT,
+    PROPERTIES,
+    REF,
+    REF_INFO,
+    STRING,
+    TOOL,
+    TYPE,
+    TYPE_DICT,
+)
 
 schema_dir = os.path.dirname(os.path.abspath(__file__))
 schema_filename = "biotoolsj.json"
@@ -10,13 +23,10 @@ class SchemaParser:
     def __init__(self):
         self.schema = SchemaParser.read_schema()
         self.type_definitions = self.schema[DEFINITIONS]
-        self.tool_properties = self.type_definitions.pop(TOOL)[PROPERTIES]  # extract tool type into own variable
-        self.restriction_dict = {
-            STRING: {},
-            OBJECT: {},
-            ARRAY: {},
-            REF_INFO: {}
-        }
+        self.tool_properties = self.type_definitions.pop(TOOL)[
+            PROPERTIES
+        ]  # extract tool type into own variable
+        self.restriction_dict = {STRING: {}, OBJECT: {}, ARRAY: {}, REF_INFO: {}}
 
     def create_restriction_dict(self):
         self.build_dict()
@@ -24,7 +34,9 @@ class SchemaParser:
 
     @staticmethod
     def read_schema():
-        with open(f"{schema_dir}/{schema_filename}", 'r', encoding='utf-8') as schema_file:
+        with open(
+            f"{schema_dir}/{schema_filename}", "r", encoding="utf-8"
+        ) as schema_file:
             return json.load(schema_file)
 
     def build_dict(self):
@@ -32,7 +44,9 @@ class SchemaParser:
         Description: Iterates dictionary items to build type-based test dictionary.
         """
         for prop in self.tool_properties.keys():
-            prop_def = self.tool_properties[prop]  # extract definition of current property
+            prop_def = self.tool_properties[
+                prop
+            ]  # extract definition of current property
             self.handle_prop(prop_def, [prop])  # parse the prop
 
     @staticmethod
@@ -50,12 +64,12 @@ class SchemaParser:
         return REF in prop
 
     def handle_ref_type(self, reference: str, path_to_prop: list):
-        reference_name = reference.split('/')[-1]
+        reference_name = reference.split("/")[-1]
         reference_definition = self.type_definitions[reference_name]
 
         if reference_name not in self.restriction_dict[REF_INFO]:
             self.restriction_dict[REF_INFO][reference_name] = []
-        self.restriction_dict[REF_INFO][reference_name].append('/'.join(path_to_prop))
+        self.restriction_dict[REF_INFO][reference_name].append("/".join(path_to_prop))
 
         self.handle_prop(reference_definition, path_to_prop)
 
@@ -72,7 +86,9 @@ class SchemaParser:
             elif prop_type == OBJECT:
                 self.parse_object(prop, path_to_prop)
             else:
-                raise RuntimeWarning(f"[WARNING]: Type '{prop_type}' is currently not being handled.")
+                raise RuntimeWarning(
+                    f"[WARNING]: Type '{prop_type}' is currently not being handled."
+                )
         elif SchemaParser.is_ref_type(prop):  # schema-defined type
             self.handle_ref_type(prop[REF], path_to_prop)
 
@@ -82,7 +98,11 @@ class SchemaParser:
         """
         array_items = array_prop[ITEMS]
 
-        item_type = array_items[TYPE] if self.is_predefined_type(array_items) else array_items[REF]
+        item_type = (
+            array_items[TYPE]
+            if self.is_predefined_type(array_items)
+            else array_items[REF]
+        )
 
         if item_type == OBJECT:
             self.parse_object(array_items, path)
@@ -113,7 +133,7 @@ class SchemaParser:
                 object_restrictions[type_restriction] = prop[type_restriction]
 
         object_restrictions[PROPERTIES] = property_names
-        self.restriction_dict[OBJECT]['/'.join(path)] = object_restrictions
+        self.restriction_dict[OBJECT]["/".join(path)] = object_restrictions
 
     def create_dict_entry(self, prop, path):
         """
@@ -127,4 +147,4 @@ class SchemaParser:
             if type_restriction in prop:
                 restriction_dict[type_restriction] = prop[type_restriction]
 
-        self.restriction_dict[prop_type]['/'.join(path)] = restriction_dict
+        self.restriction_dict[prop_type]["/".join(path)] = restriction_dict

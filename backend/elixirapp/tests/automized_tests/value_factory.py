@@ -1,8 +1,8 @@
+from .array_tester import ArrayTester
+from .constants import ARRAY, OBJECT, REF_INFO, STRING
+from .object_tester import ObjectTester
 from .schema_parser import SchemaParser
 from .string_tester import StringTester
-from .array_tester import ArrayTester
-from .object_tester import ObjectTester
-from .constants import STRING, ARRAY, OBJECT, REF_INFO
 
 
 class ValueFactory:
@@ -28,7 +28,7 @@ class ValueFactory:
         for category in categories:
             path_dict = self.restriction_dict[category]
             for path in path_dict.keys():
-                depth = len(path.strip('/').split('/'))
+                depth = len(path.strip("/").split("/"))
                 depth_to_paths[depth].append(path)
 
         return dict(depth_to_paths)
@@ -54,22 +54,31 @@ class ValueFactory:
                         restrictions.
         """
         string_restrictions = self.restriction_dict[STRING]
-        self.string_values[path] = StringTester.create_string_values(path, string_restrictions[path])
+        self.string_values[path] = StringTester.create_string_values(
+            path, string_restrictions[path]
+        )
 
     def create_array_value(self, path: str):
         """
         Description:    Method for creating valid and invalid values for the array attributes based on schema
                         restrictions.
         """
-        self.array_values[path] = ArrayTester.create_array_values(path, self.array_restrictions[path],
-                                                                  self.string_values, self.object_values)
+        self.array_values[path] = ArrayTester.create_array_values(
+            path, self.array_restrictions[path], self.string_values, self.object_values
+        )
 
     def create_object_value(self, path: str):
         """
         Description:    Method for creating valid and invalid values for the objects based on schema restrictions.
         """
-        new_obj_entry = ObjectTester.create_object_values(self.object_restrictions[path], self.ref_info, path, self.string_values,
-                                                          self.object_values, self.array_values)
+        new_obj_entry = ObjectTester.create_object_values(
+            self.object_restrictions[path],
+            self.ref_info,
+            path,
+            self.string_values,
+            self.object_values,
+            self.array_values,
+        )
         self.object_values[path] = new_obj_entry
 
     def alter_tool(self, input_tool: dict, path: list, new_value):

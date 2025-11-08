@@ -1,11 +1,23 @@
-import rstr
-import string
-import random
 import copy
+import random
 import re
+import string
+
+import rstr
+
+from .constants import (
+    ANY_OF,
+    DEFAULT_BASE_STRING,
+    ENUM,
+    EXAMPLES,
+    INVALID,
+    MAX_LENGTH,
+    MIN_LENGTH,
+    PATTERN,
+    VALID,
+    VALUE_DICT_BASE,
+)
 from .object_tester import ObjectTester
-from .constants import INVALID, VALID, PATTERN, MIN_LENGTH, MAX_LENGTH, ENUM, VALUE_DICT_BASE, DEFAULT_BASE_STRING, \
-    ANY_OF, EXAMPLES
 
 
 class StringTester:
@@ -22,11 +34,15 @@ class StringTester:
 
         if MIN_LENGTH in constraint_dict:
             minLength_value = constraint_dict[MIN_LENGTH]
-            StringTester.create_minLength_test_values(minLength_value, base_string, value_dict)
+            StringTester.create_minLength_test_values(
+                minLength_value, base_string, value_dict
+            )
 
         if MAX_LENGTH in constraint_dict:
             maxLength_value = constraint_dict[MAX_LENGTH]
-            StringTester.create_maxLength_test_values(maxLength_value, base_string, value_dict)
+            StringTester.create_maxLength_test_values(
+                maxLength_value, base_string, value_dict
+            )
 
         if ENUM in constraint_dict:
             allowed_values = constraint_dict[ENUM]
@@ -41,7 +57,9 @@ class StringTester:
     # PATTERN ----------------------------------------------------------------------------------------------------------
     @staticmethod
     def get_example_string(constraint_dict: dict, pattern: str = None):
-        if EXAMPLES in constraint_dict and constraint_dict[EXAMPLES]:  # take given example if one exists
+        if (
+            EXAMPLES in constraint_dict and constraint_dict[EXAMPLES]
+        ):  # take given example if one exists
             return random.choice(constraint_dict[EXAMPLES])
         elif pattern:  # generate random value that matches pattern
             return StringTester.create_string_matching_pattern(pattern)
@@ -63,7 +81,7 @@ class StringTester:
             index = random.randint(0, len(s) - 1)
             char_at_index = s[index]
             corrupted_char = random.choice(string.punctuation)
-            s = s[:index] + corrupted_char + s[index + 1:]
+            s = s[:index] + corrupted_char + s[index + 1 :]
             if not compiled_pattern.fullmatch(s):
                 return s
             else:
@@ -71,14 +89,18 @@ class StringTester:
 
     @staticmethod
     def create_pattern_test_values(pattern: str, value_dict: dict, valid_string: str):
-        invalid_string = StringTester.create_invalid_string_for_pattern(valid_string, pattern)
+        invalid_string = StringTester.create_invalid_string_for_pattern(
+            valid_string, pattern
+        )
         value_dict[INVALID].append(invalid_string)
 
     # ANY OF -----------------------------------------------------------------------------------------------------------
     @staticmethod
     def create_anyOf_test_values(patterns: list, value_dict: dict, valid_string: str):
         for pattern in patterns:
-            StringTester.create_pattern_test_values(pattern[PATTERN], value_dict, valid_string)
+            StringTester.create_pattern_test_values(
+                pattern[PATTERN], value_dict, valid_string
+            )
 
     # ENUM -------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -94,7 +116,7 @@ class StringTester:
         valid_string = base_str * multiplication_factor
         value_dict[VALID].append(valid_string)
 
-        invalid_string = base_str[:min_length - 1]
+        invalid_string = base_str[: min_length - 1]
         value_dict[INVALID].append(invalid_string)
 
     # MAX LENGTH -------------------------------------------------------------------------------------------------------
@@ -104,7 +126,7 @@ class StringTester:
         invalid_string = base_str * (multiplication_factor + 1)
         value_dict[INVALID].append(invalid_string)
 
-        valid_string = invalid_string[:(max_length-1)]
+        valid_string = invalid_string[: (max_length - 1)]
         value_dict[VALID].append(valid_string)
         value_dict[VALID] = [val for val in value_dict[VALID] if len(val) < max_length]
 
@@ -118,7 +140,7 @@ class StringTester:
         else:  # choose one valid value
             value_dict[VALID] = valid_values[0]
 
-        if path == 'download/version' and '' in value_dict[INVALID]:
-            value_dict[INVALID].remove('')
+        if path == "download/version" and "" in value_dict[INVALID]:
+            value_dict[INVALID].remove("")
 
         return value_dict
