@@ -1,15 +1,16 @@
 from django.db import models
 from rest_framework import serializers
 
+
 class ElixirInfo(models.Model):
-	status = models.TextField(blank=True, null=True)
-	node = models.TextField(blank=True, null=True)
+    status = models.TextField(blank=True, null=True)
+    node = models.TextField(blank=True, null=True)
 
-	# metadata
-	additionDate = models.DateTimeField(auto_now_add=True)
+    # metadata
+    additionDate = models.DateTimeField(auto_now_add=True)
 
-	def __unicode__(self):
-		return ''
+    def __unicode__(self):
+        return ""
 
 
 # class ElixirInfoSerializer(serializers.ModelSerializer):

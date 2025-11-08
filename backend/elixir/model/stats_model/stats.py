@@ -1,7 +1,9 @@
 from django.db import models
-from elixir.model.resource_model.resource import * 
-from jsonfield import JSONField
 from django.utils import timezone
+from jsonfield import JSONField
+
+from elixir.model.resource_model.resource import *
+
 
 # table to keep historic stats data
 class StatsData(models.Model):
@@ -31,11 +33,11 @@ class StatsData(models.Model):
     contactAnnotationCount = models.IntegerField(default=0)
     homepageAnnotationCount = models.IntegerField(default=0)
     publicationAnnotationCount = models.IntegerField(default=0)
-    
+
     def save(self, *args, **kwargs):
         if not self.id:
             self.date = timezone.now()
         return super(StatsData, self).save(*args, **kwargs)
-    
+
     def __unicode__(self):
-        return ''
+        return ""

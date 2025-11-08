@@ -16,11 +16,14 @@ class IssueState(models.Model):
 
 
 class Issue(models.Model):
-    issue_type = models.ForeignKey(IssueType, null=False, blank=False, on_delete=models.CASCADE)
-    issue_state = models.ForeignKey(IssueState, null=False, blank=False, on_delete=models.CASCADE)
+    issue_type = models.ForeignKey(
+        IssueType, null=False, blank=False, on_delete=models.CASCADE
+    )
+    issue_state = models.ForeignKey(
+        IssueState, null=False, blank=False, on_delete=models.CASCADE
+    )
     field_name = models.TextField(blank=True, null=True)
     field_value = models.TextField(blank=True, null=True)
-
 
     resource_biotoolsID = models.TextField(blank=True, null=True)
     resource_versionId = models.TextField(blank=True, null=True)
@@ -39,4 +42,16 @@ class Issue(models.Model):
         return self.objects.filter(resource_biotoolsID=biotoolsID)
 
     def __unicode__(self):
-        return self.resource_biotoolsID + ' \t-\t ' + str(self.issue_type.type) + '\t' + str(self.issue_type.attribute) + '\t' + str(self.issue_type.field_name) + '\t' + str(self.issue_type.field_value) + '\t' + str(self.issue_state.name)
+        return (
+            self.resource_biotoolsID
+            + " \t-\t "
+            + str(self.issue_type.type)
+            + "\t"
+            + str(self.issue_type.attribute)
+            + "\t"
+            + str(self.issue_type.field_name)
+            + "\t"
+            + str(self.issue_type.field_value)
+            + "\t"
+            + str(self.issue_state.name)
+        )
