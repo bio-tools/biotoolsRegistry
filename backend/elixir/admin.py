@@ -1,12 +1,11 @@
 from django.contrib import admin
 
-
 from .models import Resource
+
 
 @admin.register(Resource)
 class ResourceAdmin(admin.ModelAdmin):
     pass
-
 
 
 # from django.contrib import messages
@@ -104,7 +103,7 @@ class ResourceAdmin(admin.ModelAdmin):
 # # models
 
 # class TopicAdmin(SuperModelAdmin):
-	
+
 # 	search_fields = ['term', 'uri', 'resource__name']
 # 	list_display = ['term', 'uri', 'link_to_resource']
 
@@ -185,7 +184,7 @@ class ResourceAdmin(admin.ModelAdmin):
 # 	extra = 0
 
 # class DataAdmin(SuperModelAdmin):
-	
+
 # 	search_fields = ['term', 'uri', 'input__function__resource__name', 'output__function__resource__name']
 # 	list_display = ['term', 'uri', 'link_to_input', 'link_to_output', 'link_to_function', "link_to_resource"]
 
@@ -242,7 +241,7 @@ class ResourceAdmin(admin.ModelAdmin):
 # 	extra = 0
 
 # class FormatAdmin(SuperModelAdmin):
-	
+
 # 	search_fields = ['term', 'uri', 'input__function__resource__name', 'output__function__resource__name']
 # 	list_display = ['term', 'uri', 'link_to_input', 'link_to_output', 'link_to_function', "link_to_resource"]
 
