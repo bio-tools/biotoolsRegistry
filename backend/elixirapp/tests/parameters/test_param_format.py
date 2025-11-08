@@ -1,10 +1,11 @@
 import sys
 
 from rest_framework import status
+
 from elixir.serializers import *
-from elixirapp.tests.test_baseobject import BaseTestObject
 from elixir.tool_helper import ToolHelper as TH
 from elixirapp.tests.param_config import query_param_dict as qpd
+from elixirapp.tests.test_baseobject import BaseTestObject
 
 
 class TestFormat(BaseTestObject):
@@ -21,7 +22,9 @@ class TestFormat(BaseTestObject):
                 with self.subTest(url=url, format=valid_format):
                     data = TH.get_input_tool()
                     self.post_tool_checked(data)
-                    response = self.get_tool(url, data['biotoolsID'], {"format": valid_format})
+                    response = self.get_tool(
+                        url, data["biotoolsID"], {"format": valid_format}
+                    )
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_format_invalid(self):
@@ -35,11 +38,18 @@ class TestFormat(BaseTestObject):
                 with self.subTest(url=url, format=invalid_format):
                     data = TH.get_input_tool()
                     self.post_tool_checked(data)
-                    tools_default = self.get_all_tools(url).json()['count']  # TODO modify and outsource
+                    tools_default = self.get_all_tools(url).json()[
+                        "count"
+                    ]  # TODO modify and outsource
 
-                    response = self.get_tool(url, data['biotoolsID'], {"format": invalid_format})
+                    response = self.get_tool(
+                        url, data["biotoolsID"], {"format": invalid_format}
+                    )
 
-                    tools_after = self.get_all_tools(url).json()['count']
+                    tools_after = self.get_all_tools(url).json()["count"]
 
-                    if response.status_code != status.HTTP_404_NOT_FOUND and tools_after != tools_default:
+                    if (
+                        response.status_code != status.HTTP_404_NOT_FOUND
+                        and tools_after != tools_default
+                    ):
                         self.fail()

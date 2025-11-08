@@ -1,15 +1,29 @@
+import re
+
 from django.test import override_settings
 from rest_framework import status
-from elixir.serializers import *
+
+from backend.elixirapp.tests.login_data import (
+    invalid_user_login_data,
+    other_valid_user_1_login_data,
+    other_valid_user_1_registration_data,
+    other_valid_user_2_login_data,
+    other_valid_user_2_registration_data,
+    superuser_login_data,
+    superuser_registration_data,
+    user_registration_data_invalid_p2,
+    user_registration_data_missing_email,
+    user_registration_data_missing_p1,
+    user_registration_data_missing_p2,
+    user_registration_data_missing_username,
+    valid_change_password_change_data,
+    valid_user_login_data,
+    valid_user_registration_data,
+    valid_user_registration_data_post_change,
+)
 from backend.elixirapp.tests.test_baseobject import BaseTestObject
+from elixir.serializers import *
 from elixir.tool_helper import ToolHelper as TH
-import re
-from backend.elixirapp.tests.login_data import valid_user_registration_data, user_registration_data_invalid_p2, \
-    user_registration_data_missing_email, user_registration_data_missing_username, user_registration_data_missing_p1, \
-    user_registration_data_missing_p2, valid_user_login_data, invalid_user_login_data, \
-    other_valid_user_1_registration_data, other_valid_user_1_login_data, other_valid_user_2_registration_data, \
-    other_valid_user_2_login_data, superuser_registration_data, superuser_login_data, valid_change_password_change_data, \
-    valid_user_registration_data_post_change
 
 
 class TestAuthorization(BaseTestObject):
@@ -21,9 +35,9 @@ class TestAuthorization(BaseTestObject):
         Info: Gets all users and check if the user is part of the list.
         Returns: Boolean value indicating whether the user is registered.
         """
-        get_users = self.client.get(self.user_list_url, HTTP_ACCEPT='application/json')
-        current_user_name = valid_user_registration_data['username']
-        return any(user['username'] == current_user_name for user in get_users.json())
+        get_users = self.client.get(self.user_list_url, HTTP_ACCEPT="application/json")
+        current_user_name = valid_user_registration_data["username"]
+        return any(user["username"] == current_user_name for user in get_users.json())
 
     def checked_registration(self):
         """
@@ -32,24 +46,29 @@ class TestAuthorization(BaseTestObject):
         Returns: Token for the current user.
         Throws: RuntimeError if the user could not be successfully registered.
         """
-        response = self.client.post(self.registration_url, valid_user_registration_data, format='json')
+        response = self.client.post(
+            self.registration_url, valid_user_registration_data, format="json"
+        )
         if response.status_code != status.HTTP_201_CREATED:
             raise RuntimeError(
-                f"Post did not succeed: attempt to post to {self.registration_url} returned {response.status_code}.")
-        return response.json()['key']  # return token
+                f"Post did not succeed: attempt to post to {self.registration_url} returned {response.status_code}."
+            )
+        return response.json()["key"]  # return token
 
     def register_user(self, data):
         """
         Description: Registers a user with given data.
         """
-        return self.client.post(self.registration_url, data, format='json')
+        return self.client.post(self.registration_url, data, format="json")
 
     def checked_login(self, data):
         """
         Description: Logs in a user with given data.
         Returns: Login token
         """
-        return self.client.post(self.login_url, data, format='json', HTTP_ACCEPT='application/json')
+        return self.client.post(
+            self.login_url, data, format="json", HTTP_ACCEPT="application/json"
+        )
 
     def logout_user(self, token):
         """
@@ -61,13 +80,22 @@ class TestAuthorization(BaseTestObject):
         """
         Description: Queries user information.
         """
-        return self.client.get(self.user_info_url, HTTP_AUTHORIZATION=f'Token {token}', HTTP_ACCEPT='application/json')
+        return self.client.get(
+            self.user_info_url,
+            HTTP_AUTHORIZATION=f"Token {token}",
+            HTTP_ACCEPT="application/json",
+        )
 
     def change_password_user(self, token, data):
         """
         Description: Changes user's password
         """
-        return self.client.post(self.change_password_url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
+        return self.client.post(
+            self.change_password_url,
+            data,
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {token}",
+        )
 
     # TESTS ------------------------------------------------------------------------------------------------------------
 
@@ -160,24 +188,30 @@ class TestAuthorization(BaseTestObject):
         response = self.checked_login(valid_user_registration_data_post_change)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
+    @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
     def test_password_reset(self):
         # New data because otherwise email doesn't get sent
-        user_token = self.register_user({
-            "username": "test_user",
-            "password1": "test_user_password",
-            "password2": "test_user_password",
-            "email": "test_reset@user.com"
-        })
-        self.pop_email("test_reset@user.com", "[example.com] Please Confirm Your E-mail Address")
+        user_token = self.register_user(
+            {
+                "username": "test_user",
+                "password1": "test_user_password",
+                "password2": "test_user_password",
+                "email": "test_reset@user.com",
+            }
+        )
+        self.pop_email(
+            "test_reset@user.com", "[example.com] Please Confirm Your E-mail Address"
+        )
 
-        response = self.client.post(self.password_reset_url, {
-            'email': "test_reset@user.com"
-        }, format='json')
+        response = self.client.post(
+            self.password_reset_url, {"email": "test_reset@user.com"}, format="json"
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('Password reset e-mail has been sent.', str(response.content))
+        self.assertIn("Password reset e-mail has been sent.", str(response.content))
 
-        mail = self.pop_email("test_reset@user.com", "[example.com] Password Reset E-mail")
+        mail = self.pop_email(
+            "test_reset@user.com", "[example.com] Password Reset E-mail"
+        )
 
         self.assertIsNotNone(mail.message())
 
@@ -188,31 +222,42 @@ class TestAuthorization(BaseTestObject):
         self.assertIsNotNone(uid)
         self.assertIsNotNone(token)
 
-        response = self.client.post(self.password_reset_confirm_url, {
-            'uid': uid,
-            'token': token,
-            'new_password1': "NewSecurePassword",
-            'new_password2': "NewSecurePassword",
-        }, format='json')
+        response = self.client.post(
+            self.password_reset_confirm_url,
+            {
+                "uid": uid,
+                "token": token,
+                "new_password1": "NewSecurePassword",
+                "new_password2": "NewSecurePassword",
+            },
+            format="json",
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.logout_user(user_token)
-        self.client.credentials() # wipe credentials and cookies from api client
+        self.client.credentials()  # wipe credentials and cookies from api client
 
-        response = self.checked_login({
-            "username": valid_user_registration_data['username'],
-            "password": "NewSecurePassword",
-        })
+        response = self.checked_login(
+            {
+                "username": valid_user_registration_data["username"],
+                "password": "NewSecurePassword",
+            }
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
+    @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
     def test_registration_mail_sending(self):
         self.assert_mail_empty()  # sanity check
 
         # Test registration sending confirmation mail
-        response = self.client.post(self.registration_url, valid_user_registration_data, format='json')
+        response = self.client.post(
+            self.registration_url, valid_user_registration_data, format="json"
+        )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.pop_email(valid_user_registration_data['email'], "[example.com] Please Confirm Your E-mail Address")
+        self.pop_email(
+            valid_user_registration_data["email"],
+            "[example.com] Please Confirm Your E-mail Address",
+        )
 
     # todo others
     # todo find out what i meant to say with 'others'
@@ -225,7 +270,7 @@ class TestAuthorization(BaseTestObject):
         """
         self.checked_registration()
         response = self.checked_login(valid_user_login_data)
-        token = response.data['key']
+        token = response.data["key"]
 
         response = self.logout_user(token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -239,9 +284,9 @@ class TestAuthorization(BaseTestObject):
         self.checked_registration()
         response = self.checked_login(valid_user_login_data)
 
-        token = response.data['key']
-        incorrect_token = 'incorrect_token'
-        assert (incorrect_token != token)
+        token = response.data["key"]
+        incorrect_token = "incorrect_token"
+        assert incorrect_token != token
 
         response = self.logout_user(incorrect_token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -256,7 +301,9 @@ class TestAuthorization(BaseTestObject):
         self.checked_login(valid_user_login_data)
 
         response = self.logout_user("")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)  # TODO check why not validated
+        self.assertEqual(
+            response.status_code, status.HTTP_200_OK
+        )  # TODO check why not validated
 
     def test_get_superuser_info_no_resources(self):
         """
@@ -265,13 +312,13 @@ class TestAuthorization(BaseTestObject):
               The user has not posted tools before.
         Expected: Retrieved info aligns with current user state in terms of username, email and amount of resources (0).
         """
-        token = self.checked_login(superuser_login_data).data['key']
+        token = self.checked_login(superuser_login_data).data["key"]
         user_info = self.get_user_info(token).json()
 
-        self.assertEqual(user_info['username'], superuser_registration_data['username'])
-        self.assertEqual(user_info['email'], superuser_registration_data['email'])
-        self.assertTrue(user_info['is_superuser'])
-        self.assertEqual(len(user_info['resources']), 0)
+        self.assertEqual(user_info["username"], superuser_registration_data["username"])
+        self.assertEqual(user_info["email"], superuser_registration_data["email"])
+        self.assertTrue(user_info["is_superuser"])
+        self.assertEqual(len(user_info["resources"]), 0)
 
     def test_get_superuser_info_with_resources(self):
         """
@@ -280,15 +327,15 @@ class TestAuthorization(BaseTestObject):
               The user has posted a tool before.
         Expected: Retrieved info aligns with current user state in terms of username, email and amount of resources (1).
         """
-        token = self.checked_login(superuser_login_data).data['key']
+        token = self.checked_login(superuser_login_data).data["key"]
         self.post_tool_checked(TH.get_input_tool())
 
         user_info = self.get_user_info(token).json()  # post tool
 
-        self.assertEqual(user_info['username'], superuser_registration_data['username'])
-        self.assertEqual(user_info['email'], superuser_registration_data['email'])
-        self.assertTrue(user_info['is_superuser'])
-        self.assertEqual(len(user_info['resources']), 1)
+        self.assertEqual(user_info["username"], superuser_registration_data["username"])
+        self.assertEqual(user_info["email"], superuser_registration_data["email"])
+        self.assertTrue(user_info["is_superuser"])
+        self.assertEqual(len(user_info["resources"]), 1)
 
     def test_get_user_info_no_resources(self):
         """
@@ -300,10 +347,12 @@ class TestAuthorization(BaseTestObject):
         token_key = self.switch_user(valid_user_registration_data, False)
         user_info = self.get_user_info(token_key).json()
 
-        self.assertEqual(user_info['username'], valid_user_registration_data['username'])
-        self.assertEqual(user_info['email'], valid_user_registration_data['email'])
-        self.assertFalse(user_info['is_superuser'])
-        self.assertEqual(len(user_info['resources']), 0)
+        self.assertEqual(
+            user_info["username"], valid_user_registration_data["username"]
+        )
+        self.assertEqual(user_info["email"], valid_user_registration_data["email"])
+        self.assertFalse(user_info["is_superuser"])
+        self.assertEqual(len(user_info["resources"]), 0)
 
     def test_get_user_info_with_resources(self):
         """
@@ -317,8 +366,9 @@ class TestAuthorization(BaseTestObject):
 
         user_info = self.get_user_info(token_key).json()
 
-        self.assertEqual(user_info['username'], valid_user_registration_data['username'])
-        self.assertEqual(user_info['email'], valid_user_registration_data['email'])
-        self.assertFalse(user_info['is_superuser'])
-        self.assertEqual(len(user_info['resources']), 1)
-
+        self.assertEqual(
+            user_info["username"], valid_user_registration_data["username"]
+        )
+        self.assertEqual(user_info["email"], valid_user_registration_data["email"])
+        self.assertFalse(user_info["is_superuser"])
+        self.assertEqual(len(user_info["resources"]), 1)
