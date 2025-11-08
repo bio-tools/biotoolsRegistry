@@ -28,7 +28,7 @@
 									<label class="help-block" ng-repeat="error in documentationDetailForm.url.errorMessages" bo-text="error"></label>
 								</div>
 							</div>
-							
+
 							<!-- Documentation type -->
 							<div class="form-group">
 								<label class="col-sm-3 control-label" style="position: relative;"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.documentationType.description}}">Documentation type <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#documentationtype"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span>
@@ -36,7 +36,7 @@
 								</label>
 								<div class="col-sm-9" ng-init="entryIndex = $index">
 									<div class="form-group" ng-repeat="type in software.documentation[entryIndex].type track by $index" ng-init="typeIndex = $index" ng-class="{'no-margin-bottom': $last, 'has-error': registrationErrorPayload.documentation[entryIndex].type[typeIndex][0]};">
-										
+
 											<div class="input-group">
 												<select class="form-control select-btn-group" ng-options="item.value as item.text for item in documentationTypeOptions" ng-model="software.documentation[entryIndex].type[typeIndex]">
 												</select>
@@ -47,7 +47,7 @@
 											<label class="help-block" ng-repeat="error in registrationErrorPayload.documentation[entryIndex].type[typeIndex]" bo-text="error"></label>
 									</div>
 									<label class="help-block" ng-repeat="error in documentationDetailForm.documentation[entryIndex]" bo-text="error"></label>
-									
+
 									<div class="form-group" style="padding-top:7px;">
 										<a href="" ng-click="addButtonClick('type', software.documentation[entryIndex], true, false);">Add documentation type</a>
 									</div>
@@ -57,8 +57,8 @@
 
 								</div>
 							</div>
-							
-							
+
+
 							<!--  Note	 -->
 							<div class="form-group" ng-class="{'has-error': registrationErrorPayload.documentation[$index].note}">
 								<label class="col-sm-3 control-label"><span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.documentationNote.description}}">Note <a target="_blank" href="http://biotools.readthedocs.io/en/latest/curators_guide.html#note-documentation"><i class="fa fa-question-circle fa" aria-hidden="true"></i></a></span></label>

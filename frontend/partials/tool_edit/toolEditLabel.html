@@ -1,6 +1,6 @@
 <br>
 <div class="panel panel-info">
-	<div class="panel-heading" style="position: relative;"><label align="justify">Miscellaneous scientific, technical and administrative details of the tool, expressed in terms from controlled vocabularies. 
+	<div class="panel-heading" style="position: relative;"><label align="justify">Miscellaneous scientific, technical and administrative details of the tool, expressed in terms from controlled vocabularies.
 		<br>We recommend you specify at least the tool type, license, and one or more topics. See the <a target="_blank" ng-href="http://biotools.readthedocs.io/en/latest/curators_guide.html#labels-group">Curation Guidelines <i class="fa fa-external-link"></i></a>.</label>
 	</div>
 </div>
@@ -134,7 +134,7 @@
 				<div class="col-sm-9">
 					<select class="form-control select-btn-group" ng-options="item.value as item.text for item in licenseOptions" ng-model="software.license" name="license" validate-edit-resource-field>
 						<option value=""></option>
-					</select>						
+					</select>
 					<label class="help-block" ng-repeat="error in form.labelForm.license.errorMessages" bo-text="error"></label>
 				</div>
 			</div>
