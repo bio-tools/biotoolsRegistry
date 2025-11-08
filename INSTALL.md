@@ -1,5 +1,5 @@
 ## Installing bio.tools on your system
-The local (development) installation is done via [Docker](https://www.docker.com/). Other than Git (and a text editor), nothing else is required to run and write code for bio.tools. 
+The local (development) installation is done via [Docker](https://www.docker.com/). Other than Git (and a text editor), nothing else is required to run and write code for bio.tools.
 
 ## 1. Download and Install Docker
 ##### Docker main installation page
@@ -41,7 +41,7 @@ Go into the folder in which you cloned the bio.tools repo. By default it will be
 ##### 3.0.1 Build the necessary Docker images
 `docker compose build`
 
-The above command will download / build all the Docker images required for bio.tools to run on your local machine. 
+The above command will download / build all the Docker images required for bio.tools to run on your local machine.
 
 The images built can be seen by running: `docker image ls` and are:
 
@@ -60,7 +60,7 @@ The above command will create and run the required containers:
 * `biotools-mysql`
 * `biotools-elasticsearch`
 * `biotools-backend` (depends on `biotools-mysql` and `biotools-elasticsearch`)
-* `biotools-frontend`(depends on `biotools-backend`) 
+* `biotools-frontend`(depends on `biotools-backend`)
 
 > **Note:** After running the `docker compose up` command, the containers will start and will output log messages which you can see in your terminal window. In order for the containers to keep running this window needs to stay open. You will need to open new terminal windows/tabs for other operations.
 
@@ -69,7 +69,7 @@ The above command will create and run the required containers:
 Too see the running containers run: `docker container ls` or `docker ps`
 
 ## 3.1 The short(er) setup
-**Run the steps below in the root folder of the Git project (e.g. `biotoolsRegistry`)** 
+**Run the steps below in the root folder of the Git project (e.g. `biotoolsRegistry`)**
 
 ##### 3.1.1 Make migrations
 `docker exec biotools-backend python manage.py makemigrations`
@@ -79,7 +79,7 @@ Make Django migrations from the exiting models. Executed on the `biotools-backen
 ##### 3.1.2 Migrate to the DB
 `docker exec biotools-backend python manage.py migrate`
 
-Create necessary tables and other DB objects from the migrations. Executed on the `biotools-backend` container. If you get the `No migrations to apply.` message it means that you are up to date. 
+Create necessary tables and other DB objects from the migrations. Executed on the `biotools-backend` container. If you get the `No migrations to apply.` message it means that you are up to date.
 
 ##### 3.1.3 Copy initial (seed) DB
 `docker cp initial_db.sql biotools-mysql:/root`
@@ -118,7 +118,7 @@ The `test` subdomain can be viewed at [http://localhost/t?domain=test](http://lo
 
 You can login with the existing superuser (user: `biotools`, password: `biotools`).
 
-All running Docker containers can be stopped by running: `docker compose down` from the root Git folder. This will preserve the data in the MySQL database and Elasticsearch. To reinstantiate everything again run: `docker compose up`. 
+All running Docker containers can be stopped by running: `docker compose down` from the root Git folder. This will preserve the data in the MySQL database and Elasticsearch. To reinstantiate everything again run: `docker compose up`.
 
 Only need to run `docker compose build` once at the beginning or if changes are made to the bio.tools Docker settings files.
 
@@ -129,7 +129,7 @@ If you wish to remove the data along with the containers run: `docker compose do
 ## 3.2 The longer setup
 This is an alternative to **3.1** in which some of the steps were contained in the initial DB files. This will start with no data.
 
-**Run the steps below in the root folder of the Git project (e.g. `biotoolsRegistry`)** 
+**Run the steps below in the root folder of the Git project (e.g. `biotoolsRegistry`)**
 
 ##### 3.2.1 Make migrations
 `docker exec biotools-backend python manage.py makemigrations`
@@ -222,22 +222,22 @@ After running `docker compose up` you will see a number of log messages. These m
 * `biotools-frontend` (Gulp logs)
 
 #### 4.1.1 Backend dev
-The `biotools-backend` container is based on an image which uses an Apache server. The logs from `biotools-backend` come from Apache or sometimes from Python. 
+The `biotools-backend` container is based on an image which uses an Apache server. The logs from `biotools-backend` come from Apache or sometimes from Python.
 
-> **Note:** Changes in Python/Django/backend files will be reflected in the `biotools-backend` container, **BUT** because of how Apache works, the changes won't be reflected in your browser http://localhost until Apache is reloaded. In order to see the changes in the reflected in the browser you need to run: 
-> 
+> **Note:** Changes in Python/Django/backend files will be reflected in the `biotools-backend` container, **BUT** because of how Apache works, the changes won't be reflected in your browser http://localhost until Apache is reloaded. In order to see the changes in the reflected in the browser you need to run:
+>
 > `docker exec biotools-backend /etc/init.d/apache2 reload`
 
 > **Remember** to run the above command whenever you want to see your code changes reflected in your local bio.tools.
 
 > Bringing the containers down and up again will also work, but this takes significantly longer. The above command is almost instant.
 
-Most issues with the backend code will be reflected in the browser at http://localhost/api/{some_path}, e.g. [http://localhost/api/tool](http://localhost/api/tool) or [http://localhost/api/jaspar](http://localhost/api/jaspar) etc. 
+Most issues with the backend code will be reflected in the browser at http://localhost/api/{some_path}, e.g. [http://localhost/api/tool](http://localhost/api/tool) or [http://localhost/api/jaspar](http://localhost/api/jaspar) etc.
 
 See [https://biotools.readthedocs.io/en/latest/api_reference.html](https://biotools.readthedocs.io/en/latest/api_reference.html) or Django route files (`urls.py`) for more API endpoints.
 
 #### 4.1.2 Frontend dev
-The `biotools-frontend` container outputs logs from **`gulp`** ([https://gulpjs.com/](https://gulpjs.com/)) which bundles all frontend JavaScript and CSS code. 
+The `biotools-frontend` container outputs logs from **`gulp`** ([https://gulpjs.com/](https://gulpjs.com/)) which bundles all frontend JavaScript and CSS code.
 
 Every time you change and save a `.js` or `.css` file in the frontend, gulp will re-bundle everything automatically. This implies that all changes in the frontend are reflected automatically in thr browser, unlike for the backend.
 
@@ -256,16 +256,16 @@ In order to update to the latest EDAM version (e.g. `1.23`) edit the `current_ve
 
 The script file will download the specific EDAM version .owl file from [https://github.com/edamontology/edamontology](https://github.com/edamontology/edamontology) and execute the:
 
-`python /elixi/application/manage.py parse_edam` 
+`python /elixi/application/manage.py parse_edam`
 
 command in the `biotools-backend` container.
 
 > **Note:** The `current_version.txt` file is tracked by Git and any changes involving EDAM versions other than latest should not be pushed to the main branches of the repo.
 
 ### 4.3 Local email setup
-Important to note that the email system used to send emails regarding account creation and password reset will not work as intended out of the box . 
+Important to note that the email system used to send emails regarding account creation and password reset will not work as intended out of the box .
 
-In order for the emails to work you need to provide credetials (email, password, smtp settings) in the backend/elixirapp/settings.py file. bio.tools production uses Zoho mail (http://zoho.com) which currently works well with our setup. 
+In order for the emails to work you need to provide credetials (email, password, smtp settings) in the backend/elixirapp/settings.py file. bio.tools production uses Zoho mail (http://zoho.com) which currently works well with our setup.
 
 The easy way would be to make a Zoho email account and use that email information to make the email functionality run. Gmail and Yahoo were tried and the connections are blocked by Gmail and Yahoo because of security reasons. This is because Gmail and Yahoo don't accept a simple username-password login and require more strict settings. Feel free to implement this in your bio.tools instance.
 
@@ -295,7 +295,7 @@ The easy way would be to make a Zoho email account and use that email informatio
 #### Remove stopped containers
 `docker container rm <CONTAINER_ID>`
 
-or 
+or
 
 `docker container rm <CONTAINER_ID1> <CONTAINER_ID2> <CONTAINER_ID3>`
 
@@ -303,14 +303,14 @@ or
 #### Force remove containers
 `docker container rm -f <CONTAINER_ID>`
 
-or 
+or
 
 `docker container rm -f <CONTAINER_ID1> <CONTAINER_ID2> <CONTAINER_ID3>`
 
 #### Prune containers (Remove all stopped containers)
 `docker container prune`
 
-#### View images 
+#### View images
 `docker image ls`
 
 #### Remove image
@@ -335,7 +335,7 @@ As an example, to view the info in a MySQL database table run:
 
 1. `docker exec -it biotools-mysql bash`
 2. In container: `mysql -u elixir -p` (password is by default 123)
-3. In MySQL: 
+3. In MySQL:
 
 `use elixir;`
 
@@ -370,11 +370,3 @@ docker-compose YAML config file
 * [https://docs.docker.com/config/pruning/](https://docs.docker.com/config/pruning/)
 * [https://docs.docker.com/compose/](https://docs.docker.com/compose/)
 * [https://hub.docker.com/](https://hub.docker.com/)
-
-
-
-
-
-
-
-

@@ -10,7 +10,7 @@ VALUES
 	(3, 'reopened', NULL);
 
 
--- required for "issue" code to work 
+-- required for "issue" code to work
 INSERT INTO `elixir_issuetype` (`id`, `type`, `description`, `weight`, `attribute`, `field_name`, `field_value`)
 VALUES
 	(1, 'invalid_url', NULL, NULL, 'link', 'url', NULL),
