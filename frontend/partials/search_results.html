@@ -1,27 +1,44 @@
 <div class="search-results-container">
-	<div class="container">
-	<div ng-controller="DomainBarController as domain" ng-show="domain.Domain.isLoaded()" class="domain-bar-container row" ng-cloak>
-		<span class="domain-bar-title">{{ domain.Domain.current.title }}</span>
-		<a class="edit-domain-text" ui-sref="edit-domain({id: domain.Domain.current.domain})"><i class="fa fa-edit"></i> Edit domain</a>
-		<br>
-		<span class="domain-bar-subtitle">{{ domain.Domain.current.sub_title }}</span>
-		<hr>
-		<div class="domain-bar-description" ng-bind-html="domain.Domain.current.description"></div>
-	</div>
-	</div>
-	<div class="row">
-		<!-- <div search-bar ng-cloak></div> -->
-	</div>
-	<div ng-if="!ToolList.loading && ToolList.count == 0" class="col-md-12 info-dialog-background info-dialog info-dialog-text">
-		No results matching the search criteria
-	</div>
-	<div ng-if="!ToolList.loading && ToolList.count != 0">
-		<div class="row">
-			<div ng-if="DisplayModeSelector.mode.attrName == 'grid'"><div tool-list-table></div></div>
-			<div ng-if="DisplayModeSelector.mode.attrName == 'cards'" class="container"><div tool-list></div></div>
-		</div>
-	</div>
-	<div style="text-align:center" ng-if="ToolList.loading">
-		<div spinner style="margin:40px;"></div>
-	</div>
+    <div class="container">
+        <div
+            ng-controller="DomainBarController as domain"
+            ng-show="domain.Domain.isLoaded()"
+            class="domain-bar-container row"
+            ng-cloak
+        >
+            <span class="domain-bar-title">{{ domain.Domain.current.title }}</span>
+            <a class="edit-domain-text" ui-sref="edit-domain({id: domain.Domain.current.domain})"
+                ><i class="fa fa-edit"></i> Edit domain</a
+            >
+            <br />
+            <span class="domain-bar-subtitle">{{ domain.Domain.current.sub_title }}</span>
+            <hr />
+            <div
+                class="domain-bar-description"
+                ng-bind-html="domain.Domain.current.description"
+            ></div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- <div search-bar ng-cloak></div> -->
+    </div>
+    <div
+        ng-if="!ToolList.loading && ToolList.count == 0"
+        class="col-md-12 info-dialog-background info-dialog info-dialog-text"
+    >
+        No results matching the search criteria
+    </div>
+    <div ng-if="!ToolList.loading && ToolList.count != 0">
+        <div class="row">
+            <div ng-if="DisplayModeSelector.mode.attrName == 'grid'">
+                <div tool-list-table></div>
+            </div>
+            <div ng-if="DisplayModeSelector.mode.attrName == 'cards'" class="container">
+                <div tool-list></div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center" ng-if="ToolList.loading">
+        <div spinner style="margin: 40px"></div>
+    </div>
 </div>
