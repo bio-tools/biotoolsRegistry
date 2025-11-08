@@ -1,170 +1,184 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.db.models import Q
+from django.http import Http404
+from elasticsearch import NotFoundError as ESNotFoundError
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from elixir.permissions import IsDomainOwnerOrEditorOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+from rest_framework.validators import UniqueValidator
+from rest_framework.views import APIView
+
 from elixir.models import *
+from elixir.permissions import IsDomainOwnerOrEditorOrReadOnly
 from elixir.serializers import *
 from elixir.view.resource import es
-from django.http import Http404
-from rest_framework.validators import UniqueValidator
-from elasticsearch import NotFoundError as ESNotFoundError
-from django.db.models import Q
-
 
 # Perhaps there should be some domains that can't be deleted... or only deleted by superusers
 # Maybe add this in a settings file
-NOT_DELETABLE_DOMAINS = ['all']
+NOT_DELETABLE_DOMAINS = ["all"]
 
 
 def is_superuser(user):
-	return User.objects.get(username=user).is_superuser == 1
+    return User.objects.get(username=user).is_superuser == 1
+
 
 class DomainView(APIView):
-	"""
-	Create or list domains.
-	"""
-	permission_classes = (IsAuthenticatedOrReadOnly, IsDomainOwnerOrEditorOrReadOnly, )
+    """
+    Create or list domains.
+    """
 
-	# get a list of all domains (domain name/id and the number of resources in the domain)
-	# this is based on the type of user (anonymous, logged in, superuser)
-	def get(self, request, format=None):
-		if request.user and not request.user.is_anonymous and not(is_superuser(request.user)):
-			# Get domains owned by user OR where user is an editor
-			subdomains = Domain.objects.filter(
-				Q(owner=request.user) | Q(editors=request.user), 
-				visibility=1
-			).distinct()
-			# Use private serializer for authenticated users managing their domains
-			serializer = SubdomainNameSerializer(instance=subdomains, many=True, context={'request': request})
-			return Response(serializer.data, status=status.HTTP_200_OK)
-		elif request.user and not request.user.is_anonymous and is_superuser(request.user):
-			subdomains = Domain.objects.filter(visibility=1)
-			serializer = PublicSubdomainSerializer(instance=subdomains, many=True)
-			return Response(serializer.data, status=status.HTTP_200_OK)
-		else:
-			subdomains = Domain.objects.filter(visibility=1)
-			serializer = PublicSubdomainSerializer(instance=subdomains, many=True)
-			return Response(serializer.data, status=status.HTTP_200_OK)
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        IsDomainOwnerOrEditorOrReadOnly,
+    )
 
+    # get a list of all domains (domain name/id and the number of resources in the domain)
+    # this is based on the type of user (anonymous, logged in, superuser)
+    def get(self, request, format=None):
+        if (
+            request.user
+            and not request.user.is_anonymous
+            and not (is_superuser(request.user))
+        ):
+            # Get domains owned by user OR where user is an editor
+            subdomains = Domain.objects.filter(
+                Q(owner=request.user) | Q(editors=request.user), visibility=1
+            ).distinct()
+            # Use private serializer for authenticated users managing their domains
+            serializer = SubdomainNameSerializer(
+                instance=subdomains, many=True, context={"request": request}
+            )
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        elif (
+            request.user
+            and not request.user.is_anonymous
+            and is_superuser(request.user)
+        ):
+            subdomains = Domain.objects.filter(visibility=1)
+            serializer = PublicSubdomainSerializer(instance=subdomains, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            subdomains = Domain.objects.filter(visibility=1)
+            serializer = PublicSubdomainSerializer(instance=subdomains, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
-	def post(self, request, format=None):
+    def post(self, request, format=None):
 
-		serializer = DomainSerializer(data=request.data, context={'request':request,"request_type":"POST"})
+        serializer = DomainSerializer(
+            data=request.data, context={"request": request, "request_type": "POST"}
+        )
 
-		# Need to check somewhere that those resources do indeed exist
-		# Also we get DomainResource names from the original resource , rather than letting the user add names willy-nilly
+        # Need to check somewhere that those resources do indeed exist
+        # Also we get DomainResource names from the original resource , rather than letting the user add names willy-nilly
 
-		if serializer.is_valid():
-			serializer.save(owner=request.user)
-			
-			es.index(
-				index='domains', 
-				doc_type='_doc', 
-				id=serializer.validated_data['name'], 
-				body=serializer.data
-			)
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
 
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            es.index(
+                index="domains",
+                doc_type="_doc",
+                id=serializer.validated_data["name"],
+                body=serializer.data,
+            )
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DomainResourceView(APIView):
-	"""
-	Add/remove or list tools for a domain.
-	"""
-	permission_classes = (IsAuthenticatedOrReadOnly, IsDomainOwnerOrEditorOrReadOnly, )
+    """
+    Add/remove or list tools for a domain.
+    """
 
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        IsDomainOwnerOrEditorOrReadOnly,
+    )
 
-	def get_object(self, name):
-		try:
-			obj = Domain.objects.get(name=name, visibility=1)
-			self.check_object_permissions(self.request, obj)
-			return obj
-		except Domain.DoesNotExist:
-			raise Http404
+    def get_object(self, name):
+        try:
+            obj = Domain.objects.get(name=name, visibility=1)
+            self.check_object_permissions(self.request, obj)
+            return obj
+        except Domain.DoesNotExist:
+            raise Http404
 
-	def get(self, request, domain, format=None):
-		# need to do something with this, count doesn't make sense here, should be a different URL
-		
-		if domain.lower() == 'all':
-			elastic_domain_query_struct = {
-				"size": 10000,
-				"query" : {
-					"match_all" : {}
-				}
-			}
-			result = es.search(index='domains', body=elastic_domain_query_struct)
-			count = result['hits']['total']['value']
-			if count > 0:
-				result = [el['_source'] for el in result['hits']['hits']]
-				return Response({'count': count,
-						 'data': result}, status=200)
-			else:
-				return Response(status=status.HTTP_404_NOT_FOUND)
+    def get(self, request, domain, format=None):
+        # need to do something with this, count doesn't make sense here, should be a different URL
 
-		else:
-			# try:
-			# 	result = es.get(index='domains',doc_type='_doc', id=domain.lower())
-			# 	return Response(
-			# 		{
-			# 			'count': 1,
-			# 			'data': result['_source']
-			# 		}
-					
-			# 	)
-			# except ESNotFoundError:
-			# 	return Response(status=status.HTTP_404_NOT_FOUND)
-			d = self.get_object(domain)
-			result = DomainSerializer(d)
-			return Response(
-			 		{
-			 			'count': 1,
-			 			'data': result.data
-			 		}
-			)
+        if domain.lower() == "all":
+            elastic_domain_query_struct = {"size": 10000, "query": {"match_all": {}}}
+            result = es.search(index="domains", body=elastic_domain_query_struct)
+            count = result["hits"]["total"]["value"]
+            if count > 0:
+                result = [el["_source"] for el in result["hits"]["hits"]]
+                return Response({"count": count, "data": result}, status=200)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
-	def put(self, request, domain=None, format=None):	
-		# Updating a domain creates a new domain object and the old one gets a visibility of 0
+        else:
+            # try:
+            # 	result = es.get(index='domains',doc_type='_doc', id=domain.lower())
+            # 	return Response(
+            # 		{
+            # 			'count': 1,
+            # 			'data': result['_source']
+            # 		}
 
-		serializer = DomainUpdateSerializer(data=request.data, context={'request':request,"request_type":"PUT"})
+            # 	)
+            # except ESNotFoundError:
+            # 	return Response(status=status.HTTP_404_NOT_FOUND)
+            d = self.get_object(domain)
+            result = DomainSerializer(d)
+            return Response({"count": 1, "data": result.data})
 
-		if serializer.is_valid():
+    def put(self, request, domain=None, format=None):
+        # Updating a domain creates a new domain object and the old one gets a visibility of 0
 
-			old_domain = self.get_object(serializer.validated_data['name'])
-			old_domain.visibility = 0
-			old_domain.save()
+        serializer = DomainUpdateSerializer(
+            data=request.data, context={"request": request, "request_type": "PUT"}
+        )
 
-			# serializer.save(owner=old_domain.owner, additionDate=old_domain.additionDate)
-			
-			serializer.save(owner=old_domain.owner)
-			
-			es.index(
-				index='domains', 
-				doc_type='_doc', 
-				id=serializer.validated_data['name'], 
-				body=serializer.data
-			)
+        if serializer.is_valid():
 
-			return Response(serializer.data, status=status.HTTP_200_OK)
-		
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            old_domain = self.get_object(serializer.validated_data["name"])
+            old_domain.visibility = 0
+            old_domain.save()
 
+            # serializer.save(owner=old_domain.owner, additionDate=old_domain.additionDate)
 
-	def delete(self, request, domain, format=None):
-		if not request.user.is_superuser and domain.strip().lower() in NOT_DELETABLE_DOMAINS:
-			return Response({"detail": "You do not have permission to delete this domain."}, status=status.HTTP_403_FORBIDDEN)
+            serializer.save(owner=old_domain.owner)
 
-		d = self.get_object(domain)
-		d.visibility = 0
-		d.save()
+            es.index(
+                index="domains",
+                doc_type="_doc",
+                id=serializer.validated_data["name"],
+                body=serializer.data,
+            )
 
-		try:
-			es.delete(index='domains', doc_type='_doc', id=domain.lower())
-		except ESNotFoundError:
-			# if it gets here it means then it set the visibility = 1 and if it can't find the document in the index
-			# it's kind of an issue but not really
-			# return 204 just to have a bit of a difference
-			return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
-		return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, domain, format=None):
+        if (
+            not request.user.is_superuser
+            and domain.strip().lower() in NOT_DELETABLE_DOMAINS
+        ):
+            return Response(
+                {"detail": "You do not have permission to delete this domain."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        d = self.get_object(domain)
+        d.visibility = 0
+        d.save()
+
+        try:
+            es.delete(index="domains", doc_type="_doc", id=domain.lower())
+        except ESNotFoundError:
+            # if it gets here it means then it set the visibility = 1 and if it can't find the document in the index
+            # it's kind of an issue but not really
+            # return 204 just to have a bit of a difference
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(status=status.HTTP_200_OK)

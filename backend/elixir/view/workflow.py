@@ -1,13 +1,21 @@
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from elixir.permissions import IsOwnerOrReadOnly, HasEditPermissionToEditResourceOrReadOnly, CanConcludeResourceRequest, IsStaffOrReadOnly
+
 from elixir.models import *
+from elixir.permissions import (
+    CanConcludeResourceRequest,
+    HasEditPermissionToEditResourceOrReadOnly,
+    IsOwnerOrReadOnly,
+    IsStaffOrReadOnly,
+)
 from elixir.serializers import *
+
 
 class WorkflowDetailView(APIView):
     """
     Create a new workflow
     """
+
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get(self, request, id, format=None):
@@ -20,6 +28,7 @@ class WorkflowView(APIView):
     """
     Create a new workflow
     """
+
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def post(self, request, format=None):
