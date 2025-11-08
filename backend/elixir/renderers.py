@@ -2,16 +2,17 @@
 Provides XML rendering support.
 """
 
+import json
+import os
+from io import StringIO
+
+from django.utils.encoding import force_str
 
 # from django.utils import six
 from django.utils.xmlutils import SimplerXMLGenerator
-from io import StringIO
-from django.utils.encoding import force_str
-from rest_framework.renderers import BaseRenderer
 from lxml import etree as lxmletree
 from rest_framework.exceptions import ParseError
-import json
-import os
+from rest_framework.renderers import BaseRenderer
 
 
 class XMLSchemaRenderer(BaseRenderer):
@@ -63,7 +64,9 @@ class XMLSchemaRenderer(BaseRenderer):
             newdom = transform1(dom)
 
             # removing empty elements
-            xslt2 = lxmletree.parse(curr_dir + "/biotoolsSchema/removeEmptyElements.xslt")
+            xslt2 = lxmletree.parse(
+                curr_dir + "/biotoolsSchema/removeEmptyElements.xslt"
+            )
             transform2 = lxmletree.XSLT(xslt2)
             newdom2 = transform2(newdom)
 
@@ -97,8 +100,9 @@ class XMLSchemaRenderer(BaseRenderer):
             xml.characters(force_str(data))
 
 
-from elixir.biotools_to_bioschemas import rdfize
 import ast
+
+from elixir.biotools_to_bioschemas import rdfize
 
 
 class JSONLDRenderer(BaseRenderer):

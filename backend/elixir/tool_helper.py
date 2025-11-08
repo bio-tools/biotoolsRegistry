@@ -1,7 +1,7 @@
-import uuid
-from copy import deepcopy
 import json
 import os
+import uuid
+from copy import deepcopy
 
 elixir_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -24,5 +24,5 @@ class ToolHelper:
     @staticmethod
     def get_tool_from_file(filename):
         test_dir = f"{elixir_dir}/../elixirapp/tests/data/"
-        with open(os.path.join(test_dir, filename), 'r') as example:
+        with open(os.path.join(test_dir, filename), "r") as example:
             return json.load(example)
