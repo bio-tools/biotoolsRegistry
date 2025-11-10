@@ -30,7 +30,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code quality tools
 # Source code and installation
 *bio.tools* is available under [open license](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE).
 
-
 # Data
 The registry content is freely available to all under the Creative Commons Attribution licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/>).
 
