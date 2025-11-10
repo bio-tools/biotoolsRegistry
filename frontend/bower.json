@@ -29,7 +29,7 @@
     "angular-sanitize": "~1.4.7",
     "angular-animate": "~1.4.7",
     "angular-ui-router": "~0.2.15",
-    "font-awesome": "fontawesome#~4.7.0",
+    "font-awesome": "6.5.0",
     "angular-resource": "~1.5.2",
     "angular-bindonce": "~0.3.3",
     "angular-ui-grid": "^3.0.0",
