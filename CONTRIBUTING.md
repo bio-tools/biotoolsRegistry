@@ -7,7 +7,7 @@ The repo structure is heavily inspired by [branching standards & conventions](ht
 
 Instance     | Branch         | Comment
 -----------  | ------         | -------
-"master"     | master         | Accepts merges from "develop" and "hotfixes"
+"main"     | main         | Accepts merges from "develop" and "hotfixes"
 "development"        | develop         | Accepts merges from "features", "bugfixes" and "hotfixes"
 "features"   | feature/\<id\> | Always branch off HEAD of "develop"
 "bugfixes"   | bugfix/\<id\>  | Always branch off HEAD of "develop"
@@ -79,6 +79,57 @@ Issues are [labelled](https://github.com/bio-tools/biotoolsregistry/labels), the
 - ["in progress"](https://github.com/bio-tools/biotoolsRegistry/labels/in%20progress) : Stuff we're actively working on.
 - ["done - staged for release"](https://github.com/bio-tools/biotoolsRegistry/labels/done%20-%20staged%20for%20release) : Issue is implemented in dev.bio.tools.
 - ["fix verified"](https://github.com/bio-tools/biotoolsRegistry/labels/fix%20verified) : fix verified An issue labelled "done - staged for release" has been independently verified as working OK.
+
+
+# Code quality and pre-commit hooks
+
+This project uses [pre-commit](https://pre-commit.com/) across both backend and frontend codebases.
+
+## Setting up pre-commit hooks
+
+```bash
+# Create and activate a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install pre-commit
+pip install pre-commit
+
+# Install the git hooks
+pre-commit install
+```
+
+## What gets checked
+
+**Backend (Python):**
+- **Black** - Code formatting
+- **Flake8** - Linting and style guide enforcement
+- **isort** - Import statement sorting
+
+**Frontend (JavaScript):**
+- **Prettier** - Code formatting
+- **ESLint** - Linting and error detection
+
+**Both:**
+- Trailing whitespace removal
+- End-of-file fixes
+- YAML/JSON validation
+- Large file prevention
+
+## Running hooks manually
+
+```bash
+# Run on specific file
+pre-commit run --files backend/views.py
+
+# Run specific hook on all files
+pre-commit run black --all-files
+
+# Skip hooks for a commit (use sparingly)
+git commit --no-verify -m "commit message"
+```
+
+The hooks run automatically before each commit, checking only the files you've changed. See `.pre-commit-config.yaml` for full configuration.
 
 
 # Release process

@@ -23,6 +23,10 @@ https://bio-tools-dev.sdu.dk (latest development version)
 
 Please read the [documentation](http://biotools.readthedocs.io/en/latest/).
 
+# Development Setup
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code quality tools, and contribution guidelines.
+
 # Source code and installation
 *bio.tools* is available under [open license](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE).
 
