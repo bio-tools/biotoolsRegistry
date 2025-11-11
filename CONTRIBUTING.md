@@ -7,25 +7,25 @@ The repo structure is heavily inspired by [branching standards & conventions](ht
 
 Instance     | Branch         | Comment
 -----------  | ------         | -------
-"master"     | master         | Accepts merges from "develop" and "hotfixes"
+"main"     | main         | Accepts merges from "develop" and "hotfixes"
 "development"        | develop         | Accepts merges from "features", "bugfixes" and "hotfixes"
 "features"   | feature/\<id\> | Always branch off HEAD of "develop"
 "bugfixes"   | bugfix/\<id\>  | Always branch off HEAD of "develop"
 "hotfixes"   | hotfix/\<id\>  | Always branch off "master"
 
 
-- **"development" branch** (`origin/develop`) (code deployed on https://bio-tools-dev.sdu.dk) 
+- **"development" branch** (`origin/develop`) (code deployed on https://bio-tools-dev.sdu.dk)
   - the default / base branch of the repo, against which all pull requests and code pushes are automatically made
   - holds changes for the next release
   - developers will branch from / merge to it
   - accepts pull requests (see [Community Development Guidelines](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-development-guidelines))
 
-- **"master"** branch (`origin/master`) (code deployed on https://bio.tools) 
+- **"master"** branch (`origin/master`) (code deployed on https://bio.tools)
   - latest code deployed to (and allowing bug fixing of) production system
   - not normally interacted with (other than hot fixes)
   - periodically updated from "develop" branch (see [Release Process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
 - **"feature"**, **"bug"** and **"hotfix"** branches
-  - **"feature"** branches are created for significant new features / enhancements (*i.e.* whose development may take longer than a single deployment) 
+  - **"feature"** branches are created for significant new features / enhancements (*i.e.* whose development may take longer than a single deployment)
   - **"bug"** branches are created to address - in the next deployment - bugs found on the live site (a bug branch typically lasts one deployment cycle only)
   - should always be publicly available (development should never exist in just one developer's local branch)
   - always branch from, and merge back into "develop" branch
@@ -41,7 +41,7 @@ Instance     | Branch         | Comment
 
     - development of "develop" can continue while the hotfix is being addressed
     - tagged stable branch still represents what is in production.
-    
+
   - branch naming convention:
 
     - `hotfix/<id>`
@@ -64,12 +64,12 @@ The Danish ELIXIR node provides stable funding for bio.tools as part of the ELIX
   - announce changes to "develop" deployment, support the projects dependant on bio.tools in migrating them to the new version
   - announce planned and actual changes to "master" deployment (esp. any potentially breaking changes to API) via all available channels
   - maintain the issue tracker, creating, [labelling](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#issue-tracking--labelling) and closing issues as required
-  - oversee (and promote where necessary) the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct) 
+  - oversee (and promote where necessary) the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct)
 
 *All developers* must:
 
   - ensure proposed new features or other change are logged in the [issue tracker](https://github.com/bio-tools/biotoolsregistry/issues) and discussed, before coding
-  - follow the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct)  
+  - follow the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct)
 
 
 # Issue tracking & labelling
@@ -81,11 +81,62 @@ Issues are [labelled](https://github.com/bio-tools/biotoolsregistry/labels), the
 - ["fix verified"](https://github.com/bio-tools/biotoolsRegistry/labels/fix%20verified) : fix verified An issue labelled "done - staged for release" has been independently verified as working OK.
 
 
+# Code quality and pre-commit hooks
+
+This project uses [pre-commit](https://pre-commit.com/) across both backend and frontend codebases.
+
+## Setting up pre-commit hooks
+
+```bash
+# Create and activate a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install pre-commit
+pip install pre-commit
+
+# Install the git hooks
+pre-commit install
+```
+
+## What gets checked
+
+**Backend (Python):**
+- **Black** - Code formatting
+- **Flake8** - Linting and style guide enforcement
+- **isort** - Import statement sorting
+
+**Frontend (JavaScript):**
+- **Prettier** - Code formatting
+- **ESLint** - Linting and error detection
+
+**Both:**
+- Trailing whitespace removal
+- End-of-file fixes
+- YAML/JSON validation
+- Large file prevention
+
+## Running hooks manually
+
+```bash
+# Run on specific file
+pre-commit run --files backend/views.py
+
+# Run specific hook on all files
+pre-commit run black --all-files
+
+# Skip hooks for a commit (use sparingly)
+git commit --no-verify -m "commit message"
+```
+
+The hooks run automatically before each commit, checking only the files you've changed. See `.pre-commit-config.yaml` for full configuration.
+
+
 # Release process
 *tbd*, see https://github.com/bio-tools/biotoolsRegistry/issues/369
 
 
-# Community development guidelines 
+# Community development guidelines
 *tbd*, see https://github.com/bio-tools/biotoolsRegistry/issues/369
 
 
@@ -94,13 +145,13 @@ Issues are [labelled](https://github.com/bio-tools/biotoolsregistry/labels), the
 
 This code of conduct outlines our expectations for the bio.tools developer community.  It is based loosely on the [GCCBOSC 2018 Code of Conduct](https://galaxyproject.org/events/gccbosc2018/code-of-conduct/#gccbosc-2018-code-of-conduct).  We are committed to providing a welcoming and productive community for all and expect our code of conduct to be honored.  Our open source community strives to be:
 
-- **Considerate:** You depend upon the work of others who in turn depend on you.  You're unlikely to be fully aware of the ramifications of your proposals or actions, and the constraints others work under.  Before deciding or acting, talk to others and reach a common understanding of the consequences. 
+- **Considerate:** You depend upon the work of others who in turn depend on you.  You're unlikely to be fully aware of the ramifications of your proposals or actions, and the constraints others work under.  Before deciding or acting, talk to others and reach a common understanding of the consequences.
 - **Constructive:** We will not agree all the time.  Where we disagree, try to understand why and maintain a positive attitude in seeking a resolution, bearing in mind we share a common goal.
 - **Supportive:**  Support others in their work (you depend on them!), respecting the fact that we have different levels of experience and technical ability.
 - **Open-minded:** We have a wide range of backgrounds, skills and perspectives -  this diversity is a strength.  Be wary of ignoring or misunderstanding another viewpoint in the vindication of your own.
 - **Respectful:** Disagreement and differences do not excuse bad manners. Never allow frustration to turn into aggressive conduct or a personal attack.  A happy atmosphere is a productive one:  be nice, and keep a sense of humour.  If you can't be nice, be quiet.
 - **Tolerant:**  Treat people fairly and equally irrespective of their background and identity, including technical ability, experience, education, race, gender, nationality, age *etc*.
-- **Wise:** We are not infallible; we will make mistakes and change our viewpoints: admit and learn from mistakes and allow others to do the same.  
+- **Wise:** We are not infallible; we will make mistakes and change our viewpoints: admit and learn from mistakes and allow others to do the same.
 
 ## Conflict resolution
-If you are unhappy in regard to the code of conduct not being honoured, you should raise your concerns immediately and try to resolve them, either directly with the person concerned, or failing that with the nominated *community leader* who will try to resolve the issue discretely and fairly. 
+If you are unhappy in regard to the code of conduct not being honoured, you should raise your concerns immediately and try to resolve them, either directly with the person concerned, or failing that with the nominated *community leader* who will try to resolve the issue discretely and fairly.
