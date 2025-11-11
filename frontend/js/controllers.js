@@ -1465,16 +1465,16 @@ angular.module('elixir_front.controllers', [])
 
 
 }])
-.controller('OrcidCallbackController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$location', function($scope, $state, djangoAuth, $rootScope, $location) {
+.controller('OrcidCallbackController', ['$scope', '$state', 'djangoAuth', '$location', function($scope, $state, djangoAuth, $location) {
   	var code = $location.search().code;
 
 	// if user is authenticated call djangoAuth.orcidConnect
 	if (djangoAuth.authenticated) {
 		djangoAuth.orcidConnect(code)
 		.then(function (response) {
-			console.log("ORCID connection successful:", response);
+			$state.go('profile');
 		}, function (error) {
-			console.error("ORCID connection failed:", error);
+			$scope.loginErrors = "ORCID connection failed";
 		});
 	}
 	else {
@@ -1482,15 +1482,12 @@ angular.module('elixir_front.controllers', [])
 		.then(function (response) {
 			$state.go('search');
 		}, function (response) {
-			var error = $location.search().error;
 			var error_description = $location.search().error_description;
-
-			//TODO: handle errors
 			$scope.loginErrors = error_description;
 		});
 	}
 }])
-.controller('GitHubCallbackController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$location', function($scope, $state, djangoAuth, $rootScope, $location) {
+.controller('GitHubCallbackController', ['$scope', '$state', 'djangoAuth', '$location', function($scope, $state, djangoAuth, $location) {
   	var code = $location.search().code;
 
 	// Check for errors in the callback
@@ -1511,21 +1508,13 @@ angular.module('elixir_front.controllers', [])
 				$state.go('profile');
 			}, function (error) {
 				$scope.loginErrors = "Failed to connect GitHub account";
-				$state.go('profile');
 			});
 		} else {
-			// Try to log in with GitHub
 			djangoAuth.githubLogin(code)
 			.then(function (response) {
 				$state.go('search');
-				// go to states set before redirection to login
-				//if(typeof $rootScope.toState == 'undefined' || /signup/.test($rootScope.toState.name) || /reset-password/.test($rootScope.toState.//name)) {
-				//	$state.go('search');
-				//} else {
-				//	$state.go($rootScope.toState.name, $rootScope.toStateParams);
-				//}
 			}, function (response) {
-				$scope.loginErrors = response.non_field_errors || ["GitHub login failed"];
+				$scope.loginErrors = "GitHub login failed";
 				$state.go('login');
 			});
 		}
