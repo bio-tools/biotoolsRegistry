@@ -22,15 +22,36 @@
         <main class="results-main">
           <div class="results-header">
             <span class="results-count">{{ tools().length }} tools found</span>
-            <!--<mat-form-field appearance="outline">
-              <mat-label>Sort by</mat-label>
-              <mat-select value="relevance" (selectionChange)="onSortChange($event.value)">
-                <mat-option value="relevance">Relevance</mat-option>
-                <mat-option value="name">Name</mat-option>
-                <mat-option value="lastUpdate">Last Updated</mat-option>
-                <mat-option value="additionDate">Date Added</mat-option>
-              </mat-select>
-            </mat-form-field>-->
+            
+            <div class="sort-controls">
+              <span class="sort-label">Sort by:</span>
+              
+              <!-- Sort option buttons -->
+              <div class="sort-buttons">
+                @for (option of sortService.availableOptions(); track option.value) {
+                  <button 
+                    mat-button 
+                    [class.active]="sortService.currentSort().value === option.value"
+                    (click)="onSortChange(option.value)"
+                    class="sort-button">
+                    {{ option.label }}
+                  </button>
+                }
+              </div>
+              
+              <!-- Sort order toggle -->
+              <button 
+                mat-icon-button 
+                (click)="onToggleSortOrder()"
+                [matTooltip]="sortService.sortOrder() === 'desc' ? 'Descending order' : 'Ascending order'"
+                class="sort-order-button">
+                @if (sortService.sortOrder() === 'desc') {
+                  <mat-icon>arrow_downward</mat-icon>
+                } @else {
+                  <mat-icon>arrow_upward</mat-icon>
+                }
+              </button>
+            </div>
           </div>
 
           @if (loading) {

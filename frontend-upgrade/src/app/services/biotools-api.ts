@@ -16,7 +16,12 @@ export interface SearchParams {
   query?: string;
   page?: number;
   sort?: string;
+  ord?: string;
+  per_page?: number;
 }
+
+// export interface 
+
 
 @Injectable({
   providedIn: 'root'
@@ -30,9 +35,9 @@ export class BiotoolsApiService {
  
   constructor(private http: HttpClient) {}
 
-
+  /** TOOLS */
   /** Search for resources (tools) */
-  searchResources(params: SearchParams) { //TODO: define SearchParams interface
+  searchResources(params: SearchParams) {
     let httpParams = new HttpParams();
 
     if (params.query) {
@@ -41,16 +46,23 @@ export class BiotoolsApiService {
     if (params.page) {
         httpParams = httpParams.set('page', params.page.toString());   
     }
+    if (params.sort) {
+      httpParams = httpParams.set('sort', params.sort);
+    }
+    if (params.ord) {
+      httpParams = httpParams.set('ord', params.ord);
+    }
+    if (params.per_page) {
+      httpParams = httpParams.set('per_page', params.per_page.toString());
+    }
 
     return this.http.get<{ list: Array<Tool> }>(`${this.baseUrl}/t`, { params: httpParams })
     .pipe(
       map(response => response.list),
-
-      catchError(this.handleError) //TODO
+      catchError(this.handleError)
     );
   }
 
-  /** TOOLS */
   getToolByID(biotoolsID: string): Observable<Tool> {
     return this.http.get<Tool>(`${this.baseUrl}/t/${biotoolsID}`).pipe(
       catchError(this.handleError)
@@ -66,8 +78,8 @@ export class BiotoolsApiService {
 
   /** DOMAINS */
   // d/ == DomainView (?)
-  // d/domain-name == tools in domain
-  // d/all == full domain list ?si
+  // d/domain-name == tools in domain : count, data - name, resources, ...
+  // d/all == full domain list ?si result: count, data[]
 
   // Full complete list
   getDomains(): Observable<Domain[]> {
@@ -81,6 +93,7 @@ export class BiotoolsApiService {
       map(response => response.list)
     );
   }
+  // Update, delete domains
 
   /** USED TERMS / autocomplete suggestions
    *  usedTermName: one of 'all','topic','operation',... as in legacy API
@@ -104,6 +117,8 @@ export class BiotoolsApiService {
     );
   }
 
+
+  //** ONTOLOGY */
 
   //** STATS */
   //TODO

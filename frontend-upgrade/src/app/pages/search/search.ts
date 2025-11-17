@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, AfterViewInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Resources } from '../../services/resources';
 import { Tool } from '../../model/resource.model';
 import { catchError, filter } from 'rxjs';
@@ -10,11 +10,17 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Sidebar } from '../../components/sidebar/sidebar';
+import { SortService } from '../../services/sort.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-search',
   imports: [
+    CommonModule,
     Sidebar,
     // Angular Material
     MatCardModule,
@@ -23,34 +29,45 @@ import { Sidebar } from '../../components/sidebar/sidebar';
     MatCheckboxModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
-    MatChipsModule
+    MatChipsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './search.html',
   styleUrl: './search.scss'
 })
 export class Search implements OnInit, AfterViewInit {
 
-  //vibe coded
   searchQuery = '';
   totalResults = 0;
   pageSize = 50;
   loading = false;
 
   resourcesService = inject(Resources);
+  sortService = inject(SortService);
   router = inject(Router);
+  route = inject(ActivatedRoute);
   tools = signal<Array<Tool>>([]); // signal to hold array of Resource objects
 
-  ngOnInit(): void { // lifecycle hook, called after component's constructor, when component is initialized
-    this.resourcesService.getResources()
-    .pipe(
-      catchError(error => {
-        console.log('Error fetching resources:', error);
-        throw error;
-      })
-    )
-    .subscribe((resources) => {
-      console.log('Fetched resources:', resources);
-      this.tools.set(resources);
+  ngOnInit(): void {
+    // Initialize sort service from URL parameters
+    this.route.queryParams.subscribe(params => {
+      this.sortService.initFromParams({
+        sort: params['sort'],
+        ord: params['ord']
+      });
+      
+      // Check if there's a search query to add/remove score option
+      if (params['q']) {
+        this.searchQuery = params['q'];
+        this.sortService.addScoreOption();
+      } else {
+        this.sortService.removeScoreOption();
+      }
+      
+      // Pass all query params to loadResources
+      this.loadResources(params);
     });
 
     // Listen for navigation events to restore scroll position when coming back from tool page
@@ -65,6 +82,44 @@ export class Search implements OnInit, AfterViewInit {
       });
   }
 
+  loadResources(queryParams?: any): void {
+    this.loading = true;
+    const sortParams = this.sortService.getSortParams();
+    
+    // Build API parameters from URL query params
+    const apiParams: any = {
+      sort: sortParams.sort,
+      ord: sortParams.ord as 'asc' | 'desc',
+      per_page: this.pageSize
+    };
+
+    // Add all filter parameters from URL
+    if (queryParams) {
+      const filterParams = ['q', 'page', 'topic', 'operation', 'input', 'output', 'toolType', 
+                           'language', 'accessibility', 'cost', 'license', 'credit', 'collectionID', 'name'];
+      
+      for (const param of filterParams) {
+        if (queryParams[param]) {
+          apiParams[param] = queryParams[param];
+        }
+      }
+    }
+    
+    this.resourcesService.getResources(apiParams)
+    .pipe(
+      catchError(error => {
+        console.log('Error fetching resources:', error);
+        this.loading = false;
+        throw error;
+      })
+    )
+    .subscribe((resources) => {
+      console.log('Fetched resources:', resources);
+      this.tools.set(resources);
+      this.loading = false;
+    });
+  }
+
   ngAfterViewInit(): void {
     // Restore scroll position if coming back from a tool page
     const savedScrollPosition = sessionStorage.getItem('searchScrollPosition');
@@ -76,17 +131,26 @@ export class Search implements OnInit, AfterViewInit {
     }
   }
 
-  //vibe coded
   onPageChange(event: any) {
     this.pageSize = event.pageSize;
-    this.loading = true;
-    setTimeout(() => {
-      this.loading = false;
-    }, 1000);
+    this.loadResources(this.route.snapshot.queryParams);
+  }
+
+  onSortChange(sortValue: string): void {
+    const option = this.sortService.availableOptions().find(opt => opt.value === sortValue);
+    if (option) {
+      this.sortService.setSortOption(option);
+      this.loadResources(this.route.snapshot.queryParams);
+    }
+  }
+
+  onToggleSortOrder(): void {
+    this.sortService.toggleSortOrder();
+    this.loadResources(this.route.snapshot.queryParams);
   }
 
   getToolTopics(tool: Tool): string[] {
-  // Return array of topic terms
+    // Return array of topic terms
     return tool.topic?.map(t => t.term) ?? [];
   }
 
