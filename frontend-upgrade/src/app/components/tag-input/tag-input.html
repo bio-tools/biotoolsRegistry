@@ -1,32 +1,38 @@
 <div class="tag-input-root">
   <div class="tag-controls">
-    <mat-form-field appearance="outline" class="filter-select">
-      <mat-select [(ngModel)]="selectedFilter">
-        <mat-option *ngFor="let f of filterOptions" [value]="f">{{f}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-
     <mat-form-field appearance="outline" class="tag-input-field">
-      <input matInput placeholder="Add a tag or search term" [(ngModel)]="inputText" (ngModelChange)="onInputChange($event)" (keydown.enter)="addFromInput()" />
+      <!-- Tags displayed inside the input area -->
+      <div class="tags-container" matPrefix>
+        <mat-chip-set>
+          <mat-chip *ngFor="let t of tags; let i = index" [removable]="true" (removed)="removeTag(i)" class="inline-chip">
+            <span class="tag-filter">{{getFilterLabel(t.filter)}}</span>: {{t.text}}
+            <button matChipRemove aria-label="Remove tag">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+      
+      <input 
+        matInput 
+        placeholder="Search bio.tools" 
+        [(ngModel)]="inputText" 
+        (ngModelChange)="onInputChange($event)"
+        (focus)="onInputFocus()"
+        (blur)="onInputBlur()"
+        (keydown)="onKeyDown($event)" />
+      
+      <!-- Suggestions -->
+      <div class="dropdown-menu" *ngIf="showSuggestions && suggestions.length > 0">
+        <div 
+          *ngFor="let s of suggestions; let i = index" 
+          class="dropdown-item"
+          [class.highlighted]="i === selectedSuggestionIndex"
+          (mousedown)="selectSuggestion(s)"
+          (mouseenter)="selectedSuggestionIndex = i">
+          {{s}}
+        </div>
+      </div>
     </mat-form-field>
-
-    <button mat-icon-button class="add-btn" (click)="addFromInput()" aria-label="Add tag">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
-
-  <div class="suggestions" *ngIf="suggestions && suggestions.length > 0">
-    <ul>
-      <li *ngFor="let s of suggestions" (click)="selectSuggestion(s)">{{s}}</li>
-    </ul>
-  </div>
-
-  <div class="chips">
-    <mat-chip-list>
-      <mat-chip *ngFor="let t of tags; let i = index" selectable="true" removable="true" (removed)="removeTag(i)">
-        {{t.filter}}: {{t.text}}
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-    </mat-chip-list>
   </div>
 </div>

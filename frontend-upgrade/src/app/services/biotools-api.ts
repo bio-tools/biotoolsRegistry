@@ -50,14 +50,25 @@ export class BiotoolsApiService {
     );
   }
 
-  /** GET TOOL BY ID */
+  /** TOOLS */
   getToolByID(biotoolsID: string): Observable<Tool> {
     return this.http.get<Tool>(`${this.baseUrl}/t/${biotoolsID}`).pipe(
       catchError(this.handleError)
     );
   }
+  // Validate
+  // Upload
+
+  // /tool-list == slim list of tools --> maybe we can use this in the initial call when the user is logged_in?
+  // example for one tool http://localhost:8000/tool-list?name=EXTRACT
+
+  // Request editing rights / ownership
 
   /** DOMAINS */
+  // d/ == DomainView (?)
+  // d/domain-name == tools in domain
+  // d/all == full domain list ?si
+
   // Full complete list
   getDomains(): Observable<Domain[]> {
     return this.http.get<{ list: Domain[] }>(`${this.baseUrl}/domains/all`).pipe(
@@ -71,7 +82,7 @@ export class BiotoolsApiService {
     );
   }
 
-  /** Used terms / autocomplete suggestions
+  /** USED TERMS / autocomplete suggestions
    *  usedTermName: one of 'all','topic','operation',... as in legacy API
    *  params: optional query params (e.g. q, domain, page)
    */
@@ -93,8 +104,12 @@ export class BiotoolsApiService {
     );
   }
 
+
+  //** STATS */
+  //TODO
+
   private handleError(error: HttpErrorResponse) {
-    // In a real world app, you might use a remote logging infrastructure
+    //TODO: setup remote logging infrastructure
     console.error('An error occurred:', error);
     return throwError('Something bad happened; please try again later.');
   }
