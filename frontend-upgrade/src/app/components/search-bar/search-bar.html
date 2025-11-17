@@ -1,17 +1,9 @@
-<div class="search-bar-container">
-  <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Search bioinformatics tools...</mat-label>
-    <input 
-      matInput 
-      [(ngModel)]="searchQuery"
-      (keypress)="onKeyPress($event)"
-      placeholder="Enter tool name, function, or keywords">
-    <button 
-      mat-icon-button 
-      matSuffix 
-      (click)="onSearch()"
-      [disabled]="!searchQuery().trim()">
-      <mat-icon>search</mat-icon>
-    </button>
-  </mat-form-field>
+<div class="search-bar-container search-bar" style="display:flex; align-items:center;">
+  <!-- Tag based search with autocomplete -->
+  <app-tag-input 
+    [tags]="tags" 
+    (tagsChange)="onTagsChange($event)" 
+    (submit)="submitSearch()" 
+    style="flex:1;">
+  </app-tag-input>
 </div>

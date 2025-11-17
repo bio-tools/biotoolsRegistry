@@ -2,16 +2,18 @@
   width: 100%;
 }
 
-.search-field {
+.search-bar {
   width: 100%;
   
   ::ng-deep {
     .mat-mdc-form-field-outline {
       color: rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
     }
     
     .mat-mdc-form-field-outline-thick {
       color: white;
+      border-radius: 16px;
     }
     
     .mat-mdc-form-field-label {
