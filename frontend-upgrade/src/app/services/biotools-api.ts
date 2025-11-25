@@ -31,9 +31,9 @@ export class BiotoolsApiService {
   // API server base URL (no trailing slash)
   private readonly baseUrl = 'http://localhost:8000'; //TODO make configurable
 
-  //http = inject(HttpClient);
+  private http = inject(HttpClient);
  
-  constructor(private http: HttpClient) {}
+  //constructor(private http: HttpClient) {}
 
   /** TOOLS */
   /** Search for resources (tools) */
