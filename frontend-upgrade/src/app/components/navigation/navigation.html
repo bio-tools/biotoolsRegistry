@@ -4,8 +4,11 @@
       <img src="/img/biotools_white-cropped.svg" alt="bio.tools" class="biotools-logo">
     </button>
 
-    <!-- Search Bar (conditional) -->
-
+    <!-- Search Bar (conditional)
+    @if (!isHomePage) {
+      <app-search-bar></app-search-bar>
+    }
+    -->
     
     <a mat-button routerLink="/">Home</a>
     <a mat-button routerLink="/domains">Domains</a>
