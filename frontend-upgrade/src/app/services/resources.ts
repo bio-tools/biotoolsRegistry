@@ -21,28 +21,16 @@ export class Resources {
   
   http = inject(HttpClient);
  
-  // constructor() { }
 
-  getResources(params?: ResourceSearchParams) {
+  getResources(params: any) {
     let httpParams = new HttpParams();
     
-    if (params) {
-      if (params.sort) {
-        httpParams = httpParams.set('sort', params.sort);
+    Object.keys(params).forEach(key => {
+      const val = params[key];
+      if (val !== undefined && val !== null) {
+        httpParams = httpParams.set(key, String(val));
       }
-      if (params.ord) {
-        httpParams = httpParams.set('ord', params.ord);
-      }
-      if (params.page) {
-        httpParams = httpParams.set('page', params.page.toString());
-      }
-      if (params.per_page) {
-        httpParams = httpParams.set('per_page', params.per_page.toString());
-      }
-      if (params.q) {
-        httpParams = httpParams.set('q', params.q);
-      }
-    }
+    });
 
     return this.http.get<{ list: Array<Tool> }>(this.url, { params: httpParams }).pipe(
       map(response => response.list)
