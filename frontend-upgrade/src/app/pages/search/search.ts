@@ -16,6 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Sidebar } from '../../components/sidebar/sidebar';
 import { SortService } from '../../services/sort.service';
 import { CommonModule } from '@angular/common';
+import { FilterService } from '../../services/filter.service';
 
 @Component({
   selector: 'app-search',
@@ -45,14 +46,16 @@ export class Search implements OnInit, AfterViewInit {
   loading = false;
 
   resourcesService = inject(Resources);
+  filterService = inject(FilterService);
   sortService = inject(SortService);
   router = inject(Router);
   route = inject(ActivatedRoute);
-  tools = signal<Array<Tool>>([]); // signal to hold array of Resource objects
+  tools = signal<Array<Tool>>([]);
 
   ngOnInit(): void {
     // Initialize sort service from URL parameters
     this.route.queryParams.subscribe(params => {
+      this.filterService.initFromParams(params);
       this.sortService.initFromParams({
         sort: params['sort'],
         ord: params['ord']
@@ -104,17 +107,16 @@ export class Search implements OnInit, AfterViewInit {
         }
       }
     }
+
     
     this.resourcesService.getResources(apiParams)
     .pipe(
       catchError(error => {
-        console.log('Error fetching resources:', error);
         this.loading = false;
         throw error;
       })
     )
     .subscribe((resources) => {
-      console.log('Fetched resources:', resources);
       this.tools.set(resources);
       this.loading = false;
     });
