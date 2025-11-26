@@ -5,8 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BiotoolsApiService } from '../../services/biotools-api';
 import { Tool } from '../../model/resource.model';
+import { Resources } from '../../services/resources';
 
 @Component({
   selector: 'app-tool-page',
@@ -23,7 +23,7 @@ import { Tool } from '../../model/resource.model';
 export class ToolPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private biotoolsApi = inject(BiotoolsApiService);
+  private resourcesAPI = inject(Resources);
   
   software = signal<Tool | null>(null);
   loading = signal<boolean>(true);
@@ -43,7 +43,7 @@ export class ToolPage implements OnInit {
     this.loading.set(true);
     this.notFound.set(false);
     
-    this.biotoolsApi.getToolByID(id).subscribe({
+    this.resourcesAPI.getToolByID(id).subscribe({
       next: (tool) => {
         this.software.set(tool);
         this.loading.set(false);

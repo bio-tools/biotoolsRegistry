@@ -20,8 +20,6 @@ export interface SearchParams {
   per_page?: number;
 }
 
-// export interface 
-
 
 @Injectable({
   providedIn: 'root'
@@ -33,47 +31,6 @@ export class BiotoolsApiService {
 
   private http = inject(HttpClient);
  
-  //constructor(private http: HttpClient) {}
-
-  /** TOOLS */
-  /** Search for resources (tools) */
-  searchResources(params: SearchParams) {
-    let httpParams = new HttpParams();
-
-    if (params.query) {
-      httpParams = httpParams.set('q', params.query);
-    }
-    if (params.page) {
-        httpParams = httpParams.set('page', params.page.toString());   
-    }
-    if (params.sort) {
-      httpParams = httpParams.set('sort', params.sort);
-    }
-    if (params.ord) {
-      httpParams = httpParams.set('ord', params.ord);
-    }
-    if (params.per_page) {
-      httpParams = httpParams.set('per_page', params.per_page.toString());
-    }
-
-    return this.http.get<{ list: Array<Tool> }>(`${this.baseUrl}/t`, { params: httpParams })
-    .pipe(
-      map(response => response.list),
-      catchError(this.handleError)
-    );
-  }
-
-  getToolByID(biotoolsID: string): Observable<Tool> {
-    return this.http.get<Tool>(`${this.baseUrl}/t/${biotoolsID}`).pipe(
-      catchError(this.handleError)
-    );
-  }
-  // Validate
-  // Upload
-
-  // /tool-list == slim list of tools --> maybe we can use this in the initial call when the user is logged_in?
-  // example for one tool http://localhost:8000/tool-list?name=EXTRACT
-
   // Request editing rights / ownership
 
   /** DOMAINS */
