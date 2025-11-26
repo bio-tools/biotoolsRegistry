@@ -138,43 +138,6 @@ angular.module('angularDjangoRegistrationAuthApp')
 				console.error("ORCID connection failed:", error);
 			});
 		},
-		'githubLogin': function(code){
-			var djangoAuth = this;
-			return this.request({
-				'method': "POST",
-				'url': "/github/",
-				'data': {
-					'code': code,
-					'id_token': '',
-					'access_token': ''
-				}
-			}).then(function(data){
-				if(!djangoAuth.use_session){
-					$http.defaults.headers.common.Authorization = 'Token ' + data.key;
-					localStorage.token = data.key;
-				}
-				djangoAuth.authenticated = true;
-				$rootScope.$broadcast("djangoAuth.logged_in", data);
-			}, function(error) {
-				// Handle error
-				console.error("GitHub login failed:", error);
-			});
-		},
-		'githubConnect': function(code){
-			var djangoAuth = this;
-			return this.request({
-				'method': "POST",
-				'url': "/github/connect/",
-				'data': {
-					'code': code
-				}
-			}).then(function(data){
-				// Handle successful GitHub connection
-			}, function(error) {
-				// Handle error
-				console.error("GitHub connection failed:", error);
-			});
-		},
 		'disconnectSocial': function(id){
 			return this.request({
 				'method': "POST",

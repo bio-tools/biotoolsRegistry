@@ -1487,41 +1487,6 @@ angular.module('elixir_front.controllers', [])
 		});
 	}
 }])
-.controller('GitHubCallbackController', ['$scope', '$state', 'djangoAuth', '$location', function($scope, $state, djangoAuth, $location) {
-  	var code = $location.search().code;
-
-	// Check for errors in the callback
-	var error = $location.search().error;
-	var error_description = $location.search().error_description;
-	
-	if (error) {
-		$scope.loginErrors = error_description || "GitHub login failed";
-		$state.go('login');
-		return;
-	}
-
-	if (code) {
-		// if user is authenticated, try to connect GitHub account
-		if (djangoAuth.authenticated) {
-			djangoAuth.githubConnect(code)
-			.then(function (response) {
-				$state.go('profile');
-			}, function (error) {
-				$scope.loginErrors = "Failed to connect GitHub account";
-			});
-		} else {
-			djangoAuth.githubLogin(code)
-			.then(function (response) {
-				$state.go('search');
-			}, function (response) {
-				$scope.loginErrors = "GitHub login failed";
-				$state.go('login');
-			});
-		}
-	} else {
-		$state.go('login');
-	}
-}])
 .controller('LoginController', ['$scope', '$state', 'djangoAuth', '$rootScope', 'AppConfig',function($scope, $state, djangoAuth, $rootScope, AppConfig) {
 	$scope.credentials = {};
 
@@ -1552,14 +1517,6 @@ angular.module('elixir_front.controllers', [])
 		var redirect_uri = AppConfig.ORCID_REDIRECT_URI;
 
 		window.location.href = 'https://sandbox.orcid.org/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
-	}
-	
-	$scope.githubLoginButtonClick = function() {
-		var client_id = AppConfig.GITHUB_CLIENT_ID;
-		var redirect_uri = AppConfig.GITHUB_REDIRECT_URI;
-		var scope = AppConfig.GITHUB_SCOPE;
-
-		window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + client_id + '&redirect_uri=' + redirect_uri + '&scope=' + scope;
 	}
 }])
 .controller('SignupController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$timeout', function($scope, $state, djangoAuth, $rootScope, $timeout) {

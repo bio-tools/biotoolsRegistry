@@ -69,7 +69,6 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.orcid',
-    'allauth.socialaccount.providers.github',
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'django_extensions',
@@ -263,19 +262,10 @@ SOCIALACCOUNT_PROVIDERS = {
             'client_id': getenv('ORCID_CLIENT_ID', ''),
             'secret': getenv('ORCID_CLIENT_SECRET', ''),
         }
-    },
-
-    'github': {
-        'APP': {
-            'client_id': getenv('GITHUB_CLIENT_ID', ''),
-            'secret': getenv('GITHUB_CLIENT_SECRET', ''),
-        },
-        'SCOPE': ['user:email'],
     }
 }
 
 ORCID_CALLBACK_URL = getenv('ORCID_CALLBACK_URL', 'http://127.0.0.1/orcid/callback/')
-GITHUB_CALLBACK_URL = getenv('GITHUB_CALLBACK_URL', 'http://127.0.0.1/github/callback/')
                         
 # settings specific to deployment
 try:

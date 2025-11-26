@@ -63,13 +63,6 @@ angular.module('elixir_front')
 		window.location.href = 'https://sandbox.orcid.org/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
 	};
 
-	$scope.githubConnect = function() {
-		var client_id = AppConfig.GITHUB_CLIENT_ID;
-		var redirect_uri = AppConfig.GITHUB_REDIRECT_URI;
-
-		window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + client_id + '&redirect_uri=' + redirect_uri;
-	};
-
 	$scope.disconnectSocial = function(provider, id) {
 		if (!confirm("Are you sure you want to disconnect your " + provider + " account?")){
 			return;
@@ -86,13 +79,6 @@ angular.module('elixir_front')
 	};
 
 	// check if social accounts are connected
-	$scope.hasGithubAccount = function() {
-		if (!$scope.profile.socialAccounts) return false;
-		return $scope.profile.socialAccounts.some(function(account) {
-			return account.provider === 'github';
-		});
-	};
-
 	$scope.hasOrcidAccount = function() {
 		if (!$scope.profile.socialAccounts) return false;
 		return $scope.profile.socialAccounts.some(function(account) {

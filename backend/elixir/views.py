@@ -39,7 +39,6 @@ from elixir.view.tools import *
 from elixir.view.edam import *
 
 from allauth.socialaccount.providers.orcid.views import OrcidOAuth2Adapter
-from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView, SocialConnectView
 
@@ -93,47 +92,3 @@ class OrcidConnect(SocialConnectView):
 	adapter_class = OrcidOAuth2Adapter
 	callback_url = settings.ORCID_CALLBACK_URL
 	client_class = CustomOAuth2Client
-
-# Github
-
-class GitHubLogin(SocialLoginView):
-	adapter_class = GitHubOAuth2Adapter
-	callback_url = settings.GITHUB_CALLBACK_URL
-	client_class = CustomOAuth2Client
-	
-	def post(self, request, *args, **kwargs):
-		try:
-			response = super().post(request, *args, **kwargs)
-			return response
-		except Exception as e:
-			print(f"GitHubLogin.post error: {str(e)}")
-			if "already registered" in str(e).lower():
-				print("Attempting to handle 'already registered' error")
-				return Response(
-					{"non_field_errors": ["This email is already associated with an account. The account has been connected to your GitHub profile."]}, 
-					status=status.HTTP_200_OK
-				)
-			raise
-
-class GitHubConnect(SocialConnectView):
-	adapter_class = GitHubOAuth2Adapter
-	callback_url = settings.GITHUB_CALLBACK_URL
-	client_class = CustomOAuth2Client
-	
-
-class GitHubLoginCallback(APIView):
-    def get(self, request, *args, **kwargs):
-        code = request.GET.get('code')        
-        # Exchange the code for an access token
-        if code is None:
-            return Response({"error": "No code provided"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        token_url = request.build_absolute_uri(reverse("github_login"))
-
-        response = requests.post(
-            url=token_url, 
-            json={'code': code},
-            headers={'Content-Type': 'application/json'}
-        )
-
-        return Response(response.json(), status=response.status_code)

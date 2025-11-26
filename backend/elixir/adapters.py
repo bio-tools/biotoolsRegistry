@@ -42,7 +42,6 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         
         # If user is already authenticated, this is a "connect" scenario
         if request.user.is_authenticated:
-            # Check if GitHub provides an email
             if sociallogin.email_addresses:
                 social_email = sociallogin.email_addresses[0].email
                 user_email = request.user.email
@@ -51,7 +50,6 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
                 if social_email != user_email and not user_email.endswith('@biotools.local'):
                     print(f"WARNING: Email mismatch! User email ({user_email}) != Social account email ({social_email})")
                     # could raise an exception here to prevent connection
-                    # raise forms.ValidationError("GitHub email doesn't match your account email. Please use a GitHub account with the same email address.")
             
             # Connect the social account to the current logged-in user
             sociallogin.connect(request, request.user)
@@ -77,8 +75,7 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         
         # If no email is provided, we need to handle this case
         if not sociallogin.email_addresses:
-            #TODO
-            print("Creating user without email address (GitHub private email)")
+            print("Creating user without email address")
             
         user = super().save_user(request, sociallogin, form)
         return user

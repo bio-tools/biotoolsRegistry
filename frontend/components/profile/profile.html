@@ -38,7 +38,6 @@
 							<button class="btn btn-primary" ng-click="openChangePasswordModal()">Change Password</button>
 							<button class="btn btn-primary" ng-click="openChangeEmailModal()">Change Email</button>
 							<button class="btn btn-primary" ng-click="orcidConnect()" ng-if="!hasOrcidAccount()" style="background-color: green;">Connect to ORCID</button>
-							<button class="btn btn-primary" ng-click="githubConnect()" ng-if="!hasGithubAccount()" style="background-color: black;">Connect to GitHub</button>
 						</div>
 					</div>
 
@@ -49,21 +48,6 @@
 						</div>
 						<table class="table table-condensed table-hover">
 							<tbody>
-								<tr ng-repeat="account in profile.socialAccounts" ng-if="account.provider == 'github'">
-									<th>GitHub</th>
-									<td>
-										<div><strong>Username:</strong> {{account.extra_data.login}}</div>
-										<div ng-if="account.extra_data.name"><strong>Name:</strong> {{account.extra_data.name}}</div>
-										<div ng-if="account.extra_data.email"><strong>Email:</strong> {{account.extra_data.email}}</div>
-										<div ng-if="account.extra_data.html_url">
-											<strong>Profile:</strong> 
-											<a href="{{account.extra_data.html_url}}" target="_blank">{{account.extra_data.html_url}}</a>
-										</div>
-									</td>
-									<td>
-										<button class="btn btn-danger btn-sm" ng-click="disconnectSocial(account.provider, account.id)">Disconnect</button>
-									</td>
-								</tr>
 								<tr ng-repeat="account in profile.socialAccounts" ng-if="account.provider == 'orcid'">
 									<th>ORCID</th>
 									<td>

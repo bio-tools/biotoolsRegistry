@@ -64,12 +64,4 @@ function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state,
 
 		window.location.href = 'https://sandbox.orcid.org/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
 	}
-
-	vm.githubLoginPressed = function() {
-		var client_id = AppConfig.GITHUB_CLIENT_ID;
-		var redirect_uri = AppConfig.GITHUB_REDIRECT_URI;
-		var scope = AppConfig.GITHUB_SCOPE;
-
-		window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + client_id + '&redirect_uri=' + redirect_uri + '&scope=' + scope;
-	}
 }

@@ -23,9 +23,8 @@
 					<div class="social-login-buttons" style="margin-top: 20px;">
 						<strong>Social Login:</strong>
 						<br>
-						<p>If you already have an account, login and go to <a href="/profile">your profile</a> to connect your existing account to ORCID.</p>
+						<p>If you already have an account, go to <a href="/profile">your profile</a> to connect your existing account to ORCID.</p>
 						<button type="button" class="btn btn-success btn-block" ng-click="vm.orcidLoginPressed()">Log in with ORCID</button>
-						<!-- <button type="button" class="btn btn-default btn-block" ng-click="vm.githubLoginPressed()">Log in with GitHub</button> -->
 					</div>
 				</div>
 			</div>
@@ -39,7 +38,9 @@
 					<li><span class="fa fa-check text-success"></span> Request editing rights</li>
 				</ul>
 				<br>
-				<button type="submit" class="btn btn-info btn-block" ng-click="vm.registerButtonPressed()">Sign-up now</button>
+				<button type="button" class="btn btn-success btn-lg btn-block" ng-click="vm.orcidLoginPressed()">Sign up with ORCID</button> (recommended)
+				<br>
+				<button type="submit" class="btn btn-info btn-block" ng-click="vm.registerButtonPressed()">Sign-up with email</button>
 			</div>
 			<div class="col-xs-12">
 				<div ng-repeat="error in vm.error.general" uib-alert type="danger">{{error}}</div>
