@@ -5,14 +5,14 @@ angular.module('elixir_front.controllers').controller('LoginMangerController', [
 	vm.openLoginModal = function() {
 		$uibModal.open({
 			templateUrl: 'partials/modals/loginModal.html',
-			controller: ['$uibModalInstance', 'djangoAuth', '$rootScope', '$state', 'AppConfig', LoginModalController],
+			controller: ['$uibModalInstance', 'djangoAuth', '$rootScope', '$state', 'OrcidAuth', LoginModalController],
 			controllerAs: 'vm',
 			windowClass: 'login-modal-window'
 		});
 	};
 }]);
 
-function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state, AppConfig) {
+function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state, OrcidAuth) {
 	var vm = this;
 	vm.error = {};
 
@@ -59,10 +59,6 @@ function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state,
 	}
 
 	vm.orcidLoginPressed = function() {
-		var client_id = AppConfig.ORCID_CLIENT_ID;
-		var redirect_uri = AppConfig.ORCID_REDIRECT_URI;
-		var orcid_base_url = AppConfig.ORCID_BASE_URL;
-
-		window.location.href = orcid_base_url + '/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
+		OrcidAuth.start();
 	}
 }

@@ -118,8 +118,8 @@ angular.module('angularDjangoRegistrationAuthApp')
 				}
 				djangoAuth.authenticated = true;
 				$rootScope.$broadcast("djangoAuth.logged_in", data);
+				return data;
 			}, function(error) {
-				// Handle error
 				console.error("ORCID login failed:", error);
 			});
 		},
@@ -133,8 +133,9 @@ angular.module('angularDjangoRegistrationAuthApp')
 				}
 			}).then(function(data){
 				// Handle successful ORCID connection
+				$rootScope.$broadcast("djangoAuth.orcid_connected", data);
+				return data;
 			}, function(error) {
-				// Handle error
 				console.error("ORCID connection failed:", error);
 			});
 		},

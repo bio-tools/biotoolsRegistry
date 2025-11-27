@@ -1465,29 +1465,44 @@ angular.module('elixir_front.controllers', [])
 
 
 }])
-.controller('OrcidCallbackController', ['$scope', '$state', 'djangoAuth', '$location', function($scope, $state, djangoAuth, $location) {
+.controller('OrcidCallbackController', ['$scope', '$state', 'djangoAuth', '$location', 'OrcidAuth', function($scope, $state, djangoAuth, $location, OrcidAuth) {
   	var code = $location.search().code;
+	const stateParams = $location.search().state;
+
+	const stateCheck = OrcidAuth.consumeState(stateParams);
+	if (!stateCheck.ok) {
+		$scope.loginErrors = "ORCID authentication failed: invalid state parameter";
+		return;
+	}
+
+	function goAfterAuth() {
+        if (stateCheck.payload && stateCheck.payload.name) {
+            $state.go(stateCheck.payload.name, stateCheck.payload.params || {});
+        } else {
+            $state.go('search');
+        }
+    }
 
 	// if user is authenticated call djangoAuth.orcidConnect
 	if (djangoAuth.authenticated) {
 		djangoAuth.orcidConnect(code)
-		.then(function (response) {
+		.then(function () {
 			$state.go('profile');
-		}, function (error) {
+		}, function () {
 			$scope.loginErrors = "ORCID connection failed";
 		});
 	}
 	else {
 		djangoAuth.orcidLogin(code)
-		.then(function (response) {
-			$state.go('search');
-		}, function (response) {
+		.then(function () {
+			goAfterAuth();
+		}, function () {
 			var error_description = $location.search().error_description;
-			$scope.loginErrors = error_description;
+			$scope.loginErrors = error_description || "ORCID login failed";
 		});
 	}
 }])
-.controller('LoginController', ['$scope', '$state', 'djangoAuth', '$rootScope', 'AppConfig',function($scope, $state, djangoAuth, $rootScope, AppConfig) {
+.controller('LoginController', ['$scope', '$state', 'djangoAuth', '$rootScope', 'OrcidAuth', function($scope, $state, djangoAuth, $rootScope, OrcidAuth) {
 	$scope.credentials = {};
 
 	$scope.loginButtonClick = function() {
@@ -1513,14 +1528,10 @@ angular.module('elixir_front.controllers', [])
 	}, true);
 
 	$scope.orcidLoginButtonClick = function() {
-		var client_id = AppConfig.ORCID_CLIENT_ID;
-		var redirect_uri = AppConfig.ORCID_REDIRECT_URI;
-		var orcid_base_url = AppConfig.ORCID_BASE_URL;
-
-		window.location.href = orcid_base_url + '/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
+		OrcidAuth.start();
 	}
 }])
-.controller('SignupController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$timeout', 'AppConfig', function($scope, $state, djangoAuth, $rootScope, $timeout, AppConfig) {
+.controller('SignupController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$timeout', 'OrcidAuth', function($scope, $state, djangoAuth, $rootScope, $timeout, OrcidAuth) {
 	$scope.credentials = {};
 	$scope.error_message = {};
 	$scope.error_message.username = '';
@@ -1580,11 +1591,7 @@ angular.module('elixir_front.controllers', [])
 	}
 
 	$scope.orcidSignupButtonClick = function() {
-		var client_id = AppConfig.ORCID_CLIENT_ID;
-		var redirect_uri = AppConfig.ORCID_REDIRECT_URI;
-		var orcid_base_url = AppConfig.ORCID_BASE_URL;
-
-		window.location.href = orcid_base_url + '/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
+		OrcidAuth.start();
 	}
 }])
 .controller('SignupVerifyEmailKeyController', ['$scope', '$state', '$stateParams', 'djangoAuth', function($scope, $state, $stateParams, djangoAuth) {
