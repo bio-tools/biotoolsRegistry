@@ -61,7 +61,8 @@ function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state,
 	vm.orcidLoginPressed = function() {
 		var client_id = AppConfig.ORCID_CLIENT_ID;
 		var redirect_uri = AppConfig.ORCID_REDIRECT_URI;
+		var orcid_base_url = AppConfig.ORCID_BASE_URL;
 
-		window.location.href = 'https://sandbox.orcid.org/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
+		window.location.href = orcid_base_url + '/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
 	}
 }

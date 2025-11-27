@@ -42,6 +42,8 @@
 				</div>
 				<button type="submit" class="btn btn-primary btn-lg btn-block" ng-disabled="signup_form.$invalid || credentials.password !== credentials.confirm_password || loading" ng-click="signupButtonClick()">Create account <span ng-show="loading"><i class="fa fa-spinner fa-spin icon-cog"></i></span>
 				</button>
+				<br>
+				<button type="button" class="btn btn-success btn-lg btn-block" ng-click="orcidSignupButtonClick()">Sign up with ORCID</button>
 				<div class="form-group has-feedback has-error" ng-show="error_message.creation">
 					<span class="help-block">{{ error_message.creation }}</span>
 				</div>
