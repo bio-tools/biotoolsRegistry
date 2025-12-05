@@ -12,8 +12,9 @@ def as_list(x):
 
 def rdfize(entry):
     """
-    Transforms a biotools json entry into RDF, and returns a JSON-LD serialization. The following fields
-    are covered: contact, publication, EDAM topic, EDAM operation, EDAM inputs & outputs.
+    Transforms a biotools json entry into RDF, and returns a JSON-LD
+    serialization. The following fields are covered: contact,
+    publication, EDAM topic, EDAM operation, EDAM inputs & outputs.
     """
 
     ctx = {
@@ -44,14 +45,26 @@ def rdfize(entry):
 
     biotools_id = str(entry["biotoolsID"])
     name = str(entry["name"])
-    tool = {"@id": str(biotools_id) if biotools_id else None, "@type": "SoftwareApplication", "name": str(name),
-            "applicationCategory": "Computational science tool",
-            "conformsTo": "https://bioschemas.org/profiles/ComputationalTool/1.0-RELEASE", "author": [], "provider": [],
-            "contributor": [], "funder": [], "primaryContact": [], "description": entry.get("description"),
-            "url": entry.get("homepage"), "version": entry.get("version"), "license": entry.get("license"),
-            "operatingSystem": [os for os in as_list(entry.get("operatingSystem")) if os],
-            "toolType": as_list(entry.get("toolType")), "datePublished": entry.get("additionDate"),
-            "dateModified": entry.get("lastUpdate")}
+    tool = {
+        "@id": str(biotools_id) if biotools_id else None,
+        "@type": "SoftwareApplication",
+        "name": str(name),
+        "applicationCategory": "Computational science tool",
+        "conformsTo": "https://bioschemas.org/profiles/ComputationalTool/1.0-RELEASE",
+        "author": [],
+        "provider": [],
+        "contributor": [],
+        "funder": [],
+        "primaryContact": [],
+        "description": entry.get("description"),
+        "url": entry.get("homepage"),
+        "version": entry.get("version"),
+        "license": entry.get("license"),
+        "operatingSystem": [os for os in as_list(entry.get("operatingSystem")) if os],
+        "toolType": as_list(entry.get("toolType")),
+        "datePublished": entry.get("additionDate"),
+        "dateModified": entry.get("lastUpdate"),
+    }
 
     if entry.get("homepage"):
         tool["mainEntityOfPage"] = {"@type": "WebPage", "@id": entry["homepage"]}
@@ -104,8 +117,16 @@ def rdfize(entry):
         pubs = []
         for p in entry["publication"]:
             doi_url = "https://doi.org/" + p["doi"] if p.get("doi") else None
-            pmid_url = "https://pubmed.ncbi.nlm.nih.gov/" + p["pmid"] if p.get("pmid") else None
-            pmcid_url = "https://pubmed.ncbi.nlm.nih.gov/" + p["pmcid"] if p.get("pmcid") else None
+            pmid_url = (
+                "https://pubmed.ncbi.nlm.nih.gov/" + p["pmid"]
+                if p.get("pmid")
+                else None
+            )
+            pmcid_url = (
+                "https://pubmed.ncbi.nlm.nih.gov/" + p["pmcid"]
+                if p.get("pmcid")
+                else None
+            )
 
             if not (doi_url or pmid_url or pmcid_url):
                 continue
@@ -169,6 +190,14 @@ def rdfize(entry):
             "price": "0",
             "priceCurrency": "USD",
         }
+
+    if entry.get("license"):
+        license = entry["license"]
+
+        if license in ["Freeware", "Proprietary", "Other", "Not licensed"]:
+            tool["license"] = license
+        else:
+            tool["license"] = f"https://spdx.org/licenses/{license}"
 
     for doc in as_list(entry.get("documentation")):
         url = (doc.get("url") or "").replace("|", "%7C")
