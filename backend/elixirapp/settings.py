@@ -125,9 +125,6 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = getenv('SITE_ID', 1, castf=int)
 
-# CORS settings for development
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
