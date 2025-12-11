@@ -321,8 +321,8 @@ or
 
 `docker image rm <IMAGE_ID1> <IMAGE_ID2> <IMAGE_ID2>`
 
-
 (will not work if containers are running this image)
+
 
 #### Enter a container and run commands
 Any of the bio.tools runnning containers can provide a bash terminal to run commands inside the containers (similar to `docker exec`). Examples of the commands are:
@@ -362,7 +362,6 @@ docker-compose YAML config file
 `<git_project_root>/docker-compose.yml`
 
 
-
 #### Docker documentation:
 * [https://docs.docker.com/](https://docs.docker.com/)
 * [https://docs.docker.com/reference/](https://docs.docker.com/reference/)
@@ -371,11 +370,3 @@ docker-compose YAML config file
 * [https://docs.docker.com/config/pruning/](https://docs.docker.com/config/pruning/)
 * [https://docs.docker.com/compose/](https://docs.docker.com/compose/)
 * [https://hub.docker.com/](https://hub.docker.com/)
-
-
-
-
-
-
-
-
