@@ -41,11 +41,11 @@ bio.tools development is covered by the emerging [governance model](http://bioto
 # People
 Please see the [contributors page](http://biotools.readthedocs.io/en/latest/contributors.html) for a list of people involved with the project.
 
-# Publication
+# Publications
 If you use bio.tools, please cite:
 
+Ison, J. et al. (2019). [The bio.tools registry of software tools and data resources for the life sciences.](https://link.springer.com/article/10.1186/s13059-019-1772-6) _Genome Biology_.
+
+Ison, J. et al. (2019). [Community curation of bioinformatics software and data resources.](https://academic.oup.com/bib/article/21/5/1697/5560007) _Briefings in Bioinformatics_.
+
 Ison, J. et al. (2015). [Tools and data services registry: a community effort to document bioinformatics resources.](http://nar.oxfordjournals.org/content/early/2015/11/03/nar.gkv1116.long) _Nucleic Acids Research_.
-
-doi: [10.1093/nar/gkv1116](http://dx.doi.org/10.1093/nar/gkv1116) PMID: [26538599 ](http://www.ncbi.nlm.nih.gov/pubmed/26538599)
-
-This article is freely available (Open Access).
