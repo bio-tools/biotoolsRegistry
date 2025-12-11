@@ -151,6 +151,30 @@ angular.module('elixir_front.services', [])
 		});
 	}
 }])
+.factory('MetaService', function($document, $window) {
+    function setAlternate(type, href, title) {
+        if (!href) return;
+        // Remove any existing for the same type
+        var selector = 'link[rel="alternate"][type="' + type + '"]';
+        var existing = $document[0].head.querySelectorAll(selector);
+        existing.forEach ? existing.forEach(function(n){ n.remove(); })
+            : Array.prototype.forEach.call(existing, function(n){ n.parentNode.removeChild(n); });
+        var link = $document[0].createElement('link');
+        link.setAttribute('rel', 'alternate');
+        link.setAttribute('type', type);
+        link.setAttribute('href', href);
+        if (title) link.setAttribute('title', title);
+        $document[0].head.appendChild(link);
+    }
+    return {
+        setAlternatesForTool: function(biotoolsID) {
+            if (!biotoolsID) return;
+            var base = $window.location.origin;
+            setAlternate('application/json', base + '/api/' + biotoolsID + '?format=json', 'JSON');
+            setAlternate('application/xml', base + '/api/' + biotoolsID + '?format=xml', 'XML');
+        }
+    };
+})
 .factory('ToolTableDataSource', function() {
 	var columnDescriptionForKey = function(key, hidden) {
 		var widthCharMultiplier = 12;

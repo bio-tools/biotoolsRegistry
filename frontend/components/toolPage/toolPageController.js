@@ -1,11 +1,11 @@
 angular.module('elixir_front')
-.controller('ToolPageController', ['$scope', '$state', '$timeout', '$stateParams', 'Tool', 'User', 'CheckUserEditingRights', 'ResourceRequestProvider', 'ngMeta', 'Query', '$http',  function($scope, $state, $timeout, $stateParams, Tool, User, CheckUserEditingRights, ResourceRequestProvider, ngMeta, Query, $http) {
+.controller('ToolPageController', ['$scope', '$state', '$timeout', '$stateParams', 'Tool', 'User', 'CheckUserEditingRights', 'ResourceRequestProvider', 'ngMeta', 'Query', '$http', 'MetaService',  function($scope, $state, $timeout, $stateParams, Tool, User, CheckUserEditingRights, ResourceRequestProvider, ngMeta, Query, $http, MetaService) {
 	$scope.notFound = false;
 	$scope.versions = [];
 	$scope.CheckUserEditingRights = CheckUserEditingRights;
-	$scope.editingRequestedSuccess = null; 
+	$scope.editingRequestedSuccess = null;
 
-	
+
 
 	$scope.User = User;
 	$scope.elixirCommunityIndex = {
@@ -57,7 +57,7 @@ angular.module('elixir_front')
 	if ($stateParams.id.length == 0) {
 		$state.go('404');
 	}
-	
+
 	$scope.topicNameClicked = function(topic) {
 		$state.go('search', {'topicID': quoteQueryStringValue(stripEdam(topic.uri))});
 	}
@@ -175,7 +175,13 @@ angular.module('elixir_front')
 		ngMeta.setTag('description', software.description);
 		ngMeta.setTag('og:title', software.name);
 		ngMeta.setTag('og:description', software.description);
-	}
+        MetaService.setAlternatesForTool(software.biotoolsID);
+
+        const published = software.additionDate;
+        const modified = software.lastUpdate;
+        ngMeta.setTag('datePublished', published, false);
+        ngMeta.setTag('dateModified', modified, false);
+    }
 
 	// get tool
 	$scope.software = Tool.get($stateParams, function(response) {
@@ -210,7 +216,7 @@ angular.module('elixir_front')
 	}
 
 	$scope.requestEditing = function(resourceId) {
-		$scope.editingRequestedSuccess = null; 
+		$scope.editingRequestedSuccess = null;
 		ResourceRequestProvider.requestEditingRights(resourceId).then(function successCallback(response) {
 			$scope.editingRequestedSuccess = true;
 		}, function errorCallback(response) {
@@ -265,7 +271,7 @@ angular.module('elixir_front')
 			}
 		}],
 		link: function($scope, element, attrs) {
-				
+
 				//window.__dimensions_embed.addBadges();
 
 		}
@@ -277,10 +283,10 @@ angular.module('elixir_front')
 		transclude: true,
 		template: function(elem, attr){
 			return '<div class="bs-callout-sm bs-callout-primary" style="border-left-color: ' + attr.color + ';">' +
-			'<div class="tool-page-callout-header" style="color: black;">' + 
+			'<div class="tool-page-callout-header" style="color: black;">' +
 			'<a target="_blank" href="' + attr.url + '" tooltips tooltip-side="top" tooltip-content="' + attr.url + '">' + attr.name + ' › </a>' +
 			'<i ng-show="' +  attr.toshow  + '" class="fa fa-question-circle" aria-hidden="true" style="font-size: 100%; margin-left: 0.5em; color: ' + attr.color + ';" tooltips tooltip-side="top" tooltip-content="' + attr.comment + '"></i>' +
-			'</div>' + 
+			'</div>' +
 			'</div>';
 		},
 		replace: true
@@ -346,7 +352,7 @@ angular.module('elixir_front')
 			callout += '<div ng-show="' + attr.name + '" class="tool-page-callout-header" style="color: black;"><a href="" ng-click="creditNameClicked(credit.name)">{{' + attr.name + '}}</a>';
 			callout += '<i ng-show="' +  attr.toshow  + '" class="fa fa-question-circle" aria-hidden="true" style="font-size: 100%; margin-left: 0.5em; color: ' + attr.color + ';" tooltips tooltip-side="top" tooltip-content="' + attr.comment + '"></i>';
 			callout += '<span ng-show="' + attr.typeentity + ' && ' + attr.typeentity + ' != \'Person\'">';
-			callout += '<span ng-show="' + attr.typeentity + '" style="color: #CCCCCC;"> | </span>'; 
+			callout += '<span ng-show="' + attr.typeentity + '" style="color: #CCCCCC;"> | </span>';
 			callout += '<span ng-show="' + attr.typeentity + '">{{' + attr.typeentity + '}}</span>';
 			callout += '</div>';
 			callout += '<div class="tool-page-callout-text">';

@@ -5,7 +5,7 @@
 
 
 # What is biotoolsregistry?
-**biotoolsregistry** (bio.tools) is the Web application of the [ELIXIR Tools & Data Services Registry](https://bio.tools).  It allows the curation and discovery of bioinformatics resources including databases, tools, services and so on, available under a variety of interfaces. 
+**biotoolsregistry** (bio.tools) is the Web application of the [ELIXIR Tools & Data Services Registry](https://bio.tools).  It allows the curation and discovery of bioinformatics resources including databases, tools, services and so on, available under a variety of interfaces.
 
 bio.tools provides a query interface, registration interface and API. The **query interface** allows a user to search the corpus of resource descriptions, display what fields of information are shown and filter and sort the results by various attributes.  The **registration interface** allows the manual creation and editing of resource descriptions.  The HTTP-based **API** allows query as well as automated creation and update of accessions.
 
@@ -16,31 +16,36 @@ In support of discoveries in the life sciences, a plethora of databases and tool
 
 # Documentation and website
 
-bio.tools, supported by [ELIXIR](https://www.elixir-europe.org/) — the European infrastructure for biological information - is available at 
+bio.tools, supported by [ELIXIR](https://www.elixir-europe.org/) — the European infrastructure for biological information - is available at
 
 https://bio.tools (production version)
 https://bio-tools-dev.sdu.dk (latest development version)
 
 Please read the [documentation](http://biotools.readthedocs.io/en/latest/).
 
-# Source code and installation
-*bio.tools* is available under [open license](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE). 
+# Development Setup
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code quality tools, and contribution guidelines.
+
+# Source code and installation
+*bio.tools* is available under [open license](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE).
+
+For detailed installation instructions, please see [INSTALL.md](INSTALL.md).
 
 # Data
 The registry content is freely available to all under the Creative Commons Attribution licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/>).
 
 # Governance
-bio.tools development is covered by the emerging [governance model](http://biotools.readthedocs.io/en/latest/governance.html) of the bio.tools project.  
+bio.tools development is covered by the emerging [governance model](http://biotools.readthedocs.io/en/latest/governance.html) of the bio.tools project.
 
 # People
 Please see the [contributors page](http://biotools.readthedocs.io/en/latest/contributors.html) for a list of people involved with the project.
 
-# Publication
+# Publications
 If you use bio.tools, please cite:
 
+Ison, J. et al. (2019). [The bio.tools registry of software tools and data resources for the life sciences.](https://link.springer.com/article/10.1186/s13059-019-1772-6) _Genome Biology_.
+
+Ison, J. et al. (2019). [Community curation of bioinformatics software and data resources.](https://academic.oup.com/bib/article/21/5/1697/5560007) _Briefings in Bioinformatics_.
+
 Ison, J. et al. (2015). [Tools and data services registry: a community effort to document bioinformatics resources.](http://nar.oxfordjournals.org/content/early/2015/11/03/nar.gkv1116.long) _Nucleic Acids Research_.
-
-doi: [10.1093/nar/gkv1116](http://dx.doi.org/10.1093/nar/gkv1116) PMID: [26538599 ](http://www.ncbi.nlm.nih.gov/pubmed/26538599)
-
-This article is freely available (Open Access).

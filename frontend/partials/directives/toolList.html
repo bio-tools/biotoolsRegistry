@@ -6,9 +6,9 @@
 			<span style="color:#575757;" ng-if="tool.operatingSystem.length > 0">
 				<span style="color: #CCCCCC">  |  </span>
 				<span ng-repeat="operatingSystem in tool.operatingSystem track by $index" style="margin-left:4px; padding-bottom: -2px;">
-					<i style="font-size:110%;" class="fa fa-3x fa-apple" ng-show="operatingSystem == 'Mac'" tooltips tooltip-side="top" tooltip-content="Operating system:: {{ operatingSystem }}"></i>
-					<i style="font-size:110%;" class="fa fa-3x fa-linux" ng-show="operatingSystem == 'Linux'" tooltips tooltip-side="top" tooltip-content="Operating system:: {{ operatingSystem }}"></i>
-					<i style="font-size:110%;" class="fa fa-3x fa-windows" ng-show="operatingSystem == 'Windows'" tooltips tooltip-side="top" tooltip-content="Operating system:: {{ operatingSystem }}"></i>
+					<i class="fa-brands fa-apple fa-1x" ng-show="operatingSystem == 'Mac'" tooltips tooltip-side="top" tooltip-content="Operating system: {{ operatingSystem }}"></i>
+					<i class="fa-brands fa-linux fa-1x" ng-show="operatingSystem == 'Linux'" tooltips tooltip-side="top" tooltip-content="Operating system: {{ operatingSystem }}"></i>
+					<i class="fa-brands fa-windows fa-1x" ng-show="operatingSystem == 'Windows'" tooltips tooltip-side="top" tooltip-content="Operating system: {{ operatingSystem }}"></i>
 				</span>
 			</span>
 		</div>
