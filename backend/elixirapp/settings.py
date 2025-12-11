@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-import datetime
 import json
 
 # Prefix for environment variables settings.
@@ -69,11 +68,13 @@ INSTALLED_APPS = (
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.orcid',
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'django_extensions',
     'rest_framework_simplejwt',
-    'background_task'
+    'background_task',
+    'corsheaders'
 )
 
 
@@ -90,6 +91,7 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'elixirapp.urls'
@@ -122,6 +124,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SITE_ID = getenv('SITE_ID', 1, castf=int)
+
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -204,13 +207,9 @@ REST_FRAMEWORK = {
 
 # REST Auth
 REST_AUTH = {
-    'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
+    'USER_DETAILS_SERIALIZER': 'elixir.serializers.CustomUserDetailsSerializer',
     'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer',
-}
-
-# necessary for custom user validation
-REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'elixir.serializers.UserRegisterSerializer'
+    'REGISTER_SERIALIZER': 'elixir.serializers.UserRegisterSerializer',
 }
 
 OLD_PASSWORD_FIELD_ENABLED = True
@@ -218,7 +217,6 @@ OLD_PASSWORD_FIELD_ENABLED = True
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 ACCOUNT_ADAPTER = 'elixir.adapters.CustomDefaultAccountAdapter'
-ACCOUNT_EMAIL_REQUIRED = getenv('ACCOUNT_EMAIL_REQUIRED', True, castf=bool)
 ACCOUNT_USERNAME_REQUIRED = getenv(
     'ACCOUNT_USERNAME_REQUIRED',
     True,
@@ -234,6 +232,12 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = getenv(
     castf=bool,
 )
 
+SOCIALACCOUNT_ADAPTER = 'elixir.adapters.CustomSocialAccountAdapter'
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+
 URL_FRONT = getenv('URL_FRONT', 'http://localhost:8000/')
 
 DEPLOYMENT = getenv('DEPLOYMENT', 'dev')
@@ -246,6 +250,20 @@ GITHUB_ECOSYSTEM_ON = getenv('GITHUB_ECOSYSTEM_ON', False, castf=bool)
 
 ADMIN_EMAIL_LIST = getenv('ADMIN_EMAIL_LIST', [], castf=json.loads)
 
+SOCIALACCOUNT_PROVIDERS = {
+    'orcid': {
+        'BASE_DOMAIN': getenv('ORCID_BASE_DOMAIN', 'sandbox.orcid.org'),  # Use 'sandbox.orcid.org' for testing
+        'MEMBER_API': getenv('ORCID_MEMBER_API', False, castf=bool),  # Set to True for member API
+        'SCOPE': ['read-limited'],
+        'APP': {
+            'client_id': getenv('ORCID_CLIENT_ID', ''),
+            'secret': getenv('ORCID_CLIENT_SECRET', ''),
+        }
+    }
+}
+
+ORCID_CALLBACK_URL = getenv('ORCID_CALLBACK_URL', 'http://127.0.0.1/orcid/callback/')
+                        
 # settings specific to deployment
 try:
     from elixirapp.deployment_settings import *

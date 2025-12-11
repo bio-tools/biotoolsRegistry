@@ -13,8 +13,10 @@ Including another URLconf
 	1. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from dj_rest_auth.views import PasswordResetView, PasswordResetConfirmView
+from dj_rest_auth.registration.views import SocialAccountListView, SocialAccountDisconnectView
 from django.contrib import admin
 from django.urls import include, path, re_path
+from elixir import views
 
 urlpatterns = [
 	re_path(r'^admin/', admin.site.urls),
@@ -34,4 +36,10 @@ urlpatterns = [
 		 name='password_reset_confirm'),
 	path('accounts/', include('allauth.urls')),
 	path('', include('elixir.urls')),
+    
+	# Social auth
+    path('rest-auth/orcid/', views.OrcidLogin.as_view(), name='orcid_login'),
+    path('rest-auth/orcid/connect/', views.OrcidConnect.as_view(), name='orcid_connect'),
+    path('rest-auth/socialaccounts/', SocialAccountListView.as_view(), name='social_account_list'),
+    path('rest-auth/socialaccounts/<int:pk>/disconnect/', SocialAccountDisconnectView.as_view(), name='social_account_disconnect'),
 ]

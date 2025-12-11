@@ -1,5 +1,5 @@
 angular.module('elixir_front')
-.controller('ProfileController', ['$scope', '$state', 'djangoAuth', 'DisownToolService', 'User', '$uibModal', function($scope, $state, djangoAuth, DisownToolService, User, $uibModal) {
+.controller('ProfileController', ['$scope', '$state', 'djangoAuth', 'DisownToolService', 'User', '$uibModal', 'AppConfig', function($scope, $state, djangoAuth, DisownToolService, User, $uibModal, AppConfig) {
 	$scope.profile = {};
 	$scope.loading = true;
 	$scope.User = User;
@@ -28,4 +28,62 @@ angular.module('elixir_front')
             controller: 'ChangePasswordController'
         });
     };
+
+	$scope.openChangeEmailModal = function() {
+		var modalInstance = $uibModal.open({
+			templateUrl: 'components/profile/changeEmailModal.html',
+			controller: 'ChangeEmailController'
+		});
+		
+		modalInstance.result.then(function(updatedProfile) {
+			// Update the profile with new email
+			$scope.profile.email = updatedProfile.email;
+			$scope.profile.email_verified = updatedProfile.email_verified;
+		});
+	};
+
+    $scope.resendVerificationEmail = function() {
+		// If email ends with @biotools.local, do not attempt to resend
+		if ($scope.profile.email.endsWith('@biotools.local')) {
+			alert('Cannot send verification email to local test accounts.');
+			return;
+		}
+        djangoAuth.resendEmail($scope.profile.email)
+        .then(function(response) {
+            alert('Verification email sent successfully!');
+        }, function(error) {
+            alert('Failed to send verification email: ' + (error.data && error.data.message ? error.data.message : 'Please try again later.'));
+        });
+    };
+
+	$scope.orcidConnect = function() {
+        var client_id = AppConfig.ORCID_CLIENT_ID;
+		var redirect_uri = AppConfig.ORCID_REDIRECT_URI;
+		var orcid_base_url = AppConfig.ORCID_BASE_URL;
+
+		window.location.href = orcid_base_url + '/oauth/authorize?client_id=' + client_id + '&response_type=code&scope=/authenticate&redirect_uri=' + redirect_uri;
+	};
+
+	$scope.disconnectSocial = function(provider, id) {
+		if (!confirm("Are you sure you want to disconnect your " + provider + " account?")){
+			return;
+		}
+		djangoAuth.disconnectSocial(id)
+		.then(function(response) {
+			// Remove the disconnected account from the profile.socialAccounts array
+			$scope.profile.socialAccounts = $scope.profile.socialAccounts.filter(function(account) {
+				return account.id !== id;
+			});
+		}, function(error) {
+			alert("Failed to disconnect your " + provider + " account. Please try again later.");
+		});
+	};
+
+	// check if social accounts are connected
+	$scope.hasOrcidAccount = function() {
+		if (!$scope.profile.socialAccounts) return false;
+		return $scope.profile.socialAccounts.some(function(account) {
+			return account.provider === 'orcid';
+		});
+	};
 }]);

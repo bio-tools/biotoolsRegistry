@@ -220,11 +220,7 @@ angular.module('elixir_front')
 
 	// Call the API t retrieve and inject JSON-LD semantic annotations (Bioschemas tool profile)
 	$scope.software.$promise.then(function(data) {
-     		// console.log('Success: '+JSON.stringify(data));
-     		// console.log("calling API "+"/api/"+data.biotoolsID+"?format=jsonld");
 			$http.get("/api/"+data.biotoolsID+"?format=jsonld").then(function(response) {
-				// console.log(response.data);
-
 				var script = document.createElement('script');
 				script.type = 'application/ld+json';
 				script.innerHTML = JSON.stringify(response.data);

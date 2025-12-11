@@ -686,14 +686,11 @@ angular.module('elixir_front.controllers', [])
 		fetch(url)
 			.then(function(response) { return response.json(); })
 			.then(function(data) {
-				console.log("Europe PMC data fetched:", data);
 				if (data.resultList && data.resultList.result && data.resultList.result.length > 0) {
 					var rec = data.resultList.result[0];
-					console.log("Europe PMC record:", rec);
 					if (rec.doi) pub.doi = rec.doi;
 					if (rec.pmid) pub.pmid = rec.pmid;
 					if (rec.pmcid) pub.pmcid = rec.pmcid;
-					console.log("Updated publication:", pub);
 					$scope.$apply();
 				}
 			})
@@ -702,7 +699,6 @@ angular.module('elixir_front.controllers', [])
 
 	$scope.onPublicationIdChange = function(idType, value, index) {
     	if (value && value.trim() !== '') {
-        	console.log('Publication ID changed:', idType, value, 'at index:', index);
         	fetchEuropePMCData($scope.software.publication[index], idType, value.trim());
     	}
 	};
@@ -1470,7 +1466,44 @@ angular.module('elixir_front.controllers', [])
 
 
 }])
-.controller('LoginController', ['$scope', '$state', 'djangoAuth', '$rootScope',function($scope, $state, djangoAuth, $rootScope) {
+.controller('OrcidCallbackController', ['$scope', '$state', 'djangoAuth', '$location', 'OrcidAuth', function($scope, $state, djangoAuth, $location, OrcidAuth) {
+  	var code = $location.search().code;
+	const stateParams = $location.search().state;
+
+	const stateCheck = OrcidAuth.consumeState(stateParams);
+	if (!stateCheck.ok) {
+		$scope.loginErrors = "ORCID authentication failed: invalid state parameter";
+		return;
+	}
+
+	function goAfterAuth() {
+        if (stateCheck.payload && stateCheck.payload.name) {
+            $state.go(stateCheck.payload.name, stateCheck.payload.params || {});
+        } else {
+            $state.go('search');
+        }
+    }
+
+	// if user is authenticated call djangoAuth.orcidConnect
+	if (djangoAuth.authenticated) {
+		djangoAuth.orcidConnect(code)
+		.then(function () {
+			$state.go('profile');
+		}, function () {
+			$scope.loginErrors = "ORCID connection failed";
+		});
+	}
+	else {
+		djangoAuth.orcidLogin(code)
+		.then(function () {
+			goAfterAuth();
+		}, function () {
+			var error_description = $location.search().error_description;
+			$scope.loginErrors = error_description || "ORCID login failed";
+		});
+	}
+}])
+.controller('LoginController', ['$scope', '$state', 'djangoAuth', '$rootScope', 'OrcidAuth', function($scope, $state, djangoAuth, $rootScope, OrcidAuth) {
 	$scope.credentials = {};
 
 	$scope.loginButtonClick = function() {
@@ -1494,8 +1527,12 @@ angular.module('elixir_front.controllers', [])
 			delete $scope.loginErrors;
 		}
 	}, true);
+
+	$scope.orcidLoginButtonClick = function() {
+		OrcidAuth.start();
+	}
 }])
-.controller('SignupController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$timeout', function($scope, $state, djangoAuth, $rootScope, $timeout) {
+.controller('SignupController', ['$scope', '$state', 'djangoAuth', '$rootScope', '$timeout', 'OrcidAuth', function($scope, $state, djangoAuth, $rootScope, $timeout, OrcidAuth) {
 	$scope.credentials = {};
 	$scope.error_message = {};
 	$scope.error_message.username = '';
@@ -1552,6 +1589,10 @@ angular.module('elixir_front.controllers', [])
 				$scope.loading = false;
 			});
 		},100);
+	}
+
+	$scope.orcidSignupButtonClick = function() {
+		OrcidAuth.start();
 	}
 }])
 .controller('SignupVerifyEmailKeyController', ['$scope', '$state', '$stateParams', 'djangoAuth', function($scope, $state, $stateParams, djangoAuth) {

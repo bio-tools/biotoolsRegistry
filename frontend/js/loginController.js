@@ -5,14 +5,14 @@ angular.module('elixir_front.controllers').controller('LoginMangerController', [
 	vm.openLoginModal = function() {
 		$uibModal.open({
 			templateUrl: 'partials/modals/loginModal.html',
-			controller: ['$uibModalInstance', 'djangoAuth', '$rootScope', '$state', LoginModalController],
+			controller: ['$uibModalInstance', 'djangoAuth', '$rootScope', '$state', 'OrcidAuth', LoginModalController],
 			controllerAs: 'vm',
 			windowClass: 'login-modal-window'
 		});
 	};
 }]);
 
-function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state) {
+function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state, OrcidAuth) {
 	var vm = this;
 	vm.error = {};
 
@@ -56,5 +56,9 @@ function LoginModalController($uibModalInstance, djangoAuth, $rootScope, $state)
 	vm.forgotButtonPressed = function() {
 		$uibModalInstance.close();
 		$state.go('reset-password');
+	}
+
+	vm.orcidLoginPressed = function() {
+		OrcidAuth.start();
 	}
 }

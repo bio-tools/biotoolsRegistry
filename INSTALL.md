@@ -60,7 +60,8 @@ The above command will create and run the required containers:
 * `biotools-mysql`
 * `biotools-elasticsearch`
 * `biotools-backend` (depends on `biotools-mysql` and `biotools-elasticsearch`)
-* `biotools-frontend`(depends on `biotools-backend`) 
+* `biotools-frontend`(depends on `biotools-backend`)
+* `biotools-caddy`
 
 > **Note:** After running the `docker compose up` command, the containers will start and will output log messages which you can see in your terminal window. In order for the containers to keep running this window needs to stay open. You will need to open new terminal windows/tabs for other operations.
 
@@ -320,8 +321,8 @@ or
 
 `docker image rm <IMAGE_ID1> <IMAGE_ID2> <IMAGE_ID2>`
 
-
 (will not work if containers are running this image)
+
 
 #### Enter a container and run commands
 Any of the bio.tools runnning containers can provide a bash terminal to run commands inside the containers (similar to `docker exec`). Examples of the commands are:
@@ -361,7 +362,6 @@ docker-compose YAML config file
 `<git_project_root>/docker-compose.yml`
 
 
-
 #### Docker documentation:
 * [https://docs.docker.com/](https://docs.docker.com/)
 * [https://docs.docker.com/reference/](https://docs.docker.com/reference/)
@@ -370,11 +370,3 @@ docker-compose YAML config file
 * [https://docs.docker.com/config/pruning/](https://docs.docker.com/config/pruning/)
 * [https://docs.docker.com/compose/](https://docs.docker.com/compose/)
 * [https://hub.docker.com/](https://hub.docker.com/)
-
-
-
-
-
-
-
-

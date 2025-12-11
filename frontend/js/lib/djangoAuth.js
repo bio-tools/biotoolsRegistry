@@ -101,6 +101,50 @@ angular.module('angularDjangoRegistrationAuthApp')
 				$rootScope.$broadcast("djangoAuth.logged_in", data);
 			});
 		},
+		'orcidLogin': function(code){
+			// POST request at rest-auth/orcid/login/
+			var djangoAuth = this;
+			return this.request({
+				'method': "POST",
+				'url': "/orcid/",
+				'data': {
+					'code': code
+				}
+			}).then(function(data){
+				// Handle successful ORCID login
+				if(!djangoAuth.use_session){
+					$http.defaults.headers.common.Authorization = 'Token ' + data.key;
+					localStorage.token = data.key;
+				}
+				djangoAuth.authenticated = true;
+				$rootScope.$broadcast("djangoAuth.logged_in", data);
+				return data;
+			}, function(error) {
+				console.error("ORCID login failed:", error);
+			});
+		},
+		'orcidConnect': function(code){ //TODO
+			var djangoAuth = this;
+			return this.request({
+				'method': "POST",
+				'url': "/orcid/connect/",
+				'data': {
+					'code': code
+				}
+			}).then(function(data){
+				// Handle successful ORCID connection
+				$rootScope.$broadcast("djangoAuth.orcid_connected", data);
+				return data;
+			}, function(error) {
+				console.error("ORCID connection failed:", error);
+			});
+		},
+		'disconnectSocial': function(id){
+			return this.request({
+				'method': "POST",
+				'url': "/socialaccounts/"+id+"/disconnect/"
+			});
+		},
 		'logout': function(){
 			var djangoAuth = this;
 			return this.request({
@@ -151,6 +195,13 @@ angular.module('angularDjangoRegistrationAuthApp')
 				'method': "POST",
 				'url': "/registration/verify-email/",
 				'data': {'key': key} 
+			});            
+		},
+		'resendEmail': function(email){
+			return this.request({
+				'method': "POST",
+				'url': "/registration/resend-email/",
+				'data': {'email': email} 
 			});            
 		},
 		'confirmReset': function(uid,token,password1,password2){

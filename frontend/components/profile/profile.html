@@ -23,16 +23,50 @@
 								<tr>
 									<th>Username</th>
 									<td>{{profile.username}}</td>
+									<td></td>
 								</tr>
 								<tr>
 									<th>Email</th>
 									<td>{{profile.email}}</td>
+									<td>{{profile.email_verified ? 'Verified' : 'Not verified'}} 
+										<button class="btn btn-default btn-sm" ng-if="!profile.email_verified && profile.email" ng-click="resendVerificationEmail()">Resend email</button>
+									</td>
 								</tr>
 							</tbody>
 						</table>
 						<div class="panel-footer">
 							<button class="btn btn-primary" ng-click="openChangePasswordModal()">Change Password</button>
+							<button class="btn btn-primary" ng-click="openChangeEmailModal()">Change Email</button>
+							<button class="btn btn-primary" ng-click="orcidConnect()" ng-if="!hasOrcidAccount()" style="background-color: green;">Connect to ORCID</button>
 						</div>
+					</div>
+
+					<!-- Connected Accounts -->
+					<div class="panel panel-default" ng-if="profile.socialAccounts && profile.socialAccounts.length > 0">
+						<div class="panel-heading">
+							<h3 class="panel-title">Connected Accounts</h3>
+						</div>
+						<table class="table table-condensed table-hover">
+							<tbody>
+								<tr ng-repeat="account in profile.socialAccounts" ng-if="account.provider == 'orcid'">
+									<th>ORCID</th>
+									<td>
+										<div><strong>ORCID iD:</strong> {{account.uid}}</div>
+										<div ng-if="account.extra_data.name"><strong>Name:</strong> {{account.extra_data.name}}</div>
+										<div ng-if="account.extra_data.given_names || account.extra_data.family_name">
+											<strong>Full Name:</strong> {{account.extra_data.given_names}} {{account.extra_data.family_name}}
+										</div>
+										<div ng-if="account.uid">
+											<strong>Profile:</strong> 
+											<a href="https://orcid.org/{{account.uid}}" target="_blank">https://orcid.org/{{account.uid}}</a>
+										</div>
+									</td>
+									<td>
+										<button class="btn btn-danger btn-sm" ng-click="disconnectSocial(account.provider, account.id)">Disconnect</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					<!-- My resources -->
 					<div class="panel panel-default">

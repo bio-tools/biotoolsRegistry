@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from elixir.permissions import IsOwnerOrReadOnly, HasEditPermissionToEditResourceOrReadOnly, CanConcludeResourceRequest, IsStaffOrReadOnly
 from elixir.models import *
 from elixir.serializers import *
+from django.utils import timezone
 
 class IssueView(APIView):
 	"""
@@ -57,7 +58,7 @@ class IssueView(APIView):
 			i.issue_state = i_state
 			i.comment = payload.get('comment', None)
 			i.resolution_actor = str(request.user)
-			i.resolution_date = datetime.datetime.now()
+			i.resolution_date = timezone.now()
 			i.save()
 			
 			return Response(IssueSerializer(instance=i, many=False).data, status=status.HTTP_200_OK)
