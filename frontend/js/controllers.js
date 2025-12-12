@@ -1591,7 +1591,13 @@ angular
             $scope.elixirCommunityOptions = [
                 { value: '3D-BioInfo', text: '3D-BioInfo', link: '3d-bioinfo' },
                 { value: 'Biodiversity', text: 'Biodiversity', link: 'biodiversity' },
+                { value: 'Cancer Data', text: 'Cancer Data', link: 'cancer-data' },
                 { value: 'Federated Human Data', text: 'Federated Human Data', link: 'human-data' },
+                {
+                    value: 'Food and Nutrition',
+                    text: 'Food and Nutrition',
+                    link: 'food-and-nutrition',
+                },
                 { value: 'Galaxy', text: 'Galaxy', link: 'galaxy' },
                 {
                     value: 'Human Copy Number Variation',
@@ -1614,10 +1620,22 @@ angular
                     text: 'Microbial Biotechnology',
                     link: 'microbial-biotechnology',
                 },
+                { value: 'Microbiome', text: 'Microbiome', link: 'microbiome' },
                 { value: 'Plant Sciences', text: 'Plant Sciences', link: 'plant-sciences' },
                 { value: 'Proteomics', text: 'Proteomics', link: 'proteomics' },
                 { value: 'Rare Diseases', text: 'Rare Diseases', link: 'rare-diseases' },
+                {
+                    value: 'Research Data Management',
+                    text: 'Research Data Management',
+                    link: 'research-data-management',
+                },
+                {
+                    value: 'Single-cell Omics',
+                    text: 'Single-cell Omics',
+                    link: 'single-cell-omics',
+                },
                 { value: 'Systems Biology', text: 'Systems Biology', link: 'systems-biology' },
+                { value: 'Toxicology', text: 'Toxicology', link: 'toxicology' },
             ];
 
             $scope.otherIdTypeOptions = [

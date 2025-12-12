@@ -242,17 +242,23 @@ class ElixirCommunitySerializer(serializers.ModelSerializer):
             [
                 "3D-BioInfo",
                 "Biodiversity",
+                "Cancer Data",
                 "Federated Human Data",
+                "Food and Nutrition",
                 "Galaxy",
                 "Human Copy Number Variation",
                 "Intrinsically Disordered Proteins",
                 "Marine Metagenomics",
                 "Metabolomics",
                 "Microbial Biotechnology",
+                "Microbiome",
                 "Plant Sciences",
                 "Proteomics",
                 "Rare Diseases",
+                "Research Data Management",
+                "Single-cell Omics",
                 "Systems Biology",
+                "Toxicology",
             ]
         )
         attrs = enum(attrs)
