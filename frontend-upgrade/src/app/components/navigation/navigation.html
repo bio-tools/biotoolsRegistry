@@ -10,10 +10,10 @@
     }
     -->
     
-    <a mat-button routerLink="/">Home</a>
-    <a mat-button routerLink="/domains">Domains</a>
-    <a mat-button routerLink="/communities">Communities</a>
-    <a mat-button routerLink="/about">About</a>
+    <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+    <a mat-button routerLink="/domains" routerLinkActive="active">Domains</a>
+    <a mat-button routerLink="/communities" routerLinkActive="active">Communities</a>
+    <a mat-button routerLink="/about" routerLinkActive="active">About</a>
     <a mat-icon-button routerLink="/t">
         <mat-icon>search</mat-icon>
     </a>

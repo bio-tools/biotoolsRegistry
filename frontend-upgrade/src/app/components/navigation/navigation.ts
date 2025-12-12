@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { SearchBar } from '../search-bar/search-bar';
 
 @Component({
@@ -11,7 +11,8 @@ import { SearchBar } from '../search-bar/search-bar';
     MatButton,
     MatIcon,
     MatIconButton,
-    RouterLink
+    RouterLink,
+    RouterLinkActive
   ],
   templateUrl: './navigation.html',
   styleUrl: './navigation.scss'

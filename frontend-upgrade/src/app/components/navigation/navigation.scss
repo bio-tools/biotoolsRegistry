@@ -9,6 +9,20 @@
   z-index: 1000;
   height: 64px;
 
+  a { 
+    color: white;
+
+    &:hover {
+      color: orange;
+    } 
+
+    &.active {
+      text-decoration: underline;
+      text-decoration-color: orange;
+      text-underline-offset: 4px;
+    }
+  }
+
   .content {
     display: flex;
     align-items: center;
