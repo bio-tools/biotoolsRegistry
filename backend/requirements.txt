@@ -28,5 +28,5 @@ requests-oauthlib==2.0.0
 rstr==3.2.2
 six==1.17.0
 tzdata==2025.2
-urllib3==1.26.20
+urllib3==2.6.3
 
