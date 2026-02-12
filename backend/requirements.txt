@@ -1,6 +1,6 @@
 boltons==25
 defusedxml==0.6.0
-Django==5.2.4
+Django==5.2.11
 django-allauth==65.13.0
 django-background-tasks==1.2.8
 django-compat==1.0.15
@@ -16,7 +16,7 @@ jsonfield==3.1.0
 lxml==5.3.0
 mysqlclient==2.0.1
 oauthlib==3.3.1
-Pillow==11.3.0
+Pillow==12.1.1
 PyGithub==1.59.0
 pyparsing==3.2.3
 python-dateutil==2.9.0
