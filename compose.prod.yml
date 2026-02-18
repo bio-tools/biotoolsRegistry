@@ -2,11 +2,10 @@
 # - mysql
 # - elasticsearch
 # - backend: depends on mysql and elasticsearch
+# - taskrunner: process background tasks
 # - frontend: depends on backend
-# - caddy: reverse proxy for backend and frontend
+# - rendertron
 
-# This file is meant to aid local development and testing. It *must not* be
-# used for production deployment.
 
 services:
 
@@ -40,57 +39,66 @@ services:
       - "9300:9300"
     networks:
       - net
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -fs http://localhost:9200 || exit 1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
   backend:
     container_name: biotools-backend
     image: biotools/backend:latest
     build:
       context: ./backend
-      target: dev
     environment:
       - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
-      - BIOTOOLS_URL_FRONT=http://localhost/
+      - BIOTOOLS_URL_FRONT=https://bio.tools/
       - BIOTOOLS_MYSQL_DB=elixir
       - BIOTOOLS_MYSQL_HOST=biotools-mysql
       - BIOTOOLS_MYSQL_PASSWORD=123
       - BIOTOOLS_MYSQL_USER=elixir
-      - BIOTOOLS_EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
     ports:
-      - "8000:8000"
+      - "80:80"
     networks:
       - net
     depends_on:
-      mysql:
-        condition: service_started
-      elasticsearch:
-        condition: service_healthy
+      - mysql
+      - elasticsearch
     links:
       - mysql
       - elasticsearch
     volumes:
-      - ./backend:/elixir/application/backend:consistent
-      - ./frontend:/elixir/application/frontend
-      - backend_data:/elixir/application/backend/data # to avoid permission conflicts
+      - backend_data:/elixir/application/backend/data
 
-  caddy:
-    image: caddy:2
-    container_name: biotools-caddy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./backend/Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./frontend:/elixir/application/frontend:ro
-      - caddy_data:/data
-      - caddy_config:/config
+  taskrunner:
+    container_name: biotools-taskrunner
+    image: biotools/backend:latest
+    build:
+      context: ./backend
+      target: dev
+    environment:
+      - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
+      - BIOTOOLS_MYSQL_DB=elixir
+      - BIOTOOLS_MYSQL_HOST=biotools-mysql
+      - BIOTOOLS_MYSQL_PASSWORD=123
+      - BIOTOOLS_MYSQL_USER=elixir
+    networks:
+      - net
+    depends_on:
+      - mysql
+      - elasticsearch
+    command: python manage.py process_tasks
+
+  frontend:
+    container_name: biotools-frontend
+    image: biotools/frontend:latest
+    build:
+      context: ./frontend
+    networks:
+      - net
     depends_on:
       - backend
-      - frontend
+
+  rendertron:
+    image: dockette/rendertron
+    container_name: biotools-rendertron
+    ports:
+      - "3000:3000"
     networks:
       - net
     restart: unless-stopped
@@ -98,13 +106,8 @@ services:
 networks:
   net:
     name: biotools-net
-    driver: bridge
 
 volumes:
   data-mysql:
   data-elasticsearch:
-  biotools_node_modules:
-  biotools_bower_components:
-  caddy_data:
-  caddy_config:
   backend_data:
