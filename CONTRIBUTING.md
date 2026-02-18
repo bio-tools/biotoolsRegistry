@@ -2,7 +2,7 @@
 
 
 # Code repo / branch structure
-The repo structure is heavily inspired by [branching standards & conventions](https://gist.github.com/digitaljhelms/4287848) and [GitFlow](https://datasift.github.io/gitflow/IntroducingGitFlow.html).  There are two main (permanent) branches ("develop" and "master"), with other supporting (temporary) branches ("features/<id>", "bugfixes/<id>" and "hotfixes/<id>") each with a specific purpose. Strict rules mandate which branches may be originating branches and which branches must be merge targets.
+The repo structure is heavily inspired by [branching standards & conventions](https://gist.github.com/digitaljhelms/4287848) and [GitFlow](https://datasift.github.io/gitflow/IntroducingGitFlow.html).  There are two main (permanent) branches ("develop" and "main"), with other supporting (temporary) branches ("feature/<id>", "bugfix/<id>" and "hotfix/<id>") each with a specific purpose. Strict rules mandate which branches may be originating branches and which branches must be merge targets.
 
 
 Instance     | Branch         | Comment
@@ -11,19 +11,20 @@ Instance     | Branch         | Comment
 "development"        | develop         | Accepts merges from "features", "bugfixes" and "hotfixes"
 "features"   | feature/\<id\> | Always branch off HEAD of "develop"
 "bugfixes"   | bugfix/\<id\>  | Always branch off HEAD of "develop"
-"hotfixes"   | hotfix/\<id\>  | Always branch off "master"
+"hotfixes"   | hotfix/\<id\>  | Always branch off "main"
 
 
 - **"development" branch** (`origin/develop`) (code deployed on https://bio-tools-dev.sdu.dk)
   - the default / base branch of the repo, against which all pull requests and code pushes are automatically made
   - holds changes for the next release
   - developers will branch from / merge to it
-  - accepts pull requests (see [Community Development Guidelines](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-development-guidelines))
+  - accepts pull requests (see [Community Development Guidelines](https://github.com/bio-tools/biotoolsRegistry/blob/main/CONTRIBUTING.md#community-development-guidelines))
 
-- **"master"** branch (`origin/master`) (code deployed on https://bio.tools)
+- **"main"** branch (`origin/main`) (code deployed on https://bio.tools)
   - latest code deployed to (and allowing bug fixing of) production system
   - not normally interacted with (other than hot fixes)
-  - periodically updated from "develop" branch (see [Release Process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
+  - periodically updated from "develop" branch (see [Release Process](https://github.com/bio-tools/biotoolsRegistry/blob/main/contribution.md#release-process)
+
 - **"feature"**, **"bug"** and **"hotfix"** branches
   - **"feature"** branches are created for significant new features / enhancements (*i.e.* whose development may take longer than a single deployment)
   - **"bug"** branches are created to address - in the next deployment - bugs found on the live site (a bug branch typically lasts one deployment cycle only)
@@ -37,7 +38,7 @@ Instance     | Branch         | Comment
 
 - **"hotfix"** branches
   - created when there's a need to immediately fix a problem with the production system (changes can be pushed any time, outside of scheduled deployment)
-  - always branch from "master" (and tag the branch), and merge back into both "master" and "develop"
+  - always branch from "main" (and tag the branch), and merge back into both "main" and "develop"
 
     - development of "develop" can continue while the hotfix is being addressed
     - tagged stable branch still represents what is in production.
@@ -54,22 +55,22 @@ The Danish ELIXIR node provides stable funding for bio.tools as part of the ELIX
 
 - **Release Manager**
 
-  - can push changes to "master" branch (merging from "develop" or "hotfixes")
+  - can push changes to "main" branch (merging from "develop" or "hotfixes")
   - responsible for:
-    - building the "master" (https://bio.tools) and "develop" (https://bio-tools-dev.sdu.dk) deployments, as per the [release process](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#release-process)
+    - building the "main" (https://bio.tools) and "develop" (https://bio-tools-dev.sdu.dk) deployments, as per the [release process](https://github.com/bio-tools/biotoolsRegistry/blob/main/CONTRIBUTING.md#release-process)
 
 
 - **Community Leader** responsibilities:
 
   - announce changes to "develop" deployment, support the projects dependant on bio.tools in migrating them to the new version
-  - announce planned and actual changes to "master" deployment (esp. any potentially breaking changes to API) via all available channels
-  - maintain the issue tracker, creating, [labelling](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#issue-tracking--labelling) and closing issues as required
-  - oversee (and promote where necessary) the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct)
+  - announce planned and actual changes to "main" deployment (esp. any potentially breaking changes to API) via all available channels
+  - maintain the issue tracker, creating, [labelling](https://github.com/bio-tools/biotoolsRegistry/blob/main/CONTRIBUTING.md#issue-tracking--labelling) and closing issues as required
+  - oversee (and promote where necessary) the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/main/CONTRIBUTING.md#community-code-of-conduct)
 
 *All developers* must:
 
   - ensure proposed new features or other change are logged in the [issue tracker](https://github.com/bio-tools/biotoolsregistry/issues) and discussed, before coding
-  - follow the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/master/contribution.md#community-code-of-conduct)
+  - follow the [code of conduct](https://github.com/bio-tools/biotoolsRegistry/blob/main/CONTRIBUTING.md#community-code-of-conduct)
 
 
 # Issue tracking & labelling
