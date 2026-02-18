@@ -77,6 +77,20 @@ services:
       - ./frontend:/elixir/application/frontend
       - backend_data:/elixir/application/backend/data # to avoid permission conflicts
 
+  frontend:
+    container_name: biotools-frontend
+    image: biotools/frontend:latest
+    build:
+      context: ./frontend
+    networks:
+      - net
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/home/biotools/frontend:consistent
+      - biotools_node_modules:/home/biotools/frontend/node_modules
+      - biotools_bower_components:/home/biotools/frontend/bower_components
+
   caddy:
     image: caddy:2
     container_name: biotools-caddy
