@@ -212,6 +212,8 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'bio.tools API',
     'DESCRIPTION': 'bio.tools is a registry of software tools and databases for life sciences',
     'VERSION': '1.0.0',
+    'SCHEMA_PATH_PREFIX': '/api',
+    'SWAGGER_UI_FAVICON_HREF': '/img/favicon.ico',
 }
 
 # REST Auth
