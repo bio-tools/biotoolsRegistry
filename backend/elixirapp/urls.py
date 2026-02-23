@@ -17,15 +17,14 @@ from dj_rest_auth.registration.views import SocialAccountListView, SocialAccount
 from django.contrib import admin
 from django.urls import include, path, re_path
 from elixir import views
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
 	re_path(r'^admin/', admin.site.urls),
-	# url(r'^', include('django.contrib.auth.urls')),
-	# url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-	# url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
 	path('rest-auth/', include('dj_rest_auth.urls')),
 	path('rest-auth/registration/',
 		 include('dj_rest_auth.registration.urls')),
+
 	# Password reset
 	path('rest-auth/password/reset/',
 		 PasswordResetView.as_view(),
@@ -35,6 +34,12 @@ urlpatterns = [
 		 PasswordResetConfirmView.as_view(),
 		 name='password_reset_confirm'),
 	path('accounts/', include('allauth.urls')),
+	
+	# API Documentation
+	path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+	path('api/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+	path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+	
 	path('', include('elixir.urls')),
     
 	# Social auth
