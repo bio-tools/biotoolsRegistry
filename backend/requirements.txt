@@ -1,7 +1,7 @@
 boltons==25
 defusedxml==0.6.0
 Django==5.2.11
-django-allauth==65.13.0
+django-allauth==65.14.3
 django-background-tasks==1.2.8
 django-compat==1.0.15
 django-cors-headers==4.9.0
@@ -10,7 +10,7 @@ djangorestframework==3.15.2
 djangorestframework-xml==2.0.0
 djangorestframework-yaml==2.0.0
 djangorestframework-simplejwt==5.4.0
-dj-rest-auth==7.0.1
+dj-rest-auth==7.1.1
 drf-spectacular==0.29.0
 elasticsearch==7.12.1
 jsonfield==3.1.0

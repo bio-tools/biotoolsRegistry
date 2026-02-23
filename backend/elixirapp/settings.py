@@ -228,15 +228,8 @@ OLD_PASSWORD_FIELD_ENABLED = True
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 ACCOUNT_ADAPTER = 'elixir.adapters.CustomDefaultAccountAdapter'
-ACCOUNT_USERNAME_REQUIRED = getenv(
-    'ACCOUNT_USERNAME_REQUIRED',
-    True,
-    castf=bool,
-)
-ACCOUNT_AUTHENTICATION_METHOD = getenv(
-    'ACCOUNT_AUTHENTICATION_METHOD',
-    'username_email'
-)
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+ACCOUNT_SIGNUP_FIELDS = ['email', 'username*', 'password1*', 'password2*']
 ACCOUNT_CONFIRM_EMAIL_ON_GET = getenv(
     'ACCOUNT_CONFIRM_EMAIL_ON_GET',
     True,
