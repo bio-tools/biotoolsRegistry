@@ -11,7 +11,7 @@ djangorestframework-xml==2.0.0
 djangorestframework-yaml==2.0.0
 djangorestframework-simplejwt==5.4.0
 dj-rest-auth==7.0.1
-drf-spectacular==0.27.2
+drf-spectacular==0.29.0
 elasticsearch==7.12.1
 jsonfield==3.1.0
 lxml==5.3.0
@@ -30,4 +30,3 @@ rstr==3.2.2
 six==1.17.0
 tzdata==2025.2
 urllib3==1.26.20
-
