@@ -41,7 +41,7 @@
 										<td>{{ typeDescription(entry.type) }}</td>
 										<td>{{ entry.username }}</td>
 										<td>{{ entry.email }}</td>
-										<td>{{ entry.orcid }}</td>
+										<td><a href="https://orcid.org/{{entry.orcid}}" target="_blank">{{entry.orcid}}</a></td>
 										<td>
 											<div ng-if="entry.processing">
 												<i class="fa fa-circle-o-notch fa-spin fa-1x fa-fw"></i> Processing...
