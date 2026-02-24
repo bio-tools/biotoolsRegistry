@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from allauth.socialaccount.models import SocialAccount
 from elixir.models import *
 from elixir.validators import *
 from elixir.request_handling import ResourceRequestHandler
@@ -9,11 +10,7 @@ class ResourceRequestSerializer(serializers.ModelSerializer):
         allow_blank=False, max_length=25, min_length=1, source="user.username"
     )
     email = serializers.EmailField(source="user.email")
-    orcid = serializers.CharField(
-        allow_blank=True,
-        max_length=25,
-        source="user.socialAccounts.filter(provider='orcid').get('uid', '')",
-    )
+    orcid = serializers.SerializerMethodField()
     resourceId = serializers.CharField(
         allow_blank=False, min_length=1, source="resource.biotoolsID"
     )
@@ -30,6 +27,14 @@ class ResourceRequestSerializer(serializers.ModelSerializer):
             "requestId",
             "resourceId",
         )
+
+    def get_orcid(self, obj):
+        """Get ORCID from the user's social accounts"""
+        try:
+            orcid_account = SocialAccount.objects.get(user=obj.user, provider='orcid')
+            return orcid_account.uid
+        except SocialAccount.DoesNotExist:
+            return ''
 
     def create(self, validated_data):
         request = ResourceRequest.objects.create()
