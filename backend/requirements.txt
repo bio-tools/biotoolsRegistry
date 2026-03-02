@@ -1,7 +1,7 @@
 boltons==25
 defusedxml==0.6.0
-Django==5.2.4
-django-allauth==65.3.1
+Django==5.2.11
+django-allauth==65.14.3
 django-background-tasks==1.2.8
 django-compat==1.0.15
 django-cors-headers==4.9.0
@@ -10,13 +10,14 @@ djangorestframework==3.15.2
 djangorestframework-xml==2.0.0
 djangorestframework-yaml==2.0.0
 djangorestframework-simplejwt==5.4.0
-dj-rest-auth==7.0.1
+dj-rest-auth==7.1.1
+drf-spectacular==0.29.0
 elasticsearch==7.12.1
 jsonfield==3.1.0
 lxml==5.3.0
 mysqlclient==2.0.1
 oauthlib==3.3.1
-Pillow==11.3.0
+Pillow==12.1.1
 PyGithub==1.59.0
 pyparsing==3.2.3
 python-dateutil==2.9.0
@@ -29,4 +30,3 @@ rstr==3.2.2
 six==1.17.0
 tzdata==2025.2
 urllib3==1.26.20
-

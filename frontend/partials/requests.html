@@ -31,6 +31,7 @@
 										<th>Request type</th>
 										<th>Requested by</th>
 										<th>Email</th>
+										<th>ORCID</th>
 										<th style="width: 120px;">Action</th>
 									</tr>
 								</thead>
@@ -40,8 +41,9 @@
 										<td>{{ typeDescription(entry.type) }}</td>
 										<td>{{ entry.username }}</td>
 										<td>{{ entry.email }}</td>
+										<td><a href="https://orcid.org/{{entry.orcid}}" target="_blank">{{entry.orcid}}</a></td>
 										<td>
-											<div ng-if="entry.processing"> 
+											<div ng-if="entry.processing">
 												<i class="fa fa-circle-o-notch fa-spin fa-1x fa-fw"></i> Processing...
 											</div>
 											<div ng-if="!entry.processing">
@@ -91,7 +93,7 @@
 									</tr>
 								</tbody>
 							</table>
-						</div> 
+						</div>
 					</div>
 				</div>
 			</div>

@@ -74,7 +74,8 @@ INSTALLED_APPS = (
     'django_extensions',
     'rest_framework_simplejwt',
     'background_task',
-    'corsheaders'
+    'corsheaders',
+    'drf_spectacular',
 )
 
 
@@ -202,7 +203,17 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': getenv('PAGE_SIZE', 50, castf=int),
-    'NON_FIELD_ERRORS_KEY': 'general_errors'
+    'NON_FIELD_ERRORS_KEY': 'general_errors',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# Spectacular settings for API docs
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'bio.tools API',
+    'DESCRIPTION': 'bio.tools is a registry of software tools and databases for life sciences',
+    'VERSION': '1.0.0',
+    'SCHEMA_PATH_PREFIX': '/api',
+    'SWAGGER_UI_FAVICON_HREF': '/img/favicon.ico',
 }
 
 # REST Auth
@@ -217,15 +228,8 @@ OLD_PASSWORD_FIELD_ENABLED = True
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 ACCOUNT_ADAPTER = 'elixir.adapters.CustomDefaultAccountAdapter'
-ACCOUNT_USERNAME_REQUIRED = getenv(
-    'ACCOUNT_USERNAME_REQUIRED',
-    True,
-    castf=bool,
-)
-ACCOUNT_AUTHENTICATION_METHOD = getenv(
-    'ACCOUNT_AUTHENTICATION_METHOD',
-    'username_email'
-)
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+ACCOUNT_SIGNUP_FIELDS = ['email', 'username*', 'password1*', 'password2*']
 ACCOUNT_CONFIRM_EMAIL_ON_GET = getenv(
     'ACCOUNT_CONFIRM_EMAIL_ON_GET',
     True,
@@ -242,7 +246,7 @@ URL_FRONT = getenv('URL_FRONT', 'http://localhost:8000/')
 
 DEPLOYMENT = getenv('DEPLOYMENT', 'dev')
 
-RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate', 'f', 'function', 'o', 'ontology', 'used-terms', 'stats', 'env', 'sitemap.xml', 'd', 'domain', 'request', 'tool-list', 'w', 'register', 'edit-subdomain', 'subdomain', 'login', 'signup', 'reset-password', 'profile', 'requests', 'workflows', '404', 'documentation', 'about', 'schema', 'governance', 'roadmap', 'events', 'mail', 'faq', 'apidoc', 'changelog', 'helpdesk', 'projects']
+RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate', 'f', 'function', 'o', 'ontology', 'used-terms', 'stats', 'env', 'sitemap.xml', 'd', 'domain', 'request', 'tool-list', 'w', 'register', 'edit-subdomain', 'subdomain', 'login', 'signup', 'reset-password', 'profile', 'requests', 'workflows', '404', 'documentation', 'about', 'schema', 'governance', 'roadmap', 'events', 'mail', 'faq', 'apidoc', 'changelog', 'helpdesk', 'projects', 'redoc']
 
 
 # Settings for Github Ecosystem
