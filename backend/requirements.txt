@@ -1,6 +1,6 @@
 boltons==25
 defusedxml==0.6.0
-Django==5.2.11
+Django==5.2.12
 django-allauth==65.14.3
 django-background-tasks==1.2.8
 django-compat==1.0.15
