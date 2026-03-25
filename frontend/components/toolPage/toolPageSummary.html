@@ -36,19 +36,6 @@
     <span tooltips tooltip-content="Unique tool ID" class="biotools-curie"
         >(biotools:{{software.biotoolsID}})</span
     >
-    <span
-        ><a
-            class="pill-tag-verified"
-            tooltips
-            tooltip-content="This tool ID has been verified by a curator."
-            ng-if="software.validated"
-            href="https://biotools.readthedocs.io/en/latest/what_is_biotools.html#bio-tools-tool-identifiers"
-            target="_blank"
-            ><i class="fa fa-thumbs-up"></i> ID Verified</a
-        ></span
-    >
-
-    <!--<div data-id="{{ software.biotoolsID | lowercase }}" data-widget-type="widget" data-widget-subtypes="widget" data-widget-tooltip-position="left" data-widget-size="64" class="opeb pull-right" style="width: 64px; height: 64px; margin-right: 10px;"></div>-->
 
     <div
         data-widget-tooltip-position="left"
@@ -72,12 +59,6 @@
 <p style="margin-top: -0.5em" ng-show="software.homepage" class="pill-text">
     <a href="{{ ::software.homepage }}" target="_blank" style="font-size: 1.2em"
         >{{ ::software.homepage }}</a
-    >
-    <span class="pill-tag-error-small" ng-if="software.homepage_status == 1"
-        ><i class="fa fa-chain-broken" aria-hidden="true"></i> Temporarily unavailable</span
-    >
-    <span class="pill-tag-error-small" ng-if="software.homepage_status == 2"
-        ><i class="fa fa-chain-broken" aria-hidden="true"></i> Permanently unavailable</span
     >
 </p>
 <!-- Version list -->
