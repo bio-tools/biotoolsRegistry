@@ -118,7 +118,7 @@ class StatsInfo:
 		from elixir.model.resource_model.toolType import ToolType
 		tooltype_qs = ToolType.objects.filter(resource__visibility=1, additionDate__lt=upperDateLimit).values('name').annotate(count=Count('name'))
 		tooltype_qs = sorted(tooltype_qs, key=lambda t: t['count'], reverse=True)
-		return [{"toolType": t["name"], "count": t["count"]} for t in tooltype_qs if t["toolType"]]
+		return [{"toolType": t["name"], "count": t["count"]} for t in tooltype_qs if t["name"]]
 
 	def totalEntries(self, upperDateLimit=datetime.today()):
 		return Resource.objects.filter(visibility=1, additionDate__lt=upperDateLimit).count()
