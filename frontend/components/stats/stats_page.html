@@ -295,6 +295,23 @@
 		</div>
 	</div>
 </div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Tool Types</h3>
+  </div>
+  <div class="panel-body">
+    <table class="table">
+      <tr>
+        <th>Tool Type</th>
+        <th>Number of entries</th>
+      </tr>
+      <tr ng-repeat="toolTypeInfo in ::statsDataSource.statsData.toolTypeCounts">
+        <td>{{::toolTypeInfo.toolType}}</td>
+        <td>{{::toolTypeInfo.count}}</td>
+      </tr>
+    </table>
+  </div>
+</div>
 <!-- Number of affiliations -->
 <!-- <div class="panel panel-default">
 	<div class="panel-body">
