@@ -31,6 +31,7 @@ class StatsData(models.Model):
     contactAnnotationCount = models.IntegerField(default=0)
     homepageAnnotationCount = models.IntegerField(default=0)
     publicationAnnotationCount = models.IntegerField(default=0)
+    toolTypeCounts = JSONField(null=True, blank=True)
     
     def save(self, *args, **kwargs):
         if not self.id:
