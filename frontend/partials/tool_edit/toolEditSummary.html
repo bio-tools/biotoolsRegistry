@@ -27,7 +27,6 @@
 						bo-text="error"></label>
 				</div>
 			</div>
-
 			<!-- 	biotoolsID	 -->
 			<div class="form-group" ng-class="{'has-error': registrationErrorPayload.biotoolsID}" ng-if="controller == 'create'">
 				<label class="col-sm-3 control-label" style="position: relative;">
@@ -54,40 +53,6 @@
 					<a class="edit-link" href="">Edit</a>
 				</div>
 			</div>
-
-
-			<!--
-			<div class="form-group" ng-class="{'has-error': registrationErrorPayload.id}">
-				<label class="col-sm-3 control-label" style="position: relative;">
-					<span tooltips tooltip-side="right" tooltip-content="{{Attribute.description.id.description}}">ID</span>
-					<span style="color:#ff0000;position: absolute; right: 5px;"><b>*</b></span>
-				</label>
-				<div class="col-sm-9">
-					<input ng-model="software.id" ng-if="controller == 'update' || newVersion" type="text" class="form-control" placeholder="ID" ng-disabled="true" validate-edit-resource-field>
-					<div class="input-group" ng-if="controller == 'create' && !newVersion">
-						<input ng-model="software.id" name="identifier" ng-change="makeIdURLSafe(software.id)" type="text" class="form-control" placeholder="ID" ng-disabled="autoUpdateId" validate-edit-resource-field>
-						<span class="input-group-btn">
-							<button class="btn btn-default" type="button" ng-click="editIdToggleButtonClick()">
-								<span ng-show="autoUpdateId">Edit</span><i ng-show="!autoUpdateId" class="fa fa-times remove-icon-button"></i>
-							</button>
-						</span>
-					</div>
-					<label class="help-block" ng-repeat="error in form.summaryForm.identifier.errorMessages" bo-text="error"></label>
-					<label ng-show="!registrationErrorPayload.id" class="help-block">Unique identifier of the resource - <a href="" tooltips tooltip-side="bottom" tooltip-content="ID is used in the URL. Once set it can not be changed." tooltip-show-trigger="mousedown" tooltip-hide-trigger="mousedown">more info</a></label>
-				</div>
-			</div> -->
-			<!-- Latest -->
-			<!-- 			<div class="form-group">
-				<label class="col-sm-3 control-label" style="position: relative;"><span>Latest</span></label>
-				<div class="col-sm-9">
-					<select class="form-control select-btn-group" ng-options="item.value as item.text for item in latestOptions" ng-model="software.latest" name="latest" validate-edit-resource-field>
-					</select>
-					<label class="help-block" ng-repeat="error in form.summaryForm.latest.errorMessages" bo-text="error"></label>
-					<label class="help-block">Is this the latest version?</label>
-				</div>
-				<label class="help-block" ng-repeat="error in form.supplementaryForm.latest.errorMessages" bo-text="error"></label>
-			</div> -->
-
 			<!-- 	Description	 -->
 			<div class="form-group" ng-class="{'has-error': registrationErrorPayload.description}">
 				<label class="col-sm-3 control-label"><span tooltips tooltip-side="right"
