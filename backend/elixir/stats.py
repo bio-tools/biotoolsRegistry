@@ -109,8 +109,16 @@ class StatsInfo:
 		data['topDataFormats'] = self.topDataFormats(query_limit, upperDateLimit)
 		data['topContributors'] = self.topContributors(query_limit, upperDateLimit)
 		data['totalAnnotationCount'] = self.totalAnnotationCount(upperDateLimit)
+		data['toolTypeCounts'] = self.toolTypeCounts(upperDateLimit)
 		self.userGrowthByMonth()
 		return data
+	
+	def toolTypeCounts(self, upperDateLimit=datetime.today()):
+		# Returns a list of dicts: [{"toolType": name, "count": count}, ...]
+		from elixir.model.resource_model.toolType import ToolType
+		tooltype_qs = ToolType.objects.filter(resource__visibility=1, additionDate__lt=upperDateLimit).values('name').annotate(count=Count('name'))
+		tooltype_qs = sorted(tooltype_qs, key=lambda t: t['count'], reverse=True)
+		return [{"toolType": t["name"], "count": t["count"]} for t in tooltype_qs if t["name"]]
 
 	def totalEntries(self, upperDateLimit=datetime.today()):
 		return Resource.objects.filter(visibility=1, additionDate__lt=upperDateLimit).count()
