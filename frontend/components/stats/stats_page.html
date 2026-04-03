@@ -209,30 +209,6 @@
 				</tr>
 			</table>
 		</div>
-<!-- 		<div class="panel panel-default">
-			<table class="table">
-				<tr>
-					<th>Resource Type</th>
-					<th width="30%">Number of entries</th> 
-				</tr>
-				<tr ng-repeat="resourceInfo in ::statsDataSource.statsData.entriesByResourceType">
-					<td>{{::resourceInfo.resourceType}}</td>
-					<td>{{::resourceInfo.count}}</td>
-				</tr>
-			</table>
-		</div>
-		<div class="panel panel-default">
-			<table class="table">
-				<tr>
-					<th>Interface Type</th>
-					<th width="30%">Number of entries</th> 
-				</tr>
-				<tr ng-repeat="interfaceInfo in ::statsDataSource.statsData.entriesByInterfaceType">
-					<td>{{::interfaceInfo.interfaceType}}</td>
-					<td>{{::interfaceInfo.count}}</td>
-				</tr>
-			</table>
-		</div> -->
 	</div>
 </div>
 <div class="panel panel-default">
@@ -294,6 +270,23 @@
 			</table>
 		</div>
 	</div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Tool Types</h3>
+  </div>
+  <div class="panel-body">
+    <table class="table">
+      <tr>
+        <th>Tool Type</th>
+        <th width="30%">Number of entries</th>
+      </tr>
+      <tr ng-repeat="toolTypeInfo in ::statsDataSource.statsData.toolTypeCounts">
+        <td>{{::toolTypeInfo.toolType}}</td>
+        <td>{{::toolTypeInfo.count}}</td>
+      </tr>
+    </table>
+  </div>
 </div>
 <!-- Number of affiliations -->
 <!-- <div class="panel panel-default">

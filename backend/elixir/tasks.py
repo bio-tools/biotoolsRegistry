@@ -43,6 +43,7 @@ def backup_stats_with_date(upperDateLimit=datetime.today()):
     statsData.contactAnnotationCount = statsData.data["totalAnnotationCount"]["contactAnnotationCount"]
     statsData.homepageAnnotationCount = statsData.data["totalAnnotationCount"]["homepageAnnotationCount"]
     statsData.publicationAnnotationCount = statsData.data["totalAnnotationCount"]["publicationAnnotationCount"]
+    statsData.toolTypeCounts = statsData.data["toolTypeCounts"]
     statsData.save()
     statsData.date = upperDateLimit
     statsData.save()
