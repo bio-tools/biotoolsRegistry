@@ -1,42 +1,127 @@
 <div ng-if="!ToolList.loading && ToolList.count && ToolList.count != 0">
-	<div bindonce bo-name="" ng-repeat="tool in ToolList.list track by tool.biotoolsID" dir="" ng-cloak>
-		<div class="pill-title-background pill-title">
-			<!-- Tool name -->
-			<a class="pill-title-background-text" ui-sref="tool({id: tool.biotoolsID})"><span bo-html="tool.name | highlight:Highlighting.terms"></span></a>
-			<span style="color:#575757;" ng-if="tool.operatingSystem.length > 0">
-				<span style="color: #CCCCCC">  |  </span>
-				<span ng-repeat="operatingSystem in tool.operatingSystem track by $index" style="margin-left:4px; padding-bottom: -2px;">
-					<i class="fa-brands fa-apple fa-1x" ng-show="operatingSystem == 'Mac'" tooltips tooltip-side="top" tooltip-content="Operating system: {{ operatingSystem }}"></i>
-					<i class="fa-brands fa-linux fa-1x" ng-show="operatingSystem == 'Linux'" tooltips tooltip-side="top" tooltip-content="Operating system: {{ operatingSystem }}"></i>
-					<i class="fa-brands fa-windows fa-1x" ng-show="operatingSystem == 'Windows'" tooltips tooltip-side="top" tooltip-content="Operating system: {{ operatingSystem }}"></i>
-				</span>
-			</span>
-		</div>
-		<div class="panel pill-background pill-text">
-			<!-- Tool description -->
-			<span bo-html="tool.description | highlight:Highlighting.terms"></span><hr class="pill-hr-divider">
-			<!-- Topics and Operations -->
-			<div bo-show="tool.topic.length > 0" class="pill-spacing">
-				<span ng-repeat="topic in tool.topic track by $index" tooltips tooltip-content="Topic in the Life Sciences : click to find more tools with this topic."><a ng-if="topic.term !== 'N/A'" class="pill-tag-topic" bo-html="topic.term | highlight:Highlighting.terms" href="" ng-click="topicNameClicked(topic)" target="_blank"></a></span>
-			</div>
-			<div bo-show="getFlatOperations(tool.function).length > 0" class="pill-spacing">
-				<span ng-repeat="o in getFlatOperations(tool.function) track by $index" tooltips tooltip-content="Tool operation : click to find more tools with this operation.">
-					<a class="pill-tag-operation" bo-html="o.term | highlight:Highlighting.terms" href="" ng-click="operationNameClicked(o)" target="_blank"></a>
-				</span>
-
-			</div>
-			<!-- Tool type, license and collection -->
-			<div bo-show="tool.toolType.length > 0 || tool.license || tool.collectionID" class="pill-spacing">
-				<span ng-repeat="toolType in tool.toolType track by $index" class="label pill-tag-secondary-background"><span bo-html="toolType | highlight:Highlighting.terms" tooltips tooltip-content="Type of tool"></span></span>
-				<span ng-if="tool.license" class="label pill-tag-primary-background" tooltips tooltip-content="Software or data license">
-					<a ng-show="shouldLicenseBeALink(tool.license)" href="https://spdx.org/licenses/{{ ::tool.license }}" target="_blank" bo-html="tool.license | highlight:Highlighting.terms"></a>
-					<span ng-show="!shouldLicenseBeALink(tool.license)" bo-html="tool.license | highlight:Highlighting.terms"></span>
-				</span>
-				<a ng-repeat="collection in tool.collectionID track by $index" class="pill-tag-collection-background" href="" ng-click="collectionNameClicked(collection)"><span bo-html="collection | highlight:Highlighting.terms" tooltips tooltip-content="Tool collection"></span></a>
-			</div>
-		</div>
-	</div>
+    <div
+        bindonce
+        bo-name=""
+        ng-repeat="tool in ToolList.list track by tool.biotoolsID"
+        dir=""
+        ng-cloak
+    >
+        <div class="pill-title-background pill-title">
+            <!-- Tool name -->
+            <a class="pill-title-background-text" ui-sref="tool({id: tool.biotoolsID})"
+                ><span bo-html="tool.name | highlight:Highlighting.terms"></span
+            ></a>
+            <span style="color: #575757" ng-if="tool.operatingSystem.length > 0">
+                <span style="color: #cccccc"> | </span>
+                <span
+                    ng-repeat="operatingSystem in tool.operatingSystem track by $index"
+                    style="margin-left: 4px; padding-bottom: -2px"
+                >
+                    <i
+                        class="fa fa-apple fa-1x"
+                        ng-show="operatingSystem == 'Mac'"
+                        tooltips
+                        tooltip-side="top"
+                        tooltip-content="Operating system: {{ operatingSystem }}"
+                    ></i>
+                    <i
+                        class="fa fa-linux fa-1x"
+                        ng-show="operatingSystem == 'Linux'"
+                        tooltips
+                        tooltip-side="top"
+                        tooltip-content="Operating system: {{ operatingSystem }}"
+                    ></i>
+                    <i
+                        class="fa fa-windows fa-1x"
+                        ng-show="operatingSystem == 'Windows'"
+                        tooltips
+                        tooltip-side="top"
+                        tooltip-content="Operating system: {{ operatingSystem }}"
+                    ></i>
+                </span>
+            </span>
+        </div>
+        <div class="panel pill-background pill-text">
+            <!-- Tool description -->
+            <span bo-html="tool.description | highlight:Highlighting.terms"></span>
+            <hr class="pill-hr-divider" />
+            <!-- Topics and Operations -->
+            <div bo-show="tool.topic.length > 0" class="pill-spacing">
+                <span
+                    ng-repeat="topic in tool.topic track by $index"
+                    tooltips
+                    tooltip-content="Topic in the Life Sciences : click to find more tools with this topic."
+                    ><a
+                        ng-if="topic.term !== 'N/A'"
+                        class="pill-tag-topic"
+                        bo-html="topic.term | highlight:Highlighting.terms"
+                        href=""
+                        ng-click="topicNameClicked(topic)"
+                        target="_blank"
+                    ></a
+                ></span>
+            </div>
+            <div bo-show="getFlatOperations(tool.function).length > 0" class="pill-spacing">
+                <span
+                    ng-repeat="o in getFlatOperations(tool.function) track by $index"
+                    tooltips
+                    tooltip-content="Tool operation : click to find more tools with this operation."
+                >
+                    <a
+                        class="pill-tag-operation"
+                        bo-html="o.term | highlight:Highlighting.terms"
+                        href=""
+                        ng-click="operationNameClicked(o)"
+                        target="_blank"
+                    ></a>
+                </span>
+            </div>
+            <!-- Tool type, license and collection -->
+            <div
+                bo-show="tool.toolType.length > 0 || tool.license || tool.collectionID"
+                class="pill-spacing"
+            >
+                <span
+                    ng-repeat="toolType in tool.toolType track by $index"
+                    class="label pill-tag-secondary-background"
+                    ><span
+                        bo-html="toolType | highlight:Highlighting.terms"
+                        tooltips
+                        tooltip-content="Type of tool"
+                    ></span
+                ></span>
+                <span
+                    ng-if="tool.license"
+                    class="label pill-tag-primary-background"
+                    tooltips
+                    tooltip-content="Software or data license"
+                >
+                    <a
+                        ng-show="shouldLicenseBeALink(tool.license)"
+                        href="https://spdx.org/licenses/{{ ::tool.license }}"
+                        target="_blank"
+                        bo-html="tool.license | highlight:Highlighting.terms"
+                    ></a>
+                    <span
+                        ng-show="!shouldLicenseBeALink(tool.license)"
+                        bo-html="tool.license | highlight:Highlighting.terms"
+                    ></span>
+                </span>
+                <a
+                    ng-repeat="collection in tool.collectionID track by $index"
+                    class="pill-tag-collection-background"
+                    href=""
+                    ng-click="collectionNameClicked(collection)"
+                    ><span
+                        bo-html="collection | highlight:Highlighting.terms"
+                        tooltips
+                        tooltip-content="Tool collection"
+                    ></span
+                ></a>
+            </div>
+        </div>
+    </div>
 </div>
-<div style="display: flex; justify-content: center;">
-	<div tool-paginator></div>
+<div style="display: flex; justify-content: center">
+    <div tool-paginator></div>
 </div>
