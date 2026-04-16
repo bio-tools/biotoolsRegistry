@@ -1,28 +1,54 @@
 {
-  "name": "bio.tools",
-  "version": "1.0.0",
-  "description": "bio.tools frontend",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": {
-    "name": "SDU",
-    "email": "support-bio-tools@sdu.dk"
-  },
-  "private": true,
-  "license": "ISC",
-  "devDependencies": {
-    "bower": "^1.8.8",
-    "del": "^2.0.2",
-    "gulp": "^5.0.1",
-    "gulp-concat": "^2.6.0",
-    "gulp-concat-css": "^3.1.0",
-    "gulp-css-url-adjuster": "^0.2.3",
-    "gulp-minify-css": "~1.2.4",
-    "gulp-plumber": "^1.0.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-sourcemaps": "~1.6.0",
-    "gulp-uglify": "^3.0.2"
-  }
+    "name": "bio.tools",
+    "version": "1.0.0",
+    "description": "bio.tools frontend",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": {
+        "name": "SDU",
+        "email": "support-bio-tools@sdu.dk"
+    },
+    "private": true,
+    "license": "ISC",
+    "dependencies": {
+        "angucomplete-alt": "^2.5.0",
+        "angular": "~1.4.7",
+        "angular-animate": "~1.4.7",
+        "angular-bindonce": "0.3.1",
+        "angular-chart.js": "1.0.3",
+        "angular-cookies": "~1.4.7",
+        "angular-resource": "~1.5.2",
+        "angular-route": "~1.4.7",
+        "angular-sanitize": "~1.4.7",
+        "angular-timeago": "~0.2.4",
+        "angular-tooltips": "~0.1.25",
+        "angular-tree-control": "~0.2.22",
+        "angular-ui-bootstrap": "~0.14.3",
+        "angular-ui-grid": "^3.0.0",
+        "angular-ui-router": "~0.2.15",
+        "bootstrap": "3.3.5",
+        "chart.js": "^2.9.4",
+        "font-awesome": "4.7.0",
+        "lodash": "4.11.1",
+        "moment": "2.15.2",
+        "ng-meta": "^1.0.0"
+    },
+    "devDependencies": {
+        "del": "^2.0.2",
+        "graceful-fs": "^4.2.11",
+        "gulp": "^3.9.1",
+        "gulp-clean-css": "^4.3.0",
+        "gulp-concat": "^2.6.0",
+        "gulp-concat-css": "^3.1.0",
+        "gulp-css-url-adjuster": "^0.2.3",
+        "gulp-plumber": "^1.0.1",
+        "gulp-rename": "^1.2.2",
+        "gulp-sourcemaps": "~1.6.0",
+        "gulp-uglify": "^3.0.2"
+    },
+    "overrides": {
+        "graceful-fs": "^4.2.11"
+    }
 }
