@@ -45,6 +45,7 @@ services:
     image: biotools/backend:latest
     build:
       context: ./backend
+      target: prod
     environment:
       - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
       - BIOTOOLS_URL_FRONT=https://bio.tools/
@@ -59,18 +60,20 @@ services:
     depends_on:
       - mysql
       - elasticsearch
+      - frontend
     links:
       - mysql
       - elasticsearch
     volumes:
       - backend_data:/elixir/application/backend/data
+      - frontend_dist:/elixir/application/frontend:ro
 
   taskrunner:
     container_name: biotools-taskrunner
     image: biotools/backend:latest
     build:
       context: ./backend
-      target: dev
+      target: prod
     environment:
       - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
       - BIOTOOLS_MYSQL_DB=elixir
@@ -91,8 +94,8 @@ services:
       context: ./frontend
     networks:
       - net
-    depends_on:
-      - backend
+    volumes:
+      - frontend_dist:/home/biotools/frontend
 
   rendertron:
     image: dockette/rendertron
@@ -111,3 +114,4 @@ volumes:
   data-mysql:
   data-elasticsearch:
   backend_data:
+  frontend_dist:
