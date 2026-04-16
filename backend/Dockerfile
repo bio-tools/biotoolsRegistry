@@ -47,7 +47,7 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # PROD STAGE
 # Apache + mod_wsgi
-FROM ubuntu:22.04 AS prod
+FROM python:3.13-slim AS prod
 
 LABEL maintainer="SDU support-bio-tools@sdu.dk"
 ENV PYTHONUNBUFFERED=1
@@ -55,22 +55,20 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /elixir/application/backend
 
-# Install Python + Apache + mod_wsgi
+# Install Apache + mod_wsgi + MySQL client libraries
 RUN apt-get update -y && apt-get upgrade -y && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:deadsnakes/ppa -y && \
-    apt-get update -y && \
-    apt-get install -y python3 python3-pip python3-dev default-libmysqlclient-dev build-essential \
-                       apache2 apache2-utils ssl-cert libapache2-mod-wsgi-py3 curl && \
-    ln -sf /usr/bin/python3 /usr/bin/python && \
-    ln -sf /usr/bin/pip3 /usr/bin/pip
+    apt-get install -y --no-install-recommends \
+    apache2 \
+    apache2-utils \
+    libapache2-mod-wsgi-py3 \
+    libmariadb3 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-
-# Copy app from base stage
+# Copy Python packages and application from builder
+COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
+COPY --from=builder /usr/local/bin/ /usr/local/bin/
 COPY --from=builder /elixir/application/backend /elixir/application/backend
-
-# Install Python dependencies
-RUN pip install -r requirements.txt && rm -f requirements.txt
 
 # Apache config
 COPY runtime/apache.conf /etc/apache2/sites-available/elixir.conf
