@@ -1,4 +1,4 @@
-FROM node:11.15.0-slim
+FROM node:24.13.1-slim
 #FROM node:14.15.4
 
 LABEL maintainer="SDU <support-bio-tools@sdu.dk>"
@@ -10,12 +10,9 @@ USER biotools
 ENV HOME=/home/biotools
 WORKDIR $HOME/frontend
 
-
 COPY --chown=biotools:biotools package*.json .
 RUN npm install
 COPY --chown=biotools:biotools . .
 
-USER root
-RUN chown -R biotools:biotools $HOME/*
-
+RUN node_modules/.bin/gulp copy css scripts bower
 CMD ["node_modules/.bin/gulp"]
