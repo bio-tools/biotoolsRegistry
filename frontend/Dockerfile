@@ -1,5 +1,4 @@
 FROM node:24.13.1-slim
-#FROM node:14.15.4
 
 LABEL maintainer="SDU <support-bio-tools@sdu.dk>"
 
