@@ -3,7 +3,7 @@
 # - elasticsearch
 # - backend: depends on mysql and elasticsearch
 # - taskrunner: process background tasks
-# - frontend: depends on backend
+# - frontend
 # - rendertron
 
 
@@ -64,13 +64,13 @@ services:
       - elasticsearch
     volumes:
       - backend_data:/elixir/application/backend/data
+      - ./frontend:/elixir/application/frontend
 
   taskrunner:
     container_name: biotools-taskrunner
     image: biotools/backend:latest
     build:
       context: ./backend
-      target: dev
     environment:
       - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
       - BIOTOOLS_MYSQL_DB=elixir
