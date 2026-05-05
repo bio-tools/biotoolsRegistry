@@ -14,10 +14,21 @@ from rest_framework.settings import api_settings
 from elixir.models import Resource, Function, Domain
 from django.http import Http404
 from elixir.serializers import *
-from elixir.permissions import IsOwnerOrReadOnly, HasEditPermissionToEditResourceOrReadOnly, CanConcludeResourceRequest, IsStaffOrReadOnly
+from elixir.permissions import (
+    IsOwnerOrReadOnly,
+    HasEditPermissionToEditResourceOrReadOnly,
+    CanConcludeResourceRequest,
+    IsStaffOrReadOnly,
+)
 from django.contrib.auth.models import User
 from rest_framework.parsers import JSONParser
-from rest_framework.decorators import api_view, renderer_classes, permission_classes, authentication_classes, parser_classes
+from rest_framework.decorators import (
+    api_view,
+    renderer_classes,
+    permission_classes,
+    authentication_classes,
+    parser_classes,
+)
 from rest_framework.renderers import JSONRenderer
 from django.conf import settings
 from elasticsearch import Elasticsearch
@@ -44,51 +55,27 @@ from dj_rest_auth.registration.views import SocialLoginView, SocialConnectView
 
 
 def issue_function(resource, user):
-	# check for issues
-	pass
-	# EDAMTopicIssue([resource], user=user).report()
-	# EDAMOperationIssue([resource], user=user).report()
-	# EDAMDataIssue([resource], user=user).report()
-	# EDAMFormatIssue([resource], user=user).report()
-	# NoLicenseIssue([resource], user=user).report()
-	# NoContactIssue([resource], user=user).report()
-	# NoTOSIssue([resource], user=user).report()
-	
+    # check for issues
+    pass
+    # EDAMTopicIssue([resource], user=user).report()
+    # EDAMOperationIssue([resource], user=user).report()
+    # EDAMDataIssue([resource], user=user).report()
+    # EDAMFormatIssue([resource], user=user).report()
+    # NoLicenseIssue([resource], user=user).report()
+    # NoContactIssue([resource], user=user).report()
+    # NoTOSIssue([resource], user=user).report()
 
-class CustomOAuth2Client(OAuth2Client):
-    def __init__(
-        self,
-        request,
-        consumer_key,
-        consumer_secret,
-        access_token_method,
-        access_token_url,
-        callback_url,
-        _scope,  # This fixes incompatibility between django-allauth==65.3.1 and dj-rest-auth==7.0.1
-        scope_delimiter=" ",
-        headers=None,
-        basic_auth=False,
-    ):
-        super().__init__(
-            request,
-            consumer_key,
-            consumer_secret,
-            access_token_method,
-            access_token_url,
-            callback_url,
-            scope_delimiter,
-            headers,
-            basic_auth,
-        )
 
-# ORCID 
+# ORCID
+
 
 class OrcidLogin(SocialLoginView):
-	adapter_class = OrcidOAuth2Adapter
-	callback_url = settings.ORCID_CALLBACK_URL
-	client_class = CustomOAuth2Client
+    adapter_class = OrcidOAuth2Adapter
+    callback_url = settings.ORCID_CALLBACK_URL
+    client_class = OAuth2Client
+
 
 class OrcidConnect(SocialConnectView):
-	adapter_class = OrcidOAuth2Adapter
-	callback_url = settings.ORCID_CALLBACK_URL
-	client_class = CustomOAuth2Client
+    adapter_class = OrcidOAuth2Adapter
+    callback_url = settings.ORCID_CALLBACK_URL
+    client_class = OAuth2Client
