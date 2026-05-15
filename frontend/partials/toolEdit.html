@@ -29,6 +29,35 @@
 						</div>
 					</div>
 				</div>
+				<!-- Instructions, bridge, pub2tools -->
+				<div class="row" ng-init="sectionOpen = false">
+					<div class="col-md-12">
+						<a ng-click="sectionOpen = !sectionOpen" style="cursor:pointer; text-decoration:none; color:inherit;">
+							<i class="fa" ng-class="sectionOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+							<span style="font-size:16px;">Instructions & Tools</span>
+						</a>
+						<div uib-collapse="!sectionOpen">
+							<div class="well well-sm">
+								<p><b>GitHub bridge:</b> build / update a bio.tools entry from a GitHub repository by pasting its URL.</p>
+								<div class="input-group" style="max-width:500px;">
+									<input type="text" class="form-control" placeholder="GitHub repository URL" ng-model="bridge.url">
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="button" ng-click="bridgeButtonClick()" ng-disabled="!bridge.url || bridge.inProgress"><i class="fa fa-github"></i> Bridge</button>
+									</span>
+								</div>
+								<div style="margin-top:20px;">
+									<label>Result:</label>
+									<div ng-show="bridge.json" style="position:relative;">
+										<button class="btn btn-xs btn-default" style="position:absolute;top:6px;right:6px;z-index:1;" ng-click="copyBridgeJson()" title="Copy JSON">
+										<i class="fa" ng-class="bridge.copied ? 'fa-check' : 'fa-clipboard'"></i>
+										</button>
+										<pre style="max-height:300px;overflow:auto;padding-right:40px;">{{bridge.json}}</pre>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="row">
 					<div class="col-md-12">
 						<div class="form-group has-error" ng-show="registrationErrorPayload">
