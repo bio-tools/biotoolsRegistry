@@ -101,6 +101,13 @@ services:
       - biotools_node_modules:/home/biotools/frontend/node_modules
       - biotools_bower_components:/home/biotools/frontend/bower_components
 
+  bridge:
+    container_name: biotools-bridge
+    image: anitamnd/bridge:latest
+    networks:
+      - net
+    restart: unless-stopped
+
   rendertron:
     image: dockette/rendertron
     container_name: biotools-rendertron
