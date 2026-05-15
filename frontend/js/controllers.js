@@ -235,6 +235,7 @@ angular
         'UsedTerms',
         '$q',
         '$uibModal',
+        '$http',
         function (
             $scope,
             $controller,
@@ -247,7 +248,8 @@ angular
             $timeout,
             UsedTerms,
             $q,
-            $uibModal
+            $uibModal,
+            $http
         ) {
             // reference the service
             $scope.Attribute = Attribute;
@@ -260,6 +262,7 @@ angular
             $scope.orderby = 'text';
 
             $scope.registeringInProgress = false;
+            $scope.bridge = { url: '' };
 
             // for storing validation and saving progess
             ($scope.validationProgress = {}),
@@ -841,6 +844,42 @@ angular
                 if (value && value.trim() !== '') {
                     fetchEuropePMCData($scope.software.publication[index], idType, value.trim());
                 }
+            };
+
+
+            $scope.bridgeButtonClick = function () {
+                console.log('Bridge button clicked with URL:', $scope.bridge.url);
+                var match = ($scope.bridge.url || '').match(/github\.com\/([^\/]+)\/([^\/]+)/);
+                if (!match) {
+                    alert('Please enter a valid GitHub repository URL.');
+                    return;
+                }
+                var owner = match[1];
+                var repo = match[2].replace(/\.git$/, '');
+
+                console.log('Bridging GitHub repo:', owner, repo);
+                var params = { owner: owner, repo: repo };
+                if ($scope.software && $scope.software.biotoolsID) {
+                    params.biotoolsID = $scope.software.biotoolsID;
+                }
+
+                $scope.bridge.inProgress = true;
+                $http.post('/github-to-biotools', params)
+                    .then(function (response) {
+                        var data = response.data;
+                        $scope.bridge.json = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+                        $scope.bridge.inProgress = false;
+                    }, function (response) {
+                        $scope.bridge.inProgress = false;
+                        alert('Bridge failed: ' + (response.data && response.data.detail ? response.data.detail : 'Unknown error'));
+                    });
+            };
+
+            $scope.copyBridgeJson = function () {
+                navigator.clipboard.writeText($scope.bridge.json).then(function () {
+                    $scope.$apply(function () { $scope.bridge.copied = true; });
+                    $timeout(function () { $scope.bridge.copied = false; }, 2000);
+                });
             };
 
             $scope.latestOptions = [
