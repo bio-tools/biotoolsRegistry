@@ -82,3 +82,55 @@ class TestValidation(BaseTestObject):
             # ensure update was not executed on database
             get_response = self.get_tool(url, data['biotoolsID'])
             self.assertEqual(get_response.json()['name'], name)
+
+    def test_validate_tool_post_license_current_spdx(self):
+        """Current SPDX identifiers are accepted.
+
+        SPDX replaced "GPL-3.0" with "GPL-3.0-only" in 2019. The registry's
+        vocabulary predated that, so these were rejected with
+        "Invalid value: GPL-3.0-only." until elixir/licenses.py was generated
+        from the SPDX list.
+        """
+        for license_id in (
+            "GPL-3.0-only",
+            "GPL-2.0-only",
+            "LGPL-2.1-only",
+            "AGPL-3.0-only",
+        ):
+            data = TH.get_input_tool()
+            data["license"] = license_id
+            for url in self.base_urls:
+                response = self.validate_tool_post(url, data)
+                self.assertEqual(
+                    response.status_code, status.HTTP_200_OK, msg=license_id
+                )
+
+    def test_validate_tool_post_license_deprecated_spdx(self):
+        """Retired identifiers stay accepted, because existing records use them."""
+        for license_id in ("GPL-3.0", "GPL-2.0", "LGPL-2.1", "AGPL-3.0"):
+            data = TH.get_input_tool()
+            data["license"] = license_id
+            for url in self.base_urls:
+                response = self.validate_tool_post(url, data)
+                self.assertEqual(
+                    response.status_code, status.HTTP_200_OK, msg=license_id
+                )
+
+    def test_validate_tool_post_license_non_spdx(self):
+        """bio.tools' own values describe a situation rather than name a licence."""
+        for license_id in ("Not licensed", "Proprietary", "Other", "Freeware"):
+            data = TH.get_input_tool()
+            data["license"] = license_id
+            for url in self.base_urls:
+                response = self.validate_tool_post(url, data)
+                self.assertEqual(
+                    response.status_code, status.HTTP_200_OK, msg=license_id
+                )
+
+    def test_validate_tool_post_license_invalid(self):
+        """Anything outside the vocabulary is still rejected."""
+        data = TH.get_input_tool()
+        data["license"] = "NOT-A-LICENCE"
+        for url in self.base_urls:
+            response = self.validate_tool_post(url, data)
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
