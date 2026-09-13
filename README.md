@@ -44,6 +44,9 @@ Please see the [contributors page](http://biotools.readthedocs.io/en/latest/cont
 # Publications
 If you use bio.tools, please cite:
 
+Mendes, A. et al (2026). [bio.tools: an expanded web service for research software in the life sciences](https://academic.oup.com/nar/article/54/W1/W4/8719435)
+			    _Nucleic Acids Research_. 
+
 Ison, J. et al. (2019). [The bio.tools registry of software tools and data resources for the life sciences.](https://link.springer.com/article/10.1186/s13059-019-1772-6) _Genome Biology_.
 
 Ison, J. et al. (2019). [Community curation of bioinformatics software and data resources.](https://academic.oup.com/bib/article/21/5/1697/5560007) _Briefings in Bioinformatics_.
