@@ -51,6 +51,7 @@ services:
     image: biotools/backend:latest
     build:
       context: ./backend
+      dockerfile: Dockerfile.dev
       target: dev
     environment:
       - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
