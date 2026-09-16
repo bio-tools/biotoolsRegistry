@@ -78,7 +78,7 @@
 	box-shadow: none;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1200px) {
 	.details-bar-text {
 		font-size: 12px;
 	}
