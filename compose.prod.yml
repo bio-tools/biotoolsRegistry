@@ -1,9 +1,8 @@
-# docker-compose file to setup:
-# - mysql
-# - elasticsearch
-# - backend: depends on mysql and elasticsearch
+# docker compose file for the biotoolsRegistry
+# - mysql: MySQL database
+# - elasticsearch: Elasticsearch search engine
+# - biotools: bio.tools application
 # - taskrunner: process background tasks
-# - frontend: depends on backend
 # - rendertron
 
 
@@ -40,11 +39,11 @@ services:
     networks:
       - net
 
-  backend:
-    container_name: biotools-backend
-    image: biotools/backend:latest
+  biotools:
+    container_name: biotools-registry
     build:
-      context: ./backend
+      context: .
+      dockerfile: Dockerfile
     environment:
       - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
       - BIOTOOLS_URL_FRONT=https://bio.tools/
@@ -67,12 +66,13 @@ services:
 
   taskrunner:
     container_name: biotools-taskrunner
-    image: biotools/backend:latest
     build:
       context: ./backend
+      dockerfile: Dockerfile.dev
       target: dev
     environment:
       - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
+      - BIOTOOLS_URL_FRONT=https://bio.tools/
       - BIOTOOLS_MYSQL_DB=elixir
       - BIOTOOLS_MYSQL_HOST=biotools-mysql
       - BIOTOOLS_MYSQL_PASSWORD=123
@@ -83,16 +83,6 @@ services:
       - mysql
       - elasticsearch
     command: python manage.py process_tasks
-
-  frontend:
-    container_name: biotools-frontend
-    image: biotools/frontend:latest
-    build:
-      context: ./frontend
-    networks:
-      - net
-    depends_on:
-      - backend
 
   rendertron:
     image: dockette/rendertron
