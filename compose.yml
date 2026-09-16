@@ -1,8 +1,8 @@
-# docker-compose file to setup:
+# docker compose file to setup:
 # - mysql
 # - elasticsearch
 # - backend: depends on mysql and elasticsearch
-# - frontend: depends on backend
+# - frontend
 # - caddy: reverse proxy for backend and frontend
 
 # This file is meant to aid local development and testing. It *must not* be
@@ -82,6 +82,8 @@ services:
     image: biotools/frontend:latest
     build:
       context: ./frontend
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
     networks:
       - net
     depends_on:
