@@ -1,0 +1,28 @@
+FROM node:11.15.0-slim
+
+LABEL maintainer="SDU <support-bio-tools@sdu.dk>"
+
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    sed -i '/stretch-updates/d' /etc/apt/sources.list
+
+# install git  for ancient packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends --allow-unauthenticated \
+        git \
+        && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /home/biotools/frontend
+
+COPY package*.json bower.json ./
+
+RUN npm install 
+RUN npm install -g bower
+RUN bower install --allow-root
+
+RUN chown -R node:node /home/biotools/frontend
+
+ENV HOME=/home/node
+USER node
+
+CMD ["node_modules/.bin/gulp"]
