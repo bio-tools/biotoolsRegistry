@@ -38,6 +38,11 @@ localhost {
         reverse_proxy biotools-backend:8000
     }
 
+    # Proxy bridge requests to internal bridge service
+    handle /github-to-biotools* {
+        reverse_proxy biotools-metadata-bridge:8000
+    }
+
     # Serve files from frontend, also handles robots.txt
     handle {
         try_files {path} /index.html
