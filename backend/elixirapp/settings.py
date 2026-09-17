@@ -273,15 +273,15 @@ RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate
 # Settings for Github Ecosystem
 GITHUB_ECOSYSTEM_ON = getenv('GITHUB_ECOSYSTEM_ON', False, castf=str_to_bool)
 
-                        
-# settings specific to deployment
+
+# Settings specific to deployment
 try:
     from elixirapp.deployment_settings import *
 except ImportError:
     print ("Could not import deployment settings")
 
 
-# settings for blacklisted domains
+# Settings for blacklisted domains
 BLACKLISTED_DOMAINS_LIST = getenv('BLACKLISTED_DOMAINS_LIST', [], castf=json.loads)
 
 try:
