@@ -14,20 +14,24 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import json
 
-# Prefix for environment variables settings.
-ENV_NAMESPACE = "BIOTOOLS"
+from typing import Any, Callable
 
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+ENV_NAMESPACE = "BIOTOOLS"
 SITE_NAME = "bio.tools"
 
-def getenv(key, default=None, castf=str, ns=ENV_NAMESPACE):
+
+def getenv(key: str, default: Any = None, castf: Callable[[str], Any] = str, ns: str=ENV_NAMESPACE):
     """Helper function to retrieve namespaced environment variables."""
     value = os.environ.get('{ns}_{key}'.format(ns=ns, key=key), None)
     return castf(value) if value is not None else default
 
+def str_to_bool(value) -> bool:
+    """Interpret common string representations of boolean values."""
+    return str(value).strip().lower() in ['true', '1', 'yes', 'y', 'on']
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -39,7 +43,7 @@ SECRET_KEY = getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv('DEBUG', True, castf=bool)
+DEBUG = getenv('DEBUG', True, castf=str_to_bool)
 
 ALLOWED_HOSTS = ['*']
 
@@ -157,7 +161,7 @@ DB_COLLATION = {
 EMAIL_BACKEND = getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = getenv('EMAIL_HOST', 'smtp.zoho.com')
 EMAIL_PORT = getenv('EMAIL_PORT', 465, castf=int)
-EMAIL_USE_SSL = getenv('EMAIL_USE_SSL', True, castf=bool)
+EMAIL_USE_SSL = getenv('EMAIL_USE_SSL', True, castf=str_to_bool)
 EMAIL_HOST_USER = getenv('EMAIL_HOST_USER', 'support@bio.tools')
 DEFAULT_FROM_EMAIL = getenv('DEFAULT_FROM_EMAIL', 'support@bio.tools')
 
@@ -168,19 +172,22 @@ LANGUAGE_CODE = getenv('LANGUAGE_CODE', 'en-us')
 
 TIME_ZONE = getenv('TIME_ZONE', 'UTC')
 
-USE_I18N = getenv('USE_I18N', True, castf=bool)
+USE_I18N = getenv('USE_I18N', True, castf=str_to_bool)
 
-USE_L10N = getenv('USE_L10N', True, castf=bool)
+USE_L10N = getenv('USE_L10N', True, castf=str_to_bool)
 
-USE_TZ = getenv('USE_TZ', True, castf=bool)
+USE_TZ = getenv('USE_TZ', True, castf=str_to_bool)
 
-
-STATIC_ROOT = getenv('STATIC_ROOT', '/elixir/application/frontend/static/')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
+
 STATIC_URL = getenv('STATIC_URL', '/static/')
+STATIC_ROOT = getenv('STATIC_ROOT', '/elixir/application/frontend/static/')
+
 
 # Django REST Framework
 REST_FRAMEWORK = {
@@ -233,7 +240,7 @@ ACCOUNT_SIGNUP_FIELDS = ['email', 'username*', 'password1*', 'password2*']
 ACCOUNT_CONFIRM_EMAIL_ON_GET = getenv(
     'ACCOUNT_CONFIRM_EMAIL_ON_GET',
     True,
-    castf=bool,
+    castf=str_to_bool,
 )
 
 SOCIALACCOUNT_ADAPTER = 'elixir.adapters.CustomSocialAccountAdapter'
@@ -241,23 +248,10 @@ SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
-
-URL_FRONT = getenv('URL_FRONT', 'http://localhost:8000/')
-
-DEPLOYMENT = getenv('DEPLOYMENT', 'dev')
-
-RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate', 'f', 'function', 'o', 'ontology', 'used-terms', 'stats', 'env', 'sitemap.xml', 'd', 'domain', 'request', 'tool-list', 'w', 'register', 'edit-subdomain', 'subdomain', 'login', 'signup', 'reset-password', 'profile', 'requests', 'workflows', '404', 'documentation', 'about', 'schema', 'governance', 'roadmap', 'events', 'mail', 'faq', 'apidoc', 'changelog', 'helpdesk', 'projects', 'redoc']
-
-
-# Settings for Github Ecosystem
-GITHUB_ECOSYSTEM_ON = getenv('GITHUB_ECOSYSTEM_ON', False, castf=bool)
-
-ADMIN_EMAIL_LIST = getenv('ADMIN_EMAIL_LIST', [], castf=json.loads)
-
 SOCIALACCOUNT_PROVIDERS = {
     'orcid': {
         'BASE_DOMAIN': getenv('ORCID_BASE_DOMAIN', 'sandbox.orcid.org'),  # Use 'sandbox.orcid.org' for testing
-        'MEMBER_API': getenv('ORCID_MEMBER_API', False, castf=bool),  # Set to True for member API
+        'MEMBER_API': getenv('ORCID_MEMBER_API', False, castf=str_to_bool),  # Set to True for member API
         'SCOPE': ['read-limited'],
         'APP': {
             'client_id': getenv('ORCID_CLIENT_ID', ''),
@@ -267,15 +261,27 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 ORCID_CALLBACK_URL = getenv('ORCID_CALLBACK_URL', 'http://127.0.0.1/orcid/callback/')
-                        
-# settings specific to deployment
+
+
+URL_FRONT = getenv('URL_FRONT', 'http://localhost:8000/')
+
+DEPLOYMENT = getenv('DEPLOYMENT', 'dev')
+
+RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate', 'f', 'function', 'o', 'ontology', 'used-terms', 'stats', 'env', 'sitemap.xml', 'd', 'domain', 'request', 'tool-list', 'w', 'register', 'edit-subdomain', 'subdomain', 'login', 'signup', 'reset-password', 'profile', 'requests', 'workflows', '404', 'documentation', 'about', 'schema', 'governance', 'roadmap', 'events', 'mail', 'faq', 'apidoc', 'changelog', 'helpdesk', 'projects', 'redoc']
+
+
+# Settings for Github Ecosystem
+GITHUB_ECOSYSTEM_ON = getenv('GITHUB_ECOSYSTEM_ON', False, castf=str_to_bool)
+
+
+# Settings specific to deployment
 try:
     from elixirapp.deployment_settings import *
 except ImportError:
     print ("Could not import deployment settings")
 
 
-# settings for blacklisted domains
+# Settings for blacklisted domains
 BLACKLISTED_DOMAINS_LIST = getenv('BLACKLISTED_DOMAINS_LIST', [], castf=json.loads)
 
 try:
