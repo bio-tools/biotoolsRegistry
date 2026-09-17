@@ -12,11 +12,8 @@ services:
     container_name: biotools-mysql
     image: mysql:8.0.43
     restart: unless-stopped
-    environment:
-      - MYSQL_ROOT_PASSWORD=elixirroot
-      - MYSQL_DATABASE=elixir
-      - MYSQL_USER=elixir
-      - MYSQL_PASSWORD=123
+    env_file:
+      - .env.mysql
     volumes:
       - "data-mysql:/var/lib/mysql"
     ports:
@@ -44,13 +41,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
-      - BIOTOOLS_URL_FRONT=https://bio.tools/
-      - BIOTOOLS_MYSQL_DB=elixir
-      - BIOTOOLS_MYSQL_HOST=biotools-mysql
-      - BIOTOOLS_MYSQL_PASSWORD=123
-      - BIOTOOLS_MYSQL_USER=elixir
+    env_file:
+      - .env
     ports:
       - "80:80"
     networks:
@@ -70,13 +62,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
       target: dev
-    environment:
-      - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
-      - BIOTOOLS_URL_FRONT=https://bio.tools/
-      - BIOTOOLS_MYSQL_DB=elixir
-      - BIOTOOLS_MYSQL_HOST=biotools-mysql
-      - BIOTOOLS_MYSQL_PASSWORD=123
-      - BIOTOOLS_MYSQL_USER=elixir
+    env_file:
+      - .env
     networks:
       - net
     depends_on:
