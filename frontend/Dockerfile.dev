@@ -18,11 +18,7 @@ COPY package*.json bower.json ./
 
 RUN npm install 
 RUN npm install -g bower
+
 RUN bower install --allow-root
-
-RUN chown -R node:node /home/biotools/frontend
-
-ENV HOME=/home/node
-USER node
 
 CMD ["node_modules/.bin/gulp"]
