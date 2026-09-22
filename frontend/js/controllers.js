@@ -295,6 +295,12 @@ angular
                     function (response) {
                         // handle success
                         progress.inProgress = false;
+
+                        if (response && response.no_changes) {
+                            progress.noChanges = true;
+                            return;
+                        }
+
                         progress.success = true;
                         if (isRemoval) {
                             alert('Resource removed succesfully.');
@@ -534,6 +540,7 @@ angular
                 function (newVal, oldVal) {
                     if (newVal !== oldVal) {
                         $scope.savingProgress.success = false;
+                        $scope.savingProgress.noChanges = false;
                         $scope.validationProgress.success = false;
                     }
                 },
