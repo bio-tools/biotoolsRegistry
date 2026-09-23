@@ -20,12 +20,14 @@ jobs:
 
     - name: wait for mysql
       run: |
-        until docker exec biotools-mysql mysqladmin ping -uroot -pelixirroot --silent; do
+        until docker exec biotools-mysql mysql -uroot -pelixirroot -e "SELECT 1;" > /dev/null 2>&1; do
+          echo "Waiting for MySQL..."
           sleep 5
         done
 
     - name: grant mysql privileges
       run: docker exec -i biotools-mysql mysql -u root -pelixirroot -e "GRANT ALL PRIVILEGES ON *.* TO 'elixir'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+      
     - name: run tests
       run: docker compose run --rm --no-deps backend python manage.py test
 
