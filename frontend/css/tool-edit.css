@@ -9,3 +9,90 @@
     margin-bottom: 8px;
     font-size: 12px;
   }
+
+/* GitHub metadata bridge review */
+.bridge-review-body {
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+.bridge-review td {
+    vertical-align: middle;
+}
+
+.bridge-review td:nth-child(2),
+.bridge-review td:nth-child(3) {
+    white-space: normal;
+    word-break: break-word;
+    max-width: 300px;
+    padding-right: 24px;
+}
+
+.bridge-review tr.bridge-changed > td {
+    background-color: #eaf5ea;
+}
+
+.bridge-review .radio-inline {
+    margin-right: 10px;
+}
+
+.bridge-review td.bridge-align-top {
+    vertical-align: top;
+    text-align: left;
+}
+
+/* radios: stacked vertically, flush left, even row height */
+.bridge-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.bridge-actions .bridge-action {
+    margin: 0;
+    padding-left: 0;
+}
+
+.bridge-actions .bridge-action input[type='radio'] {
+    margin-right: 4px;
+}
+
+/* item rows: checkbox on the left, label text beside it, centered on one line */
+.bridge-item-list {
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.bridge-item-list li {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.bridge-item-label {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+    margin-bottom: 2px;
+}
+
+.bridge-item-label input[type='checkbox'] {
+    flex: 0 0 auto;
+    margin: 0 6px 0 0;
+}
+
+.bridge-item-text {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.bridge-item-unchecked {
+    opacity: 0.55;
+}
+
+.bridge-confirm-json {
+    max-height: 50vh;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    padding: 10px;
+}
