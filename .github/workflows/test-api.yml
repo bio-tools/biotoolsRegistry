@@ -13,26 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: checkout repository
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-    - name: set up docker compose
-      uses: docker/setup-compose-action@v1
+    - name: start mysql and elasticsearch
+      run: docker compose up -d mysql elasticsearch
 
-    - name: build and run
-      run: docker compose up -d
+    - name: wait for mysql
+      run: |
+        until docker exec biotools-mysql mysqladmin ping -uroot -pelixirroot --silent; do
+          sleep 5
+        done
 
-    - name: wait for services
-      run: sleep 15
-
-    - name: list containers
-      run: docker compose ps
-
-    - name: grant mysql privileges
-      run: docker exec -i biotools-mysql mysql -u root -pelixirroot -e "GRANT ALL PRIVILEGES ON *.* TO 'elixir'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
-    
     - name: run tests
-      run: docker exec biotools-backend python manage.py test
+      run: docker compose run --rm --no-deps backend python manage.py test
 
     - name: tear down
-      run: docker compose down
+      run: docker compose down -v
