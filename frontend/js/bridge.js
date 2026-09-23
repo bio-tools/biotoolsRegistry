@@ -375,8 +375,6 @@ angular
 
             return {
                 isGithubUrl: isGithubUrl,
-                buildChoices: buildChoices,
-                applyChoices: applyChoices,
                 sync: syncChoices,
                 run: run,
                 apply: apply,

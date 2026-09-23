@@ -32,12 +32,20 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                    <div class="panel panel-info" ng-if="controller == 'create' || canEditTool" ng-cloak>
-                        <div class="panel-heading">
-                            <label><b>GitHub Bridge:</b> import metadata from a GitHub repository [experimental]</label>
+                    <div class="panel github-bridge-panel" ng-if="controller == 'create' || canEditTool" ng-cloak>
+                        <div class="panel-heading github-bridge-heading">
+                            <div class="github-bridge-title">
+                                <span class="github-bridge-icon" aria-hidden="true"><i class="fa fa-github"></i></span>
+                                <div>
+                                    <strong>GitHub Bridge</strong>
+                                    <span class="github-bridge-badge">Experimental</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="panel-body form-inline">
-                            <div class="input-group" style="width:70%;">
+                        <div class="panel-body">
+                            <div class="github-bridge-form">
+                                <p>Import metadata from a GitHub repository. Paste a public repository URL to begin.</p>
+                            <div class="input-group">
                                 <input type="text" class="form-control" ng-model="bridge.url"
                                     placeholder="https://github.com/owner/repository"
                                     ng-disabled="bridge.inProgress">
@@ -48,6 +56,7 @@
                                 <i class="fa fa-circle-o-notch fa-spin" ng-show="bridge.inProgress"></i>
                             </button>
                             <p class="help-block" style="margin-bottom:0;" ng-show="bridge.message">{{bridge.message}}</p>
+                        </div>
                         </div>
                     </div>                        
                     <div class="form-group has-error" ng-show="registrationErrorPayload">
