@@ -96,3 +96,93 @@
     border-radius: 4px;
     padding: 10px;
 }
+
+/* GitHub metadata bridge form */
+.github-bridge-panel {
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(31, 35, 40, 0.08);
+}
+
+.github-bridge-heading {
+  padding: 14px 16px;
+  color: #1f2328;
+  background: #f6f8fa;
+  border-bottom: 1px solid #d0d7de;
+}
+
+.github-bridge-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.github-bridge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #1f2328;
+  font-size: 20px;
+}
+
+.github-bridge-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 6px;
+  border: 1px solid #d0d7de;
+  border-radius: 999px;
+  color: #656d76;
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.github-bridge-form {
+  max-width: 760px;
+}
+
+.github-bridge-form .input-group {
+  width: 100%;
+}
+
+.github-bridge-form .form-control {
+  height: 38px;
+  border-color: #d0d7de;
+  box-shadow: none;
+  width: 65%;
+}
+
+.github-bridge-form .btn {
+  height: 38px;
+  margin-top: 5px;
+  padding-right: 14px;
+  padding-left: 14px;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .github-bridge-form {
+    max-width: 760px;
+  }
+}
+
+@media (max-width: 767px) {
+  .github-bridge-form .input-group {
+    display: block;
+  }
+
+  .github-bridge-form .form-control,
+  .github-bridge-form .input-group-btn,
+  .github-bridge-form .btn {
+    display: block;
+    width: 100%;
+  }
+
+  .github-bridge-form .input-group-btn {
+    margin-top: 8px;
+  }
+}
