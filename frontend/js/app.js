@@ -5,6 +5,7 @@ var elixir_front = angular.module('elixir_front', [
 	'elixir_front.services',
 	'elixir_front.directives',
 	'elixir_front.controllers',
+	'elixir_front.bridge',
 	'ui.bootstrap',
 	'ngCookies',
 	'ngRoute',

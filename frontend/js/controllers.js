@@ -235,6 +235,8 @@ angular
         'UsedTerms',
         '$q',
         '$uibModal',
+        '$http',
+        'Bridge',
         function (
             $scope,
             $controller,
@@ -247,7 +249,9 @@ angular
             $timeout,
             UsedTerms,
             $q,
-            $uibModal
+            $uibModal,
+            $http,
+            Bridge
         ) {
             // reference the service
             $scope.Attribute = Attribute;
@@ -260,6 +264,7 @@ angular
             $scope.orderby = 'text';
 
             $scope.registeringInProgress = false;
+            $scope.bridge = { url: '', inProgress: false, message: null, raw: null, choices: null, active: false };
 
             // for storing validation and saving progess
             ($scope.validationProgress = {}),
@@ -318,6 +323,31 @@ angular
                         $scope.registrationErrorPayload = response.data;
                     }
                 );
+            };
+
+            // metadata bridge (implementation in js/bridge.js, Bridge service)
+            $scope.isGithubUrl = function (url) {
+                return Bridge.isGithubUrl(url);
+            };
+
+            $scope.initBridgeUrl = function () {
+                Bridge.prefillUrl($scope.software, $scope.bridge);
+            };
+
+            $scope.bridgeButtonClick = function () {
+                Bridge.run(
+                    $scope.bridge,
+                    $scope.software,
+                    $scope.software && $scope.software.biotoolsID
+                );
+            };
+
+            // number of bridge suggestions with a pending (non-keep) action,
+            // shown as a badge on the GitHub Bridge tab
+            $scope.bridgeTabCount = function () {
+                return ($scope.bridge.choices || []).filter(function (c) {
+                    return c.action !== 'keep';
+                }).length;
             };
 
             // modals
@@ -755,6 +785,11 @@ angular
                     // Check permissions
                     if ($scope.canEditTool == false) {
                         $scope.initializePermissions();
+                    }
+                    // DEBUG: auto-populate the bridge review tab once the
+                    // tool is loaded (no-op unless DEBUG is enabled in bridge.js)
+                    if (newVal && (newVal.biotoolsID || newVal.name)) {
+                        Bridge.initDebug($scope.bridge, $scope.software);
                     }
                 },
                 true
