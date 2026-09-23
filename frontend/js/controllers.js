@@ -325,13 +325,9 @@ angular
                 );
             };
 
-            // metadata bridge (implementation in js/bridge.js, Bridge service)
+            // metadata bridge
             $scope.isGithubUrl = function (url) {
                 return Bridge.isGithubUrl(url);
-            };
-
-            $scope.initBridgeUrl = function () {
-                Bridge.prefillUrl($scope.software, $scope.bridge);
             };
 
             $scope.bridgeButtonClick = function () {
@@ -785,11 +781,6 @@ angular
                     // Check permissions
                     if ($scope.canEditTool == false) {
                         $scope.initializePermissions();
-                    }
-                    // DEBUG: auto-populate the bridge review tab once the
-                    // tool is loaded (no-op unless DEBUG is enabled in bridge.js)
-                    if (newVal && (newVal.biotoolsID || newVal.name)) {
-                        Bridge.initDebug($scope.bridge, $scope.software);
                     }
                 },
                 true
