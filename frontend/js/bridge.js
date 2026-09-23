@@ -7,50 +7,6 @@ angular
     .factory('Bridge', [
         '$http',
         function ($http) {
-            // DEBUG: set to true to use the mock data below instead of
-            // calling the bridge service. When true, the review tab is also
-            // auto-populated on page load (see initDebug) so the GitHub
-            // Bridge tab is visible immediately for styling/testing.
-            var DEBUG = false;
-
-            // mock bridge output resembling the real service's response,
-            // including a duplicate topic to exercise dedupe handling
-            var DEBUG_MOCK = {
-                name: 'MetaboLink',
-                description: 'Repository for metabolomics and lipidomics data processing app.',
-                homepage: 'https://computproteomics.bmb.sdu.dk/Metabolomics',
-                version: ['1.2.0'],
-                license: 'MIT',
-                language: ['JavaScript', 'R'],
-                topic: [
-                    { uri: 'http://edamontology.org/topic_0154', term: 'Proteomics' },
-                    { uri: 'http://edamontology.org/topic_3172', term: 'Metabolomics' },
-                ],
-                function: [
-                    {
-                        operation: [
-                            { uri: 'http://edamontology.org/operation_2928', term: 'Data analysis' },
-                        ],
-                        input: [
-                            {
-                                data: { uri: 'http://edamontology.org/data_0857', term: 'Mass spectrometry data' },
-                            },
-                        ],
-                    },
-                ],
-                operatingSystem: ['Linux', 'Mac'],
-                collectionID: ['proteomics'],
-                link: [
-                    { type: ['Repository'], url: 'https://github.com/anitamnd/metabolink' },
-                ],
-                documentation: [
-                    { type: ['User manual'], url: 'https://github.com/anitamnd/metabolink#readme' },
-                ],
-                credit: [
-                    { name: 'Anita N.D.', typeEntity: 'Person' },
-                ],
-            };
-
             // fields the bridge may never touch
             var BRIDGE_FORBIDDEN = [
                 'biotoolsID',
@@ -129,6 +85,15 @@ angular
                         return ((v.type && v.type[0]) || v.type || 'Other') + ' — ' + (v.url || '');
                     },
                 },
+                // Publications
+                {
+                    key: 'publication', label: 'Publications', kind: 'list', tab: 'Publications',
+                    dedupeKey: function (v) { return (v.doi || '') + '|' + (v.pmid || '') + '|' + (v.pmcid || ''); },
+                    itemLabel: function (v) {
+                        var id = v.doi || v.pmid || v.pmcid || '?';
+                        return (v.type && v.type[0] || 'Other') + ' — ' + id;
+                    },
+                },
                 // Credits
                 {
                     key: 'credit', label: 'Credits', kind: 'list', tab: 'Credits',
@@ -140,24 +105,7 @@ angular
             function isGithubUrl(url) {
                 return /github\.com\/[^\/]+\/[^\/]+/.test(url || '');
             }
-
-            // pre-fill the bridge URL from the tool's homepage or Repository link
-            function prefillUrl(software, bridge) {
-                var homepage = software && software.homepage;
-                if (homepage && /github\.com/.test(homepage)) {
-                    bridge.url = homepage;
-                    return;
-                }
-
-                var links = (software && software.link) || [];
-                for (var i = 0; i < links.length; i++) {
-                    if (links[i].type === 'Repository' && /github\.com/.test(links[i].url)) {
-                        bridge.url = links[i].url;
-                        return;
-                    }
-                }
-            }
-
+            
             // readable one-line summary of a function block:
             // operations, plus inputs/outputs when present
             function functionBlockLabel(fn) {
@@ -238,6 +186,66 @@ angular
                 return choices;
             }
 
+            // re-sync the "current" side of the choices with the live
+            // software model, preserving the user's selections; called when
+            // the review tab is shown so edits made in other tabs are reflected
+            function syncChoices(choices, software) {
+                var defsByKey = {};
+                BRIDGE_FIELD_DEFS.forEach(function (def) {
+                    defsByKey[def.key] = def;
+                });
+
+                choices.forEach(function (choice) {
+                    var def = defsByKey[choice.field];
+                    if (!def) return;
+
+                    if (def.kind === 'scalar') {
+                        choice.current = (software && software[def.key]) || '';
+                        return;
+                    }
+
+                    var currentList = Array.isArray(software && software[def.key])
+                        ? software[def.key]
+                        : [];
+
+                    // remember the user's checkbox state by dedupe key so it
+                    // survives the rebuild for items that still exist
+                    var previous = {};
+                    choice.items.forEach(function (i) {
+                        previous[def.dedupeKey(i.item)] = i.checked;
+                    });
+
+                    var seen = {};
+                    var items = [];
+                    currentList.forEach(function (item) {
+                        var k = def.dedupeKey(item);
+                        seen[k] = true;
+                        items.push({
+                            source: 'current',
+                            item: item,
+                            checked: k in previous ? previous[k] : true,
+                            duplicate: false,
+                        });
+                    });
+                    choice.suggested.forEach(function (item) {
+                        var k = def.dedupeKey(item);
+                        var dup = !!seen[k];
+                        if (!dup) seen[k] = true;
+                        items.push({
+                            source: 'suggested',
+                            item: item,
+                            checked: k in previous ? previous[k] : !dup,
+                            duplicate: dup,
+                        });
+                    });
+
+                    choice.current = currentList;
+                    choice.items = items;
+                });
+
+                return choices;
+            }
+
             // apply the user's choices onto the software model
             function applyChoices(choices, software) {
                 var applied = 0;
@@ -280,7 +288,6 @@ angular
             }
 
             // internal: process bridge data into choices and store them for
-            // the review tab (shared by the real run and the debug mock)
             function processResults(bridge, software, data) {
                 // the bridge may return the tool entry as a JSON string
                 if (typeof data === 'string') {
@@ -310,31 +317,8 @@ angular
                 bridge.active = true;
             }
 
-            // DEBUG helper: populate the review tab with the mock data
-            function runDebug(bridge, software) {
-                bridge.url = bridge.url || 'https://github.com/anitamnd/metabolink';
-                bridge.inProgress = false;
-                processResults(bridge, software, angular.copy(DEBUG_MOCK));
-                bridge.message = '[DEBUG] Using mock bridge data.';
-            }
-
-            // DEBUG helper: auto-populate once the tool is loaded; safe to
-            // call from the controller on every page load — waits until the
-            // software object has a biotoolsID (or name) so the comparison
-            // against current values is meaningful
-            function initDebug(bridge, software) {
-                if (!DEBUG) return;
-                if (bridge.choices) return; // already populated
-                runDebug(bridge, software);
-            }
-
             // run the bridge, store the choices for review in the bridge tab
             function run(bridge, software, biotoolsID, onMessage) {
-                // DEBUG: skip the network call entirely and use the mock data
-                if (DEBUG) {
-                    return runDebug(bridge, software);
-                }
-
                 var match = (bridge.url || '').match(/github\.com\/([^\/]+)\/([^\/]+)/);
 
                 if (!match) {
@@ -391,18 +375,12 @@ angular
 
             return {
                 isGithubUrl: isGithubUrl,
-                prefillUrl: prefillUrl,
                 buildChoices: buildChoices,
                 applyChoices: applyChoices,
+                sync: syncChoices,
                 run: run,
                 apply: apply,
                 discard: discard,
-                initDebug: initDebug,
-                runDebug: function (bridge, software) {
-                    // exposed for console/testing: Bridge.runDebug($scope) not available,
-                    // but keep the flag toggle accessible
-                    runDebug(bridge, software);
-                },
             };
         },
     ])
@@ -432,6 +410,15 @@ angular
                     });
                 }
             );
+
+            // when the review tab becomes active, refresh the "current"
+            // side of the choices against the live software model so edits
+            // made in the other tabs are reflected here (selections survive)
+            $scope.$watch('bridge.active', function (active) {
+                if (active && $scope.bridge.choices && $scope.software) {
+                    Bridge.sync($scope.bridge.choices, $scope.software);
+                }
+            });
 
             vm.keepAll = function () {
                 ($scope.bridge.choices || []).forEach(function (choice) {
@@ -510,6 +497,12 @@ angular
 
             vm.discard = function () {
                 Bridge.discard($scope.bridge);
+            };
+
+            vm.hasChanges = function (group) {
+                return group.choices.some(function (c) {
+                    return c.action !== 'keep';
+                });
             };
 
             // reset checkbox selections to the defaults of the chosen action;
