@@ -1,0 +1,114 @@
+<br>
+<div class="panel panel-info">
+	<div class="panel-heading" style="position: relative;">
+		<label align="justify">Review the metadata imported from GitHub.
+			<br>For each field choose whether to <b>Keep</b> the current value, <b>Replace</b> it with the
+			GitHub suggestion, or — for lists — <b>Merge</b> by selecting individual items from both.
+			Your choices are kept while you browse the other tabs, so you can compare before applying.</label>
+	</div>
+</div>
+<div ng-controller="BridgeReviewCtrl as vm">
+	<div class="row" style="margin-bottom: 10px;">
+		<div class="col-sm-12 text-right">
+			<button type="button" class="btn btn-default" ng-click="vm.keepAll()">Keep all current</button>
+			<button type="button" class="btn btn-danger" ng-click="vm.discard()">Discard bridge results</button>
+			<button type="button" class="btn btn-primary" ng-click="vm.apply()">Apply selected</button>
+		</div>
+	</div>
+
+	<div ng-repeat="group in vm.groups">
+		<h4>{{group.label}}</h4>
+		<table class="table table-condensed bridge-review">
+			<thead>
+				<tr>
+					<th style="width:18%">Field</th>
+					<th style="width:33%">Current</th>
+					<th style="width:33%">From GitHub</th>
+					<th style="width:16%">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- SCALAR rows -->
+				<tr ng-repeat="choice in group.choices" ng-if="choice.kind === 'scalar'"
+					ng-class="{'bridge-changed': choice.action !== 'keep'}">
+					<td class="bridge-align-top"><b>{{choice.label}}</b></td>
+					<td class="bridge-align-top">
+						<span ng-if="choice.current">{{choice.current}}</span>
+						<span ng-if="!choice.current" class="text-muted"><i>(empty)</i></span>
+					</td>
+					<td class="bridge-align-top">{{choice.suggested}}</td>
+					<td class="bridge-align-top">
+						<div class="bridge-actions">
+							<label class="radio-inline bridge-action"><input type="radio" ng-model="choice.action" value="keep"> Keep</label>
+							<label class="radio-inline bridge-action"><input type="radio" ng-model="choice.action" value="replace"> Replace</label>
+						</div>
+					</td>
+				</tr>
+				<!-- LIST rows: checklists in Current / From GitHub columns -->
+				<tr ng-repeat-start="choice in group.choices" ng-if="choice.kind === 'list'"
+					ng-class="{'bridge-changed': choice.action !== 'keep'}">
+					<td class="bridge-align-top"><b>{{choice.label}}</b></td>
+					<td class="bridge-align-top">
+						<ul class="list-unstyled bridge-item-list">
+							<li ng-repeat="item in choice.items" ng-if="item.source === 'current'"
+								ng-class="{'text-muted': item.duplicate, 'bridge-item-unchecked': !item.checked && !item.duplicate}">
+								<label class="bridge-item-label">
+									<input type="checkbox" ng-model="item.checked"
+										ng-disabled="item.duplicate || choice.action === 'replace'">
+									<span class="bridge-item-text">
+										{{ choice.itemLabel(item.item) }}
+										<span ng-if="item.duplicate" class="text-muted"><i>(also on GitHub)</i></span>
+									</span>
+								</label>
+							</li>
+							<li ng-if="!choice.current.length" class="text-muted"><i>(empty)</i></li>
+						</ul>
+					</td>
+					<td class="bridge-align-top">
+						<ul class="list-unstyled bridge-item-list">
+							<li ng-repeat="item in choice.items" ng-if="item.source === 'suggested'"
+								ng-class="{'bridge-item-unchecked': !item.checked && !item.duplicate}">
+								<label class="bridge-item-label">
+									<input type="checkbox" ng-model="item.checked"
+										ng-disabled="item.duplicate || choice.action === 'keep'">
+									<span class="bridge-item-text">
+										{{ choice.itemLabel(item.item) }}
+										<span ng-if="item.duplicate" class="text-muted"><i>(already in current)</i></span>
+									</span>
+								</label>
+							</li>
+							<li ng-if="!choice.suggested.length" class="text-muted"><i>(empty)</i></li>
+						</ul>
+					</td>
+					<td class="bridge-align-top">
+						<div class="bridge-actions">
+							<label class="radio-inline bridge-action"><input type="radio" ng-model="choice.action" ng-change="vm.actionChanged(choice)" value="keep"> Keep</label>
+							<label class="radio-inline bridge-action"><input type="radio" ng-model="choice.action" ng-change="vm.actionChanged(choice)" value="replace"> Replace</label>
+							<label class="radio-inline bridge-action"><input type="radio" ng-model="choice.action" ng-change="vm.actionChanged(choice)" value="merge"> Merge</label>
+						</div>
+					</td>
+				</tr>
+				<tr ng-repeat-end></tr>
+				<!-- RESULT preview row -->
+				<tr ng-repeat="choice in group.choices" ng-if="choice.action !== 'keep'"
+					class="bridge-result-row">
+					<td class="text-muted"><b>→</b></td>
+					<td colspan="3"><b>{{ choice.label }}</b> <pre>{{ vm.getResult(choice) | json:2 }}</pre></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-12 text-right">
+			<button type="button" class="btn btn-default" ng-click="vm.keepAll()">Keep all current</button>
+			<button type="button" class="btn btn-danger" ng-click="vm.discard()">Discard bridge results</button>
+			<button type="button" class="btn btn-primary" ng-click="vm.apply()">Apply selected</button>
+		</div>
+	</div>
+
+	<div ng-if="bridge.raw">
+		<h4>Raw bridge output</h4>
+		<pre>{{ bridge.raw }}</pre>
+	</div>
+</div>
