@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <h3 class="modal-title">Apply changes from GitHub?</h3>
+</div>
+<div class="modal-body">
+    <p>
+        The following <b>{{vm.count}}</b> field(s) of the tool entry will be updated:
+    </p>
+    <pre class="bridge-confirm-json">{{ vm.changesJson }}</pre>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+    <button type="button" class="btn btn-primary" ng-click="vm.confirm()">Yes, apply changes</button>
+</div>
