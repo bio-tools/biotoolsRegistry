@@ -8,14 +8,6 @@
 	</div>
 </div>
 <div ng-controller="BridgeReviewCtrl as vm">
-	<div class="row" style="margin-bottom: 10px;">
-		<div class="col-sm-12 text-right">
-			<button type="button" class="btn btn-default" ng-click="vm.keepAll()">Keep all current</button>
-			<button type="button" class="btn btn-danger" ng-click="vm.discard()">Discard bridge results</button>
-			<button type="button" class="btn btn-primary" ng-click="vm.apply()">Apply selected</button>
-		</div>
-	</div>
-
 	<div ng-repeat="group in vm.groups">
 		<h4>{{group.label}}</h4>
 		<table class="table table-condensed bridge-review">
@@ -31,7 +23,7 @@
 				<!-- SCALAR rows -->
 				<tr ng-repeat="choice in group.choices" ng-if="choice.kind === 'scalar'"
 					ng-class="{'bridge-changed': choice.action !== 'keep'}">
-					<td class="bridge-align-top"><b>{{choice.label}}</b></td>
+					<td class="bridge-align-top">{{choice.label}}</td>
 					<td class="bridge-align-top">
 						<span ng-if="choice.current">{{choice.current}}</span>
 						<span ng-if="!choice.current" class="text-muted"><i>(empty)</i></span>
@@ -47,7 +39,7 @@
 				<!-- LIST rows: checklists in Current / From GitHub columns -->
 				<tr ng-repeat-start="choice in group.choices" ng-if="choice.kind === 'list'"
 					ng-class="{'bridge-changed': choice.action !== 'keep'}">
-					<td class="bridge-align-top"><b>{{choice.label}}</b></td>
+					<td class="bridge-align-top">{{choice.label}}</td>
 					<td class="bridge-align-top">
 						<ul class="list-unstyled bridge-item-list">
 							<li ng-repeat="item in choice.items" ng-if="item.source === 'current'"
@@ -90,6 +82,9 @@
 				</tr>
 				<tr ng-repeat-end></tr>
 				<!-- RESULT preview row -->
+				<tr ng-if="vm.hasChanges(group)">
+					<td colspan="4"><b>Results</b></td>
+				</tr>
 				<tr ng-repeat="choice in group.choices" ng-if="choice.action !== 'keep'"
 					class="bridge-result-row">
 					<td class="text-muted"><b>→</b></td>
@@ -107,8 +102,13 @@
 		</div>
 	</div>
 
-	<div ng-if="bridge.raw">
-		<h4>Raw bridge output</h4>
-		<pre>{{ bridge.raw }}</pre>
+	<div ng-if="bridge.raw" style="margin-bottom: 20px;">
+		<button type="button" class="btn btn-default btn-xs" ng-click="vm.showRaw = !vm.showRaw">
+			<i class="fa" ng-class="{'fa-chevron-down': !vm.showRaw, 'fa-chevron-up': vm.showRaw}"></i>
+			Raw bridge output
+		</button>
+		<div uib-collapse="!vm.showRaw">
+			<pre>{{ bridge.raw }}</pre>
+		</div>
 	</div>
 </div>
