@@ -1,13 +1,32 @@
 <!-- Domain editors -->
 <span class="content-page-input-title-label">Domain editors</span>
-<input type="text"	
-	ng-model="userSuggestion"
-	class="form-control"
-	placeholder="Search for users"
-	uib-typeahead="suggestion for suggestion in userSuggestions($viewValue)"
-	uib-typeahead-on-select="userSelected($item, $model, $label)"
-	uib-typeahead-no-results="noResults">
-<h6 class="text-danger" ng-if="noResults">No users found. Try searching based on the username.</h6>
+<div class="form-group user-picker"
+	 ng-class="{ open: userSearch.showDropdown && userSearch.results.length > 0 }">
+	<input type="text"
+		ng-model="userSearch.query"
+		class="form-control"
+		placeholder="Search for users"
+		autocomplete="off"
+		ng-change="searchUsers()"
+		ng-keydown="userSearchKeydown($event)"
+		ng-focus="showDropdown()">
+	<ul class="list-group user-picker-dropdown"
+		ng-show="userSearch.showDropdown && userSearch.results.length > 0">
+		<li class="list-group-item user-picker-item"
+			ng-repeat="username in userSearch.results track by $index"
+			ng-class="{ active: $index === userSearch.highlighted }"
+			ng-mouseenter="userSearch.highlighted = $index"
+			ng-mousedown="selectEditor(username); $event.preventDefault()">
+			{{username}}
+		</li>
+	</ul>
+	<i class="fa fa-circle-o-notch fa-spin" style="margin-top:5px;" ng-show="userSearch.loading"></i>
+	<h6 class="text-danger" style="margin-top:5px;" ng-show="userSearch.error">User search failed. Please try again.</h6>
+	<h6 class="text-danger" style="margin-top:5px;"
+		ng-show="!userSearch.loading && !userSearch.error && userSearch.query.length >= 2 && userSearch.results.length == 0">
+		No users found. Try searching based on the username.
+	</h6>
+</div>
 <!-- Create a table to show users with editing rights -->
 <div>
 	<span class="content-page-input-title-label">Users that can edit the subdomain</span>

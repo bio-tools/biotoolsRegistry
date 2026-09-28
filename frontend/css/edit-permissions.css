@@ -1,3 +1,29 @@
 .edit-permission-user-table-vertical-space {
 	margin-top: 20px;
 }
+
+.user-picker {
+    position: relative;
+}
+
+.user-picker-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-top: 2px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    background-color: #fff;
+}
+
+.user-picker-item {
+    cursor: pointer;
+}
+
+.user-picker-item.active {
+    background-color: #337ab7;
+    color: #fff;
+}
