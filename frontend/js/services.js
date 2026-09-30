@@ -338,6 +338,7 @@ angular.module('elixir_front.services', [])
 .service('DisplayModeSelector', function(){
 	this.list = [
 	{"attrName": "cards", "text": "Cards"},
+	{"attrName": "dashboard", "text": "Dashboard"},
 	{"attrName": "grid", "text": "Table"}
 	];
 	this.mode = this.list[0];

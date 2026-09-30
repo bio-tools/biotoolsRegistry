@@ -1,0 +1,140 @@
+/* Dashboard view: filter sidebar + tool list */
+
+.dashboard-container {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Sidebar */
+.dashboard-sidebar {
+    padding-right: 20px;
+}
+
+.dashboard-sidebar-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #575757;
+    margin-bottom: 10px;
+}
+
+.dashboard-filter-section {
+    margin-bottom: 20px;
+}
+
+.dashboard-filter-section-title {
+    font-weight: bold;
+    font-size: 13px;
+    color: #333333;
+    margin-bottom: 5px;
+}
+
+/* Collapsible dropdown header */
+.dashboard-filter-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 13px;
+    color: #333333;
+    padding: 5px 8px;
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px;
+    text-decoration: none;
+}
+
+.dashboard-filter-toggle:hover {
+    background-color: #F0F0F0;
+    text-decoration: none;
+    color: #333333;
+}
+
+.dashboard-filter-toggle-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dashboard-filter-caret {
+    color: #337ab7;
+    font-size: 12px;
+    margin-left: 5px;
+    transition: transform 0.15s ease;
+}
+
+.dashboard-filter-caret-open {
+    transform: rotate(180deg);
+}
+
+/* Dropdown body: search box + scrollable option list */
+.dashboard-filter-dropdown {
+    margin-top: 5px;
+    padding: 5px;
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+}
+
+.dashboard-filter-input {
+    margin-bottom: 5px;
+    font-size: 12px;
+    padding: 3px 8px;
+    height: auto;
+}
+
+.dashboard-filter-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 5px;
+}
+
+.dashboard-filter-list-scrollable {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.dashboard-filter-empty {
+    font-size: 12px;
+    color: #999999;
+    padding: 2px 4px;
+}
+
+.dashboard-filter-list li {
+    padding: 1px 0;
+}
+
+.dashboard-filter-value {
+    display: block;
+    font-size: 12px;
+    color: #337ab7;
+    text-decoration: none;
+    padding: 2px 4px;
+    border-radius: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dashboard-filter-value:hover {
+    background-color: #F0F0F0;
+    text-decoration: none;
+}
+
+.dashboard-filter-value-active {
+    background-color: #337ab7;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.dashboard-filter-value-active:hover {
+    background-color: #286090;
+    color: #ffffff;
+}
+
+/* stack sidebar above results on small screens */
+@media (max-width: 991px) {
+    .dashboard-sidebar {
+        margin-bottom: 20px;
+    }
+}
