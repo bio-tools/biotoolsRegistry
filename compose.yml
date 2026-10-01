@@ -112,6 +112,16 @@ services:
       - net
     restart: unless-stopped
 
+  metadata-bridge:
+    container_name: biotools-metadata-bridge
+    image: anitamnd/bridge:latest
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      HUGGINGFACE_TOKEN: ${HUGGINGFACE_TOKEN}
+    restart: unless-stopped
+    networks:
+      - net
+
 networks:
   net:
     name: biotools-net
