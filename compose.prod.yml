@@ -74,6 +74,16 @@ services:
       - elasticsearch
     command: python manage.py process_tasks
 
+  metadata-bridge:
+    container_name: biotools-metadata-bridge
+    image: anitamnd/bridge:latest
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      HUGGINGFACE_TOKEN: ${HUGGINGFACE_TOKEN}
+    restart: unless-stopped
+    networks:
+      - net
+
   rendertron:
     image: dockette/rendertron
     container_name: biotools-rendertron
