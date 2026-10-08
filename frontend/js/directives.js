@@ -80,8 +80,8 @@ angular.module('elixir_front.directives', [])
                 {param: 'license', ontology: 'license', label: 'License'},
                 {param: 'operatingSystem', ontology: null, label: 'Operating system', staticOptions: ['Linux', 'Mac', 'Windows', 'Android', 'iOS']},
                 {param: 'collectionID', ontology: 'collectionID', label: 'Collection'},
-                {param: 'cost', ontology: null, label: 'Cost', staticOptions: ['Free of charge', 'Free of charge (with restrictions)', 'Proprietary']},
-                {param: 'accessibility', ontology: null, label: 'Accessibility', staticOptions: ['Open access', 'Open access (with restrictions)', 'Restricted']},
+                {param: 'cost', ontology: null, label: 'Cost', staticOptions: ['Free of charge', 'Free of charge (with restrictions)', 'Commercial']},
+                {param: 'accessibility', ontology: null, label: 'Accessibility', staticOptions: ['Open access', 'Open access (with restrictions)', 'Restricted access']},
             ];
             scope.filterSections = filterSections;
 
