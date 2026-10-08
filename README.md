@@ -25,7 +25,14 @@ Please read the [documentation](http://biotools.readthedocs.io/en/latest/).
 
 # Development Setup
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code quality tools, and contribution guidelines.
+The project uses [Docker Compose](https://docs.docker.com/compose/) with two setup files:
+
+* **Development**: [compose.yml](compose.yml) — runs backend, frontend, MySQL, Elasticsearch, Caddy and the metadata bridge, with source code mounted for live editing. Started with `docker compose up`.
+* **Production**: [compose.prod.yml](compose.prod.yml) — builds a self-contained application image served on port 80, plus a task runner, rendertron and the metadata bridge. Started with `docker compose -f compose.prod.yml up`.
+
+Configuration for both setups is provided via environment variables. Copy the [`.env.example`](.env.example) template to `.env` and adjust the values (see [INSTALL.md](INSTALL.md), step 3). The `.env` file is git-ignored and must never be committed.
+
+See [INSTALL.md](INSTALL.md) for detailed installation instructions and [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code quality tools, and contribution guidelines.
 
 # Source code and installation
 *bio.tools* is available under [open license](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE).

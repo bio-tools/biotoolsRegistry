@@ -1,3 +1,5 @@
+import hashlib
+
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from elixir.permissions import (
@@ -46,6 +48,32 @@ def check_update_confidence_flag(resource_confidence_flag, request_confidence_fl
     ):
         return False
     return True
+
+
+def _canonicalize(value):
+    if isinstance(value, dict):
+        return {k: _canonicalize(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        items = [_canonicalize(v) for v in value]
+        items.sort(key=lambda v: json.dumps(v, sort_keys=True, default=str))
+        return [v for i, v in enumerate(items) if i == 0 or v != items[i - 1]]
+    return value
+
+
+def _payload_fingerprint(validated_data):
+    """
+    Returns a fingerprint of the payload, which is used to determine if the payload has changed.
+    """
+    # We need to remove the fields that are not part of the resource model
+    payload = {k: v for k, v in validated_data.items() if k not in ['additionDate', 'lastUpdate', 'validated', 'homepage_status', 'elixir_badge', 'biotoolsID']}
+    canonical = _canonicalize(payload)
+    return hashlib.sha256(
+            json.dumps(
+                canonical,
+                sort_keys=True,
+                default=str,
+            ).encode("utf-8")
+        ).hexdigest()
 
 
 class ResourceList(APIView):
@@ -474,6 +502,11 @@ class ResourceDetail(APIView):
         )
 
         if serializer.is_valid():
+            fingerprint = _payload_fingerprint(serializer.validated_data)
+
+            if fingerprint and fingerprint == resource.version_hash:
+                return Response({"no_changes": True, "detail": "No changes detected."}, status=status.HTTP_200_OK)
+            
             # only superusers can change confidence_flag from tool to something else
             if not request.user.is_superuser and not (
                 check_update_confidence_flag(
@@ -506,8 +539,8 @@ class ResourceDetail(APIView):
                 additionDate=resource.additionDate,
                 owner=resource.owner,
                 was_id_validated=is_id_valid,
+                version_hash=fingerprint,
             )
-            # issue_function(Resource.objects.get(biotoolsID=serializer.data['biotoolsID'], visibility=1), str(resource.owner))
 
             # update the existing resource in elastic
             result = es.search(

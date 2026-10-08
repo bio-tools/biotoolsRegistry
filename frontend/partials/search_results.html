@@ -19,6 +19,7 @@
 		<div class="row">
 			<div ng-if="DisplayModeSelector.mode.attrName == 'grid'"><div tool-list-table></div></div>
 			<div ng-if="DisplayModeSelector.mode.attrName == 'cards'" class="container"><div tool-list></div></div>
+			<div ng-if="DisplayModeSelector.mode.attrName == 'dashboard'" class="container"><div tool-list-dashboard></div></div>
 		</div>
 	</div>
 	<div style="text-align:center" ng-if="ToolList.loading">

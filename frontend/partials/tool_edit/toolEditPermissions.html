@@ -1,48 +1,85 @@
 <div ng-controller="PermissionsController">
-	<ng-form name="permissionsForm">
-		<div class="panel-body">
-			<!-- Public resource -->
-			<div class="radio">
-				<label>
-					<input type="radio" name="sharing_radio" ng-model="software.editPermission.type" value="private">Make this resource editable by me only
-				</label>
-			</div>
-			<!-- Private resource -->
-			<div class="radio">
-				<label>
-					<input type="radio" name="sharing_radio" ng-model="software.editPermission.type" value="public">Make this resource editable by anyone
-				</label>
-			</div>
-			<!-- Specify permissions -->
-			<div class="radio">
-				<label>
-					<input type="radio" name="sharing_radio" ng-model="software.editPermission.type" value="group">Make this resource editable for a specifed list of users
-				</label>
-			</div>
-		</div>
-		<!-- Manage permissions for users -->
-		<div ng-show="software.editPermission.type == 'group'" class="panel panel-default">
-			<div class="panel-body">
-				<input type="text"
-				ng-model="userSuggestion"
-				class="form-control"
-				placeholder="Search for users"
-				uib-typeahead="suggestion for suggestion in userSuggestions($viewValue)"
-				uib-typeahead-on-select="userSelected($item, $model, $label)"
-				uib-typeahead-no-results="noResults">
-				<h6 class="text-danger" ng-if="noResults">No users found. Try searching based on the username.</h6>
-				<!-- Create a table to show users with editing rights -->
-				<div>
-					<h5 class="edit-permission-user-table-vertical-space">Users that can edit the current resource:</h5>
-					<span ng-show="!software.editPermission.authors || software.editPermission.authors.length == 0">None</span>
-					<ul class="list-group" ng-show="users.length != 0">
-						<li class="list-group-item" ng-repeat="user in software.editPermission.authors track by $index">
-							<span>{{user}}</span>
-							<button class="btn btn-xs btn-danger pull-right" ng-click="deleteUser($index)">Remove</button>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</ng-form>
+    <ng-form name="permissionsForm">
+        <div class="panel-body">
+            <div class="radio">
+                <label>
+                    <input type="radio"
+                           name="sharing_radio"
+                           ng-model="software.editPermission.type"
+                           ng-change="setPermissionType('private')"
+                           value="private">
+                    Make this resource editable by me only
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio"
+                           name="sharing_radio"
+                           ng-model="software.editPermission.type"
+                           ng-change="setPermissionType('public')"
+                           value="public">
+                    Make this resource editable by anyone
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio"
+                           name="sharing_radio"
+                           ng-model="software.editPermission.type"
+                           ng-change="setPermissionType('group')"
+                           value="group">
+                    Make this resource editable for a specified list of users
+                </label>
+            </div>
+        </div>
+
+        <!-- Manage permissions for users -->
+        <div ng-show="software.editPermission.type == 'group'" class="panel panel-default">
+            <div class="panel-body">
+                <!-- User picker (plain dropdown) -->
+                <div class="form-group user-picker"
+                     ng-class="{ open: userSearch.showDropdown && userSearch.results.length > 0 }">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Search for users"
+                           autocomplete="off"
+                           ng-model="userSearch.query"
+                           ng-change="searchUsers()"
+                           ng-keydown="userSearchKeydown($event)"
+                           ng-focus="showDropdown()">
+                    <ul class="list-group user-picker-dropdown"
+                        ng-show="userSearch.showDropdown && userSearch.results.length > 0">
+                        <li class="list-group-item user-picker-item"
+                            ng-repeat="username in userSearch.results track by $index"
+                            ng-class="{ active: $index === userSearch.highlighted }"
+                            ng-mouseenter="userSearch.highlighted = $index"
+                            ng-mousedown="selectUser(username); $event.preventDefault()">
+                            {{username}}
+                        </li>
+                    </ul>
+                    <i class="fa fa-circle-o-notch fa-spin" style="margin-top:5px;"
+                       ng-show="userSearch.loading"></i>
+                    <h6 class="text-danger" style="margin-top:5px;"
+                        ng-show="!userSearch.loading && !userSearch.error && userSearch.query.length >= 2 && userSearch.results.length == 0 && userSearch.showDropdown == false && false"></h6>
+                    <h6 class="text-danger" style="margin-top:5px;"
+                        ng-show="userSearch.error">User search failed. Please try again.</h6>
+                </div>
+
+                <!-- Users with editing rights -->
+                <h5 class="edit-permission-user-table-vertical-space">
+                    Users that can edit the current resource:
+                </h5>
+                <span ng-show="!software.editPermission.authors || software.editPermission.authors.length == 0">None</span>
+                <ul class="list-group"
+                    ng-show="software.editPermission.authors && software.editPermission.authors.length > 0">
+                    <li class="list-group-item"
+                        ng-repeat="user in software.editPermission.authors track by $index">
+                        <span>{{user}}</span>
+                        <button class="btn btn-xs btn-danger pull-right"
+                                ng-click="removeAuthor($index)">Remove</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </ng-form>
 </div>

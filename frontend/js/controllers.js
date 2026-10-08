@@ -235,6 +235,8 @@ angular
         'UsedTerms',
         '$q',
         '$uibModal',
+        '$http',
+        'Bridge',
         function (
             $scope,
             $controller,
@@ -247,7 +249,9 @@ angular
             $timeout,
             UsedTerms,
             $q,
-            $uibModal
+            $uibModal,
+            $http,
+            Bridge
         ) {
             // reference the service
             $scope.Attribute = Attribute;
@@ -260,6 +264,7 @@ angular
             $scope.orderby = 'text';
 
             $scope.registeringInProgress = false;
+            $scope.bridge = { url: '', inProgress: false, message: null, raw: null, choices: null, active: false };
 
             // for storing validation and saving progess
             ($scope.validationProgress = {}),
@@ -295,6 +300,12 @@ angular
                     function (response) {
                         // handle success
                         progress.inProgress = false;
+
+                        if (response && response.no_changes) {
+                            progress.noChanges = true;
+                            return;
+                        }
+
                         progress.success = true;
                         if (isRemoval) {
                             alert('Resource removed succesfully.');
@@ -312,6 +323,27 @@ angular
                         $scope.registrationErrorPayload = response.data;
                     }
                 );
+            };
+
+            // metadata bridge
+            $scope.isGithubUrl = function (url) {
+                return Bridge.isGithubUrl(url);
+            };
+
+            $scope.bridgeButtonClick = function () {
+                Bridge.run(
+                    $scope.bridge,
+                    $scope.software,
+                    $scope.software && $scope.software.biotoolsID
+                );
+            };
+
+            // number of bridge suggestions with a pending (non-keep) action,
+            // shown as a badge on the GitHub Bridge tab
+            $scope.bridgeTabCount = function () {
+                return ($scope.bridge.choices || []).filter(function (c) {
+                    return c.action !== 'keep';
+                }).length;
             };
 
             // modals
@@ -534,6 +566,7 @@ angular
                 function (newVal, oldVal) {
                     if (newVal !== oldVal) {
                         $scope.savingProgress.success = false;
+                        $scope.savingProgress.noChanges = false;
                         $scope.validationProgress.success = false;
                     }
                 },
