@@ -78,7 +78,7 @@ angular.module('elixir_front.directives', [])
                 {param: 'outputData', ontology: 'outputData', label: 'Output data', searchable: true},
                 {param: 'language', ontology: 'language', label: 'Language'},
                 {param: 'license', ontology: 'license', label: 'License'},
-                {param: 'operatingSystem', ontology: null, label: 'Operating system', staticOptions: ['Linux', 'Mac', 'Windows']},
+                {param: 'operatingSystem', ontology: null, label: 'Operating system', staticOptions: ['Linux', 'Mac', 'Windows', 'Android', 'iOS']},
                 {param: 'collectionID', ontology: 'collectionID', label: 'Collection'},
                 {param: 'cost', ontology: null, label: 'Cost', staticOptions: ['Free of charge', 'Free of charge (with restrictions)', 'Proprietary']},
                 {param: 'accessibility', ontology: null, label: 'Accessibility', staticOptions: ['Open access', 'Open access (with restrictions)', 'Restricted']},
