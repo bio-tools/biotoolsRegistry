@@ -1,0 +1,32 @@
+{% extends 'html/public/base.html' %}
+{% block title %}Statistics | bio.tools{% endblock %}
+{% block content %}
+<h1>Registry statistics</h1>
+{% for section in sections %}
+<section class="statistics-section" aria-label="{{ section.title }}">
+  <h2>{{ section.title }}</h2>
+  {% if section.unavailable %}<div role="alert"><p>This dataset is temporarily unavailable.</p><a href="">Retry</a></div>
+  {% elif section.empty %}<p>No historical measurements available.</p>
+  {% else %}
+    {% if section.date %}<p>{{ section.date }}</p>{% endif %}
+    {% if section.counts %}<dl class="statistics-totals">{% for item in section.counts %}<div><dt>{{ item.label }}</dt><dd>{{ item.value }}</dd></div>{% endfor %}</dl>{% endif %}
+    {% if section.annotations %}
+    <details><summary>Annotations by type</summary><table class="public-table"><thead><tr><th>Annotation</th><th>Count</th></tr></thead><tbody>
+      {% for item in section.annotations %}<tr><th scope="row">{{ item.label }}</th><td>{{ item.value }}</td></tr>{% endfor %}
+      <tr><th scope="row">Total</th><td>{{ section.annotation_total }}</td></tr>
+    </tbody></table></details>
+    {% endif %}
+    {% for chart in section.breakdowns %}
+    <details><summary>{{ chart.label }}</summary>
+      {% for item in chart.values %}<div class="stat-bar"><span>{{ item.label }}</span><meter min="0" max="{{ chart.maximum }}" value="{{ item.value }}" aria-label="{{ item.label }}">{{ item.value }}</meter><span>{{ item.value }}</span></div>{% empty %}<p>No measurements available.</p>{% endfor %}
+    </details>
+    {% endfor %}
+    {% for chart in section.series %}
+    <details {% if forloop.first %}open{% endif %}><summary>{{ chart.label }}</summary>
+      {% for item in chart.values %}<div class="stat-bar"><span>{{ item.date }}</span><meter min="0" max="{{ chart.maximum }}" value="{{ item.value }}" aria-label="{{ chart.label }}: {{ item.date }}">{{ item.value }}</meter><span>{{ item.value }}</span></div>{% endfor %}
+    </details>
+    {% endfor %}
+  {% endif %}
+</section>
+{% endfor %}
+{% endblock %}

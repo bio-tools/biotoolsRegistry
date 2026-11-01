@@ -1,0 +1,1 @@
+INVALID_QUERY_ERROR = "[TEST ERROR]: Invalid query resulted in change in database."

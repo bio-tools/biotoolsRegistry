@@ -1,0 +1,13 @@
+{% extends 'html/base.html' %}
+{% block title %}Request access to {{ tool.name }} | bio.tools{% endblock %}
+{% block content %}
+<h1>Request access</h1>
+<p><a href="{% url 'html:tool-detail' identifier=tool.biotoolsID %}">{{ tool.name }}</a></p>
+<p>Owner: {{ tool.owner.username }}</p>
+<form method="post" class="auth-form request-form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Send request</button>
+</form>
+<p><a href="{% url 'html:requests' %}">My requests</a></p>
+{% endblock %}

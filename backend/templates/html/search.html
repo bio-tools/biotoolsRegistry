@@ -1,0 +1,53 @@
+{% extends "html/base.html" %}
+{% block title %}Search tools | bio.tools{% endblock %}
+{% block content %}
+<h1>Search tools</h1>
+<template id="search-config">{{ search_config|json_script }}</template>
+<div data-vue-island="search-workspace" data-vue-props="search-config" hx-disable>
+  <form method="get" action="{{ search_path }}" class="search-form native-search">
+    {% for key, value in unknown_parameters %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endfor %}
+    <label for="native-search">Search bio.tools</label>
+    <div class="search-controls"><input id="native-search" type="search" name="q" maxlength="256" value="{{ search_values.q }}"><button type="submit">Search</button></div>
+    <details class="native-filters"><summary>Filters</summary>
+      {% for group in search_groups %}{% include 'html/search_filter_group.html' with group=group only %}{% endfor %}
+      <label for="native-advanced">Advanced filters</label>
+      <textarea id="native-advanced" name="advanced" rows="3">{{ search_values.advanced|default:'[]' }}</textarea>
+    </details>
+    <div class="search-controls native-sort">
+      <div><label for="native-sort">Sort by</label><select id="native-sort" name="sort">{% for key, label in search_config.sorts.items %}<option value="{{ key }}" {% if search_values.sort|default:'lastUpdate' == key %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+      <div><label for="native-order">Order</label><select id="native-order" name="ord"><option value="desc">Descending</option><option value="asc" {% if search_values.ord == 'asc' %}selected{% endif %}>Ascending</option></select></div>
+      <div><label for="native-size">Page size</label><select id="native-size" name="per_page">{% for size in search_config.pageSizes %}<option value="{{ size }}" {% if search_values.per_page|default:'50' == size|stringformat:'s' %}selected{% endif %}>{{ size }}</option>{% endfor %}</select></div>
+      <div><label for="native-view">View</label><select id="native-view" name="view"><option value="cards">Cards</option><option value="table" {% if search_values.view == 'table' %}selected{% endif %}>Table</option></select></div>
+      <button type="submit">Apply filters</button><a href="{{ search_path }}">Clear search</a>
+    </div>
+  </form>
+  <ul class="native-active-filters" aria-label="Active filters">{% for field in search_fields %}{% if field.value %}<li>{{ field.label }}: {{ field.value }}</li>{% endif %}{% endfor %}</ul>
+  {% if search_values.advanced %}<details><summary>Applied advanced filters</summary><pre>{{ search_values.advanced }}</pre></details>{% endif %}
+  <section aria-label="Search results">
+  {% if search_result.error %}
+    <div role="alert"><p>{% if search_result.error.field %}{{ search_result.error.field }}: {% endif %}{{ search_result.error.message }}</p>
+      <a href="{{ request.get_full_path }}">Retry</a> <a href="{{ first_url }}">Page 1</a></div>
+  {% else %}
+    <p role="status">{{ search_result.count }} tools &middot; Page {{ search_result.pagination.page }} of {{ search_result.pagination.pages }}</p>
+    {% if search_values.view == 'table' and search_result.count %}
+    <div class="native-comparison" tabindex="0" role="region" aria-label="Tool results table">
+      <table><thead><tr><th>{{ search_config.comparisonFields.name }}</th>{% for key, label in search_config.comparisonFields.items %}{% if key != 'name' %}<th>{{ label }}</th>{% endif %}{% endfor %}</tr></thead>
+      <tbody>{% for tool in search_result.items %}<tr data-tool-id="{{ tool.id }}"><th scope="row"><a href="{{ tool.url }}">{{ tool.name }}</a></th>{% for cell in tool.comparisonCells %}<td>{{ cell|default:'-' }}</td>{% endfor %}</tr>{% endfor %}</tbody></table>
+    </div>
+    {% else %}
+    {% for tool in search_result.items %}
+    <article class="native-tool-result" data-tool-id="{{ tool.id }}">
+      <h2><a href="{{ tool.url }}">{{ tool.name }}</a></h2><small>bio.tools:{{ tool.id }}</small>
+      <p>{{ tool.description }}</p><p>{{ tool.toolTypes|join:', ' }}</p>
+      {% if tool.topics %}<p>Topics: {{ tool.topics|join:', ' }}</p>{% endif %}
+      {% if tool.operations %}<p>Operations: {{ tool.operations|join:', ' }}</p>{% endif %}
+      <small>Added {{ tool.added|default:'-' }} &middot; Updated {{ tool.updated|default:'-' }}</small>
+    </article>
+    {% empty %}<h2>No tools found</h2>{% endfor %}
+    {% endif %}
+    {% if search_result.pagination.limited %}<p>Showing the first 10,000 matches. Narrow your search for more specific results.</p>{% endif %}
+    <nav class="pagination" aria-label="Result pages">{% if previous_url %}<a href="{{ previous_url }}">Previous</a>{% endif %}<span>{{ search_result.pagination.page }} / {{ search_result.pagination.pages }}</span>{% if next_url %}<a href="{{ next_url }}">Next</a>{% endif %}</nav>
+  {% endif %}
+  </section>
+</div>
+{% endblock %}

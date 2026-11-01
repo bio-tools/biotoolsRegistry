@@ -1,161 +1,105 @@
+"""Domain writes shared by token API and native session forms."""
+from django.conf import settings
+from django.db import transaction
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+from elasticsearch.exceptions import TransportError
+from rest_framework.exceptions import PermissionDenied, ValidationError
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from elixir.permissions import IsDomainOwnerOrReadOnly, IsOwnerOrReadOnly, HasEditPermissionToEditResourceOrReadOnly, CanConcludeResourceRequest, IsStaffOrReadOnly
-from elixir.models import *
-from elixir.serializers import *
+
+from elixir.management_errors import ManagementUnavailable
+from elixir.models import Domain
+from elixir.permissions import IsDomainOwnerOrEditorOrReadOnly
+from elixir.serializers import DomainSerializer, DomainUpdateSerializer, PublicSubdomainSerializer, SubdomainNameSerializer
 from elixir.view.resource import es
-from django.http import Http404
-from rest_framework.validators import UniqueValidator
-from elasticsearch import NotFoundError as ESNotFoundError
 
-# Perhaps there should be some domains that can't be deleted... or only deleted by superusers
-# Maybe add this in a settings file
-NOT_DELETABLE_DOMAINS = ['all']
+NOT_DELETABLE_DOMAINS = {'all', 'covid-19'}
 
 
-def is_superuser(user):
-	return User.objects.get(username=user).is_superuser == 1
+def manages_domain(user, domain):
+    return user.is_authenticated and (user.is_superuser or domain.owner_id == user.pk)
+
+
+def index_domain(domain, *, delete=False):
+    try:
+        index = getattr(settings, 'ELASTIC_SEARCH_DOMAIN_INDEX', 'domains')
+        if delete:
+            es.delete(index=index, doc_type='_doc', id=domain.name, ignore=[404], refresh='wait_for')
+        else:
+            es.index(index=index, doc_type='_doc', id=domain.name,
+                     body=DomainSerializer(domain).data, refresh='wait_for')
+    except TransportError as exc:
+        raise ManagementUnavailable() from exc
+
 
 class DomainView(APIView):
-	"""
-	Create or list domains.
-	"""
-	permission_classes = (IsAuthenticatedOrReadOnly, IsDomainOwnerOrReadOnly, )
+    permission_classes = (IsAuthenticatedOrReadOnly, IsDomainOwnerOrEditorOrReadOnly)
 
+    def get(self, request, format=None):
+        domains = Domain.objects.filter(visibility=1)
+        if request.user.is_authenticated and not request.user.is_superuser:
+            domains = domains.filter(Q(owner=request.user) | Q(editors=request.user)).distinct()
+            serializer = SubdomainNameSerializer(domains, many=True, context={'request': request})
+        else:
+            serializer = PublicSubdomainSerializer(domains, many=True)
+        return Response(serializer.data)
 
-	# get a list of all domains (domain name/id and the number of resources in the domain)
-	# this is based on the type of user (anonymous, logged in, superuser)
-	def get(self, request, format=None):
-		if request.user and not request.user.is_anonymous and not(is_superuser(request.user)):
-			subdomains = Domain.objects.filter(owner=request.user, visibility=1)
-			serializer = SubdomainNameSerializer(instance=subdomains, many=True)
-			return Response(serializer.data, status=status.HTTP_200_OK)
-		elif request.user and not request.user.is_anonymous and is_superuser(request.user):
-			subdomains = Domain.objects.filter(visibility=1)
-			serializer = SubdomainNameSerializer(instance=subdomains, many=True)
-			return Response(serializer.data, status=status.HTTP_200_OK)
-		else:
-			subdomains = Domain.objects.filter(visibility=1)
-			serializer = SubdomainNameSerializer(instance=subdomains, many=True)
-			return Response(serializer.data, status=status.HTTP_200_OK)
+    @transaction.atomic
+    def post(self, request, format=None):
+        serializer = DomainSerializer(data=request.data, context={'request': request, 'request_type': 'POST'})
+        serializer.is_valid(raise_exception=True)
+        domain = serializer.save(owner=request.user)
+        index_domain(domain)
+        return Response(serializer.data, status=201)
 
-
-	def post(self, request, format=None):
-
-		serializer = DomainSerializer(data=request.data, context={'request':request,"request_type":"POST"})
-
-		# Need to check somewhere that those resources do indeed exist
-		# Also we get DomainResource names from the original resource , rather than letting the user add names willy-nilly
-
-		if serializer.is_valid():
-			serializer.save(owner=request.user)
-			
-			es.index(
-				index='domains', 
-				doc_type='_doc', 
-				id=serializer.validated_data['name'], 
-				body=serializer.data
-			)
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DomainResourceView(APIView):
-	"""
-	Add/remove or list tools for a domain.
-	"""
-	permission_classes = (IsAuthenticatedOrReadOnly, IsDomainOwnerOrReadOnly, )
+    permission_classes = (IsAuthenticatedOrReadOnly, IsDomainOwnerOrEditorOrReadOnly)
 
+    def get_object(self, name, *, lock=False):
+        query = Domain.objects.select_for_update() if lock else Domain.objects.all()
+        obj = get_object_or_404(query, name=name.lower(), visibility=1)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
-	def get_object(self, name):
-		try:
-			obj = Domain.objects.get(name=name, visibility=1)
-			self.check_object_permissions(self.request, obj)
-			return obj
-		except Domain.DoesNotExist:
-			raise Http404
+    def get(self, request, domain, format=None):
+        if domain.lower() == 'all':
+            result = es.search(index=getattr(settings, 'ELASTIC_SEARCH_DOMAIN_INDEX', 'domains'),
+                               body={'size': 10000, 'query': {'match_all': {}}})
+            return Response({'count': result['hits']['total']['value'],
+                             'data': [hit['_source'] for hit in result['hits']['hits']]})
+        return Response({'count': 1, 'data': DomainSerializer(self.get_object(domain)).data})
 
-	def get(self, request, domain, format=None):
-		# need to do something with this, count doesn't make sense here, should be a different URL
-		
-		if domain.lower() == 'all':
-			elastic_domain_query_struct = {
-				"size": 10000,
-				"query" : {
-					"match_all" : {}
-				}
-			}
-			result = es.search(index='domains', body=elastic_domain_query_struct)
-			count = result['hits']['total']['value']
-			if count > 0:
-				result = [el['_source'] for el in result['hits']['hits']]
-				return Response({'count': count,
-						 'data': result}, status=200)
-			else:
-				return Response(status=status.HTTP_404_NOT_FOUND)
+    @transaction.atomic
+    def put(self, request, domain=None, format=None):
+        # The legacy API also accepts PUT /d with the identifier in the body.
+        if not isinstance(request.data, dict) or not isinstance(request.data.get('domain'), str):
+            raise ValidationError({'domain': 'Supply a domain identifier.'})
+        name = domain or request.data.get('domain', '')
+        old = self.get_object(name, lock=True)
+        if request.data.get('domain', '').lower() != old.name:
+            raise ValidationError({'domain': 'The URL and domain identifier must match.'})
+        data = request.data.copy()
+        current_editors = set(old.editors.values_list('username', flat=True))
+        data.setdefault('editors', sorted(current_editors))
+        serializer = DomainUpdateSerializer(data=data, context={'request': request, 'request_type': 'PUT'})
+        serializer.is_valid(raise_exception=True)
+        if not manages_domain(request.user, old) and {user.username for user in serializer.validated_data['editors']} != current_editors:
+            raise PermissionDenied('Only the owner can change domain editors.')
+        old.visibility = 0
+        old.save(update_fields=['visibility'])
+        updated = serializer.save(owner=old.owner)
+        index_domain(updated)
+        return Response(serializer.data)
 
-		else:
-			# try:
-			# 	result = es.get(index='domains',doc_type='_doc', id=domain.lower())
-			# 	return Response(
-			# 		{
-			# 			'count': 1,
-			# 			'data': result['_source']
-			# 		}
-					
-			# 	)
-			# except ESNotFoundError:
-			# 	return Response(status=status.HTTP_404_NOT_FOUND)
-			d = self.get_object(domain)
-			result = DomainSerializer(d)
-			return Response(
-			 		{
-			 			'count': 1,
-			 			'data': result.data
-			 		}
-			)
-
-	def put(self, request, domain=None, format=None):	
-		# Updating a domain creates a new domain object and the old one gets a visibility of 0
-
-		serializer = DomainUpdateSerializer(data=request.data, context={'request':request,"request_type":"PUT"})
-
-		if serializer.is_valid():
-
-			old_domain = self.get_object(serializer.validated_data['name'])
-			old_domain.visibility = 0
-			old_domain.save()
-
-			# serializer.save(owner=old_domain.owner, additionDate=old_domain.additionDate)
-			
-			serializer.save(owner=old_domain.owner)
-			
-			es.index(
-				index='domains', 
-				doc_type='_doc', 
-				id=serializer.validated_data['name'], 
-				body=serializer.data
-			)
-
-			return Response(serializer.data, status=status.HTTP_200_OK)
-		
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-	def delete(self, request, domain, format=None):
-		if not(request.user.is_superuser) and domain.strip().lower() in NOT_DELETABLE_DOMAINS:
-			return Response({"detail": "You do not have permission to delete this domain."}, status=status.HTTP_403_FORBIDDEN)
-
-		d = self.get_object(domain)
-		d.visibility = 0
-		d.save()
-
-		try:
-			es.delete(index='domains', doc_type='_doc', id=domain.lower())
-		except ESNotFoundError:
-			# if it gets here it means then it set the visibility = 1 and if it can't find the document in the index
-			# it's kind of an issue but not really
-			# return 204 just to have a bit of a difference
-			return Response(status=status.HTTP_204_NO_CONTENT)
-
-		return Response(status=status.HTTP_200_OK)
+    @transaction.atomic
+    def delete(self, request, domain, format=None):
+        current = self.get_object(domain, lock=True)
+        if not manages_domain(request.user, current) or current.name in NOT_DELETABLE_DOMAINS:
+            raise PermissionDenied('Only the owner can delete a domain; all and covid-19 are protected.')
+        current.visibility = 0
+        current.save(update_fields=['visibility'])
+        index_domain(current, delete=True)
+        return Response(status=204)

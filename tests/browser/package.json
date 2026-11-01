@@ -1,0 +1,14 @@
+{
+  "name": "biotools-browser-regressions",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "report": "playwright show-report"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

@@ -32,6 +32,8 @@ class EditPermissionAuthorSerializer(serializers.ModelSerializer):
 
 	# need to add validation here since this method overrides all validation
 	def to_internal_value(self, data):
+		if not isinstance(data, str) or not data:
+			raise serializers.ValidationError("Specify a username.")
 		return {'username': data}
 
 	def to_representation(self, obj):

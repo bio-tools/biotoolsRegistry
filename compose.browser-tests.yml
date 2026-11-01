@@ -1,0 +1,13 @@
+# Deterministic provider only for disposable CI/rehearsal stacks.
+services:
+  backend:
+    environment:
+      - BIOTOOLS_GITHUB_BRIDGE_URL=http://bridge-stub:8000/github-to-biotools
+  bridge-stub:
+    image: biotools/backend:latest
+    command: python /rehearsal/bridge_stub.py
+    environment:
+      BIOTOOLS_ALLOW_TEST_SEED: biotools-refresh
+    volumes:
+      - ./tests/browser:/rehearsal:ro
+    networks: [net]

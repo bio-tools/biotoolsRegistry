@@ -1,0 +1,8 @@
+schema: spec-driven
+created: 2026-09-09
+goal: Establish the authentication and CSRF behavior used by migrated Django, htmx and Vue browser interfaces while preserving external API authentication.
+affected_areas:
+  - backend
+  - authentication
+  - frontend-next
+  - security

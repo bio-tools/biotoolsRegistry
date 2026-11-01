@@ -1,0 +1,9 @@
+{% load detail_tags %}
+{% for item in items %}
+<div class="io-item">
+  {% edam_term item.data data_field %}
+  {% if item.format.all %}<ul class="formats">{% for format in item.format.all %}
+    <li>{% edam_term format format_field %}</li>
+  {% endfor %}</ul>{% endif %}
+</div>
+{% empty %}<span class="muted">Not specified</span>{% endfor %}

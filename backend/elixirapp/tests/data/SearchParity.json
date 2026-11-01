@@ -1,0 +1,39 @@
+{
+  "resource": {
+    "biotoolsID": "parity-alpha", "name": "Parity Alpha", "description": "Distinctive proteomics analysis.",
+    "homepage": "https://example.org/parity-alpha", "version": ["v7unique"],
+    "topic": [{"uri": "http://edamontology.org/topic_0121", "term": "Proteomics"}],
+    "function": [{"operation": [{"uri": "http://edamontology.org/operation_0292", "term": "Sequence alignment"}],
+      "input": [{"data": {"uri": "http://edamontology.org/data_2044", "term": "Sequence"}, "format": [{"uri": "http://edamontology.org/format_1929", "term": "FASTA"}]}],
+      "output": [{"data": {"uri": "http://edamontology.org/data_0863", "term": "Alignment"}, "format": [{"uri": "http://edamontology.org/format_1915", "term": "ClustalW"}]}],
+      "note": "Distinctive annotation", "cmd": "align sequences"}],
+    "toolType": ["Command-line tool"], "collectionID": ["A & B + collection"], "maturity": "Mature",
+    "operatingSystem": ["Linux"], "language": ["Python"], "cost": "Free of charge", "license": "MIT", "accessibility": "Open access",
+    "credit": [{"name": "Parity Team", "note": "Distinctive credit", "typeRole": ["Developer"], "typeEntity": "Person",
+      "orcidid": "0000-0001-2345-6789", "gridid": "grid.unique", "rorid": "rorunique", "fundrefid": "fundrefunique"}],
+    "publication": [{"doi": "10.1234/parityunique", "pmid": "987654321", "pmcid": "PMC987654321", "type": ["Primary"], "version": "paperunique"}],
+    "link": [{"url": "https://example.org/issueunique", "type": ["Issue tracker"], "note": "Linkunique"}],
+    "documentation": [{"url": "https://example.org/docsunique", "type": ["User manual"], "note": "Docsunique"}],
+    "download": [{"url": "https://example.org/codeunique", "type": "Source code", "version": "downloadunique", "note": "Downloadunique"}],
+    "otherID": [{"value": "uniqueidentifier", "type": "doi", "version": "identifierunique"}],
+    "elixirNode": ["Denmark"], "elixirPlatform": ["Tools"], "elixirCommunity": ["Proteomics"], "owner": "parityowner",
+    "additionDate": "2026-01-01", "lastUpdate": "2026-01-02"
+  },
+  "filters": {
+    "biotoolsID": "parity-alpha", "name": "Parity Alpha", "topic": "Proteomics", "topicID": "topic_0121",
+    "function": "Distinctive annotation", "operation": "Sequence alignment", "operationID": "operation_0292",
+    "dataType": "Sequence", "dataTypeID": "data_2044", "dataFormat": "FASTA", "dataFormatID": "format_1929",
+    "input": "FASTA", "inputID": "data_2044", "inputDataType": "Sequence", "inputDataTypeID": "data_2044",
+    "inputDataFormat": "FASTA", "inputDataFormatID": "format_1929", "output": "ClustalW", "outputID": "data_0863",
+    "outputDataType": "Alignment", "outputDataTypeID": "data_0863", "outputDataFormat": "ClustalW", "outputDataFormatID": "format_1915",
+    "homepage": "https://example.org/parity-alpha", "description": "Distinctive proteomics", "version": "v7unique", "toolType": "Command-line tool",
+    "collectionID": "A & B + collection", "maturity": "Mature", "operatingSystem": "Linux", "language": "Python",
+    "cost": "Free of charge", "license": "MIT", "accessibility": "Open access", "credit": "Parity Team", "creditName": "Parity Team",
+    "creditTypeRole": "Developer", "creditTypeEntity": "Person", "creditOrcidID": "0000-0001-2345-6789", "creditGridID": "grid.unique",
+    "creditRORID": "rorunique", "creditFundRefID": "fundrefunique", "publication": "10.1234/parityunique", "publicationID": "987654321",
+    "publicationType": "Primary", "publicationVersion": "paperunique", "link": "Linkunique", "linkType": "Issue tracker",
+    "documentation": "Docsunique", "documentationType": "User manual", "download": "Downloadunique", "downloadType": "Source code",
+    "downloadVersion": "downloadunique", "otherID": "uniqueidentifier", "otherIDType": "doi", "otherIDVersion": "identifierunique",
+    "otherIDValue": "uniqueidentifier", "elixirNode": "Denmark", "elixirPlatform": "Tools", "elixirCommunity": "Proteomics", "owner": "parityowner"
+  }
+}

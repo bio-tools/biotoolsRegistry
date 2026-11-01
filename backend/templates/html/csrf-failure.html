@@ -1,0 +1,7 @@
+{% extends 'html/base.html' %}
+{% block title %}Request rejected | bio.tools{% endblock %}
+{% block content %}
+<h1>Request rejected</h1>
+<p>The security check failed. Return to the form and reload it before trying again.</p>
+<a href="{% url 'html:login' %}">Sign in</a>
+{% endblock %}

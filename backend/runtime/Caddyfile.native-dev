@@ -1,0 +1,23 @@
+https://localhost {
+	root * /elixir/application/frontend
+	@icon path /favicon.ico /img/favicon.ico
+	handle @icon {
+		rewrite * /static/html/favicon.ico
+		file_server
+	}
+	handle /robots.txt {
+		respond "User-agent: *\nDisallow: /\n" 200
+	}
+	handle /media/* {
+		root * /elixir/application/media_cdn
+		uri strip_prefix /media
+		file_server
+	}
+	@files path /static/* /resources/* /img/* /json/*
+	handle @files {
+		file_server
+	}
+	handle {
+		reverse_proxy {$BIOTOOLS_DJANGO_UPSTREAM:biotools-backend:8000}
+	}
+}

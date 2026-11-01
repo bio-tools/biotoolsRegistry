@@ -1,3 +1,4 @@
+from elixir.resource_options import METADATA_CHOICES
 from rest_framework import serializers
 from elixir.models import *
 from elixir.validators import *
@@ -31,7 +32,7 @@ class LinkTypeSerializer(serializers.ModelSerializer):
 		# checking if blank
 		IsNotBlankValidator(data)
 		# checking if within enum
-		enum = ENUMValidator(['Helpdesk', 'Issue tracker', 'Mailing list', 'Mirror', 'Repository', 'Social media', 'Service', 'Software catalogue', 'Technical monitoring', 'Galaxy service', 'Discussion forum', 'Other'])
+		enum = ENUMValidator(METADATA_CHOICES['link.type'])
 		data = enum(data)
 		return {'type': data}
 
@@ -51,4 +52,3 @@ class LinkSerializer(serializers.ModelSerializer):
 
 	def get_pk_field(self, model_field):
 		return None
-

@@ -1,0 +1,389 @@
+{% extends 'html/public/base.html' %}
+{% load static %}
+{% block title %}About bio.tools{% endblock %}
+{% block content %}
+<div class="public-copy public-about">
+<div class="container">
+	
+	<div class="jumbotron about-container home-text	">
+		<h1>About bio.tools</h1>
+		
+		<div class="about-section">
+
+				<div class="row equal-height-row">
+					<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+						<div class="about-summary-cell">
+						<h4><i class="fa fa-globe"></i>  Open Data</h4>
+						<p class="description-text">
+							<em>bio.tools</em> content is freely available to all under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> license 
+							- you are free to share and adapt the data, so long as you give credit and do not restrict the freedom of others. 
+						</p>
+						</div>
+					</div>
+		
+					<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+						<div class=" about-summary-cell">
+						<h4><i class="fa fa-code"></i> Open Source</h4>
+						<p class="description-text">
+							<em>bio.tools</em> source code is freely available to all under <a href="http://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer">GPL-3.0</a> - 
+							you are free to share and adapt our software, but you must ensure it remains free for all its users.
+						</p>
+						</div>
+					</div>
+		
+					<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+						<div class=" about-summary-cell">
+						<h4><i class="fa fa-users"></i> Built by You</h4>
+						<p class="description-text">
+							We depend on the goodwill and enthusiasm of our thousands (and growing!) of contributors - if you develop or provide tools and online services, 
+							please <a href="/register">add</a> them after <a href="/signup">signing-up</a>.
+						</p>
+						</div>
+					</div>
+				</div>
+		
+		
+				<div class="row equal-height-row">
+					<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+						<div class=" about-summary-cell">
+						<h4><i class="fa fa-link"></i> Tool IDs</h4>
+						<p class="description-text">
+							All <em>bio.tools</em> entries are assigned a human-friendly unique identifier, <em>e.g.</em> <a href="/signalp" target="_blank" rel="noopener noreferrer">biotools:signalp</a>.  
+							Once verified, a <em>bio.tools</em> ID provides a stable way to trace resources and integrate <em>bio.tools</em> data with other projects.
+						</p>
+						</div>
+					</div>
+		
+					<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+						<div class=" about-summary-cell">
+						<h4><i class="fa fa-book"></i> Standard Semantics</h4>
+						<p class="description-text">
+							The scientific function of <em>bio.tools</em> resources can be precisely annotated in defined terms from the 
+							<a href="http://github.com/edamontology/edamontology/" target="_blank" rel="noopener noreferrer">EDAM ontology</a>, including common topics, operations, types of 
+							data and data formats.
+						</p></div>
+					</div>
+		
+					<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+						<div class=" about-summary-cell">
+						<h4><i class="fa fa-pencil"></i> Standard Syntax</h4>
+						<p class="description-text">
+							<em>bio.tools</em> resource descriptions adhere to a rigorous syntax defined by 
+							<a href="http://github.com/bio-tools/biotoolsschema" target="_blank" rel="noopener noreferrer">biotoolsSchema</a>, which provides regular expressions, 
+							controlled vocabularies and other syntax rules for 50 key attributes.
+						</p>
+						</div>
+					</div>	
+				</div>
+		
+				<div class="row equal-height-row">
+					<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+						<div class=" about-summary-cell">
+						<h4><i class="fa fa-circle"></i> Community-driven</h4>
+						<p class="description-text">
+							We rely upon <a href="https://www.elixir-europe.org/communities" target="_blank" rel="noopener noreferrer">scientific communities</a> to improve the terminology and 
+							description of resources in different domains of the life sciences - we welcome your help with this 
+							<a href="https://biotools.readthedocs.io/en/latest/editors_guide.html" target="_blank" rel="noopener noreferrer">work in progress</a>. 
+						</p>
+						</div>
+					</div>
+		
+					<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+						<div class=" about-summary-cell">
+						<h4><i class="fa fa-flask"></i> Backed by ELIXIR </h4>
+						<p class="description-text">
+							<em>bio.tools</em> is anchored within <a href="https://www.elixir-europe.org/" target="_blank" rel="noopener noreferrer">ELIXIR</a>, the European Infrastructure 
+							for Biological Information. <em>bio.tools</em> will remain free, open and maintained in the long term.
+						</p>
+						</div>
+					</div>
+		
+					<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+						<div class=" about-summary-cell">
+						<h4><i class="fa fa-bars"></i> Tools Platform</h4>
+						<p class="description-text">
+							<em>bio.tools</em> is an integral part of the <a href="https://www.elixir-europe.org/platforms/tools" target="_blank" rel="noopener noreferrer">ELIXIR Tools Platform</a>,
+							enabling the development, description, discovery, re-use, deployment and benchmarking of software tools and workflows.
+						</p>
+						</div>
+					</div>
+				</div>			
+		
+				<div class="row equal-height-row">
+					<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+						<div class=" about-summary-cell">
+						<h4><i class="fa fa-plug"></i> API</h4>
+						<p class="description-text">
+							Our Web API provides an easy way to access the <em>bio.tools</em> data, allowing precise or alternatively flexible queries over all fields.  
+							Please see the <a href="https://biotools.readthedocs.io/en/latest/api_reference.html" target="_blank" rel="noopener noreferrer">API reference</a> and
+							 <a href="https://biotools.readthedocs.io/en/latest/api_usage_guide.html" target="_blank" rel="noopener noreferrer">API Usage Guide</a>.
+						</p>
+						</div>
+					</div>
+		
+					<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+						<div class=" about-summary-cell">
+						<h4><i class="fa fa-file-text"></i> Documentation</h4>
+						<p class="description-text">
+							Check out the docs for <a href="https://biotools.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer">bio.tools</a>, 
+							<a href="https://biotoolsschema.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer">biotoolsSchema</a> and the 
+							<a href="https://edamontologydocs.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer">EDAM ontology</a> - report any problems or make suggestions via GitHub.  
+						</p>
+						</div>
+					</div>
+		
+					<div class="col-lg-4 col-md-4 col-sm-12 outer-summary-cell">
+						<div class=" about-summary-cell">
+						<h4><i class="fa fa-life-ring"></i> Support</h4>
+						<p class="description-text">
+							Whether you are a user of <em>bio.tools</em>, a developer who wants to add their tools, or a scientist who wants integrate our data with your own; 
+							help is at hand.  Head over to <a href="http://github.com/bio-tools/biotoolsregistry/" target="_blank" rel="noopener noreferrer">GitHub</a> or 
+							<a href="mailto:support-bio-tools@sdu.dk">mail us</a> directly.
+						</p>
+						</div>
+					</div>
+				</div>
+		</div>
+
+		<hr>
+
+		<div class="about-section">
+        <h2 id="citing">Publications and citing</h2>
+        <p>If you use <em>bio.tools</em>, please cite:</p>
+        <ul class="citation-list" aria-label="bio.tools publications">
+          <li>
+            <h3><a href="https://academic.oup.com/nar/article/54/W1/W4/8719435" target="_blank" rel="noopener noreferrer">bio.tools: an expanded web service for research software in the life sciences</a></h3>
+            <p class="citation-authors">Mendes, A. et al. (2026).</p>
+            <p><cite>Nucleic Acids Research</cite></p>
+            <p class="citation-identifiers">DOI <a href="https://doi.org/10.1093/nar/gkag420" target="_blank" rel="noopener noreferrer">10.1093/nar/gkag420</a></p>
+          </li>
+          <li>
+            <h3><a href="http://nar.oxfordjournals.org/content/early/2015/11/03/nar.gkv1116.long" target="_blank" rel="noopener noreferrer">Tools and data services registry: a community effort to document bioinformatics resources.</a></h3>
+            <p class="citation-authors">Ison, J. et al. (2015).</p>
+            <p><cite>Nucleic Acids Research</cite></p>
+            <p class="citation-identifiers">DOI <a href="https://doi.org/10.1093/nar/gkv1116" target="_blank" rel="noopener noreferrer">10.1093/nar/gkv1116</a></p>
+          </li>
+          <li>
+            <h3><a href="https://doi.org/10.1186/s13059-019-1772-6" target="_blank" rel="noopener noreferrer">The bio.tools registry of software tools and data resources for the life sciences</a></h3>
+            <p class="citation-authors">Ison, J. et al. (2019).</p>
+            <p><cite>Genome Biology</cite></p>
+            <p class="citation-identifiers">DOI <a href="https://doi.org/10.1186/s13059-019-1772-6" target="_blank" rel="noopener noreferrer">10.1186/s13059-019-1772-6</a></p>
+          </li>
+        </ul>
+        <p>If you use EDAM or its part, please cite:</p>
+        <ul class="citation-list" aria-label="EDAM publications">
+          <li>
+            <h3><a href="http://bioinformatics.oxfordjournals.org/content/29/10/1325.full" target="_blank" rel="noopener noreferrer">EDAM: an ontology of bioinformatics operations, types of data and identifiers, topics and formats</a></h3>
+            <p class="citation-authors">Ison, J., Kalaš, M., Jonassen, I., Bolser, D., Uludag, M., McWilliam, H., Malone, J., Lopez, R., Pettifer, S. and Rice, P. (2013).</p>
+            <p><cite>Bioinformatics</cite></p>
+            <p class="citation-identifiers">DOI <a href="https://doi.org/10.1093/bioinformatics/btt113" target="_blank" rel="noopener noreferrer">10.1093/bioinformatics/btt113</a></p>
+          </li>
+          <li>
+            <h3><a href="https://f1000research.com/posters/11-1" target="_blank" rel="noopener noreferrer">EDAM: the bioscientific data analysis ontology.</a></h3>
+            <p class="citation-authors">Black, M. et al. (2021).</p>
+            <p><cite>F1000 Research</cite></p>
+            <p class="citation-identifiers">DOI <a href="https://doi.org/10.7490/f1000research.1118900.1" target="_blank" rel="noopener noreferrer">10.7490/f1000research.1118900.1</a></p>
+          </li>
+        </ul>
+        <p>For more information please visit our <a href="https://biotools.readthedocs.io/en/latest/publications.html" target="_blank" rel="noopener noreferrer">publications page</a>.</p>
+		</div>
+
+		<hr>
+
+		<div class="about-section">
+		<h4>Funding</h4>
+		<p class="description-text">
+			We acknowledge with gratitude the support of our funders:
+			</p><ul>
+				<li>The Danish Ministry of Higher Education and Science.</li>
+				<li>ELIXIR-EXCELERATE under the European Union's Horizon 2020 research and innovation programme (grant agreement number 
+					<a href="https://cordis.europa.eu/project/rcn/198519_en.html" target="_blank" rel="noopener noreferrer">676559</a>).</li>
+					<li>Continuous support by the <a href="https://elixir-europe.org/platforms/tools">ELIXIR Tools Platform.</a></li>
+			</ul>
+		<p></p>
+		</div>
+
+		<hr>
+
+		
+		<div class="about-section">
+			<h4>Supported by ELIXIR Nodes</h4>
+			<div class="row">
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/belgium" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/be.svg' %}" alt="Belgium">
+					</a>
+					<span>Belgium</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/czech-republic" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/cz.svg' %}" alt="Czech Republic">
+					</a>
+					<span>Czech Republic</span>
+				</div>
+
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/denmark" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/dk.svg' %}" alt="Denmark">
+					</a>
+					<span>Denmark</span>
+				</div>
+
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="http://www.elixir-europe.org/about-us/who-we-are/nodes/estonia" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/ee.svg' %}" alt="Estonia">
+					</a>
+					<span>Estonia</span>
+				</div>
+			
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/finland" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/fi.svg' %}" alt="Finland">
+					</a>
+					<span>Finland</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/france" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/fr.svg' %}" alt="France">
+					</a>
+					<span>France</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/germany" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/de.svg' %}" alt="Germany">
+					</a>
+					<span>Germany</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/greece" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/gr.svg' %}" alt="Greece">
+					</a>
+					<span>Greece</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/hungary" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/hu.svg' %}" alt="Hungary">
+					</a>
+					<span>Hungary</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/ireland" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/ie.svg' %}" alt="Ireland">
+					</a>
+					<span>Ireland</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="http://www.elixir-europe.org/about-us/who-we-are/nodes/israel" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/il.svg' %}" alt="Israel">
+					</a>
+					<span>Israel</span>
+				</div>
+
+		
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="http://www.elixir-europe.org/about-us/who-we-are/nodes/italy" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/it.svg' %}" alt="Italy">
+					</a>
+					<span>Italy</span>
+				</div>
+		</div>
+
+		<div class="row">
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="http://www.elixir-europe.org/about-us/who-we-are/nodes/luxembourg" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/lu.svg' %}" alt="Luxembourg">
+					</a>
+					<span>Luxembourg</span>
+				</div>
+
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="http://www.elixir-europe.org/about-us/who-we-are/nodes/netherlands" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/nl.svg' %}" alt="Netherlands">
+					</a>
+					<span>Netherlands</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="http://www.elixir-europe.org/about-us/who-we-are/nodes/norway" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/no.svg' %}" alt="Norway">
+					</a>
+					<span>Norway</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="http://www.elixir-europe.org/about-us/who-we-are/nodes/slovenia" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/si.svg' %}" alt="Slovenia">
+					</a>
+					<span>Slovenia</span>
+				</div>
+			
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="http://www.elixir-europe.org/about-us/who-we-are/nodes/portugal" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/pt.svg' %}" alt="Portugal">
+					</a>
+					<span>Portugal</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="http://www.elixir-europe.org/about-us/who-we-are/nodes/spain" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/es.svg' %}" alt="Spain">
+					</a>
+					<span>Spain</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="http://www.elixir-europe.org/about-us/who-we-are/nodes/sweden" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/se.svg' %}" alt="Sweden">
+					</a>
+					<span>Sweden</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="http://www.elixir-europe.org/about-us/who-we-are/nodes/switzerland" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/ch.svg' %}" alt="Switzerland">
+					</a>
+					<span>Switzerland</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="http://www.elixir-europe.org/about-us/who-we-are/nodes/uk" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/gb.svg' %}" alt="United Kingdom">
+					</a>
+					<span>United Kingdom</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/cyprus" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/cy.svg' %}" alt="Cyprus">
+					</a>
+					<span>Cyprus</span>
+				</div>
+
+				<div class="flag-item col-lg-1 col-md-2 col-sm-2 col-xs-3">
+					<a target="_blank" href="https://www.elixir-europe.org/about-us/who-we-are/nodes/embl-ebi" rel="noopener noreferrer">
+						<img class="img-responsive" src="{% static 'public/img/countries/embl.png' %}" alt="EMBL">
+					</a>
+					<span>EMBL</span>
+				</div>
+		</div>
+		
+		</div>
+
+	</div>
+
+</div>
+</div>
+{% endblock %}

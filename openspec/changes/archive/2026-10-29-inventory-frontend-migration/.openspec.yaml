@@ -1,0 +1,8 @@
+schema: spec-driven
+created: 2026-09-09
+goal: Document current frontend behavior and establish migration architecture before runtime changes.
+affected_areas:
+  - frontend
+  - backend
+  - documentation
+

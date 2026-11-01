@@ -1,0 +1,21 @@
+# Use only with compose.refresh.json and compose.query-tests.yml.
+# The upstream suite regenerates EDAM files and mutates Elasticsearch indexes.
+services:
+  full-test-backend:
+    image: biotools-refresh/backend:baseline
+    command: ["sleep", "infinity"]
+    environment:
+      BIOTOOLS_MYSQL_HOST: biotools-mysql
+      BIOTOOLS_MYSQL_DB: elixir
+      BIOTOOLS_MYSQL_USER: elixir
+      BIOTOOLS_MYSQL_PASSWORD: '123'
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://query-test-elasticsearch:9200
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+    networks:
+      - net
+    volumes:
+      - ./backend:/elixir/application/backend:ro
+      - ./registry-assets:/elixir/application/frontend:ro
+      - ./backend/data:/edam-seed:ro
+    tmpfs:
+      - /elixir/application/backend/data:uid=999,gid=999

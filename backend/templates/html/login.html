@@ -1,0 +1,22 @@
+{% extends 'html/base.html' %}
+{% block title %}Sign in | bio.tools{% endblock %}
+{% block content %}
+<h1>Sign in</h1>
+<form class="auth-form" method="post" action="{% url 'html:login' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="hidden" name="next" value="{{ next }}">
+  <button type="submit">Sign in</button>
+</form>
+<nav class="account-links" aria-label="Account recovery">
+  <a href="/reset-password">Forgot password?</a>
+  <a href="/signup">Create account</a>
+  {% if not request.native_accounts %}<a href="/login">ORCID sign-in</a>{% endif %}
+</nav>
+{% if request.native_accounts %}
+<form method="post" action="{% url 'orcid_login' %}" class="auth-form">
+  {% csrf_token %}<input type="hidden" name="next" value="{{ next }}">
+  <button type="submit">Sign in with ORCID</button>
+</form>
+{% endif %}
+{% endblock %}

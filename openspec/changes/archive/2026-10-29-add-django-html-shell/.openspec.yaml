@@ -1,0 +1,8 @@
+schema: spec-driven
+created: 2026-09-09
+goal: Introduce an isolated Django-rendered frontend shell while leaving legacy routes and the public API untouched.
+affected_areas:
+  - backend
+  - templates
+  - routing
+  - static-assets

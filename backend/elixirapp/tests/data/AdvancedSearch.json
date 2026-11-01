@@ -1,0 +1,20 @@
+{
+  "score": {"key": "fixtureQuality", "label": "Fixture quality", "version": "fixture-v1", "min": 0, "max": 1, "field": "fixtureQualityV1"},
+  "items": [
+    {"biotoolsID": "advanced-1", "toolType": ["Command-line tool"], "topic": [{"uri": "http://edamontology.org/topic_0091"}], "additionDate": "2026-01-01T00:00:00Z", "publication": [{"doi": "10.1/fixture"}], "fixtureQualityV1": 0},
+    {"biotoolsID": "advanced-2", "toolType": ["Web application"], "topic": [{"uri": "http://edamontology.org/topic_0091"}], "additionDate": "2026-01-10T23:59:59Z", "publication": [{"pmid": "123"}], "fixtureQualityV1": 0.5},
+    {"biotoolsID": "advanced-3", "toolType": ["Command-line tool"], "topic": [{"uri": "http://edamontology.org/topic_3071"}], "additionDate": "2026-01-11T00:00:00Z", "publication": [{"pmcid": "PMC123"}], "fixtureQualityV1": 1},
+    {"biotoolsID": "advanced-4", "toolType": ["Library", "Database portal", "Suite", "Workbench", "Command-line tool"], "topic": [], "additionDate": "2026-01-05T12:00:00Z", "publication": [{"doi": null}], "fixtureQualityV1": 0.75},
+    {"biotoolsID": "advanced-5", "toolType": [], "topic": [], "publication": [], "fixtureQualityV1": null},
+    {"biotoolsID": "advanced-6", "toolType": ["command-line tool"], "topic": [], "additionDate": "2025-12-31T23:59:59Z", "publication": [{"metadata": {"title": "No identifier"}}]}
+  ],
+  "cases": [
+    {"filter": {"scope": "server", "type": "boolean", "field": "hasPublication", "value": true}, "ids": ["advanced-1", "advanced-2", "advanced-3"]},
+    {"filter": {"scope": "server", "type": "boolean", "field": "hasPublication", "value": false}, "ids": ["advanced-4", "advanced-5", "advanced-6"]},
+    {"filter": {"scope": "server", "type": "range", "field": "added", "min": "2026-01-01", "max": "2026-01-10"}, "ids": ["advanced-1", "advanced-2", "advanced-4"]},
+    {"filter": {"scope": "server", "type": "categorical", "field": "toolType", "values": ["Command-line tool"]}, "ids": ["advanced-1", "advanced-3", "advanced-4"]},
+    {"filter": {"scope": "server", "type": "ontology", "field": "topic", "values": ["http://edamontology.org/topic_0091"]}, "ids": ["advanced-1", "advanced-2"]},
+    {"filter": {"scope": "server", "type": "score", "field": "fixtureQuality", "version": "fixture-v1", "min": 0.5, "max": 0.75}, "ids": ["advanced-2", "advanced-4"]},
+    {"filter": {"scope": "server", "type": "score", "field": "fixtureQuality", "version": "fixture-v1", "max": 0}, "ids": ["advanced-1"]}
+  ]
+}

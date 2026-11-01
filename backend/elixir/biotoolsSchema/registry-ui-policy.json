@@ -1,0 +1,603 @@
+{
+  "version": 1,
+  "baseline": "dev 400bbe32bbdc5396356b35a8f8b4040a731978e5; bundled biotoolsSchema 3.3.0 with reviewed registry extensions",
+  "extraChoices": {
+    "operatingSystem": [
+      "Android",
+      "iOS"
+    ],
+    "accessibility": [
+      "Open access (with restrictions)"
+    ],
+    "publication.type": [
+      "Preprint"
+    ],
+    "language": [
+      "Clojure",
+      "Cython",
+      "CUDA",
+      "F#",
+      "Go",
+      "Jython",
+      "Kotlin",
+      "Q#",
+      "QCL",
+      "Rust",
+      "Swift",
+      "TypeScript"
+    ],
+    "toolType": [
+      "Mobile application"
+    ]
+  },
+  "excludedChoices": {
+    "language": [
+      "Icarus"
+    ]
+  },
+  "registryPaths": [
+    "owner",
+    "additionDate",
+    "lastUpdate",
+    "validated",
+    "confidence_flag",
+    "elixir_badge",
+    "homepage_status",
+    "editPermission",
+    "editPermission.type",
+    "editPermission.authors",
+    "publication.metadata",
+    "publication.metadata.title",
+    "publication.metadata.abstract",
+    "publication.metadata.date",
+    "publication.metadata.journal",
+    "publication.metadata.citationCount",
+    "publication.metadata.authors",
+    "publication.metadata.authors.name"
+  ],
+  "writePaths": [
+    "name",
+    "description",
+    "homepage",
+    "version",
+    "otherID",
+    "otherID.value",
+    "otherID.type",
+    "otherID.version",
+    "toolType",
+    "topic",
+    "topic.uri",
+    "topic.term",
+    "operatingSystem",
+    "language",
+    "license",
+    "collectionID",
+    "maturity",
+    "cost",
+    "accessibility",
+    "elixirPlatform",
+    "elixirCommunity",
+    "elixirNode",
+    "function",
+    "function.operation",
+    "function.operation.uri",
+    "function.operation.term",
+    "function.input",
+    "function.input.data",
+    "function.input.data.uri",
+    "function.input.data.term",
+    "function.input.format",
+    "function.input.format.uri",
+    "function.input.format.term",
+    "function.output",
+    "function.output.data",
+    "function.output.data.uri",
+    "function.output.data.term",
+    "function.output.format",
+    "function.output.format.uri",
+    "function.output.format.term",
+    "function.note",
+    "function.cmd",
+    "link",
+    "link.url",
+    "link.type",
+    "link.note",
+    "download",
+    "download.url",
+    "download.type",
+    "download.note",
+    "download.version",
+    "documentation",
+    "documentation.url",
+    "documentation.type",
+    "documentation.note",
+    "relation",
+    "relation.biotoolsID",
+    "relation.type",
+    "publication",
+    "publication.doi",
+    "publication.pmid",
+    "publication.pmcid",
+    "publication.type",
+    "publication.version",
+    "publication.note",
+    "credit",
+    "credit.name",
+    "credit.email",
+    "credit.url",
+    "credit.orcidid",
+    "credit.gridid",
+    "credit.rorid",
+    "credit.fundrefid",
+    "credit.typeEntity",
+    "credit.typeRole",
+    "credit.note"
+  ],
+  "publicPaths": [
+    "owner",
+    "additionDate",
+    "lastUpdate",
+    "confidence_flag",
+    "elixir_badge",
+    "name",
+    "description",
+    "homepage",
+    "biotoolsID",
+    "biotoolsCURIE",
+    "version",
+    "otherID",
+    "otherID.value",
+    "otherID.type",
+    "otherID.version",
+    "toolType",
+    "topic",
+    "topic.uri",
+    "topic.term",
+    "operatingSystem",
+    "language",
+    "license",
+    "collectionID",
+    "maturity",
+    "cost",
+    "accessibility",
+    "elixirPlatform",
+    "elixirCommunity",
+    "elixirNode",
+    "function",
+    "function.operation",
+    "function.operation.uri",
+    "function.operation.term",
+    "function.input",
+    "function.input.data",
+    "function.input.data.uri",
+    "function.input.data.term",
+    "function.input.format",
+    "function.input.format.uri",
+    "function.input.format.term",
+    "function.output",
+    "function.output.data",
+    "function.output.data.uri",
+    "function.output.data.term",
+    "function.output.format",
+    "function.output.format.uri",
+    "function.output.format.term",
+    "function.note",
+    "function.cmd",
+    "link",
+    "link.url",
+    "link.type",
+    "link.note",
+    "download",
+    "download.url",
+    "download.type",
+    "download.note",
+    "download.version",
+    "documentation",
+    "documentation.url",
+    "documentation.type",
+    "documentation.note",
+    "relation",
+    "relation.biotoolsID",
+    "relation.type",
+    "publication",
+    "publication.doi",
+    "publication.pmid",
+    "publication.pmcid",
+    "publication.type",
+    "publication.version",
+    "publication.note",
+    "credit",
+    "credit.name",
+    "credit.email",
+    "credit.url",
+    "credit.orcidid",
+    "credit.gridid",
+    "credit.rorid",
+    "credit.fundrefid",
+    "credit.typeEntity",
+    "credit.typeRole",
+    "credit.note",
+    "publication.metadata",
+    "publication.metadata.title",
+    "publication.metadata.abstract",
+    "publication.metadata.date",
+    "publication.metadata.journal",
+    "publication.metadata.citationCount",
+    "publication.metadata.authors",
+    "publication.metadata.authors.name"
+  ],
+  "search": {
+    "toolType": [
+      "toolType"
+    ],
+    "topic": [
+      "topic"
+    ],
+    "function.operation": [
+      "operation"
+    ],
+    "function.input": [
+      "input"
+    ],
+    "function.output": [
+      "output"
+    ],
+    "language": [
+      "language"
+    ],
+    "accessibility": [
+      "accessibility"
+    ],
+    "cost": [
+      "cost"
+    ],
+    "license": [
+      "license"
+    ],
+    "credit": [
+      "credit"
+    ],
+    "collectionID": [
+      "collectionID"
+    ],
+    "name": [
+      "name"
+    ],
+    "biotoolsID": [
+      "biotoolsID"
+    ],
+    "topic.uri": [
+      "topicID"
+    ],
+    "function": [
+      "function"
+    ],
+    "function.operation.uri": [
+      "operationID"
+    ],
+    "function.input.data": [
+      "dataType",
+      "inputDataType"
+    ],
+    "function.input.data.uri": [
+      "dataTypeID",
+      "inputDataTypeID",
+      "inputID"
+    ],
+    "function.input.format": [
+      "dataFormat",
+      "inputDataFormat"
+    ],
+    "function.input.format.uri": [
+      "dataFormatID",
+      "inputDataFormatID"
+    ],
+    "function.output.data": [
+      "outputDataType"
+    ],
+    "function.output.data.uri": [
+      "outputDataTypeID",
+      "outputID"
+    ],
+    "function.output.format": [
+      "outputDataFormat"
+    ],
+    "function.output.format.uri": [
+      "outputDataFormatID"
+    ],
+    "homepage": [
+      "homepage"
+    ],
+    "description": [
+      "description"
+    ],
+    "version": [
+      "version"
+    ],
+    "maturity": [
+      "maturity"
+    ],
+    "operatingSystem": [
+      "operatingSystem"
+    ],
+    "credit.name": [
+      "creditName"
+    ],
+    "credit.typeRole": [
+      "creditTypeRole"
+    ],
+    "credit.typeEntity": [
+      "creditTypeEntity"
+    ],
+    "credit.orcidid": [
+      "creditOrcidID"
+    ],
+    "credit.gridid": [
+      "creditGridID"
+    ],
+    "credit.rorid": [
+      "creditRORID"
+    ],
+    "credit.fundrefid": [
+      "creditFundRefID"
+    ],
+    "publication": [
+      "publication",
+      "publicationID"
+    ],
+    "publication.type": [
+      "publicationType"
+    ],
+    "publication.version": [
+      "publicationVersion"
+    ],
+    "link": [
+      "link"
+    ],
+    "link.type": [
+      "linkType"
+    ],
+    "documentation": [
+      "documentation"
+    ],
+    "documentation.type": [
+      "documentationType"
+    ],
+    "download": [
+      "download"
+    ],
+    "download.type": [
+      "downloadType"
+    ],
+    "download.version": [
+      "downloadVersion"
+    ],
+    "otherID": [
+      "otherID"
+    ],
+    "otherID.type": [
+      "otherIDType"
+    ],
+    "otherID.version": [
+      "otherIDVersion"
+    ],
+    "otherID.value": [
+      "otherIDValue"
+    ],
+    "elixirNode": [
+      "elixirNode"
+    ],
+    "elixirPlatform": [
+      "elixirPlatform"
+    ],
+    "elixirCommunity": [
+      "elixirCommunity"
+    ],
+    "owner": [
+      "owner"
+    ]
+  },
+  "presentation": {
+    "name": {
+      "label": "Name"
+    },
+    "biotoolsID": {
+      "label": "bio.tools ID"
+    },
+    "biotoolsCURIE": {
+      "label": "bio.tools CURIE"
+    },
+    "homepage": {
+      "label": "Homepage"
+    },
+    "description": {
+      "label": "Description",
+      "multiline": true
+    },
+    "toolType": {
+      "label": "Tool type"
+    },
+    "version": {
+      "label": "Versions",
+      "itemLabel": "Version"
+    },
+    "otherID": {
+      "label": "Other identifiers",
+      "itemLabel": "Identifier"
+    },
+    "otherID.value": {
+      "label": "Identifier value"
+    },
+    "otherID.type": {
+      "label": "Identifier type"
+    },
+    "otherID.version": {
+      "label": "Identifier version"
+    },
+    "topic": {
+      "label": "Topics",
+      "itemLabel": "Topic"
+    },
+    "operatingSystem": {
+      "label": "Operating systems",
+      "itemLabel": "Operating system"
+    },
+    "language": {
+      "label": "Languages",
+      "itemLabel": "Language"
+    },
+    "collectionID": {
+      "label": "Collections",
+      "itemLabel": "Collection"
+    },
+    "elixirPlatform": {
+      "label": "ELIXIR platforms",
+      "itemLabel": "ELIXIR platform"
+    },
+    "elixirCommunity": {
+      "label": "ELIXIR communities",
+      "itemLabel": "ELIXIR community"
+    },
+    "elixirNode": {
+      "label": "ELIXIR nodes",
+      "itemLabel": "ELIXIR node"
+    },
+    "function": {
+      "label": "Functions",
+      "itemLabel": "Function"
+    },
+    "function.operation": {
+      "label": "Operations"
+    },
+    "function.input": {
+      "label": "Inputs"
+    },
+    "function.output": {
+      "label": "Outputs"
+    },
+    "function.note": {
+      "label": "Note",
+      "multiline": true
+    },
+    "function.cmd": {
+      "label": "Command (cmd)"
+    },
+    "link": {
+      "label": "Links",
+      "itemLabel": "Link"
+    },
+    "documentation": {
+      "label": "Documentation",
+      "itemLabel": "Documentation link"
+    },
+    "download": {
+      "label": "Downloads",
+      "itemLabel": "Download"
+    },
+    "relation": {
+      "label": "Related tools",
+      "itemLabel": "Relation"
+    },
+    "publication": {
+      "label": "Publications",
+      "itemLabel": "Publication"
+    },
+    "credit": {
+      "label": "Credits",
+      "itemLabel": "Credit"
+    },
+    "credit.name": {
+      "label": "Credit name"
+    },
+    "credit.email": {
+      "label": "Email"
+    },
+    "credit.url": {
+      "label": "URL"
+    },
+    "credit.orcidid": {
+      "label": "ORCID"
+    },
+    "credit.gridid": {
+      "label": "GRID ID"
+    },
+    "credit.rorid": {
+      "label": "ROR ID"
+    },
+    "credit.fundrefid": {
+      "label": "FundRef ID"
+    },
+    "credit.typeEntity": {
+      "label": "Entity type"
+    },
+    "credit.typeRole": {
+      "label": "Roles",
+      "itemLabel": "Role"
+    },
+    "publication.doi": {
+      "label": "DOI"
+    },
+    "publication.pmid": {
+      "label": "PMID"
+    },
+    "publication.pmcid": {
+      "label": "PMCID"
+    },
+    "publication.version": {
+      "label": "Publication version"
+    },
+    "publication.type": {
+      "label": "Publication types",
+      "itemLabel": "Publication type"
+    },
+    "download.version": {
+      "label": "Download version"
+    },
+    "download.type": {
+      "label": "Download type"
+    },
+    "relation.biotoolsID": {
+      "label": "Related tool ID"
+    },
+    "relation.type": {
+      "label": "Relation type"
+    },
+    "link.note": {
+      "label": "Note",
+      "multiline": true
+    },
+    "documentation.note": {
+      "label": "Note",
+      "multiline": true
+    },
+    "download.note": {
+      "label": "Note",
+      "multiline": true
+    },
+    "publication.note": {
+      "label": "Note",
+      "multiline": true
+    },
+    "credit.note": {
+      "label": "Note",
+      "multiline": true
+    },
+    "link.url": {
+      "label": "URL"
+    },
+    "documentation.url": {
+      "label": "URL"
+    },
+    "download.url": {
+      "label": "URL"
+    },
+    "link.type": {
+      "label": "Types",
+      "itemLabel": "Type"
+    },
+    "documentation.type": {
+      "label": "Types",
+      "itemLabel": "Type"
+    }
+  }
+}

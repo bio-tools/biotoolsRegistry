@@ -1,0 +1,12 @@
+{% extends 'html/base.html' %}
+{% block title %}Verify email | bio.tools{% endblock %}
+{% block content %}
+<h1>Verify email</h1>
+{% if confirmation and can_confirm %}
+<p>Confirm {{ email }} as your email address.</p>
+<form method="post" class="auth-form">{% csrf_token %}<button type="submit">Verify email</button></form>
+{% else %}
+<p>This verification link is invalid, expired or already used.</p>
+{% endif %}
+<a href="{% url 'html:login' %}">Sign in</a>
+{% endblock %}

@@ -1,0 +1,231 @@
+{
+  "description": "Prediction of the presence and location of signal peptide cleavage sites in amino acid sequences from different organisms.",
+  "homepage": "http://cbs.dtu.dk/services/SignalP/",
+  "biotoolsID": "signalp",
+  "biotoolsCURIE": "biotools:signalp",
+  "version": [
+    "4.1"
+  ],
+  "otherID": [
+    {
+      "value": "rrid:SCR_015644",
+      "type": "rrid",
+      "version": null
+    }
+  ],
+  "relation": [],
+  "function": [
+    {
+      "operation": [
+        {
+          "uri": "http://edamontology.org/operation_0418",
+          "term": "Protein signal peptide detection"
+        },
+        {
+          "uri": "http://edamontology.org/operation_0422",
+          "term": "Protein cleavage site prediction"
+        }
+      ],
+      "input": [
+        {
+          "data": {
+            "uri": "http://edamontology.org/data_2044",
+            "term": "Sequence"
+          },
+          "format": [
+            {
+              "uri": "http://edamontology.org/format_1929",
+              "term": "FASTA"
+            }
+          ]
+        }
+      ],
+      "output": [
+        {
+          "data": {
+            "uri": "http://edamontology.org/data_1277",
+            "term": "Protein features"
+          },
+          "format": [
+            {
+              "uri": "http://edamontology.org/format_2305",
+              "term": "GFF"
+            }
+          ]
+        },
+        {
+          "data": {
+            "uri": "http://edamontology.org/data_2955",
+            "term": "Sequence report"
+          },
+          "format": []
+        }
+      ],
+      "note": "predicts the presence and location of signal peptide cleavage sites in amino acid sequences from different organisms",
+      "cmd": null
+    }
+  ],
+  "toolType": [
+    "Command-line tool",
+    "Web application"
+  ],
+  "topic": [
+    {
+      "uri": "http://edamontology.org/topic_3510",
+      "term": "Protein sites, features and motifs"
+    }
+  ],
+  "operatingSystem": [
+    "Linux",
+    "Mac"
+  ],
+  "language": [],
+  "license": "Other",
+  "collectionID": [
+    "CBS"
+  ],
+  "maturity": "Mature",
+  "cost": "Free of charge (with restrictions)",
+  "accessibility": null,
+  "elixirPlatform": [],
+  "elixirNode": [],
+  "elixirCommunity": [],
+  "link": [
+    {
+      "url": "http://www.cbs.dtu.dk/cgi-bin/sw_request?signalp",
+      "type": [
+        "Repository"
+      ],
+      "note": null
+    }
+  ],
+  "download": [
+    {
+      "url": "http://www.cbs.dtu.dk/cgi-bin/sw_request?signalp",
+      "type": "Source code",
+      "note": null,
+      "version": null
+    },
+    {
+      "url": "http://www.cbs.dtu.dk/cgi-bin/sw_request?signalp",
+      "type": "Binaries",
+      "note": null,
+      "version": null
+    }
+  ],
+  "documentation": [
+    {
+      "url": "http://www.cbs.dtu.dk/services/SignalP",
+      "type": [
+        "General"
+      ],
+      "note": null
+    }
+  ],
+  "publication": [
+    {
+      "doi": "10.1038/nmeth.1701",
+      "pmid": "21959131",
+      "pmcid": null,
+      "type": [
+        "Primary"
+      ],
+      "version": null,
+      "note": null,
+      "metadata": {
+        "title": "SignalP 4.0: Discriminating signal peptides from transmembrane regions",
+        "abstract": "",
+        "date": "2011-10-01T00:00:00Z",
+        "citationCount": 7535,
+        "authors": [
+          {
+            "name": "Petersen T.N."
+          },
+          {
+            "name": "Brunak S."
+          },
+          {
+            "name": "Von Heijne G."
+          },
+          {
+            "name": "Nielsen H."
+          }
+        ],
+        "journal": "Nature Methods"
+      }
+    }
+  ],
+  "credit": [
+    {
+      "name": "TN Petersen",
+      "email": null,
+      "url": null,
+      "orcidid": null,
+      "gridid": null,
+      "rorid": null,
+      "fundrefid": null,
+      "typeEntity": "Person",
+      "typeRole": [
+        "Developer"
+      ],
+      "note": null
+    },
+    {
+      "name": "CBS",
+      "email": null,
+      "url": null,
+      "orcidid": null,
+      "gridid": null,
+      "rorid": null,
+      "fundrefid": null,
+      "typeEntity": "Institute",
+      "typeRole": [
+        "Provider"
+      ],
+      "note": null
+    },
+    {
+      "name": "Henrik Nielsen",
+      "email": "hnielsen@cbs.dtu.dk",
+      "url": null,
+      "orcidid": "http://orcid.org/0000-0002-9412-9643",
+      "gridid": null,
+      "rorid": null,
+      "fundrefid": null,
+      "typeEntity": null,
+      "typeRole": [
+        "Developer"
+      ],
+      "note": null
+    },
+    {
+      "name": "Henrik Nielsen",
+      "email": "hnielsen@cbs.dtu.dk",
+      "url": null,
+      "orcidid": "http://orcid.org/0000-0002-9412-9643",
+      "gridid": null,
+      "rorid": null,
+      "fundrefid": null,
+      "typeEntity": "Person",
+      "typeRole": [
+        "Primary contact"
+      ],
+      "note": null
+    }
+  ],
+  "owner": "lidiamorrone",
+  "additionDate": "2015-12-17T14:23:00Z",
+  "lastUpdate": "2024-11-24T14:37:27.222979Z",
+  "editPermission": {
+    "type": "group",
+    "authors": [
+      "CBS",
+      "lidiamorrone",
+      "Medicine"
+    ]
+  },
+  "validated": 1,
+  "homepage_status": 0,
+  "elixir_badge": 0,
+  "confidence_flag": null
+}

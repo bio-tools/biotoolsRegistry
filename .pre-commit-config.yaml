@@ -1,0 +1,33 @@
+repos:
+  # Backend hooks
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        files: ^backend/
+        exclude: ^backend/(data/|.venv/|EDAM_obsolete.json)
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        files: ^backend/
+        exclude: ^backend/(data/|.venv/|EDAM_obsolete.json)
+        args: ['--max-line-length=88', '--extend-ignore=E203,W503']
+
+  # General hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^(registry-assets/)
+      - id: end-of-file-fixer
+        exclude: ^(registry-assets/)
+      - id: check-yaml
+        exclude: ^(registry-assets/)
+      - id: check-json
+        exclude: ^(registry-assets/)
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: check-merge-conflict
+      - id: mixed-line-ending

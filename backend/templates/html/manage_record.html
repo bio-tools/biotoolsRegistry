@@ -1,0 +1,18 @@
+{% extends 'html/base.html' %}
+{% block title %}Manage {{ resource.name }} | bio.tools{% endblock %}
+{% block content %}
+<h1>Manage {{ resource.name }}</h1>
+<p><a href="/{{ resource.biotoolsID }}">View record</a> · <a href="/{{ resource.biotoolsID }}/edit">Edit metadata and permissions</a> · <a href="/requests/tool/{{ resource.biotoolsID }}/">Request ownership or editing rights</a></p>
+<p>Disowning transfers ownership to the registry administrator. Removing a record hides it from public detail and search. Only a superuser can remove records.</p>
+{% if form.errors %}<div role="alert" class="message error">{{ form.errors }}</div>{% endif %}
+{% if can_disown or can_delete %}
+<form method="post">{% csrf_token %}{{ form.revision }}
+  <label for="id_action">Action</label><select id="id_action" name="action">
+    {% if can_disown %}<option value="disown">Disown record</option>{% endif %}
+    {% if can_delete %}<option value="delete" {% if form.action.value == 'delete' %}selected{% endif %}>Remove record</option>{% endif %}
+  </select>
+  <p>{{ form.confirm }} {{ form.confirm.label_tag }}</p>
+  <button type="submit">Confirm record action</button>
+</form>
+{% else %}<p>You do not own this record. Use the request link above to ask for ownership.</p>{% endif %}
+{% endblock %}

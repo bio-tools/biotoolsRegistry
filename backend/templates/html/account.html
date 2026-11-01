@@ -1,0 +1,23 @@
+{% extends 'html/base.html' %}
+{% block title %}Account | bio.tools{% endblock %}
+{% block content %}
+<h1>Account</h1>
+<dl class="account-details">
+  <dt>Username</dt><dd>{{ user.username }}</dd>
+  <dt>Email</dt><dd>{{ user.email }}</dd>
+</dl>
+<section class="session-check">
+  <h2>Session</h2>
+  <template id="session-config">{{ session_config|json_script }}</template>
+  <div data-vue-island="session-check" data-vue-props="session-config" hx-disable>
+    <form method="post" action="{% url 'html:session-check' %}">
+      {% csrf_token %}
+      <button type="submit">Verify session</button>
+    </form>
+  </div>
+  {% if request.session.browser_last_verified %}<p role="status">Session verified.</p>{% endif %}
+</section>
+<a href="/profile">Account settings</a>
+<p><a href="{% url 'html:requests' %}">Ownership &amp; editing requests</a></p>
+<p><a href="{% url 'html:editor-new' %}">Register a tool</a></p>
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends 'html/public/base.html' %}
+{% load static %}
+{% block title %}bio.tools{% endblock %}
+{% block content %}
+<div class="public-copy public-home">
+<div>
+	
+	<div class="container">
+	
+		<div class="jumbotron home-summary home-text">
+			<h1>bio.tools</h1>
+			<p>Essential scientific and technical information about software tools, databases and services for bioinformatics and the life sciences.</p>
+			<div>{% include 'html/public/home_search.html' %}</div>
+
+			<p class="description-text">
+				Explore <em>bio.tools</em> by the most popular bioinformatics concepts, or <a href="/t?page=1"><span class="bolder-text">view all tools</span></a>.</p>
+			<p class="description-text">
+			Concepts are defined in the <a href="https://github.com/edamontology/edamontology" target="_blank" rel="noopener noreferrer"><span class="bolder-text">EDAM ontology</span></a> 
+			which you can browse at <a href="https://www.ebi.ac.uk/ols/ontologies/edam/" target="_blank" rel="noopener noreferrer"><span class="bolder-text">OLS</span></a>, 
+			<a href="https://bioportal.bioontology.org/ontologies/EDAM/?p=classes&amp;conceptid=root" target="_blank" rel="noopener noreferrer"><span class="bolder-text">BioPortal</span></a> 
+			or in the <a href="https://edamontology.github.io/edam-browser/" target="_blank" rel="noopener noreferrer"><span class="bolder-text">EDAM Browser</span></a>. 
+			</p>
+
+		</div>
+
+		<div class="jumbotron home-summary home-text">
+			<h2>What is bio.tools?</h2>
+			<p class="description-text">
+				<em>bio.tools</em> is a community-driven registry of bioinformatics software and data resources. It provides detailed information about 
+				software tools, databases, analysis workflows, and services that are used in bioinformatics and the life sciences.
+			</p>
+			<p class="description-text">
+				Each <em>bio.tools</em> entry has a unique identifier based on the resource name, e.g., <a href="/signalp" target="_blank" rel="noopener noreferrer"><span class="bolder-text">biotools:signalp</span></a>.
+			</p>
+			<p class="description-text">
+				All the <em>bio.tools</em> data and technical components are available under <span class="bolder-text">open license</span> and we warmly welcome 
+				you to <a href="https://biotools.readthedocs.io/en/latest/what_is_biotools.html#getting-involved-a-quick-start-guide" target="_blank" rel="noopener noreferrer">
+					<span class="bolder-text">get involved</span></a>.
+			</p>
+			<p class="description-text">
+				Find out more in <a href="https://biotools.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer"><span class="bolder-text">bio.tools documentation</span></a> 
+				and in the <a href="/about"><span class="bolder-text">About section</span></a>.
+			</p>
+			<div class="supported-by">
+			<p>
+				<a target="_blank" href="https://www.elixir-europe.org/" rel="noopener noreferrer">
+					<img src="{% static 'public/img/ELIXIR_logo_white_background.png' %}" alt="ELIXIR" title="ELIXIR">
+				</a>
+				<em>bio.tools is supported by ELIXIR Europe</em>
+			</p>
+			</div>
+		</div>
+
+		<div class="jumbotron home-summary home-text">
+			<h2>Communities in bio.tools</h2>
+			<p class="description-text">
+				Explore <b><a href="/communities">communities</a></b> in <em>bio.tools</em> and see what resources are used by different scientific communities.
+			</p>
+			<p class="description-text">
+				We strongly encourage everyone to take part in the community effort and contribute. <a href="mailto:support-bio-tools@sdu.dk">Email us</a> for more info.
+			</p>
+
+			<h4>Communities and domains</h4>
+			<p class="description-text">
+				In <em>bio.tools</em> we try, with the help of the community, to create content domains or "slices" relevant to a specific community, research area or task 
+				(e.g. <a href="/t?domain=proteomics">Proteomics</a>, and <a href="/t?domain=rare-diseases">Rare diseases</a>).
+			</p>
+			<p class="description-text">
+				Explore and search <em>bio.tools</em> <a href="/domains">domains</a> and <a href="/domain-manager">manage</a> your own domains. Read more about <em>bio.tools</em> 
+				domains <a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html" target="_blank" rel="noopener noreferrer">here</a>.
+			</p>
+		</div>
+	</div>
+
+
+	
+
+	<div class="row logo-container">
+
+			<div class="logos-text">
+				<h4 class="text-center">Led by ELIXIR Denmark &amp; partners</h4>
+			</div>
+
+			<div class="inner-logo-container">
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.dtu.dk/english" rel="noopener noreferrer">
+							<img class="" src="{% static 'public/img/logos/dtu.png' %}" alt="Technical University of Denmark" title="Technical University of Denmark">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.ku.dk/english/" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/ku.png' %}" alt="University of Copenhagen" title="University of Copenhagen">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="http://international.au.dk/" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/aarhus-uni.jpg' %}" alt="Aarhus University" title="Aarhus University">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.en.aau.dk/" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/aalborg-uni.png' %}" alt="Aalborg University" title="Aalborg University">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.sdu.dk/en" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/sdu2.png' %}" alt="University of Southern Denmark" title="University of Southern Denmark">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.pasteur.fr/en" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/institut-pasteur.png' %}" alt="Institut Pasteur" title="Institut Pasteur">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.uib.no/en" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/bergen.jpg' %}" alt="University of Bergen" title="University of Bergen">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.bsc.es/" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/bsc.jpg' %}" alt="Barcelona Supercomputing Center" title="Barcelona Supercomputing Center">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.ceitec.eu/" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/ceitec.jpg' %}" alt="Central European Institute of Technology" title="Central European Institute of Technology">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.ut.ee/en" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/tartu.png' %}" alt="University of Tartu" title="University of Tartu">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.embl.org/" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/embl.png' %}" alt="EMBL-EBI" title="EMBL-EBI">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.sib.swiss/" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/sib.png' %}" alt="SIB Swiss Institute of Bioinformatics" title="SIB Swiss Institute of Bioinformatics">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.irbbarcelona.org/en" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/irb.jpeg' %}" alt="IRB Barcelona" title="Institute For Research In Biomedicine Barcelona">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="https://www.inesc-id.pt/" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/inesc.png' %}" alt="INESC-ID" title=" Instituto de Engenharia de Sistemas e Computadores - Investigação e Desenvolvimento">
+						</a>
+					</div>
+
+					<div class="new-logo-item">
+						<a target="_blank" href="http://www.cnrs.fr/" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/cnrs.png' %}" alt="Centre national de la recherche scientifique" title="Centre national de la recherche scientifique">
+						</a>
+					</div>
+			
+					<div class="new-logo-item">
+						<a target="_blank" href="https://cpm.lumc.nl/about-this-group-225" rel="noopener noreferrer">
+							<img class="img-responsive" src="{% static 'public/img/logos/OIP.jpeg' %}" alt="Leiden University Medical Center " title="Leiden University Medical Center">
+						</a>
+					</div>
+			</div>
+	</div>
+</div>
+
+</div>
+{% endblock %}

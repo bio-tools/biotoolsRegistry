@@ -1,0 +1,152 @@
+const { test, expect } = require('./fixtures');
+
+test.describe('workflow designer', () => {
+  test.setTimeout(60000);
+  test.skip(process.env.BIOTOOLS_TEST_WORKFLOW_MATCHING !== '1', 'Requires the local detail-demo fixture and EDAM data.');
+
+  for (const width of [1440, 390]) {
+    test(`select functions and build a recoverable design at ${width}px`, async ({ page }, testInfo) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/workflows/design/');
+      await expect(page.getByRole('heading', { name: 'Workflow designer' })).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Browse existing workflow images' })).toHaveAttribute('href', '/workflows');
+      await page.getByRole('button', { name: 'Choose data type' }).focus();
+      await page.keyboard.press('Enter');
+      await page.getByRole('combobox', { name: 'Find data terms' }).fill('data_2044');
+      await expect(page.getByRole('dialog').getByRole('option')).toHaveCount(1);
+      await page.getByRole('dialog').getByRole('option').first().click();
+      await page.getByRole('button', { name: 'Apply selection' }).click();
+      await page.getByRole('button', { name: 'Choose operation' }).click();
+      await page.getByRole('combobox', { name: 'Find operation terms' }).fill('operation_2928');
+      await expect(page.getByRole('dialog').getByRole('option')).toHaveCount(1);
+      await page.getByRole('dialog').getByRole('option').first().click();
+      await page.getByRole('button', { name: 'Apply selection' }).click();
+      await page.getByRole('button', { name: 'Search functions' }).click();
+      const item = page.locator('li').filter({ hasText: 'Sequence Workbench (demo)' }).filter({ has: page.getByRole('button', { name: 'Add function' }) }).first();
+      await expect(item).toBeVisible();
+      await item.getByRole('button', { name: 'Add function' }).click();
+      await item.getByRole('button', { name: 'Add function' }).click();
+      await item.getByRole('button', { name: 'Add function' }).click();
+      await expect(page.getByRole('heading', { name: 'Sequence Workbench (demo)' })).toHaveCount(3);
+      await expect(page.getByRole('img', { name: /Connections between workflow steps/ })).toBeVisible();
+      await page.getByLabel('Output', { exact: true }).selectOption({ index: 1 });
+      await page.getByLabel('Input', { exact: true }).selectOption({ index: 2 });
+      await page.getByRole('button', { name: 'Connect', exact: true }).click();
+      await expect(page.getByRole('alert')).toContainText('Explain');
+      await page.getByLabel('Reason for an uncertain connection').fill('Review format conversion');
+      await page.route('**/_workflow/compare/**', async route => {
+        const response = await route.fetch();
+        const body = await response.json();
+        body.vocabularyRevisions.data = 'changed';
+        await route.fulfill({ response, json: body });
+      });
+      await page.getByRole('button', { name: 'Connect', exact: true }).click();
+      await expect(page.getByRole('alert')).toContainText('changed during the check');
+      await expect(page.getByRole('button', { name: 'Review current function' })).toHaveCount(2);
+      await page.unroute('**/_workflow/compare/**');
+      await page.getByRole('button', { name: 'Review current function' }).first().click();
+      await expect(page.getByRole('button', { name: 'Review current function' })).toHaveCount(1);
+      await page.getByRole('button', { name: 'Review current function' }).first().click();
+      await expect(page.getByRole('button', { name: 'Review current function' })).toHaveCount(0);
+      await page.getByRole('button', { name: 'Connect', exact: true }).click();
+      await expect(page.getByRole('list', { name: 'Connections' })).toContainText(/(related|unknown|conflict) — Review format conversion/);
+      await page.getByLabel('Input', { exact: true }).selectOption({ index: 3 });
+      await page.getByLabel('Reason for an uncertain connection').fill('Second branch');
+      await page.getByRole('button', { name: 'Connect', exact: true }).click();
+      await expect(page.getByRole('list', { name: 'Connections' }).getByRole('listitem')).toHaveCount(2);
+      await page.screenshot({ path: testInfo.outputPath(`branch-${width}.png`), fullPage: true });
+      await page.getByRole('listitem').filter({ hasText: 'Second branch' }).getByRole('button', { name: /Remove connection/ }).click();
+      await expect(page.getByRole('list', { name: 'Connections' }).getByRole('listitem')).toHaveCount(1);
+      await page.getByLabel('Output', { exact: true }).selectOption({ index: 2 });
+      await page.getByLabel('Input', { exact: true }).selectOption({ index: 1 });
+      await page.getByLabel('Reason for an uncertain connection').fill('Cycle check');
+      await page.getByRole('button', { name: 'Connect', exact: true }).click();
+      await expect(page.getByRole('alert')).toContainText('cycle');
+      await page.getByRole('button', { name: /Edit connection/ }).click();
+      await expect(page.getByLabel('Output', { exact: true })).toBeFocused();
+      await page.getByLabel('Reason for an uncertain connection').fill('Check conversion manually');
+      await page.getByRole('button', { name: 'Update connection' }).click();
+      await expect(page.getByRole('list', { name: 'Connections' })).toContainText(/(related|unknown|conflict) — Check conversion manually/);
+      await page.screenshot({ path: testInfo.outputPath(`designer-${width}.png`), fullPage: true });
+      const download = page.waitForEvent('download');
+      await page.getByRole('button', { name: 'Download draft' }).click();
+      const saved = await download;
+      expect(saved.suggestedFilename()).toBe('biotools-workflow-design.json');
+      await page.getByLabel('Restore draft').setInputFiles(await saved.path());
+      await expect(page.getByText('Stored snapshot needs review.')).toHaveCount(3);
+      await page.getByRole('button', { name: 'Review current function' }).first().click();
+      await expect(page.getByText('Stored snapshot needs review.')).toHaveCount(2);
+      await page.route('**/_workflow/function/**', async route => {
+        const response = await route.fetch();
+        const body = await response.json();
+        body.resource.revision.token = 'changed';
+        await route.fulfill({ response, json: body });
+      });
+      await page.getByRole('button', { name: 'Review current function' }).first().click();
+      await expect(page.getByRole('alert')).toContainText('changed or is unavailable');
+      await expect(page.getByText('Stored snapshot needs review.')).toHaveCount(2);
+      await page.unroute('**/_workflow/function/**');
+      await page.getByLabel('Restore draft').setInputFiles({ name: 'broken.json', mimeType: 'application/json', buffer: Buffer.from('{"version":999}') });
+      await expect(page.getByRole('alert')).toContainText('Unsupported or invalid draft');
+      await expect(page.getByRole('heading', { name: 'Sequence Workbench (demo)' })).toHaveCount(3);
+      await page.route('**/_workflow/matches/**', route => route.fulfill({ status: 503, json: { error: { message: 'Try again' } } }));
+      await page.getByRole('button', { name: 'Search functions' }).click();
+      await expect(page.getByRole('alert')).toContainText('Try again');
+      await expect(page.getByRole('heading', { name: 'Sequence Workbench (demo)' })).toHaveCount(3);
+      expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
+      if (width === 1440) {
+        await page.locator('body').evaluate(body => { body.style.zoom = '2'; });
+        expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
+        await page.screenshot({ path: testInfo.outputPath('designer-200-percent.png'), fullPage: true });
+      }
+    });
+  }
+
+  test('keyboard users can select a function and connect two steps', async ({ page }) => {
+    await page.goto('/workflows/design/');
+    const picker = page.getByRole('button', { name: 'Choose data type' });
+    await picker.focus();
+    await page.keyboard.press('Enter');
+    const query = page.getByRole('combobox', { name: 'Find data terms' });
+    await expect(query).toBeFocused();
+    await page.keyboard.type('data_2044');
+    await expect(page.getByRole('dialog').getByRole('option')).toHaveCount(1);
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+    await page.getByRole('button', { name: 'Apply selection' }).focus();
+    await page.keyboard.press('Enter');
+    await expect(picker).toBeFocused();
+    await page.getByRole('button', { name: 'Search functions' }).focus();
+    await page.keyboard.press('Enter');
+    const item = page.locator('li').filter({ hasText: 'Sequence Workbench (demo)' }).filter({ has: page.getByRole('button', { name: 'Add function' }) }).first();
+    await expect(item).toBeVisible();
+    await item.getByRole('button', { name: 'Add function' }).focus();
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('heading', { name: 'Sequence Workbench (demo)' })).toHaveCount(1);
+    await item.getByRole('button', { name: 'Add function' }).focus();
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('heading', { name: 'Sequence Workbench (demo)' })).toHaveCount(2);
+    await page.getByLabel('Output', { exact: true }).focus();
+    await page.keyboard.press('Home');
+    await page.keyboard.press('ArrowDown');
+    await page.getByLabel('Input', { exact: true }).focus();
+    await page.keyboard.press('Home');
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowDown');
+    await page.getByLabel('Reason for an uncertain connection').focus();
+    await page.keyboard.type('Review conversion');
+    await page.getByRole('button', { name: 'Connect', exact: true }).focus();
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('list', { name: 'Connections' })).toContainText('Review conversion');
+    await page.getByRole('button', { name: /Edit connection/ }).focus();
+    await page.keyboard.press('Enter');
+    await expect(page.getByLabel('Output', { exact: true })).toBeFocused();
+  });
+
+  test('shows an honest fallback when the interactive asset fails', async ({ page }) => {
+    await page.route('**/static/modern/assets/*.js', route => route.abort());
+    await page.goto('/workflows/design/');
+    await expect(page.getByRole('alert')).toContainText('requires its interactive assets');
+    await expect(page.getByRole('link', { name: 'Browse existing workflow images' })).toBeVisible();
+  });
+});

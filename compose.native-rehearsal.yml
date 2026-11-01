@@ -1,0 +1,118 @@
+# Add to compose.refresh.json to exercise the packaged legacy-free image.
+# This service shares the disposable preview's database and index; do not use it
+# with production data. The media mount is read-only for the initial rehearsal.
+services:
+  native:
+    image: biotools-refresh/production:review
+    build:
+      context: .
+      target: prod
+    environment:
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://elasticsearch:9200
+      BIOTOOLS_MYSQL_DB: elixir
+      BIOTOOLS_MYSQL_HOST: biotools-mysql
+      BIOTOOLS_MYSQL_PASSWORD: '123'
+      BIOTOOLS_MYSQL_USER: elixir
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      BIOTOOLS_URL_FRONT: http://localhost:8005/
+      BIOTOOLS_DEBUG: ''
+      BIOTOOLS_CSRF_TRUSTED_ORIGINS: '["https://localhost:8444"]'
+      BIOTOOLS_SECURE_PROXY_SSL_HEADER: '["HTTP_X_FORWARDED_PROTO", "https"]'
+    ports:
+      - 127.0.0.1:8005:80
+    networks:
+      - net
+    volumes:
+      - media_data:/elixir/application/media_cdn:ro
+
+  native-caddy:
+    image: caddy:2
+    ports:
+      - 127.0.0.1:8444:443
+    networks:
+      - net
+    volumes:
+      - ./backend/runtime/Caddyfile.native:/etc/caddy/Caddyfile:ro
+      - native_caddy_data:/data
+      - native_caddy_config:/config
+
+  production-secure:
+    image: biotools-refresh/production:review
+    environment:
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://elasticsearch:9200
+      BIOTOOLS_MYSQL_DB: elixir
+      BIOTOOLS_MYSQL_HOST: biotools-mysql
+      BIOTOOLS_MYSQL_PASSWORD: '123'
+      BIOTOOLS_MYSQL_USER: elixir
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      BIOTOOLS_URL_FRONT: https://localhost:8447/
+      BIOTOOLS_DEBUG: '0'
+      BIOTOOLS_SECRET_KEY: isolated-rehearsal-only
+      BIOTOOLS_ALLOWED_HOSTS: '["localhost"]'
+      BIOTOOLS_CSRF_TRUSTED_ORIGINS: '["https://localhost:8447"]'
+      BIOTOOLS_SESSION_COOKIE_SECURE: '1'
+      BIOTOOLS_CSRF_COOKIE_SECURE: '1'
+      BIOTOOLS_SECURE_PROXY_SSL_HEADER: '["HTTP_X_FORWARDED_PROTO", "https"]'
+    networks:
+      - net
+    volumes:
+      - media_data:/elixir/application/media_cdn:ro
+
+  production-secure-caddy:
+    image: caddy:2
+    ports:
+      - 127.0.0.1:8447:443
+    networks:
+      - net
+    volumes:
+      - ./backend/runtime/Caddyfile.production-rehearsal:/etc/caddy/Caddyfile:ro
+      - production_caddy_data:/data
+      - production_caddy_config:/config
+
+  native-dev:
+    image: biotools-refresh/backend:baseline
+    environment:
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://elasticsearch:9200
+      BIOTOOLS_MYSQL_DB: elixir
+      BIOTOOLS_MYSQL_HOST: biotools-mysql
+      BIOTOOLS_MYSQL_PASSWORD: '123'
+      BIOTOOLS_MYSQL_USER: elixir
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      BIOTOOLS_URL_FRONT: https://localhost:8446/
+      BIOTOOLS_DEBUG: ''
+      BIOTOOLS_WSGI_APPLICATION: elixirapp.dev_wsgi.application
+      BIOTOOLS_MIGRATION_PREVIEW_DEMOS: '0'
+      BIOTOOLS_CSRF_TRUSTED_ORIGINS: '["https://localhost:8446"]'
+      BIOTOOLS_SECURE_PROXY_SSL_HEADER: '["HTTP_X_FORWARDED_PROTO", "https"]'
+    networks:
+      - net
+    volumes:
+      - ./backend:/elixir/application/backend
+      - backend_data:/elixir/application/backend/data
+      - media_data:/elixir/application/media_cdn:ro
+
+  native-caddy-dev:
+    image: caddy:2
+    environment:
+      BIOTOOLS_DJANGO_UPSTREAM: native-dev:8000
+    ports:
+      - 127.0.0.1:8446:443
+    networks:
+      - net
+    volumes:
+      - ./backend/runtime/Caddyfile.native-dev:/etc/caddy/Caddyfile:ro
+      - ./registry-assets/static:/elixir/application/frontend/static:ro
+      - ./registry-assets/resources:/elixir/application/frontend/resources:ro
+      - ./registry-assets/img:/elixir/application/frontend/img:ro
+      - ./registry-assets/json:/elixir/application/frontend/json:ro
+      - media_data:/elixir/application/media_cdn:ro
+      - native_caddy_dev_data:/data
+      - native_caddy_dev_config:/config
+
+volumes:
+  native_caddy_data:
+  native_caddy_config:
+  production_caddy_data:
+  production_caddy_config:
+  native_caddy_dev_data:
+  native_caddy_dev_config:

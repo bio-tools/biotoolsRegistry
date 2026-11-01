@@ -73,10 +73,16 @@ def construct_es_query(query_dict):
 	sort_order = query_dict.get('ord', None) or 'desc'
 	search_struct = elixir.search_settings.search_struct
 	elastic_query = elixir.search_settings.elastic_query
+	per_page_raw = query_dict.get('per_page', api_settings.PAGE_SIZE)
+	try:
+		per_page = int(per_page_raw)
+	except (ValueError, TypeError):
+		per_page = api_settings.PAGE_SIZE
+	per_page = min(per_page, 100)  # Cap at 100
 
 	query_struct = {
-		'size': api_settings.PAGE_SIZE,
-		'from': api_settings.PAGE_SIZE*(page-1),
+		'size': per_page,
+		'from': per_page*(page-1),
 		'query': {},
 		'sort': {
 			'lastUpdate': {

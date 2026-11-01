@@ -1,0 +1,8 @@
+schema: spec-driven
+created: 2026-09-09
+goal: Add a reusable accessible Vue EDAM selector for search and resource-editing interfaces.
+affected_areas:
+  - frontend-next
+  - backend
+  - edam
+  - accessibility

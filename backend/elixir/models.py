@@ -23,8 +23,6 @@ from elixir.model.resource_model.download import *
 from elixir.model.resource_model.documentation import *
 from elixir.model.resource_model.collection import *
 from elixir.model.resource_model.contact import *
-from elixir.model.resource_model.community import *
-
 from elixir.model.stats_model.search import *
 from elixir.model.stats_model.stats import *
 
@@ -32,5 +30,6 @@ from elixir.model.issues_model.issues import *
 
 from elixir.model.workflow_model.workflow import *
 from elixir.model.workflow_model.workflowAnnotation import *
+from elixir.model.workflow_model.workflowDesign import *
 
 from elixir import signals

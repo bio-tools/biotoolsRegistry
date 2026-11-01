@@ -1,0 +1,9 @@
+{% extends 'html/base.html' %}
+{% block title %}Workflow designer | bio.tools{% endblock %}
+{% block content %}
+<h1>Workflow designer</h1>
+<p><a href="/workflows">Browse existing workflow images</a></p>
+<div data-vue-island="workflow-designer" hx-disable>
+  <p role="alert">The workflow designer requires its interactive assets. If they are unavailable, try again later or browse the existing workflows.</p>
+</div>
+{% endblock %}

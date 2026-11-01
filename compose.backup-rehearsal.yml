@@ -1,0 +1,31 @@
+# Disposable recovery rehearsal only: the database is held in tmpfs and has no host port.
+services:
+  backup-mysql:
+    image: mysql:8.0.43
+    environment:
+      MYSQL_ROOT_PASSWORD: rehearsal-root-only
+      MYSQL_DATABASE: backup_source
+      MYSQL_USER: backup_fixture
+      MYSQL_PASSWORD: rehearsal-fixture-only
+    tmpfs:
+      - /var/lib/mysql
+    networks:
+      - net
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=rehearsal-root-only mysqladmin ping -uroot --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  backup-previous:
+    image: biotools-refresh/upstream:review
+    environment:
+      BIOTOOLS_MYSQL_DB: backup_restored
+      BIOTOOLS_MYSQL_HOST: backup-mysql
+      BIOTOOLS_MYSQL_USER: backup_fixture
+      BIOTOOLS_MYSQL_PASSWORD: rehearsal-fixture-only
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://unavailable-rehearsal-index:9200
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      BIOTOOLS_URL_FRONT: http://localhost/
+    networks:
+      - net

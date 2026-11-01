@@ -1,0 +1,5 @@
+{% load detail_tags %}
+{% if label %}<span class="edam-term">
+  {% if search %}<a href="{{ search }}">{{ label }}</a>{% else %}{{ label }}{% endif %}
+  {% if uri %}<small>{% external_link uri identifier|default:uri %}</small>{% endif %}
+</span>{% endif %}

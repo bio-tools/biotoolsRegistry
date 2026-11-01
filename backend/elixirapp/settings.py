@@ -12,38 +12,38 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-import datetime
 import json
-# import djcelery
-
 
 # Prefix for environment variables settings.
 ENV_NAMESPACE = "BIOTOOLS"
 
+SITE_NAME = "bio.tools"
+
+def str_to_bool(value):
+    value = value.strip().lower()
+    if value in {'1', 'true', 'yes', 'on'}:
+        return True
+    if value in {'', '0', 'false', 'no', 'off'}:
+        return False
+    raise ValueError('Expected a boolean environment value.')
+
+def string_list(value):
+    items = json.loads(value)
+    if not isinstance(items, list) or not all(isinstance(item, str) and item for item in items):
+        raise ValueError('Expected a JSON array of non-empty strings.')
+    return items
+
+def proxy_ssl_header(value):
+    items = string_list(value)
+    if len(items) != 2 or not items[0].startswith('HTTP_'):
+        raise ValueError('Expected a proxy HTTP header and its secure value.')
+    return tuple(items)
 
 def getenv(key, default=None, castf=str, ns=ENV_NAMESPACE):
     """Helper function to retrieve namespaced environment variables."""
     value = os.environ.get('{ns}_{key}'.format(ns=ns, key=key), None)
-    return castf(value) if value is not None else default
+    return (str_to_bool(value) if castf is bool else castf(value)) if value is not None else default
 
-
-# CELERY SETTINGS
-# REDIS_HOST = getenv('REDIS_HOST', 'localhost')
-# REDIS_PORT = getenv('REDIS_PORT', '6379')
-# REDIS_DB = getenv('REDIS_DB', '0')
-# BROKER_URL = 'redis://{host}:{port}/{db}'.format(
-#     host=REDIS_HOST,
-#     port=REDIS_PORT,
-#     db=REDIS_DB,
-# )
-# CELERY_ACCEPT_CONTENT = ['json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-
-# CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
-# CELERY_ALWAYS_EAGER = getenv('CELERY_ALWAYS_EAGER', True, castf=bool)
-
-# djcelery.setup_loader()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_URL = "/media/"
@@ -53,17 +53,25 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# NOTE: This setting is currently overwritten by deployment_settings import
 SECRET_KEY = getenv(
     'SECRET_KEY',
     '$a$$kkc_q040nqu&c9k=zshyc+x)%3-k3g7^ik8g$+lgx9#6!w'
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# NOTE: This setting is currently overwritten by deployment_settings import
 DEBUG = getenv('DEBUG', True, castf=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = getenv('ALLOWED_HOSTS', ['*'], castf=string_list)
+CSRF_TRUSTED_ORIGINS = getenv('CSRF_TRUSTED_ORIGINS', [], castf=json.loads)
+SESSION_COOKIE_SECURE = getenv('SESSION_COOKIE_SECURE', False, castf=bool)
+CSRF_COOKIE_SECURE = getenv('CSRF_COOKIE_SECURE', False, castf=bool)
+SECURE_PROXY_SSL_HEADER = getenv('SECURE_PROXY_SSL_HEADER', None, castf=proxy_ssl_header)
+CSRF_FAILURE_VIEW = 'elixirapp.browser_auth.csrf_failure'
+MIGRATION_PREVIEW_DEMOS = getenv('MIGRATION_PREVIEW_DEMOS', '1') == '1'
+GITHUB_BRIDGE_URL = getenv('GITHUB_BRIDGE_URL', '')
+LOGGING = {'version': 1, 'disable_existing_loggers': False,
+           'handlers': {'route_console': {'class': 'logging.StreamHandler'}},
+           'loggers': {'biotools.routes': {'handlers': ['route_console'], 'level': 'INFO', 'propagate': False}}}
 
 # Separator character for setting multiple Elasticsearch RFC-1738 URLs.
 ELASTIC_SEARCH_SEP = ';'
@@ -75,10 +83,8 @@ ELASTIC_SEARCH_URLS = getenv(
 )
 
 ELASTIC_SEARCH_INDEX = 'elixir'
-# Application definition
 
 INSTALLED_APPS = (
-    # 'super_inlines',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -89,30 +95,26 @@ INSTALLED_APPS = (
     'elixir',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_auth',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_auth.registration',
+    'allauth.socialaccount.providers.orcid',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
     'django_extensions',
-    # 'djcelery',
-    # 'kombu.transport.django',
-    'background_task'
+    'rest_framework_simplejwt',
+    'background_task',
+    'corsheaders',
+    'drf_spectacular',
 )
 
 
 MIDDLEWARE_CLASSES = (
-#     'django.contrib.sessions.middleware.SessionMiddleware',
-#     'django.middleware.common.CommonMiddleware',
-#     'django.middleware.csrf.CsrfViewMiddleware',
-#     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-#     'django.contrib.messages.middleware.MessageMiddleware',
-#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-#     'django.middleware.security.SecurityMiddleware',
 )
 
 MIDDLEWARE = (
+    'elixirapp.html.HtmlRoutingMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -120,6 +122,8 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'elixirapp.urls'
@@ -153,6 +157,7 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = getenv('SITE_ID', 1, castf=int)
 
+
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
@@ -164,9 +169,6 @@ DATABASES = {
                 'NAME': getenv('MYSQL_DB', 'elixir'),
                 'USER': getenv('MYSQL_USER', 'elixir'),
                 'PASSWORD': getenv('MYSQL_PASSWORD', '123'),
-                # 'TEST': {
-                #     'CHARSET': 'utf8'
-                # },
                 'OPTIONS': {
                     'charset': 'utf8mb4' 
                 }
@@ -182,26 +184,14 @@ DB_COLLATION = {
     'CORRECT': 'utf8mb4_unicode_ci'
 }
 
-# Gmail Mail settings (don't usually work because Gmail requires extra security)
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = ''
-# EMAIL_HOST_PASSWORD = ''
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = 'no-reply@local-bio.tools'
-
-# Zoho Mail works (create an account)
-# EMAIL_HOST = 'smtp.zoho.com'
-# EMAIL_PORT = 465
-# EMAIL_USE_SSL = True
-# EMAIL_HOST_USER =  'zoho_email_here'
-# EMAIL_HOST_PASSWORD = ''
-# DEFAULT_FROM_EMAIL = 'no-reply@local-bio.tools'
-
+# Mail settings
+EMAIL_BACKEND = getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = getenv('EMAIL_HOST', 'smtp.zoho.com')
 EMAIL_PORT = getenv('EMAIL_PORT', 465, castf=int)
 EMAIL_USE_SSL = getenv('EMAIL_USE_SSL', True, castf=bool)
+EMAIL_USE_TLS = getenv('EMAIL_USE_TLS', False, castf=bool)
 EMAIL_HOST_USER = getenv('EMAIL_HOST_USER', 'support@bio.tools')
+EMAIL_HOST_PASSWORD = getenv('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = getenv('DEFAULT_FROM_EMAIL', 'support@bio.tools')
 
 # Internationalization
@@ -226,13 +216,9 @@ STATIC_ROOT = getenv('STATIC_ROOT', '/elixir/application/frontend/static/')
 STATIC_URL = getenv('STATIC_URL', '/static/')
 
 # Django REST Framework
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
@@ -249,59 +235,73 @@ REST_FRAMEWORK = {
         #'elixir.renderers.XMLSchemaRenderer',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': getenv('PAGE_SIZE', 10, castf=int),
-    'NON_FIELD_ERRORS_KEY': 'general_errors'
+    'PAGE_SIZE': getenv('PAGE_SIZE', 50, castf=int),
+    'NON_FIELD_ERRORS_KEY': 'general_errors',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-# JWT Authentication
-
-JWT_EXPIRATION_DELTA_DAYS = getenv('JWT_EXPIRATION_DELTA_DAYS', 1, castf=int)
-
-JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=JWT_EXPIRATION_DELTA_DAYS),
+# Spectacular settings for API docs
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'bio.tools API',
+    'DESCRIPTION': 'bio.tools is a registry of software tools and databases for life sciences',
+    'VERSION': '1.0.0',
+    'SCHEMA_PATH_PREFIX': '/api',
+    'SWAGGER_UI_FAVICON_HREF': f"{STATIC_URL.rstrip('/')}/html/favicon.ico",
 }
 
 # REST Auth
-
-REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': 'elixir.serializers.UserSerializer',
-    'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer'
-}
-# necessary for custom user validation
-REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'elixir.serializers.UserRegisterSerializer'
+REST_AUTH = {
+    'USER_DETAILS_SERIALIZER': 'elixir.serializers.CustomUserDetailsSerializer',
+    'PASSWORD_RESET_SERIALIZER': 'elixir.serializers.CustomPasswordResetSerializer',
+    'REGISTER_SERIALIZER': 'elixir.serializers.UserRegisterSerializer',
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+OLD_PASSWORD_FIELD_ENABLED = True
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 ACCOUNT_ADAPTER = 'elixir.adapters.CustomDefaultAccountAdapter'
-ACCOUNT_EMAIL_REQUIRED = getenv('ACCOUNT_EMAIL_REQUIRED', True, castf=bool)
-ACCOUNT_USERNAME_REQUIRED = getenv(
-    'ACCOUNT_USERNAME_REQUIRED',
-    True,
-    castf=bool,
-)
-ACCOUNT_AUTHENTICATION_METHOD = getenv(
-    'ACCOUNT_AUTHENTICATION_METHOD'
-    'username_email'
-)
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+ACCOUNT_SIGNUP_FIELDS = ['email', 'username*', 'password1*', 'password2*']
 ACCOUNT_CONFIRM_EMAIL_ON_GET = getenv(
     'ACCOUNT_CONFIRM_EMAIL_ON_GET',
     True,
     castf=bool,
 )
-# NOTE: This setting is currently overwritten by deployment_settings import
+
+SOCIALACCOUNT_ADAPTER = 'elixir.adapters.CustomSocialAccountAdapter'
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+
 URL_FRONT = getenv('URL_FRONT', 'http://localhost:8000/')
-# NOTE: This setting is currently overwritten by deployment_settings import
+
 DEPLOYMENT = getenv('DEPLOYMENT', 'dev')
 
-RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate', 'f', 'function', 'o', 'ontology', 'used-terms', 'stats', 'env', 'sitemap.xml', 'd', 'domain', 'request', 'tool-list', 'w', 'register', 'edit-subdomain', 'subdomain', 'login', 'signup', 'reset-password', 'profile', 'requests', 'workflows', '404', 'documentation', 'about', 'schema', 'governance', 'roadmap', 'events', 'mail', 'faq', 'apidoc', 'changelog', 'helpdesk', 'projects']
+RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate', 'f', 'function', 'o', 'ontology', 'used-terms', 'stats', 'env', 'sitemap.xml', 'd', 'domain', 'request', 'tool-list', 'w', 'register', 'edit-subdomain', 'subdomain', 'login', 'signup', 'reset-password', 'profile', 'requests', 'workflows', '404', 'documentation', 'about', 'schema', 'governance', 'roadmap', 'events', 'mail', 'faq', 'apidoc', 'changelog', 'helpdesk', 'projects', 'redoc']
 
 
 # Settings for Github Ecosystem
-# Ecosystem is off by default
+RESERVED_URL_KEYWORDS.extend(['github-to-biotools', 'domain-manager', 'edit-domain'])
 GITHUB_ECOSYSTEM_ON = getenv('GITHUB_ECOSYSTEM_ON', False, castf=bool)
+
 ADMIN_EMAIL_LIST = getenv('ADMIN_EMAIL_LIST', [], castf=json.loads)
 
+SOCIALACCOUNT_PROVIDERS = {
+    'orcid': {
+        'BASE_DOMAIN': getenv('ORCID_BASE_DOMAIN', 'sandbox.orcid.org'),  # Use 'sandbox.orcid.org' for testing
+        'MEMBER_API': getenv('ORCID_MEMBER_API', False, castf=bool),  # Set to True for member API
+        'SCOPE': ['read-limited'],
+        'APP': {
+            'client_id': getenv('ORCID_CLIENT_ID', ''),
+            'secret': getenv('ORCID_CLIENT_SECRET', ''),
+        }
+    }
+}
+
+ORCID_CALLBACK_URL = getenv('ORCID_CALLBACK_URL', 'http://127.0.0.1/orcid/callback/')
+                        
 # settings specific to deployment
 try:
     from elixirapp.deployment_settings import *
@@ -309,12 +309,10 @@ except ImportError:
     print ("Could not import deployment settings")
 
 
-
 # settings for blacklisted domains
 BLACKLISTED_DOMAINS_LIST = getenv('BLACKLISTED_DOMAINS_LIST', [], castf=json.loads)
 
-# settings blacklisting
 try:
     from elixir.blacklisted_domains import *
 except ImportError:
-    print ("Could not import deployment settings")
+    print ("Could not import blacklisted domains")

@@ -2,7 +2,7 @@ from django.db import models
 from elixir.model.resource_model.elixirInfo import * 
 from elixir.model.resource_model.editPermission import *
 from django.contrib.auth.models import User
-from elixir.model.resource_model.community import Community
+
 
 class Resource(models.Model):
     
@@ -45,7 +45,7 @@ class Resource(models.Model):
     biotoolsCURIE = models.CharField(blank=False, null=False, max_length=109) #because of biotools: prefix
 
     name = models.TextField()
-    # Version is it's own model now
+    # Version is its own model now
     #version = models.TextField(blank=True, null=True)
     
     # Keep versionId for now, will probably remove later, there is no real data one can use from it anyway...
@@ -78,9 +78,6 @@ class Resource(models.Model):
     editPermission = models.ForeignKey(EditPermission, null=False, blank=True, on_delete=models.CASCADE)
 
 
-    # Community data
-    community = models.ForeignKey(Community, blank=False, null=True, on_delete=models.CASCADE)
-    
     # metadata
     additionDate = models.DateTimeField(blank=True, null=True)
     lastUpdate = models.DateTimeField(auto_now=True)
@@ -96,7 +93,7 @@ class Resource(models.Model):
 
 class OtherID(models.Model):
     value = models.CharField(blank=False, null=False, max_length=1000, unique=False)
-    # TODO: make sure type is inferred from value, but still appears in the iterface
+    # TODO: make sure type is inferred from value, but still appears in the interface
     type = models.TextField(blank=True, null=True)
     version = models.TextField(blank=True, null=True)
     resource = models.ForeignKey(Resource, null=True, blank=True, related_name='otherID', on_delete=models.CASCADE)

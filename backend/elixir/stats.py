@@ -7,7 +7,7 @@ from datetime import date
 import elixir.elixir_logging as elixir_logging
 import collections
 
-class StatsInfo():
+class StatsInfo:
 	# historic data handling
 	def statsDataForLast(self, days):
 		return StatsData.objects.filter(date__gte=datetime.now()-timedelta(days=days)).order_by('date')
@@ -109,8 +109,16 @@ class StatsInfo():
 		data['topDataFormats'] = self.topDataFormats(query_limit, upperDateLimit)
 		data['topContributors'] = self.topContributors(query_limit, upperDateLimit)
 		data['totalAnnotationCount'] = self.totalAnnotationCount(upperDateLimit)
+		data['toolTypeCounts'] = self.toolTypeCounts(upperDateLimit)
 		self.userGrowthByMonth()
 		return data
+	
+	def toolTypeCounts(self, upperDateLimit=datetime.today()):
+		# Returns a list of dicts: [{"toolType": name, "count": count}, ...]
+		from elixir.model.resource_model.toolType import ToolType
+		tooltype_qs = ToolType.objects.filter(resource__visibility=1, additionDate__lt=upperDateLimit).values('name').annotate(count=Count('name'))
+		tooltype_qs = sorted(tooltype_qs, key=lambda t: t['count'], reverse=True)
+		return [{"toolType": t["name"], "count": t["count"]} for t in tooltype_qs if t["name"]]
 
 	def totalEntries(self, upperDateLimit=datetime.today()):
 		return Resource.objects.filter(visibility=1, additionDate__lt=upperDateLimit).count()
@@ -176,10 +184,10 @@ class StatsInfo():
 
 	def topContributors(self, limit, upperDateLimit=datetime.today()):
 		emailsList = User.objects.filter(date_joined__lt=upperDateLimit).values('email')
-		emailsList = [data for data in emailsList if data['email'] != None and data['email'] != '' and '@' in data['email']] # discard empty emails
+		emailsList = [data for data in emailsList if data['email'] is not None and data['email'] != '' and '@' in data['email']] # discard empty emails
 		emailsList = [data['email'].split(".").pop() for data in emailsList] # extract domains
-		emailsList = collections.Counter(emailsList) # count occurences
-		emailsList = emailsList.most_common(limit) # sort and limit occurences
+		emailsList = collections.Counter(emailsList) # count occurrences
+		emailsList = emailsList.most_common(limit) # sort and limit occurrences
 		emailsList = [{ 'domain': data[0], 'count': data[1]} for data in emailsList] # format data
 		return emailsList
 

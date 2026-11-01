@@ -1,0 +1,9 @@
+schema: spec-driven
+created: 2026-09-09
+goal: Extract reusable Python tool retrieval and search logic while preserving public REST API behavior.
+affected_areas:
+  - backend
+  - api
+  - search
+  - elasticsearch
+

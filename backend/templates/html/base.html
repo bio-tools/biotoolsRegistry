@@ -1,0 +1,76 @@
+{% load static modern_assets %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="{% block robots %}noindex, {% if request.canonical %}follow{% else %}nofollow{% endif %}{% endblock %}">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta name="session-url" content="{% url 'html:session' %}">
+  <meta name="session-user" content="{% if user.is_authenticated %}{{ user.pk }}{% endif %}">
+  <title>{% block title %}bio.tools{% endblock %}</title>
+  <link rel="icon" href="{% static 'html/favicon.ico' %}">
+  <link rel="stylesheet" href="{% static 'html/shell.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="page-width header-content">
+      <a class="brand" href="/" aria-label="bio.tools home">
+        <img src="{% static 'html/biotools-white.svg' %}" alt="bio.tools" width="156" height="80">
+      </a>
+      <nav aria-label="Main navigation">
+        {% block navigation %}
+        <a href="/t">Tools</a>
+        <a href="/communities">Communities</a>
+        <a href="/domains">Domains</a>
+        <a href="/about">About</a>
+        <a href="/workflows">Workflows</a>{% if user.is_authenticated %}<a href="/domain-manager">Manage domains</a>{% endif %}
+        {% if user.is_authenticated %}
+        <a href="{% if request.canonical %}/profile{% else %}{% url 'html:account' %}{% endif %}">Account</a>
+        <a href="{% url 'html:editor-new' %}">Register a tool</a><a href="{% url 'html:requests' %}">Requests</a>
+        <form method="post" action="{% url 'html:logout' %}" hx-post="{% url 'html:logout' %}" hx-swap="none">
+          {% csrf_token %}<button type="submit" class="nav-button">Sign out</button>
+        </form>
+        {% else %}
+        <a href="{% url 'html:login' %}">Sign in</a>
+        {% endif %}
+        {% endblock %}
+      </nav>
+      {% if not request.canonical %}<span class="environment-label">Migration preview</span>{% endif %}
+    </div>
+  </header>
+  <main id="main" class="page-width" tabindex="-1">
+    {% if messages %}
+    <ul class="messages" aria-label="Messages">
+      {% for message in messages %}
+      <li class="message {{ message.tags }}" role="{% if message.level >= 40 %}alert{% else %}status{% endif %}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <p id="request-error" class="message error" role="alert" hidden>
+      The request could not be completed. Check your input and try again, or <a href="">reload this page</a>.
+    </p>
+    <div id="authentication-error" class="message error" role="alert" hidden>
+      <p id="authentication-message"></p>
+      <a id="authentication-login" target="_blank" rel="noopener" hidden>Sign in</a>
+      <button id="session-reconnect" type="button" class="secondary">Reconnect</button>
+    </div>
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="page-width footer-content">
+      {% block footer %}
+      <span>bio.tools</span>
+      <nav aria-label="Footer navigation">
+        <a href="https://biotools.readthedocs.io/">Documentation</a>
+        <a href="/stats">Statistics</a>
+        <a href="https://github.com/bio-tools/biotoolsRegistry">Source code</a>
+      </nav>
+      {% endblock %}
+    </div>
+  </footer>
+  {% block scripts %}{% modern_script %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% extends 'html/base.html' %}
+{% block title %}{% if domain %}Edit {{ domain.name }}{% else %}Create domain{% endif %} | bio.tools{% endblock %}
+{% block content %}
+<h1>{% if domain %}Edit domain: {{ domain.name }}{% else %}Create a domain{% endif %}</h1>
+<p><a href="/domain-manager">Manage domains</a>{% if domain %} · <a href="/t?domain={{ domain.name|urlencode }}">Browse domain tools</a>{% endif %}</p>
+{% if form.errors %}<div role="alert" class="message error">{{ form.errors }}</div>{% endif %}
+<form method="post" class="domain-form">{% csrf_token %}{{ form.revision }}
+{% for field in form.visible_fields %}
+  {% if field.name == 'editors' and can_manage %}
+    <template id="domain-editors-config">{{ editors_config|json_script }}</template>
+    <div data-vue-island="domain-editors" data-vue-props="domain-editors-config" hx-disable>{{ field.label_tag }}{{ field }}</div>
+  {% elif field.name != 'confirm_delete' %}<p>{{ field.label_tag }}{{ field }}{% if field.help_text %}<span>{{ field.help_text }}</span>{% endif %}</p>{% endif %}
+{% endfor %}
+<button type="submit" name="action" value="save">Save domain</button>
+{% if can_delete %}<fieldset><legend>Delete domain</legend>{{ form.confirm_delete }}{{ form.confirm_delete.label_tag }}<button type="submit" name="action" value="delete">Delete domain</button></fieldset>{% endif %}
+</form>
+<details><summary>Find tool identifiers</summary><p>Search in a separate tab to keep this draft open. Add identifiers to the tool list above.</p>
+<form method="get" target="_blank"><label for="domain-tool-query">Tool name or identifier</label><input id="domain-tool-query" name="q" value="{{ query }}"><button type="submit">Find tools</button></form>
+{% if query %}<ul>{% for tool in matches %}<li>{{ tool.name }} — <code>{{ tool.biotoolsID }}</code></li>{% empty %}<li>No matching tools.</li>{% endfor %}</ul>{% endif %}</details>
+{% endblock %}

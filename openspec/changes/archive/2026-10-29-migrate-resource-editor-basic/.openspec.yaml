@@ -1,0 +1,8 @@
+schema: spec-driven
+created: 2026-09-09
+goal: Implement the first usable Vue-owned resource editor slice for basic resource fields with authoritative backend validation.
+affected_areas:
+  - frontend-next
+  - backend
+  - resource-editor
+  - authentication

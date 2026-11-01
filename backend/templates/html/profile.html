@@ -1,0 +1,31 @@
+{% extends 'html/base.html' %}
+{% block title %}My profile | bio.tools{% endblock %}
+{% block content %}
+<h1>My profile</h1>
+<div class="account-profile">
+<section aria-labelledby="account-information">
+  <h2 id="account-information">Account information</h2>
+  <dl><dt>Username</dt><dd>{{ profile.username }}</dd><dt>Email</dt><dd>{{ profile.email }} ({{ profile.email_verified|yesno:'Verified,Not verified' }})</dd></dl>
+  <nav class="account-links" aria-label="Account settings">
+    <a href="{% url 'account_change_password' %}">Change password</a>
+    <a href="{% url 'account_email' %}">Change email</a>
+    <a href="{% url 'html:requests' %}">Requests ({{ profile.requests_count }})</a>
+  </nav>
+  {% if not profile.email_verified %}<form method="post" action="{% url 'account_resend_email' %}">{% csrf_token %}<button type="submit">Resend verification email</button></form>{% endif %}
+</section>
+<section aria-labelledby="connected-accounts">
+  <h2 id="connected-accounts">Connected accounts</h2>
+  <ul>{% for account in profile.socialAccounts %}<li>{{ account.provider }}: {{ account.uid }}</li>{% empty %}<li>No connected accounts.</li>{% endfor %}</ul>
+  <form method="post" action="{% url 'orcid_connect' %}">{% csrf_token %}<button type="submit">Connect ORCID</button></form>
+  {% if profile.socialAccounts %}<p><a href="{% url 'socialaccount_connections' %}">Disconnect an account</a></p>{% endif %}
+</section>
+<section aria-labelledby="owned-resources">
+  <h2 id="owned-resources">My resources</h2>
+  <ul>{% for resource in profile.resources %}<li><a href="/{{ resource.id }}">{{ resource.name }}</a> <span>{{ resource.editPermission.type }}</span> <a href="/{{ resource.id }}/edit">Edit</a> <a href="/{{ resource.id }}/manage">Manage record</a></li>{% empty %}<li>No resources registered.</li>{% endfor %}</ul>
+</section>
+<section aria-labelledby="shared-resources">
+  <h2 id="shared-resources">Resources shared with me</h2>
+  <ul>{% for resource in profile.sharedResources %}<li><a href="/{{ resource.id }}">{{ resource.name }}</a> <a href="/{{ resource.id }}/edit">Edit</a> <a href="/{{ resource.id }}/manage">Manage record</a></li>{% empty %}<li>No shared resources.</li>{% endfor %}</ul>
+</section>
+</div>
+{% endblock %}

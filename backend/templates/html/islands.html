@@ -1,0 +1,17 @@
+{% extends "html/base.html" %}
+{% block title %}Vue runtime preview | bio.tools{% endblock %}
+{% block content %}
+<h1>Vue runtime preview</h1>
+<div class="search-controls">
+<form method="get" action="{% url 'html:islands' %}" hx-get="{% url 'html:islands' %}"
+      hx-target="#island-demos" hx-swap="outerHTML" hx-disabled-elt="find button">
+  <button type="submit">Reset counters</button>
+</form>
+<form method="get" action="{% url 'html:islands' %}" hx-get="{% url 'html:islands' %}"
+      hx-target="#first-counter" hx-select="#first-counter" hx-swap="outerHTML" hx-disabled-elt="find button">
+  <button type="submit" class="secondary">Reset first counter</button>
+</form>
+</div>
+{% include "html/fragments/islands.html" %}
+<p><a href="{% url 'html:index' %}">Return to bio.tools</a></p>
+{% endblock %}

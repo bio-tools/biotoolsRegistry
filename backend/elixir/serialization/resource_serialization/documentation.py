@@ -1,3 +1,4 @@
+from elixir.resource_options import METADATA_CHOICES
 from rest_framework import serializers
 from elixir.models import *
 from elixir.validators import *
@@ -20,7 +21,7 @@ class DocumentationTypeSerializer(serializers.ModelSerializer):
 		# checking if blank
 		IsNotBlankValidator(data)
 		# checking if within enum
-		enum = ENUMValidator(['API documentation', 'Citation instructions', 'Code of conduct', 'Command-line options', 'General', 'User manual', 'Terms of use', 'Training material', 'Governance', 'Contributions policy', 'Installation instructions', 'FAQ', 'Release notes', 'Other', 'Quick start guide'])
+		enum = ENUMValidator(METADATA_CHOICES['documentation.type'])
 		data = enum(data)
 		return {'type': data}
 

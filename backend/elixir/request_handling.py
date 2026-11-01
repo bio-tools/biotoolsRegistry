@@ -21,7 +21,8 @@ class ResourceRequestHandler:
 			author = EditPermissionAuthor.objects.create(user=user)
 		author.save()
 		author.editPermissions.add(resourceRequest.resource.editPermission)
-		resourceRequest.resource.editPermission.type = 'group'
+		if resourceRequest.resource.editPermission.type != 'public':
+			resourceRequest.resource.editPermission.type = 'group'
 		resourceRequest.resource.editPermission.authors.add(author)
 		resourceRequest.resource.save()
 		resourceRequest.resource.editPermission.save()

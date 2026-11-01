@@ -2,6 +2,10 @@ from django.db import models
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
+class DomainNameLock(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+
 class Domain(models.Model):
     YES_NO_CHOICES = (
         (0, 'NO'),
@@ -17,6 +21,8 @@ class Domain(models.Model):
     is_private = models.BooleanField(default=False)
     
     owner = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
+    editors = models.ManyToManyField(User, related_name='editable_domains', blank=True)
+
     visibility = models.IntegerField(choices=YES_NO_CHOICES, default=1) 
 
     def __unicode__(self):

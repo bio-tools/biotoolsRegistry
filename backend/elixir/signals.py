@@ -6,7 +6,8 @@ from django.utils import timezone
 
 # fetch publication metadata after creation
 def set_publicationMetadata(sender, instance, **kwargs):
-	update_publication(instance)
+	if instance.metadata_id is None and not getattr(instance, '_preserve_metadata', False):
+		update_publication(instance)
 
 post_save.connect(set_publicationMetadata, sender=Publication)
 

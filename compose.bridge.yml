@@ -1,0 +1,14 @@
+# Optional internal service. Enable explicitly with --profile github-import.
+services:
+  bridge:
+    image: anitamnd/bridge@sha256:d9dc5a5484247b9eedc9e204aea999bcd82fce79e5fea8bdfe4681b50203ec61
+    platform: linux/amd64
+    profiles: [github-import]
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      HUGGINGFACE_TOKEN: ${HUGGINGFACE_TOKEN:-}
+    networks: [net]
+    restart: unless-stopped
+    mem_limit: 1g
+    cpus: 2
+    pids_limit: 128

@@ -1,0 +1,26 @@
+{% extends 'html/public/base.html' %}
+{% block title %}Domains | bio.tools{% endblock %}
+{% block content %}
+<h1>Domains</h1>
+<p>Community collections of bioinformatics tools and resources.</p>
+<form method="get" class="public-search">
+  {% if domain_form.errors %}<div role="alert">{{ domain_form.errors }}</div>{% endif %}
+  <label for="{{ domain_form.q.id_for_label }}">Search domains</label>
+  <div class="search-controls">{{ domain_form.q }}<button type="submit">Search</button></div>
+  <fieldset><legend>Search in</legend><label><input type="checkbox" checked disabled>Domain name</label>{{ domain_form.field }}</fieldset>
+  <a href="/domains">Clear search</a>
+</form>
+{% if unavailable %}<div role="alert"><p>The domain directory is temporarily unavailable.</p><a href="">Retry</a></div>
+{% else %}
+<p role="status">{{ domains|length }} of {{ domain_count }} domains</p>
+{% for entry in domains %}
+<article class="domain-entry">
+  <h2><a href="{{ entry.url }}">{{ entry.domain }}</a></h2>
+  <p>{{ entry.resources|length }} tools{% if entry.title %} &middot; {{ entry.title }}{% endif %}</p>
+  {% if entry.sub_title %}<p>{{ entry.sub_title }}</p>{% endif %}
+  <ul class="public-tags">{% for collection in entry.collections %}<li><a href="{{ collection.url }}">{{ collection.name }}</a></li>{% endfor %}{% for tag in entry.tag %}<li>{{ tag }}</li>{% endfor %}</ul>
+</article>
+{% empty %}<p>No domains found.</p>{% endfor %}
+{% endif %}
+<p><a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html">Domain documentation</a> &middot; <a href="/domain-manager">Manage domains</a></p>
+{% endblock %}

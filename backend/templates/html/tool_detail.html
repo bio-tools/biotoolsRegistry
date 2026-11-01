@@ -1,0 +1,95 @@
+{% extends 'html/base.html' %}
+{% load static detail_tags %}
+{% block title %}{{ tool.name }} | bio.tools{% endblock %}
+{% block robots %}{% if request.canonical %}index, follow{% else %}noindex, nofollow{% endif %}{% endblock %}
+{% block extra_head %}
+  <meta name="description" content="{{ tool.description|truncatechars:160 }}">
+  <meta property="og:title" content="{{ tool.name }} | bio.tools">
+  <meta property="og:description" content="{{ tool.description|truncatechars:160 }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="alternate" type="application/json" href="{{ api_url }}?format=json">
+  <link rel="alternate" type="application/xml" href="{{ api_url }}?format=xml">
+  <link rel="alternate" type="application/ld+json" href="{{ api_url }}?format=jsonld">
+  <link rel="stylesheet" href="{% static 'html/detail.css' %}">
+{% endblock %}
+{% block scripts %}{% endblock %}
+{% block content %}
+<article class="tool-detail">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/t">Tools</a><span aria-hidden="true">/</span><span>{{ tool.biotoolsID }}</span></nav>
+  <header class="tool-heading">
+    <div><p class="resource-id">biotools:{{ tool.biotoolsID }}</p><h1>{{ tool.name }}</h1>
+      <div class="homepage">{% external_link tool.homepage %}</div>
+    </div>
+    <div class="tool-actions"><a href="/{{ tool.biotoolsID }}/manage">Manage record</a>
+      {% if request.canonical %}<a href="{{ edit_url }}">Edit record</a>{% elif can_edit %}<a href="{% url 'html:editor-edit' identifier=tool.biotoolsID %}">Edit record</a>{% endif %}
+      <nav aria-label="Export record"><a href="{{ api_url }}?format=json">JSON</a><a href="{{ api_url }}?format=xml">XML</a></nav>
+    </div>
+  </header>
+  {% if tool.confidence_flag and tool.confidence_flag != 'tool' %}<p class="record-notice">Automatically generated entry. Confidence: <strong>{{ tool.confidence_flag }}</strong>.</p>{% endif %}
+  {% if tool.owner.username == 'pub2tools2024' or tool.owner.username == 'pub2tools2025' %}<p class="record-notice">Literature-derived annotation from Pub2Tools; fields may need verification.</p>{% endif %}
+  <nav class="section-nav" aria-label="Tool sections">
+    <a href="#overview">Overview</a>{% if tool.function.all %}<a href="#functions">Functions</a>{% endif %}
+    {% if tool.publication.all %}<a href="#publications">Publications</a>{% endif %}
+    {% for node in metadata_sections %}<a href="#metadata-{{ node.name }}">{{ node.label }}</a>{% endfor %}
+    <a href="#record">Registry record</a>
+  </nav>
+  <div class="detail-layout">
+    <div class="detail-content">
+      <section id="overview" class="detail-section"><h2>Overview</h2>
+        {% if tool.description %}<p class="description">{{ tool.description }}</p>{% endif %}
+        {% if tool.topic.all %}<h3>{{ schema_fields.topic.label }}</h3><ul class="topic-list">{% for topic in tool.topic.all %}<li>{% edam_term topic 'topicID' %}</li>{% endfor %}</ul>{% endif %}
+      </section>
+      {% if tool.function.all %}<section id="functions" class="detail-section"><h2>{{ schema_fields.function.label }}</h2>
+        {% for entry in functions %}{% with function=entry.record %}<section class="function-row" aria-labelledby="function-{{ forloop.counter }}">
+          <h3 id="function-{{ forloop.counter }}">Function {{ forloop.counter }}</h3>
+          <div class="function-flow" role="group" aria-label="Function {{ forloop.counter }}: inputs to operations to outputs">
+            <div><h4>Input</h4>{% include 'html/detail/io.html' with items=function.input.all data_field='inputDataTypeID' format_field='inputDataFormatID' only %}</div>
+            <span class="function-arrow" aria-hidden="true">&#8594;</span>
+            <div class="operations"><h4>Operation</h4>{% for operation in function.operation.all %}{% edam_term operation 'operationID' %}{% empty %}<span class="muted">Not specified</span>{% endfor %}</div>
+            <span class="function-arrow" aria-hidden="true">&#8594;</span>
+            <div><h4>Output</h4>{% include 'html/detail/io.html' with items=function.output.all data_field='outputDataTypeID' format_field='outputDataFormatID' only %}</div>
+          </div>
+          {% if entry.extra %}{% include 'html/detail/schema_fields.html' with nodes=entry.extra %}{% endif %}
+        </section>{% endwith %}{% endfor %}
+      </section>{% endif %}
+      {% for node in metadata_sections %}<section id="metadata-{{ node.name }}" class="detail-section"><h2>{{ node.label }}</h2>
+        <ul class="resource-links">{% for entry in node.entries %}<li>{% include 'html/detail/schema_fields.html' with nodes=entry %}</li>{% endfor %}</ul>
+      </section>{% endfor %}
+      {% if tool.publication.all %}<section id="publications" class="detail-section"><h2>{{ schema_fields.publication.label }}</h2>
+        <ol class="citation-list publication-list">{% for entry in publications %}{% with pub=entry.record %}<li>
+          <h3>{% if pub.metadata.title %}{{ pub.metadata.title }}{% else %}Publication {{ forloop.counter }}{% endif %}</h3>
+          {% if pub.type.all %}<p class="publication-type">{% for type in pub.type.all %}{{ type.type }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+          {% if pub.metadata.authors.all %}<p class="citation-authors">{% for author in pub.metadata.authors.all %}{{ author.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+          {% if pub.metadata.journal or pub.metadata.date %}<p><cite>{{ pub.metadata.journal|default:'' }}</cite>{% if pub.metadata.date %} <time datetime="{{ pub.metadata.date|date:'c' }}">{{ pub.metadata.date|date:'Y' }}</time>{% endif %}</p>{% endif %}
+          <ul class="identifier-links">
+            {% if pub.doi %}<li>DOI {% identifier_link pub.doi 'doi' %}</li>{% endif %}
+            {% if pub.pmid %}<li>PMID {% identifier_link pub.pmid 'pmid' %}</li>{% endif %}
+            {% if pub.pmcid %}<li>PMCID {% identifier_link pub.pmcid 'pmcid' %}</li>{% endif %}
+          </ul>
+          {% if pub.version %}<p>Version {{ pub.version }}</p>{% endif %}{% if pub.note %}<p class="metadata-note">{{ pub.note }}</p>{% endif %}
+          {% if pub.metadata.abstract %}<details><summary>Abstract</summary><p>{{ pub.metadata.abstract }}</p></details>{% endif %}
+          {% if entry.extra %}{% include 'html/detail/schema_fields.html' with nodes=entry.extra %}{% endif %}
+        </li>{% endwith %}{% endfor %}</ol>
+      </section>{% endif %}
+    </div>
+    <aside aria-label="Tool metadata">
+      <section class="detail-section"><h2>Tool information</h2>{% include 'html/detail/schema_fields.html' with nodes=metadata_facts %}</section>
+      {% if badges %}<section class="detail-section"><h2>ELIXIR</h2><ul class="plain-list">
+        {% for label, url in badges %}<li>{% external_link url label %}</li>{% endfor %}
+      </ul></section>{% endif %}
+      <section class="detail-section"><h2>Training &amp; evaluation</h2><ul class="plain-list">
+        <li><a href="https://tess.elixir-europe.org/materials?q={{ tool.name|urlencode }}">Training materials</a></li>
+        <li><a href="https://tess.elixir-europe.org/events?q={{ tool.name|urlencode }}">Training events</a></li>
+        <li><a href="https://openebench.bsc.es/tool/{{ tool.biotoolsID|lower|urlencode }}">OpenEBench</a></li>
+      </ul></section>
+      <section id="record" class="detail-section"><h2>Registry record</h2><dl class="facts">
+        <dt>Identifier</dt><dd>biotools:{{ tool.biotoolsID }}</dd>
+        {% if tool.additionDate %}<dt>Added</dt><dd><time datetime="{{ tool.additionDate|date:'c' }}">{{ tool.additionDate|date:'j F Y' }}</time></dd>{% endif %}
+        {% if tool.lastUpdate %}<dt>Updated</dt><dd><time datetime="{{ tool.lastUpdate|date:'c' }}">{{ tool.lastUpdate|date:'j F Y' }}</time></dd>{% endif %}
+        <dt>Owner</dt><dd>{{ tool.owner.username }}</dd>
+      </dl><a href="{% url 'html:request-create' identifier=tool.biotoolsID %}">Request editing rights or ownership</a></section>
+    </aside>
+  </div>
+</article>
+{% endblock %}

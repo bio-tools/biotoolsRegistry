@@ -1,0 +1,25 @@
+{% extends "html/base.html" %}
+
+{% block title %}bio.tools | Migration preview{% endblock %}
+
+{% block content %}
+<h1>bio.tools</h1>
+<p class="lead">Bioinformatics tools and services</p>
+<form class="search-form" role="search" method="get" action="/t">
+  <label for="query">Search tools</label>
+  <div class="search-controls">
+    <input id="query" name="q" type="search" required>
+    <input type="hidden" name="page" value="1">
+    <input type="hidden" name="sort" value="score">
+    <button type="submit">Search</button>
+  </div>
+</form>
+<section class="session-check" aria-labelledby="session-heading">
+  <h2 id="session-heading">Browser session</h2>
+  <form method="post" action="{% url 'html:index' %}">
+    {% csrf_token %}
+    <button class="secondary" type="submit">Check session</button>
+  </form>
+</section>
+<p><a href="{% url 'html:preview' %}">Message preview</a></p>
+{% endblock %}

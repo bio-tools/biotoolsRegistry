@@ -1,0 +1,11 @@
+{% extends 'html/base.html' %}
+{% block title %}{% if editing %}Edit {{ resource.name }}{% else %}Register a tool{% endif %} | bio.tools{% endblock %}
+{% block content %}
+{% if editing %}<p><a href="{% url 'html:requests' %}">Ownership &amp; editing requests</a></p>{% endif %}
+<template id="editor-config">{{ editor_config|json_script }}</template>
+<div data-vue-island="resource-editor" data-vue-props="editor-config" hx-disable>
+  <h1>{% if editing %}Edit tool{% else %}Register a tool{% endif %}</h1>
+  <p role="status">The editor requires JavaScript and its assets. If it does not appear, enable JavaScript or <a href="">retry this page</a>. No changes have been saved.</p>
+  {% if editing %}<p><a href="/{{ resource.biotoolsID }}">View record</a> · <a href="/api/t/{{ resource.biotoolsID }}?format=json" download>Export stored JSON</a></p>{% else %}<p><a href="/t">Browse tools</a></p>{% endif %}
+</div>
+{% endblock %}

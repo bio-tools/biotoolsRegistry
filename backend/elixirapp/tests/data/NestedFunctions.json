@@ -1,0 +1,22 @@
+[
+  {
+    "operation": [{"uri": "http://edamontology.org/operation_0292"}, {"uri": "http://edamontology.org/operation_0004"}],
+    "input": [
+      {"data": {"uri": "http://edamontology.org/data_0863"}, "format": [{"uri": "http://edamontology.org/format_1929"}, {"uri": "http://edamontology.org/format_1915"}]},
+      {"data": {"uri": "http://edamontology.org/data_2044"}}
+    ],
+    "output": [
+      {"data": {"uri": "http://edamontology.org/data_2044"}, "format": [{"uri": "http://edamontology.org/format_1929"}]},
+      {"data": {"uri": "http://edamontology.org/data_0863"}, "format": [{"uri": "http://edamontology.org/format_1915"}, {"uri": "http://edamontology.org/format_1929"}]}
+    ],
+    "note": "First function with multiple annotations.",
+    "cmd": "example --first"
+  },
+  {
+    "operation": [{"uri": "http://edamontology.org/operation_0292"}],
+    "input": [{"data": {"uri": "http://edamontology.org/data_2044"}}],
+    "output": [{"data": {"uri": "http://edamontology.org/data_0863"}}],
+    "note": "Second function with independent annotations.",
+    "cmd": "example --second"
+  }
+]

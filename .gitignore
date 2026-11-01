@@ -1,18 +1,31 @@
-frontend/bower_components/
-frontend/node_modules/
-*.pyc
 backend/elixirapp/deployment_settings.py
 backend/elixir/blacklisted_domains.py
-*.DS_Store
-deployment/
-prerender/
 backend/data/edam/json/*
 !backend/data/edam/json/.gitkeep
 backend/data/edam/owl/*
-!backend/data/edam/owl/.gitkeep 
+!backend/data/edam/owl/.gitkeep
+backend/elixir/ecosystem/__secret_settings__.py
+
+node_modules/
+deployment/
+prerender/
+
 *.log
 /logs
 /logs/*
-*__secret_settings__.py*
-backend/elixir/ecosystem/__secret_settings__.py
+*.DS_Store
+*.pyc
+.idea
+*.sh
+.venv/
+.vscode/
 
+# Collected migration assets; sources live under backend/elixir/static/.
+/registry-assets/static/html/
+/registry-assets/static/modern/
+/backend/elixirapp/tests/data/WorkflowCorpus.local.json
+/backend/elixirapp/tests/data/WorkflowCorpus.local.metadata.json
+/backend/elixirapp/tests/data/WorkflowOntology.local.json
+
+# Private archive of the checkout replaced during consolidation.
+/.previous-checkout-backup.tar.gz

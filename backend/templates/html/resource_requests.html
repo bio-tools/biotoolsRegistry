@@ -1,0 +1,36 @@
+{% extends 'html/base.html' %}
+{% block title %}Requests | bio.tools{% endblock %}
+{% block content %}
+<h1>Requests</h1>
+<form method="get" class="request-filter">
+  <label><input type="checkbox" name="completed" value="1" {% if show_completed %}checked{% endif %}> Include completed</label>
+  <button type="submit" class="secondary">Apply</button>
+</form>
+<section class="request-section" aria-labelledby="received-title">
+  <h2 id="received-title">Received requests</h2>
+  {% for item in received %}
+  <article class="request-row">
+    <h3><a href="{% url 'html:tool-detail' identifier=item.resourceId %}">{{ item.resourceId }}</a></h3>
+    <p>{% if item.type == 'ownership' %}Ownership{% else %}Editing rights{% endif %} requested by {{ item.username }} ({{ item.email }})</p>
+    {% if item.orcid %}<p>ORCID: {{ item.orcid }}</p>{% endif %}
+    {% if item.completed %}<p>{% if item.accepted %}Accepted{% else %}Declined{% endif %}</p>{% else %}
+    <form method="post" action="{% url 'html:request-conclude' %}">
+      {% csrf_token %}<input type="hidden" name="requestId" value="{{ item.requestId }}">
+      {% if item.type == 'ownership' %}<p>Accepting transfers ownership and pending requests to {{ item.username }}.</p>{% endif %}
+      <button type="submit" name="accept" value="true">Accept</button>
+      <button type="submit" name="accept" value="false" class="secondary">Decline</button>
+    </form>
+    {% endif %}
+  </article>
+  {% empty %}<p>No received requests.</p>{% endfor %}
+</section>
+<section class="request-section" aria-labelledby="sent-title">
+  <h2 id="sent-title">Sent requests</h2>
+  {% for item in sent %}
+  <article class="request-row">
+    <h3><a href="{% url 'html:tool-detail' identifier=item.resourceId %}">{{ item.resourceId }}</a></h3>
+    <p>{% if item.type == 'ownership' %}Ownership{% else %}Editing rights{% endif %}: {% if not item.completed %}Pending{% elif item.accepted %}Accepted{% else %}Declined{% endif %}</p>
+  </article>
+  {% empty %}<p>No sent requests.</p>{% endfor %}
+</section>
+{% endblock %}

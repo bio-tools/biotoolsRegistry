@@ -1,0 +1,12 @@
+<section id="island-demos" aria-label="Counters">
+  <template id="first-counter-props">{{ first_counter|json_script }}</template>
+  <div id="first-counter" data-vue-island="counter-demo" data-vue-props="first-counter-props" hx-disable>
+    <h2>{{ first_counter.label }}</h2>
+    <p>{{ first_counter.initial }}</p>
+  </div>
+  <template id="second-counter-props">{{ second_counter|json_script }}</template>
+  <div data-vue-island="counter-demo" data-vue-props="second-counter-props" hx-disable>
+    <h2>{{ second_counter.label }}</h2>
+    <p>{{ second_counter.initial }}</p>
+  </div>
+</section>

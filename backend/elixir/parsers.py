@@ -26,11 +26,11 @@ class XMLSchemaParser(BaseParser):
 		"""
 
 		# Identical to biotools_3.3.0.xsd except no maxOccurs="unbounded" on the "tool" element
-		with open('/elixir/application/backend/elixir/biotoolsSchema/biotools_3.3.0-singletool.xsd', 'r') as f:
+		with open(getattr(settings, 'RESOURCE_SCHEMA_PATH', '/elixir/application/backend/elixir/biotoolsSchema/biotools_3.3.0-singletool.xsd'), 'rb') as f:
 			schema_root = lxmletree.XML(f.read())
 		
 		schema = lxmletree.XMLSchema(schema_root)
-		xmlparser = lxmletree.XMLParser(schema=schema)
+		xmlparser = lxmletree.XMLParser(schema=schema, resolve_entities=False, no_network=True)
 		xml_tree = None
 
 		try:
@@ -45,7 +45,7 @@ class XMLSchemaParser(BaseParser):
 			#xslt for transforming from biotoolsSchema to generic xml from django
 			xslt1 = lxmletree.parse('/elixir/application/backend/elixir/biotoolsSchema/biotoolsSchema_3.3.0_XML_to_framework_XML_xslt1.0.xslt')
 			transform1 = lxmletree.XSLT(xslt1)
-			dom = lxmletree.fromstring(xml_string)
+			dom = xml_tree
 			newdom = transform1(dom)
 
 

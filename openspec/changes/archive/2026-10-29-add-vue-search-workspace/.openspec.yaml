@@ -1,0 +1,9 @@
+schema: spec-driven
+created: 2026-09-09
+goal: Implement the public search results experience as a cohesive Vue application embedded in a Django-rendered page.
+affected_areas:
+  - backend
+  - frontend-next
+  - search
+  - routing
+  - elasticsearch

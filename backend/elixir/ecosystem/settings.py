@@ -31,7 +31,7 @@ ECO_MASTER_BRANCH = getenv('ECO_MASTER_BRANCH', 'master')
 ECO_ROOT_GITHUB_FOLDER = getenv('ECO_ROOT_GITHUB_FOLDER', 'data')
 ECO_BIOTOOLS_EXTENSION =  getenv('ECO_BIOTOOLS_EXTENSION', 'biotools.json')
 ECO_DELETED_BRANCH_SUFFIX = getenv('ECO_DELETED_BRANCH_SUFFIX', '__delete')
-# recommended to have loggin on by default, saves a lot of hassle
+# recommended to have logging on by default, saves a lot of hassle
 ECO_LOG_ISSUE  = getenv('ECO_LOG_ISSUE', True, castf=bool)
 # For the log file we can have a specific bio.tools backend filepath like:
 #   /elixir/application/backend/log/ecosytem.log
@@ -44,7 +44,7 @@ ECO_EMAIL_RECIPIENTS = getenv('ECO_EMAIL_RECIPIENTS', [], castf=json.loads)
 # not set by default, needs to be set in __secret_settings__.py
 ECO_PERSONAL_TOKEN = getenv('ECO_LOGGER_NAME', '')
 
-# Secret settings from "__secret_settings__.py" file that can overide the ones above
+# Secret settings from "__secret_settings__.py" file that can override the ones above
 # Can also leave the "__secret_settings__.py" file empty if you use environment variables
 try:
     from .__secret_settings__ import *

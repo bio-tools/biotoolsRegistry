@@ -3,7 +3,7 @@ from elixir.model.resource_model.resource import *
 
 class Credit(models.Model):
     # make sure you have a credit name either as a TextField or as a CreditName see class below this one
-    # comment should be note
+    # comment should be under `note`
     # some fields need to be removed check notes
 
     name = models.TextField(null=True, blank=True)

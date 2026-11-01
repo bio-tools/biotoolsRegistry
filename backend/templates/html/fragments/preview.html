@@ -1,0 +1,15 @@
+<section id="message-preview" aria-label="Message preview">
+  <form class="search-form" method="get" action="{% url 'html:preview' %}"
+        hx-get="{% url 'html:preview' %}" hx-target="#message-preview" hx-swap="outerHTML"
+        hx-push-url="true" hx-indicator="#preview-loading" hx-disabled-elt="find button">
+    {{ form.message.label_tag }}
+    {{ form.message.errors }}
+    <div class="search-controls">
+      {{ form.message }}
+      <button type="submit">Preview</button>
+    </div>
+    <p id="preview-loading" class="htmx-indicator" role="status">Loading...</p>
+  </form>
+  <h2>Preview</h2>
+  <p id="preview-result" aria-live="polite">{{ preview_message }}</p>
+</section>

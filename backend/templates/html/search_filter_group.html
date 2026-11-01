@@ -1,0 +1,13 @@
+<details class="search-filter-group" data-filter-group="{{ group.id }}" {% if group.active %}open{% endif %}>
+  <summary>{{ group.label }}{% if group.active %}<span class="filter-group-count">{{ group.active }} active</span>{% endif %}</summary>
+  <div class="filter-group-body">
+    <div class="native-filter-grid">
+    {% for field in group.fields %}
+      <div class="filter-field"><label for="native-{{ field.key }}">{{ field.label }}</label>
+      <input id="native-{{ field.key }}" name="{{ field.key }}" value="{{ field.value }}" maxlength="256" list="native-values-{{ field.key }}">
+      <datalist id="native-values-{{ field.key }}">{% for choice in field.choices %}<option value='"{{ choice.value }}"'>{{ choice.label }}</option>{% endfor %}</datalist></div>
+    {% endfor %}
+    </div>
+    {% for child in group.children %}{% include 'html/search_filter_group.html' with group=child only %}{% endfor %}
+  </div>
+</details>

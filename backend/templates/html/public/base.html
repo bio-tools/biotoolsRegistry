@@ -1,0 +1,3 @@
+{% extends 'html/base.html' %}
+{% block robots %}{% if public_indexable %}index, follow{% else %}noindex, follow{% endif %}{% endblock %}
+{% block extra_head %}<link rel="canonical" href="{{ canonical_url }}">{% endblock %}

@@ -1,0 +1,5776 @@
+{
+  "contract": {
+    "fields": {
+      "accessibility": {
+        "blank": true,
+        "choices": [
+          {
+            "label": "Open access",
+            "value": "Open access"
+          },
+          {
+            "label": "Restricted access",
+            "value": "Restricted access"
+          },
+          {
+            "label": "Open access (with restrictions)",
+            "value": "Open access (with restrictions)"
+          }
+        ],
+        "help": "Whether the software is freely available for use.",
+        "kind": "string",
+        "label": "Accessibility",
+        "maxLength": 300,
+        "minLength": 1,
+        "nullable": false,
+        "path": "accessibility",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaRequired": false,
+        "search": [
+          "accessibility"
+        ],
+        "writable": true
+      },
+      "additionDate": {
+        "blank": false,
+        "help": "",
+        "kind": "string",
+        "label": "Addition date",
+        "nullable": true,
+        "path": "additionDate",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "search": [],
+        "writable": false
+      },
+      "biotoolsCURIE": {
+        "blank": false,
+        "help": "bio.tools CURIE (compact URI) based on the bio.tools tool ID.",
+        "kind": "string",
+        "label": "bio.tools CURIE",
+        "nullable": false,
+        "path": "biotoolsCURIE",
+        "public": true,
+        "readOnly": true,
+        "required": false,
+        "schemaPatterns": [
+          "biotools:[_\\-.0-9a-zA-Z]*"
+        ],
+        "schemaRequired": false,
+        "search": [],
+        "writable": false
+      },
+      "biotoolsID": {
+        "blank": false,
+        "help": "Unique ID of the tool that is assigned upon registration of the software in bio.tools.",
+        "kind": "string",
+        "label": "bio.tools ID",
+        "maxLength": 100,
+        "minLength": 1,
+        "nullable": false,
+        "path": "biotoolsID",
+        "public": true,
+        "readOnly": false,
+        "required": true,
+        "schemaPatterns": [
+          "[_\\-.0-9a-zA-Z]*"
+        ],
+        "schemaRequired": false,
+        "search": [
+          "biotoolsID"
+        ],
+        "writable": false
+      },
+      "collectionID": {
+        "empty": false,
+        "help": "Tag for a collection that the software has been assigned to within bio.tools.",
+        "item": {
+          "blank": false,
+          "kind": "string",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaMaxLength": 100,
+          "schemaMinLength": 1,
+          "schemaPatterns": [
+            "[\\p{Zs}A-Za-z0-9+\\.,\\-_:;()]*"
+          ],
+          "schemaRequired": false
+        },
+        "itemLabel": "Collection",
+        "kind": "array",
+        "label": "Collections",
+        "nullable": false,
+        "path": "collectionID",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "collectionID"
+        ],
+        "writable": true
+      },
+      "confidence_flag": {
+        "blank": false,
+        "help": "",
+        "kind": "string",
+        "label": "Confidence flag",
+        "maxLength": 8,
+        "minLength": 1,
+        "nullable": false,
+        "path": "confidence_flag",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "search": [],
+        "writable": false
+      },
+      "cost": {
+        "blank": false,
+        "choices": [
+          {
+            "label": "Free of charge",
+            "value": "Free of charge"
+          },
+          {
+            "label": "Free of charge (with restrictions)",
+            "value": "Free of charge (with restrictions)"
+          },
+          {
+            "label": "Commercial",
+            "value": "Commercial"
+          }
+        ],
+        "help": "Monetary cost of acquiring the software.",
+        "kind": "string",
+        "label": "Cost",
+        "maxLength": 300,
+        "minLength": 1,
+        "nullable": false,
+        "path": "cost",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaRequired": false,
+        "search": [
+          "cost"
+        ],
+        "writable": true
+      },
+      "credit": {
+        "empty": false,
+        "help": "An individual or organisation that should be credited, or may be contacted about the software.",
+        "item": {
+          "fields": {
+            "email": {
+              "blank": false,
+              "help": "Email address of credited entity.",
+              "kind": "string",
+              "label": "Email",
+              "maxLength": 300,
+              "nullable": false,
+              "path": "credit.email",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaChoiceGroup": true,
+              "schemaPatterns": [
+                "[A-Za-z0-9_]+([-+.'][A-Za-z0-9_]+)*@[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*"
+              ],
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            },
+            "fundrefid": {
+              "blank": false,
+              "help": "Crossref funder ID of a funding organisation.",
+              "kind": "string",
+              "label": "FundRef ID",
+              "nullable": false,
+              "path": "credit.fundrefid",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaPatterns": [
+                "10\\.13039/[\\[\\]<>A-Za-z0-9:;\\)\\(_/.-]+"
+              ],
+              "schemaRequired": false,
+              "search": [
+                "creditFundRefID"
+              ],
+              "writable": true
+            },
+            "gridid": {
+              "blank": false,
+              "help": "GRID ID of organisation.",
+              "kind": "string",
+              "label": "GRID ID",
+              "nullable": false,
+              "path": "credit.gridid",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaPatterns": [
+                "grid.[0-9]{4,}.[a-f0-9]{1,2}"
+              ],
+              "schemaRequired": false,
+              "search": [
+                "creditGridID"
+              ],
+              "writable": true
+            },
+            "name": {
+              "blank": false,
+              "help": "Name of credited entity.",
+              "kind": "string",
+              "label": "Credit name",
+              "maxLength": 100,
+              "minLength": 1,
+              "nullable": false,
+              "path": "credit.name",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaChoiceGroup": true,
+              "schemaMaxLength": 100,
+              "schemaMinLength": 1,
+              "schemaRequired": false,
+              "search": [
+                "creditName"
+              ],
+              "writable": true
+            },
+            "note": {
+              "blank": false,
+              "help": "A comment about the credit.",
+              "kind": "string",
+              "label": "Note",
+              "maxLength": 1000,
+              "minLength": 10,
+              "multiline": true,
+              "nullable": false,
+              "path": "credit.note",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxLength": 1000,
+              "schemaMinLength": 10,
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            },
+            "orcidid": {
+              "blank": false,
+              "help": "ORCID iD of person.",
+              "kind": "string",
+              "label": "ORCID",
+              "nullable": false,
+              "path": "credit.orcidid",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaPatterns": [
+                "http://orcid\\.org/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]",
+                "https://orcid\\.org/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]"
+              ],
+              "schemaRequired": false,
+              "search": [
+                "creditOrcidID"
+              ],
+              "writable": true
+            },
+            "rorid": {
+              "blank": false,
+              "help": "ROR ID of organisation.",
+              "kind": "string",
+              "label": "ROR ID",
+              "nullable": false,
+              "path": "credit.rorid",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaPatterns": [
+                "0[0-9a-zA-Z]{6}[0-9]{2}"
+              ],
+              "schemaRequired": false,
+              "search": [
+                "creditRORID"
+              ],
+              "writable": true
+            },
+            "typeEntity": {
+              "blank": false,
+              "choices": [
+                {
+                  "label": "Person",
+                  "value": "Person"
+                },
+                {
+                  "label": "Project",
+                  "value": "Project"
+                },
+                {
+                  "label": "Division",
+                  "value": "Division"
+                },
+                {
+                  "label": "Institute",
+                  "value": "Institute"
+                },
+                {
+                  "label": "Consortium",
+                  "value": "Consortium"
+                },
+                {
+                  "label": "Funding agency",
+                  "value": "Funding agency"
+                }
+              ],
+              "help": "Type of entity that is credited.",
+              "kind": "string",
+              "label": "Entity type",
+              "nullable": false,
+              "path": "credit.typeEntity",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaRequired": false,
+              "search": [
+                "creditTypeEntity"
+              ],
+              "writable": true
+            },
+            "typeRole": {
+              "choices": [
+                {
+                  "label": "Primary contact",
+                  "value": "Primary contact"
+                },
+                {
+                  "label": "Contributor",
+                  "value": "Contributor"
+                },
+                {
+                  "label": "Developer",
+                  "value": "Developer"
+                },
+                {
+                  "label": "Documentor",
+                  "value": "Documentor"
+                },
+                {
+                  "label": "Maintainer",
+                  "value": "Maintainer"
+                },
+                {
+                  "label": "Provider",
+                  "value": "Provider"
+                },
+                {
+                  "label": "Support",
+                  "value": "Support"
+                }
+              ],
+              "empty": false,
+              "help": "Role performed by credited entity.",
+              "item": {
+                "blank": false,
+                "kind": "string",
+                "nullable": false,
+                "readOnly": false,
+                "required": false,
+                "schemaRequired": false
+              },
+              "itemLabel": "Role",
+              "kind": "array",
+              "label": "Roles",
+              "nullable": false,
+              "path": "credit.typeRole",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxItems": null,
+              "schemaMinItems": 0,
+              "schemaRequired": false,
+              "search": [
+                "creditTypeRole"
+              ],
+              "writable": true
+            },
+            "url": {
+              "blank": false,
+              "help": "URL for credited entity.",
+              "kind": "string",
+              "label": "URL",
+              "nullable": false,
+              "path": "credit.url",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaChoiceGroup": true,
+              "schemaPatterns": [
+                "http(s?)://[^\\s/$.?#]*\\.[^\\s]*"
+              ],
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            }
+          },
+          "kind": "object",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "Credit",
+        "kind": "array",
+        "label": "Credits",
+        "nullable": false,
+        "path": "credit",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "credit"
+        ],
+        "writable": true
+      },
+      "description": {
+        "blank": false,
+        "help": "Software description, e.g. a few sentences adapted from the software publication abstract or homepage.",
+        "kind": "string",
+        "label": "Description",
+        "maxLength": 1000,
+        "minLength": 10,
+        "multiline": true,
+        "nullable": false,
+        "path": "description",
+        "public": true,
+        "readOnly": false,
+        "required": true,
+        "schemaMaxLength": 1000,
+        "schemaMinLength": 10,
+        "schemaRequired": true,
+        "search": [
+          "description"
+        ],
+        "writable": true
+      },
+      "documentation": {
+        "empty": false,
+        "help": "A link to documentation about the software e.g. manual, API specification or training material.",
+        "item": {
+          "fields": {
+            "note": {
+              "blank": true,
+              "help": "Comment about the documentation.",
+              "kind": "string",
+              "label": "Note",
+              "maxLength": 1000,
+              "minLength": 10,
+              "multiline": true,
+              "nullable": false,
+              "path": "documentation.note",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxLength": 1000,
+              "schemaMinLength": 10,
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            },
+            "type": {
+              "choices": [
+                {
+                  "label": "API documentation",
+                  "value": "API documentation"
+                },
+                {
+                  "label": "Citation instructions",
+                  "value": "Citation instructions"
+                },
+                {
+                  "label": "Code of conduct",
+                  "value": "Code of conduct"
+                },
+                {
+                  "label": "Command-line options",
+                  "value": "Command-line options"
+                },
+                {
+                  "label": "Contributions policy",
+                  "value": "Contributions policy"
+                },
+                {
+                  "label": "FAQ",
+                  "value": "FAQ"
+                },
+                {
+                  "label": "General",
+                  "value": "General"
+                },
+                {
+                  "label": "Governance",
+                  "value": "Governance"
+                },
+                {
+                  "label": "Installation instructions",
+                  "value": "Installation instructions"
+                },
+                {
+                  "label": "Quick start guide",
+                  "value": "Quick start guide"
+                },
+                {
+                  "label": "Release notes",
+                  "value": "Release notes"
+                },
+                {
+                  "label": "Terms of use",
+                  "value": "Terms of use"
+                },
+                {
+                  "label": "Training material",
+                  "value": "Training material"
+                },
+                {
+                  "label": "User manual",
+                  "value": "User manual"
+                },
+                {
+                  "label": "Other",
+                  "value": "Other"
+                }
+              ],
+              "empty": false,
+              "help": "Documentation type.",
+              "item": {
+                "blank": false,
+                "kind": "string",
+                "nullable": false,
+                "readOnly": false,
+                "required": true,
+                "schemaRequired": true
+              },
+              "itemLabel": "Type",
+              "kind": "array",
+              "label": "Types",
+              "nullable": false,
+              "path": "documentation.type",
+              "public": true,
+              "readOnly": false,
+              "required": true,
+              "schemaMaxItems": null,
+              "schemaMinItems": 1,
+              "schemaRequired": true,
+              "search": [
+                "documentationType"
+              ],
+              "writable": true
+            },
+            "url": {
+              "blank": false,
+              "help": "Link to documentation on the web for the tool.",
+              "kind": "string",
+              "label": "URL",
+              "nullable": false,
+              "path": "documentation.url",
+              "public": true,
+              "readOnly": false,
+              "required": true,
+              "schemaPatterns": [
+                "http(s?)://[^\\s/$.?#]*\\.[^\\s]*",
+                "s?ftp://[^\\s/$.?#]*\\.[^\\s]*"
+              ],
+              "schemaRequired": true,
+              "search": [],
+              "writable": true
+            }
+          },
+          "kind": "object",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "Documentation link",
+        "kind": "array",
+        "label": "Documentation",
+        "nullable": false,
+        "path": "documentation",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "documentation"
+        ],
+        "writable": true
+      },
+      "download": {
+        "empty": false,
+        "help": "A link to a download for the software, e.g. source code, virtual machine image or container.",
+        "item": {
+          "fields": {
+            "note": {
+              "blank": true,
+              "help": "Comment about the download.",
+              "kind": "string",
+              "label": "Note",
+              "maxLength": 1000,
+              "minLength": 10,
+              "multiline": true,
+              "nullable": false,
+              "path": "download.note",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxLength": 1000,
+              "schemaMinLength": 10,
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            },
+            "type": {
+              "blank": true,
+              "choices": [
+                {
+                  "label": "API specification",
+                  "value": "API specification"
+                },
+                {
+                  "label": "Biological data",
+                  "value": "Biological data"
+                },
+                {
+                  "label": "Binaries",
+                  "value": "Binaries"
+                },
+                {
+                  "label": "Command-line specification",
+                  "value": "Command-line specification"
+                },
+                {
+                  "label": "Container file",
+                  "value": "Container file"
+                },
+                {
+                  "label": "Icon",
+                  "value": "Icon"
+                },
+                {
+                  "label": "Software package",
+                  "value": "Software package"
+                },
+                {
+                  "label": "Screenshot",
+                  "value": "Screenshot"
+                },
+                {
+                  "label": "Source code",
+                  "value": "Source code"
+                },
+                {
+                  "label": "Test data",
+                  "value": "Test data"
+                },
+                {
+                  "label": "Test script",
+                  "value": "Test script"
+                },
+                {
+                  "label": "Tool wrapper (CWL)",
+                  "value": "Tool wrapper (CWL)"
+                },
+                {
+                  "label": "Tool wrapper (Galaxy)",
+                  "value": "Tool wrapper (Galaxy)"
+                },
+                {
+                  "label": "Tool wrapper (Taverna)",
+                  "value": "Tool wrapper (Taverna)"
+                },
+                {
+                  "label": "Tool wrapper (Other)",
+                  "value": "Tool wrapper (Other)"
+                },
+                {
+                  "label": "VM image",
+                  "value": "VM image"
+                },
+                {
+                  "label": "Downloads page",
+                  "value": "Downloads page"
+                },
+                {
+                  "label": "Other",
+                  "value": "Other"
+                }
+              ],
+              "help": "Download type.",
+              "kind": "string",
+              "label": "Download type",
+              "maxLength": 300,
+              "minLength": 1,
+              "nullable": false,
+              "path": "download.type",
+              "public": true,
+              "readOnly": false,
+              "required": true,
+              "schemaRequired": true,
+              "search": [
+                "downloadType"
+              ],
+              "writable": true
+            },
+            "url": {
+              "blank": false,
+              "help": "Download link.",
+              "kind": "string",
+              "label": "URL",
+              "nullable": false,
+              "path": "download.url",
+              "public": true,
+              "readOnly": false,
+              "required": true,
+              "schemaPatterns": [
+                "http(s?)://[^\\s/$.?#]*\\.[^\\s]*",
+                "s?ftp://[^\\s/$.?#]*\\.[^\\s]*"
+              ],
+              "schemaRequired": true,
+              "search": [],
+              "writable": true
+            },
+            "version": {
+              "blank": true,
+              "help": "Software version number.",
+              "kind": "string",
+              "label": "Download version",
+              "maxLength": 100,
+              "minLength": 1,
+              "nullable": false,
+              "path": "download.version",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxLength": 100,
+              "schemaMinLength": 1,
+              "schemaPatterns": [
+                "[\\p{Zs}A-Za-z0-9+\\.,\\-_:;()~]*"
+              ],
+              "schemaRequired": false,
+              "search": [
+                "downloadVersion"
+              ],
+              "writable": true
+            }
+          },
+          "kind": "object",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "Download",
+        "kind": "array",
+        "label": "Downloads",
+        "nullable": false,
+        "path": "download",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "download"
+        ],
+        "writable": true
+      },
+      "editPermission": {
+        "fields": {
+          "authors": {
+            "empty": true,
+            "help": "",
+            "item": {
+              "blank": false,
+              "kind": "string",
+              "nullable": false,
+              "readOnly": false,
+              "required": false
+            },
+            "kind": "array",
+            "label": "Authors",
+            "nullable": false,
+            "path": "editPermission.authors",
+            "public": false,
+            "readOnly": false,
+            "required": false,
+            "search": [],
+            "writable": false
+          },
+          "type": {
+            "blank": false,
+            "help": "",
+            "kind": "string",
+            "label": "Type",
+            "nullable": false,
+            "path": "editPermission.type",
+            "public": false,
+            "readOnly": false,
+            "required": true,
+            "search": [],
+            "writable": false
+          }
+        },
+        "help": "",
+        "kind": "object",
+        "label": "Edit permission",
+        "nullable": false,
+        "path": "editPermission",
+        "public": false,
+        "readOnly": false,
+        "required": false,
+        "search": [],
+        "writable": false
+      },
+      "elixirCommunity": {
+        "choices": [
+          {
+            "label": "3D-BioInfo",
+            "value": "3D-BioInfo"
+          },
+          {
+            "label": "Biodiversity",
+            "value": "Biodiversity"
+          },
+          {
+            "label": "Systems Biology",
+            "value": "Systems Biology"
+          },
+          {
+            "label": "Cancer Data",
+            "value": "Cancer Data"
+          },
+          {
+            "label": "Food and Nutrition",
+            "value": "Food and Nutrition"
+          },
+          {
+            "label": "Microbiome",
+            "value": "Microbiome"
+          },
+          {
+            "label": "Research Data Management",
+            "value": "Research Data Management"
+          },
+          {
+            "label": "Single-cell Omics",
+            "value": "Single-cell Omics"
+          },
+          {
+            "label": "Toxicology",
+            "value": "Toxicology"
+          },
+          {
+            "label": "Federated Human Data",
+            "value": "Federated Human Data"
+          },
+          {
+            "label": "Galaxy",
+            "value": "Galaxy"
+          },
+          {
+            "label": "Human Copy Number Variation",
+            "value": "Human Copy Number Variation"
+          },
+          {
+            "label": "Intrinsically Disordered Proteins",
+            "value": "Intrinsically Disordered Proteins"
+          },
+          {
+            "label": "Marine Metagenomics",
+            "value": "Marine Metagenomics"
+          },
+          {
+            "label": "Metabolomics",
+            "value": "Metabolomics"
+          },
+          {
+            "label": "Microbial Biotechnology",
+            "value": "Microbial Biotechnology"
+          },
+          {
+            "label": "Plant Sciences",
+            "value": "Plant Sciences"
+          },
+          {
+            "label": "Proteomics",
+            "value": "Proteomics"
+          },
+          {
+            "label": "Rare Diseases",
+            "value": "Rare Diseases"
+          }
+        ],
+        "empty": false,
+        "help": "ELIXIR (or other) community to which the software is relevant.",
+        "item": {
+          "blank": false,
+          "kind": "string",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "ELIXIR community",
+        "kind": "array",
+        "label": "ELIXIR communities",
+        "nullable": false,
+        "path": "elixirCommunity",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "elixirCommunity"
+        ],
+        "writable": true
+      },
+      "elixirNode": {
+        "choices": [
+          {
+            "label": "Belgium",
+            "value": "Belgium"
+          },
+          {
+            "label": "Czech Republic",
+            "value": "Czech Republic"
+          },
+          {
+            "label": "Denmark",
+            "value": "Denmark"
+          },
+          {
+            "label": "EMBL",
+            "value": "EMBL"
+          },
+          {
+            "label": "Estonia",
+            "value": "Estonia"
+          },
+          {
+            "label": "Finland",
+            "value": "Finland"
+          },
+          {
+            "label": "France",
+            "value": "France"
+          },
+          {
+            "label": "Germany",
+            "value": "Germany"
+          },
+          {
+            "label": "Greece",
+            "value": "Greece"
+          },
+          {
+            "label": "Hungary",
+            "value": "Hungary"
+          },
+          {
+            "label": "Ireland",
+            "value": "Ireland"
+          },
+          {
+            "label": "Israel",
+            "value": "Israel"
+          },
+          {
+            "label": "Italy",
+            "value": "Italy"
+          },
+          {
+            "label": "Luxembourg",
+            "value": "Luxembourg"
+          },
+          {
+            "label": "Netherlands",
+            "value": "Netherlands"
+          },
+          {
+            "label": "Norway",
+            "value": "Norway"
+          },
+          {
+            "label": "Portugal",
+            "value": "Portugal"
+          },
+          {
+            "label": "Slovenia",
+            "value": "Slovenia"
+          },
+          {
+            "label": "Spain",
+            "value": "Spain"
+          },
+          {
+            "label": "Sweden",
+            "value": "Sweden"
+          },
+          {
+            "label": "Switzerland",
+            "value": "Switzerland"
+          },
+          {
+            "label": "UK",
+            "value": "UK"
+          }
+        ],
+        "empty": false,
+        "help": "ELIXIR node credited for developing or providing the software - the software is in Node Service Delivery Plan.",
+        "item": {
+          "blank": false,
+          "kind": "string",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "ELIXIR node",
+        "kind": "array",
+        "label": "ELIXIR nodes",
+        "nullable": false,
+        "path": "elixirNode",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "elixirNode"
+        ],
+        "writable": true
+      },
+      "elixirPlatform": {
+        "choices": [
+          {
+            "label": "Data",
+            "value": "Data"
+          },
+          {
+            "label": "Tools",
+            "value": "Tools"
+          },
+          {
+            "label": "Compute",
+            "value": "Compute"
+          },
+          {
+            "label": "Interoperability",
+            "value": "Interoperability"
+          },
+          {
+            "label": "Training",
+            "value": "Training"
+          }
+        ],
+        "empty": false,
+        "help": "ELIXIR platform credited for developing or providing the software.",
+        "item": {
+          "blank": false,
+          "kind": "string",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "ELIXIR platform",
+        "kind": "array",
+        "label": "ELIXIR platforms",
+        "nullable": false,
+        "path": "elixirPlatform",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "elixirPlatform"
+        ],
+        "writable": true
+      },
+      "elixir_badge": {
+        "help": "",
+        "kind": "number",
+        "label": "Elixir badge",
+        "nullable": false,
+        "path": "elixir_badge",
+        "public": true,
+        "readOnly": true,
+        "required": false,
+        "search": [],
+        "writable": false
+      },
+      "function": {
+        "empty": false,
+        "help": "Details of a function the software provides, expressed in terms from the EDAM ontology.",
+        "item": {
+          "fields": {
+            "cmd": {
+              "blank": false,
+              "help": "Relevant command, command-line fragment or option for executing this function / running the tool in this mode.",
+              "kind": "string",
+              "label": "Command (cmd)",
+              "maxLength": 1000,
+              "minLength": 1,
+              "nullable": false,
+              "path": "function.cmd",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxLength": 1000,
+              "schemaMinLength": 1,
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            },
+            "input": {
+              "empty": false,
+              "help": "Details of primary input data.",
+              "item": {
+                "fields": {
+                  "data": {
+                    "fields": {
+                      "term": {
+                        "blank": true,
+                        "help": "EDAM Data term (preferred label or synonym).",
+                        "kind": "string",
+                        "label": "Term",
+                        "nullable": true,
+                        "path": "function.input.data.term",
+                        "public": true,
+                        "readOnly": false,
+                        "required": false,
+                        "schemaChoiceGroup": true,
+                        "schemaRequired": false,
+                        "search": [],
+                        "writable": true
+                      },
+                      "uri": {
+                        "blank": false,
+                        "help": "EDAM Data URL.",
+                        "kind": "string",
+                        "label": "Uri",
+                        "nullable": false,
+                        "path": "function.input.data.uri",
+                        "public": true,
+                        "readOnly": false,
+                        "required": false,
+                        "schemaChoiceGroup": true,
+                        "schemaPatterns": [
+                          "http://edamontology\\.org/data_[0-9]{4}"
+                        ],
+                        "schemaRequired": false,
+                        "search": [
+                          "dataTypeID",
+                          "inputDataTypeID",
+                          "inputID"
+                        ],
+                        "writable": true
+                      }
+                    },
+                    "help": "Input data type (EDAM data).",
+                    "kind": "object",
+                    "label": "Data",
+                    "nullable": false,
+                    "path": "function.input.data",
+                    "public": true,
+                    "readOnly": false,
+                    "required": true,
+                    "schemaRequired": true,
+                    "search": [
+                      "dataType",
+                      "inputDataType"
+                    ],
+                    "writable": true
+                  },
+                  "format": {
+                    "empty": false,
+                    "help": "Input data format (EDAM format).",
+                    "item": {
+                      "fields": {
+                        "term": {
+                          "blank": true,
+                          "help": "EDAM Format term (preferred label or synonym)",
+                          "kind": "string",
+                          "label": "Term",
+                          "nullable": true,
+                          "path": "function.input.format.term",
+                          "public": true,
+                          "readOnly": false,
+                          "required": false,
+                          "schemaChoiceGroup": true,
+                          "schemaRequired": false,
+                          "search": [],
+                          "writable": true
+                        },
+                        "uri": {
+                          "blank": false,
+                          "help": "EDAM Format URL.",
+                          "kind": "string",
+                          "label": "Uri",
+                          "nullable": false,
+                          "path": "function.input.format.uri",
+                          "public": true,
+                          "readOnly": false,
+                          "required": false,
+                          "schemaChoiceGroup": true,
+                          "schemaPatterns": [
+                            "http://edamontology\\.org/format_[0-9]{4}"
+                          ],
+                          "schemaRequired": false,
+                          "search": [
+                            "dataFormatID",
+                            "inputDataFormatID"
+                          ],
+                          "writable": true
+                        }
+                      },
+                      "kind": "object",
+                      "nullable": false,
+                      "readOnly": false,
+                      "required": false,
+                      "schemaRequired": false
+                    },
+                    "kind": "array",
+                    "label": "Format",
+                    "nullable": false,
+                    "path": "function.input.format",
+                    "public": true,
+                    "readOnly": false,
+                    "required": false,
+                    "schemaMaxItems": null,
+                    "schemaMinItems": 0,
+                    "schemaRequired": false,
+                    "search": [
+                      "dataFormat",
+                      "inputDataFormat"
+                    ],
+                    "writable": true
+                  }
+                },
+                "kind": "object",
+                "nullable": false,
+                "readOnly": false,
+                "required": false,
+                "schemaRequired": false
+              },
+              "kind": "array",
+              "label": "Inputs",
+              "nullable": false,
+              "path": "function.input",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxItems": null,
+              "schemaMinItems": 0,
+              "schemaRequired": false,
+              "search": [
+                "input"
+              ],
+              "writable": true
+            },
+            "note": {
+              "blank": false,
+              "help": "General comment about function.",
+              "kind": "string",
+              "label": "Note",
+              "maxLength": 1000,
+              "minLength": 10,
+              "multiline": true,
+              "nullable": false,
+              "path": "function.note",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxLength": 1000,
+              "schemaMinLength": 10,
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            },
+            "operation": {
+              "empty": false,
+              "help": "Operation performed (EDAM operation).",
+              "item": {
+                "fields": {
+                  "term": {
+                    "blank": true,
+                    "help": "EDAM Operation term (preferred label or synonym).",
+                    "kind": "string",
+                    "label": "Term",
+                    "nullable": true,
+                    "path": "function.operation.term",
+                    "public": true,
+                    "readOnly": false,
+                    "required": false,
+                    "schemaChoiceGroup": true,
+                    "schemaRequired": false,
+                    "search": [],
+                    "writable": true
+                  },
+                  "uri": {
+                    "blank": false,
+                    "help": "EDAM Operation URL.",
+                    "kind": "string",
+                    "label": "Uri",
+                    "nullable": false,
+                    "path": "function.operation.uri",
+                    "public": true,
+                    "readOnly": false,
+                    "required": false,
+                    "schemaChoiceGroup": true,
+                    "schemaPatterns": [
+                      "http://edamontology\\.org/operation_[0-9]{4}"
+                    ],
+                    "schemaRequired": false,
+                    "search": [
+                      "operationID"
+                    ],
+                    "writable": true
+                  }
+                },
+                "kind": "object",
+                "nullable": false,
+                "readOnly": false,
+                "required": true,
+                "schemaRequired": true
+              },
+              "kind": "array",
+              "label": "Operations",
+              "nullable": false,
+              "path": "function.operation",
+              "public": true,
+              "readOnly": false,
+              "required": true,
+              "schemaMaxItems": null,
+              "schemaMinItems": 1,
+              "schemaRequired": true,
+              "search": [
+                "operation"
+              ],
+              "writable": true
+            },
+            "output": {
+              "empty": false,
+              "help": "Details of primary output data.",
+              "item": {
+                "fields": {
+                  "data": {
+                    "fields": {
+                      "term": {
+                        "blank": true,
+                        "help": "EDAM Data term (preferred label or synonym).",
+                        "kind": "string",
+                        "label": "Term",
+                        "nullable": true,
+                        "path": "function.output.data.term",
+                        "public": true,
+                        "readOnly": false,
+                        "required": false,
+                        "schemaChoiceGroup": true,
+                        "schemaRequired": false,
+                        "search": [],
+                        "writable": true
+                      },
+                      "uri": {
+                        "blank": false,
+                        "help": "EDAM Data URL.",
+                        "kind": "string",
+                        "label": "Uri",
+                        "nullable": false,
+                        "path": "function.output.data.uri",
+                        "public": true,
+                        "readOnly": false,
+                        "required": false,
+                        "schemaChoiceGroup": true,
+                        "schemaPatterns": [
+                          "http://edamontology\\.org/data_[0-9]{4}"
+                        ],
+                        "schemaRequired": false,
+                        "search": [
+                          "outputDataTypeID",
+                          "outputID"
+                        ],
+                        "writable": true
+                      }
+                    },
+                    "help": "Output data type (EDAM data).",
+                    "kind": "object",
+                    "label": "Data",
+                    "nullable": false,
+                    "path": "function.output.data",
+                    "public": true,
+                    "readOnly": false,
+                    "required": true,
+                    "schemaRequired": true,
+                    "search": [
+                      "outputDataType"
+                    ],
+                    "writable": true
+                  },
+                  "format": {
+                    "empty": false,
+                    "help": "Output data format (EDAM format).",
+                    "item": {
+                      "fields": {
+                        "term": {
+                          "blank": true,
+                          "help": "EDAM Format term (preferred label or synonym)",
+                          "kind": "string",
+                          "label": "Term",
+                          "nullable": true,
+                          "path": "function.output.format.term",
+                          "public": true,
+                          "readOnly": false,
+                          "required": false,
+                          "schemaChoiceGroup": true,
+                          "schemaRequired": false,
+                          "search": [],
+                          "writable": true
+                        },
+                        "uri": {
+                          "blank": false,
+                          "help": "EDAM Format URL.",
+                          "kind": "string",
+                          "label": "Uri",
+                          "nullable": false,
+                          "path": "function.output.format.uri",
+                          "public": true,
+                          "readOnly": false,
+                          "required": false,
+                          "schemaChoiceGroup": true,
+                          "schemaPatterns": [
+                            "http://edamontology\\.org/format_[0-9]{4}"
+                          ],
+                          "schemaRequired": false,
+                          "search": [
+                            "outputDataFormatID"
+                          ],
+                          "writable": true
+                        }
+                      },
+                      "kind": "object",
+                      "nullable": false,
+                      "readOnly": false,
+                      "required": false,
+                      "schemaRequired": false
+                    },
+                    "kind": "array",
+                    "label": "Format",
+                    "nullable": false,
+                    "path": "function.output.format",
+                    "public": true,
+                    "readOnly": false,
+                    "required": false,
+                    "schemaMaxItems": null,
+                    "schemaMinItems": 0,
+                    "schemaRequired": false,
+                    "search": [
+                      "outputDataFormat"
+                    ],
+                    "writable": true
+                  }
+                },
+                "kind": "object",
+                "nullable": false,
+                "readOnly": false,
+                "required": false,
+                "schemaRequired": false
+              },
+              "kind": "array",
+              "label": "Outputs",
+              "nullable": false,
+              "path": "function.output",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxItems": null,
+              "schemaMinItems": 0,
+              "schemaRequired": false,
+              "search": [
+                "output"
+              ],
+              "writable": true
+            }
+          },
+          "kind": "object",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "Function",
+        "kind": "array",
+        "label": "Functions",
+        "nullable": false,
+        "path": "function",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "function"
+        ],
+        "writable": true
+      },
+      "homepage": {
+        "blank": false,
+        "help": "Homepage of the software, or some URL that best serves this purpose.",
+        "kind": "string",
+        "label": "Homepage",
+        "maxLength": 300,
+        "minLength": 1,
+        "nullable": false,
+        "path": "homepage",
+        "public": true,
+        "readOnly": false,
+        "required": true,
+        "schemaPatterns": [
+          "http(s?)://[^\\s/$.?#]*\\.[^\\s]*",
+          "s?ftp://[^\\s/$.?#]*\\.[^\\s]*"
+        ],
+        "schemaRequired": true,
+        "search": [
+          "homepage"
+        ],
+        "writable": true
+      },
+      "homepage_status": {
+        "help": "",
+        "kind": "number",
+        "label": "Homepage status",
+        "nullable": false,
+        "path": "homepage_status",
+        "public": false,
+        "readOnly": true,
+        "required": false,
+        "search": [],
+        "writable": false
+      },
+      "language": {
+        "choices": [
+          {
+            "label": "ActionScript",
+            "value": "ActionScript"
+          },
+          {
+            "label": "Ada",
+            "value": "Ada"
+          },
+          {
+            "label": "AppleScript",
+            "value": "AppleScript"
+          },
+          {
+            "label": "Assembly language",
+            "value": "Assembly language"
+          },
+          {
+            "label": "AWK",
+            "value": "AWK"
+          },
+          {
+            "label": "Bash",
+            "value": "Bash"
+          },
+          {
+            "label": "C",
+            "value": "C"
+          },
+          {
+            "label": "C#",
+            "value": "C#"
+          },
+          {
+            "label": "C++",
+            "value": "C++"
+          },
+          {
+            "label": "COBOL",
+            "value": "COBOL"
+          },
+          {
+            "label": "ColdFusion",
+            "value": "ColdFusion"
+          },
+          {
+            "label": "CWL",
+            "value": "CWL"
+          },
+          {
+            "label": "D",
+            "value": "D"
+          },
+          {
+            "label": "Delphi",
+            "value": "Delphi"
+          },
+          {
+            "label": "Dylan",
+            "value": "Dylan"
+          },
+          {
+            "label": "Eiffel",
+            "value": "Eiffel"
+          },
+          {
+            "label": "Elm",
+            "value": "Elm"
+          },
+          {
+            "label": "Forth",
+            "value": "Forth"
+          },
+          {
+            "label": "Fortran",
+            "value": "Fortran"
+          },
+          {
+            "label": "Groovy",
+            "value": "Groovy"
+          },
+          {
+            "label": "Haskell",
+            "value": "Haskell"
+          },
+          {
+            "label": "Java",
+            "value": "Java"
+          },
+          {
+            "label": "JavaScript",
+            "value": "JavaScript"
+          },
+          {
+            "label": "Julia",
+            "value": "Julia"
+          },
+          {
+            "label": "JSP",
+            "value": "JSP"
+          },
+          {
+            "label": "LabVIEW",
+            "value": "LabVIEW"
+          },
+          {
+            "label": "Lisp",
+            "value": "Lisp"
+          },
+          {
+            "label": "Lua",
+            "value": "Lua"
+          },
+          {
+            "label": "Maple",
+            "value": "Maple"
+          },
+          {
+            "label": "Mathematica",
+            "value": "Mathematica"
+          },
+          {
+            "label": "MATLAB",
+            "value": "MATLAB"
+          },
+          {
+            "label": "MLXTRAN",
+            "value": "MLXTRAN"
+          },
+          {
+            "label": "NMTRAN",
+            "value": "NMTRAN"
+          },
+          {
+            "label": "OCaml",
+            "value": "OCaml"
+          },
+          {
+            "label": "Pascal",
+            "value": "Pascal"
+          },
+          {
+            "label": "Perl",
+            "value": "Perl"
+          },
+          {
+            "label": "PHP",
+            "value": "PHP"
+          },
+          {
+            "label": "Prolog",
+            "value": "Prolog"
+          },
+          {
+            "label": "PyMOL",
+            "value": "PyMOL"
+          },
+          {
+            "label": "Python",
+            "value": "Python"
+          },
+          {
+            "label": "R",
+            "value": "R"
+          },
+          {
+            "label": "Racket",
+            "value": "Racket"
+          },
+          {
+            "label": "REXX",
+            "value": "REXX"
+          },
+          {
+            "label": "Ruby",
+            "value": "Ruby"
+          },
+          {
+            "label": "SAS",
+            "value": "SAS"
+          },
+          {
+            "label": "Scala",
+            "value": "Scala"
+          },
+          {
+            "label": "Scheme",
+            "value": "Scheme"
+          },
+          {
+            "label": "Shell",
+            "value": "Shell"
+          },
+          {
+            "label": "Smalltalk",
+            "value": "Smalltalk"
+          },
+          {
+            "label": "SQL",
+            "value": "SQL"
+          },
+          {
+            "label": "Turing",
+            "value": "Turing"
+          },
+          {
+            "label": "Verilog",
+            "value": "Verilog"
+          },
+          {
+            "label": "VHDL",
+            "value": "VHDL"
+          },
+          {
+            "label": "Visual Basic",
+            "value": "Visual Basic"
+          },
+          {
+            "label": "XAML",
+            "value": "XAML"
+          },
+          {
+            "label": "Other",
+            "value": "Other"
+          },
+          {
+            "label": "Clojure",
+            "value": "Clojure"
+          },
+          {
+            "label": "Cython",
+            "value": "Cython"
+          },
+          {
+            "label": "CUDA",
+            "value": "CUDA"
+          },
+          {
+            "label": "F#",
+            "value": "F#"
+          },
+          {
+            "label": "Go",
+            "value": "Go"
+          },
+          {
+            "label": "Jython",
+            "value": "Jython"
+          },
+          {
+            "label": "Kotlin",
+            "value": "Kotlin"
+          },
+          {
+            "label": "Q#",
+            "value": "Q#"
+          },
+          {
+            "label": "QCL",
+            "value": "QCL"
+          },
+          {
+            "label": "Rust",
+            "value": "Rust"
+          },
+          {
+            "label": "Swift",
+            "value": "Swift"
+          },
+          {
+            "label": "TypeScript",
+            "value": "TypeScript"
+          }
+        ],
+        "empty": false,
+        "help": "Source code language.",
+        "item": {
+          "blank": false,
+          "kind": "string",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "Language",
+        "kind": "array",
+        "label": "Languages",
+        "nullable": false,
+        "path": "language",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "language"
+        ],
+        "writable": true
+      },
+      "lastUpdate": {
+        "blank": false,
+        "help": "",
+        "kind": "string",
+        "label": "Last update",
+        "nullable": false,
+        "path": "lastUpdate",
+        "public": true,
+        "readOnly": true,
+        "required": false,
+        "search": [],
+        "writable": false
+      },
+      "license": {
+        "blank": false,
+        "choices": [
+          {
+            "label": "Freeware",
+            "value": "Freeware"
+          },
+          {
+            "label": "Proprietary",
+            "value": "Proprietary"
+          },
+          {
+            "label": "Other",
+            "value": "Other"
+          },
+          {
+            "label": "Not licensed",
+            "value": "Not licensed"
+          },
+          {
+            "label": "0BSD",
+            "value": "0BSD"
+          },
+          {
+            "label": "3D-Slicer-1.0",
+            "value": "3D-Slicer-1.0"
+          },
+          {
+            "label": "AAL",
+            "value": "AAL"
+          },
+          {
+            "label": "ADSL",
+            "value": "ADSL"
+          },
+          {
+            "label": "AFL-1.1",
+            "value": "AFL-1.1"
+          },
+          {
+            "label": "AFL-1.2",
+            "value": "AFL-1.2"
+          },
+          {
+            "label": "AFL-2.0",
+            "value": "AFL-2.0"
+          },
+          {
+            "label": "AFL-2.1",
+            "value": "AFL-2.1"
+          },
+          {
+            "label": "AFL-3.0",
+            "value": "AFL-3.0"
+          },
+          {
+            "label": "AGPL-1.0",
+            "value": "AGPL-1.0"
+          },
+          {
+            "label": "AGPL-1.0-only",
+            "value": "AGPL-1.0-only"
+          },
+          {
+            "label": "AGPL-1.0-or-later",
+            "value": "AGPL-1.0-or-later"
+          },
+          {
+            "label": "AGPL-3.0",
+            "value": "AGPL-3.0"
+          },
+          {
+            "label": "AGPL-3.0-only",
+            "value": "AGPL-3.0-only"
+          },
+          {
+            "label": "AGPL-3.0-or-later",
+            "value": "AGPL-3.0-or-later"
+          },
+          {
+            "label": "ALGLIB-Documentation",
+            "value": "ALGLIB-Documentation"
+          },
+          {
+            "label": "AMD-newlib",
+            "value": "AMD-newlib"
+          },
+          {
+            "label": "AMDPLPA",
+            "value": "AMDPLPA"
+          },
+          {
+            "label": "AML",
+            "value": "AML"
+          },
+          {
+            "label": "AML-glslang",
+            "value": "AML-glslang"
+          },
+          {
+            "label": "AMPAS",
+            "value": "AMPAS"
+          },
+          {
+            "label": "ANTLR-PD",
+            "value": "ANTLR-PD"
+          },
+          {
+            "label": "ANTLR-PD-fallback",
+            "value": "ANTLR-PD-fallback"
+          },
+          {
+            "label": "APAFML",
+            "value": "APAFML"
+          },
+          {
+            "label": "APL-1.0",
+            "value": "APL-1.0"
+          },
+          {
+            "label": "APSL-1.0",
+            "value": "APSL-1.0"
+          },
+          {
+            "label": "APSL-1.1",
+            "value": "APSL-1.1"
+          },
+          {
+            "label": "APSL-1.2",
+            "value": "APSL-1.2"
+          },
+          {
+            "label": "APSL-2.0",
+            "value": "APSL-2.0"
+          },
+          {
+            "label": "ASWF-Digital-Assets-1.0",
+            "value": "ASWF-Digital-Assets-1.0"
+          },
+          {
+            "label": "ASWF-Digital-Assets-1.1",
+            "value": "ASWF-Digital-Assets-1.1"
+          },
+          {
+            "label": "Abstyles",
+            "value": "Abstyles"
+          },
+          {
+            "label": "AdaCore-doc",
+            "value": "AdaCore-doc"
+          },
+          {
+            "label": "Adobe-2006",
+            "value": "Adobe-2006"
+          },
+          {
+            "label": "Adobe-Display-PostScript",
+            "value": "Adobe-Display-PostScript"
+          },
+          {
+            "label": "Adobe-Glyph",
+            "value": "Adobe-Glyph"
+          },
+          {
+            "label": "Adobe-Utopia",
+            "value": "Adobe-Utopia"
+          },
+          {
+            "label": "Advanced-Cryptics-Dictionary",
+            "value": "Advanced-Cryptics-Dictionary"
+          },
+          {
+            "label": "Afmparse",
+            "value": "Afmparse"
+          },
+          {
+            "label": "Aladdin",
+            "value": "Aladdin"
+          },
+          {
+            "label": "Apache-1.0",
+            "value": "Apache-1.0"
+          },
+          {
+            "label": "Apache-1.1",
+            "value": "Apache-1.1"
+          },
+          {
+            "label": "Apache-2.0",
+            "value": "Apache-2.0"
+          },
+          {
+            "label": "App-s2p",
+            "value": "App-s2p"
+          },
+          {
+            "label": "Arphic-1999",
+            "value": "Arphic-1999"
+          },
+          {
+            "label": "Artistic-1.0",
+            "value": "Artistic-1.0"
+          },
+          {
+            "label": "Artistic-1.0-Perl",
+            "value": "Artistic-1.0-Perl"
+          },
+          {
+            "label": "Artistic-1.0-cl8",
+            "value": "Artistic-1.0-cl8"
+          },
+          {
+            "label": "Artistic-2.0",
+            "value": "Artistic-2.0"
+          },
+          {
+            "label": "Artistic-dist",
+            "value": "Artistic-dist"
+          },
+          {
+            "label": "Aspell-RU",
+            "value": "Aspell-RU"
+          },
+          {
+            "label": "BOLA-1.1",
+            "value": "BOLA-1.1"
+          },
+          {
+            "label": "BSD-1-Clause",
+            "value": "BSD-1-Clause"
+          },
+          {
+            "label": "BSD-2-Clause",
+            "value": "BSD-2-Clause"
+          },
+          {
+            "label": "BSD-2-Clause-Darwin",
+            "value": "BSD-2-Clause-Darwin"
+          },
+          {
+            "label": "BSD-2-Clause-FreeBSD",
+            "value": "BSD-2-Clause-FreeBSD"
+          },
+          {
+            "label": "BSD-2-Clause-NetBSD",
+            "value": "BSD-2-Clause-NetBSD"
+          },
+          {
+            "label": "BSD-2-Clause-Patent",
+            "value": "BSD-2-Clause-Patent"
+          },
+          {
+            "label": "BSD-2-Clause-Views",
+            "value": "BSD-2-Clause-Views"
+          },
+          {
+            "label": "BSD-2-Clause-first-lines",
+            "value": "BSD-2-Clause-first-lines"
+          },
+          {
+            "label": "BSD-2-Clause-pkgconf-disclaimer",
+            "value": "BSD-2-Clause-pkgconf-disclaimer"
+          },
+          {
+            "label": "BSD-2-Clause-pos-unchanged",
+            "value": "BSD-2-Clause-pos-unchanged"
+          },
+          {
+            "label": "BSD-3-Clause",
+            "value": "BSD-3-Clause"
+          },
+          {
+            "label": "BSD-3-Clause-Attribution",
+            "value": "BSD-3-Clause-Attribution"
+          },
+          {
+            "label": "BSD-3-Clause-Clear",
+            "value": "BSD-3-Clause-Clear"
+          },
+          {
+            "label": "BSD-3-Clause-HP",
+            "value": "BSD-3-Clause-HP"
+          },
+          {
+            "label": "BSD-3-Clause-LBNL",
+            "value": "BSD-3-Clause-LBNL"
+          },
+          {
+            "label": "BSD-3-Clause-Modification",
+            "value": "BSD-3-Clause-Modification"
+          },
+          {
+            "label": "BSD-3-Clause-No-Military-License",
+            "value": "BSD-3-Clause-No-Military-License"
+          },
+          {
+            "label": "BSD-3-Clause-No-Nuclear-License",
+            "value": "BSD-3-Clause-No-Nuclear-License"
+          },
+          {
+            "label": "BSD-3-Clause-No-Nuclear-License-2014",
+            "value": "BSD-3-Clause-No-Nuclear-License-2014"
+          },
+          {
+            "label": "BSD-3-Clause-No-Nuclear-Warranty",
+            "value": "BSD-3-Clause-No-Nuclear-Warranty"
+          },
+          {
+            "label": "BSD-3-Clause-Open-MPI",
+            "value": "BSD-3-Clause-Open-MPI"
+          },
+          {
+            "label": "BSD-3-Clause-Sun",
+            "value": "BSD-3-Clause-Sun"
+          },
+          {
+            "label": "BSD-3-Clause-Tso",
+            "value": "BSD-3-Clause-Tso"
+          },
+          {
+            "label": "BSD-3-Clause-acpica",
+            "value": "BSD-3-Clause-acpica"
+          },
+          {
+            "label": "BSD-3-Clause-flex",
+            "value": "BSD-3-Clause-flex"
+          },
+          {
+            "label": "BSD-4-Clause",
+            "value": "BSD-4-Clause"
+          },
+          {
+            "label": "BSD-4-Clause-Shortened",
+            "value": "BSD-4-Clause-Shortened"
+          },
+          {
+            "label": "BSD-4-Clause-UC",
+            "value": "BSD-4-Clause-UC"
+          },
+          {
+            "label": "BSD-4.3RENO",
+            "value": "BSD-4.3RENO"
+          },
+          {
+            "label": "BSD-4.3TAHOE",
+            "value": "BSD-4.3TAHOE"
+          },
+          {
+            "label": "BSD-Advertising-Acknowledgement",
+            "value": "BSD-Advertising-Acknowledgement"
+          },
+          {
+            "label": "BSD-Attribution-HPND-disclaimer",
+            "value": "BSD-Attribution-HPND-disclaimer"
+          },
+          {
+            "label": "BSD-Inferno-Nettverk",
+            "value": "BSD-Inferno-Nettverk"
+          },
+          {
+            "label": "BSD-Mark-Modifications",
+            "value": "BSD-Mark-Modifications"
+          },
+          {
+            "label": "BSD-Protection",
+            "value": "BSD-Protection"
+          },
+          {
+            "label": "BSD-Source-Code",
+            "value": "BSD-Source-Code"
+          },
+          {
+            "label": "BSD-Source-Code-no-disclaimer",
+            "value": "BSD-Source-Code-no-disclaimer"
+          },
+          {
+            "label": "BSD-Source-beginning-file",
+            "value": "BSD-Source-beginning-file"
+          },
+          {
+            "label": "BSD-Systemics",
+            "value": "BSD-Systemics"
+          },
+          {
+            "label": "BSD-Systemics-W3Works",
+            "value": "BSD-Systemics-W3Works"
+          },
+          {
+            "label": "BSD-ask-to-endorse",
+            "value": "BSD-ask-to-endorse"
+          },
+          {
+            "label": "BSL-1.0",
+            "value": "BSL-1.0"
+          },
+          {
+            "label": "BUSL-1.1",
+            "value": "BUSL-1.1"
+          },
+          {
+            "label": "Baekmuk",
+            "value": "Baekmuk"
+          },
+          {
+            "label": "Bahyph",
+            "value": "Bahyph"
+          },
+          {
+            "label": "Barr",
+            "value": "Barr"
+          },
+          {
+            "label": "Beerware",
+            "value": "Beerware"
+          },
+          {
+            "label": "BitTorrent-1.0",
+            "value": "BitTorrent-1.0"
+          },
+          {
+            "label": "BitTorrent-1.1",
+            "value": "BitTorrent-1.1"
+          },
+          {
+            "label": "Bitstream-Charter",
+            "value": "Bitstream-Charter"
+          },
+          {
+            "label": "Bitstream-Vera",
+            "value": "Bitstream-Vera"
+          },
+          {
+            "label": "BlueOak-1.0.0",
+            "value": "BlueOak-1.0.0"
+          },
+          {
+            "label": "Boehm-GC",
+            "value": "Boehm-GC"
+          },
+          {
+            "label": "Boehm-GC-without-fee",
+            "value": "Boehm-GC-without-fee"
+          },
+          {
+            "label": "Borceux",
+            "value": "Borceux"
+          },
+          {
+            "label": "Brian-Gladman-2-Clause",
+            "value": "Brian-Gladman-2-Clause"
+          },
+          {
+            "label": "Brian-Gladman-3-Clause",
+            "value": "Brian-Gladman-3-Clause"
+          },
+          {
+            "label": "Brian-Gladman-3-Clause-no-conversion",
+            "value": "Brian-Gladman-3-Clause-no-conversion"
+          },
+          {
+            "label": "Buddy",
+            "value": "Buddy"
+          },
+          {
+            "label": "Bugroff",
+            "value": "Bugroff"
+          },
+          {
+            "label": "C-UDA-1.0",
+            "value": "C-UDA-1.0"
+          },
+          {
+            "label": "CAL-1.0",
+            "value": "CAL-1.0"
+          },
+          {
+            "label": "CAL-1.0-Combined-Work-Exception",
+            "value": "CAL-1.0-Combined-Work-Exception"
+          },
+          {
+            "label": "CAPEC-tou",
+            "value": "CAPEC-tou"
+          },
+          {
+            "label": "CATOSL-1.1",
+            "value": "CATOSL-1.1"
+          },
+          {
+            "label": "CC-BY-1.0",
+            "value": "CC-BY-1.0"
+          },
+          {
+            "label": "CC-BY-2.0",
+            "value": "CC-BY-2.0"
+          },
+          {
+            "label": "CC-BY-2.5",
+            "value": "CC-BY-2.5"
+          },
+          {
+            "label": "CC-BY-2.5-AU",
+            "value": "CC-BY-2.5-AU"
+          },
+          {
+            "label": "CC-BY-3.0",
+            "value": "CC-BY-3.0"
+          },
+          {
+            "label": "CC-BY-3.0-AT",
+            "value": "CC-BY-3.0-AT"
+          },
+          {
+            "label": "CC-BY-3.0-AU",
+            "value": "CC-BY-3.0-AU"
+          },
+          {
+            "label": "CC-BY-3.0-DE",
+            "value": "CC-BY-3.0-DE"
+          },
+          {
+            "label": "CC-BY-3.0-IGO",
+            "value": "CC-BY-3.0-IGO"
+          },
+          {
+            "label": "CC-BY-3.0-NL",
+            "value": "CC-BY-3.0-NL"
+          },
+          {
+            "label": "CC-BY-3.0-US",
+            "value": "CC-BY-3.0-US"
+          },
+          {
+            "label": "CC-BY-4.0",
+            "value": "CC-BY-4.0"
+          },
+          {
+            "label": "CC-BY-NC-1.0",
+            "value": "CC-BY-NC-1.0"
+          },
+          {
+            "label": "CC-BY-NC-2.0",
+            "value": "CC-BY-NC-2.0"
+          },
+          {
+            "label": "CC-BY-NC-2.5",
+            "value": "CC-BY-NC-2.5"
+          },
+          {
+            "label": "CC-BY-NC-3.0",
+            "value": "CC-BY-NC-3.0"
+          },
+          {
+            "label": "CC-BY-NC-3.0-DE",
+            "value": "CC-BY-NC-3.0-DE"
+          },
+          {
+            "label": "CC-BY-NC-3.0-IGO",
+            "value": "CC-BY-NC-3.0-IGO"
+          },
+          {
+            "label": "CC-BY-NC-4.0",
+            "value": "CC-BY-NC-4.0"
+          },
+          {
+            "label": "CC-BY-NC-ND-1.0",
+            "value": "CC-BY-NC-ND-1.0"
+          },
+          {
+            "label": "CC-BY-NC-ND-2.0",
+            "value": "CC-BY-NC-ND-2.0"
+          },
+          {
+            "label": "CC-BY-NC-ND-2.5",
+            "value": "CC-BY-NC-ND-2.5"
+          },
+          {
+            "label": "CC-BY-NC-ND-3.0",
+            "value": "CC-BY-NC-ND-3.0"
+          },
+          {
+            "label": "CC-BY-NC-ND-3.0-DE",
+            "value": "CC-BY-NC-ND-3.0-DE"
+          },
+          {
+            "label": "CC-BY-NC-ND-3.0-IGO",
+            "value": "CC-BY-NC-ND-3.0-IGO"
+          },
+          {
+            "label": "CC-BY-NC-ND-4.0",
+            "value": "CC-BY-NC-ND-4.0"
+          },
+          {
+            "label": "CC-BY-NC-SA-1.0",
+            "value": "CC-BY-NC-SA-1.0"
+          },
+          {
+            "label": "CC-BY-NC-SA-2.0",
+            "value": "CC-BY-NC-SA-2.0"
+          },
+          {
+            "label": "CC-BY-NC-SA-2.0-DE",
+            "value": "CC-BY-NC-SA-2.0-DE"
+          },
+          {
+            "label": "CC-BY-NC-SA-2.0-FR",
+            "value": "CC-BY-NC-SA-2.0-FR"
+          },
+          {
+            "label": "CC-BY-NC-SA-2.0-UK",
+            "value": "CC-BY-NC-SA-2.0-UK"
+          },
+          {
+            "label": "CC-BY-NC-SA-2.5",
+            "value": "CC-BY-NC-SA-2.5"
+          },
+          {
+            "label": "CC-BY-NC-SA-3.0",
+            "value": "CC-BY-NC-SA-3.0"
+          },
+          {
+            "label": "CC-BY-NC-SA-3.0-DE",
+            "value": "CC-BY-NC-SA-3.0-DE"
+          },
+          {
+            "label": "CC-BY-NC-SA-3.0-IGO",
+            "value": "CC-BY-NC-SA-3.0-IGO"
+          },
+          {
+            "label": "CC-BY-NC-SA-4.0",
+            "value": "CC-BY-NC-SA-4.0"
+          },
+          {
+            "label": "CC-BY-ND-1.0",
+            "value": "CC-BY-ND-1.0"
+          },
+          {
+            "label": "CC-BY-ND-2.0",
+            "value": "CC-BY-ND-2.0"
+          },
+          {
+            "label": "CC-BY-ND-2.5",
+            "value": "CC-BY-ND-2.5"
+          },
+          {
+            "label": "CC-BY-ND-3.0",
+            "value": "CC-BY-ND-3.0"
+          },
+          {
+            "label": "CC-BY-ND-3.0-DE",
+            "value": "CC-BY-ND-3.0-DE"
+          },
+          {
+            "label": "CC-BY-ND-4.0",
+            "value": "CC-BY-ND-4.0"
+          },
+          {
+            "label": "CC-BY-SA-1.0",
+            "value": "CC-BY-SA-1.0"
+          },
+          {
+            "label": "CC-BY-SA-2.0",
+            "value": "CC-BY-SA-2.0"
+          },
+          {
+            "label": "CC-BY-SA-2.0-UK",
+            "value": "CC-BY-SA-2.0-UK"
+          },
+          {
+            "label": "CC-BY-SA-2.1-JP",
+            "value": "CC-BY-SA-2.1-JP"
+          },
+          {
+            "label": "CC-BY-SA-2.5",
+            "value": "CC-BY-SA-2.5"
+          },
+          {
+            "label": "CC-BY-SA-3.0",
+            "value": "CC-BY-SA-3.0"
+          },
+          {
+            "label": "CC-BY-SA-3.0-AT",
+            "value": "CC-BY-SA-3.0-AT"
+          },
+          {
+            "label": "CC-BY-SA-3.0-DE",
+            "value": "CC-BY-SA-3.0-DE"
+          },
+          {
+            "label": "CC-BY-SA-3.0-IGO",
+            "value": "CC-BY-SA-3.0-IGO"
+          },
+          {
+            "label": "CC-BY-SA-4.0",
+            "value": "CC-BY-SA-4.0"
+          },
+          {
+            "label": "CC-PDDC",
+            "value": "CC-PDDC"
+          },
+          {
+            "label": "CC-PDM-1.0",
+            "value": "CC-PDM-1.0"
+          },
+          {
+            "label": "CC-SA-1.0",
+            "value": "CC-SA-1.0"
+          },
+          {
+            "label": "CC0-1.0",
+            "value": "CC0-1.0"
+          },
+          {
+            "label": "CDDL-1.0",
+            "value": "CDDL-1.0"
+          },
+          {
+            "label": "CDDL-1.1",
+            "value": "CDDL-1.1"
+          },
+          {
+            "label": "CDL-1.0",
+            "value": "CDL-1.0"
+          },
+          {
+            "label": "CDLA-Permissive-1.0",
+            "value": "CDLA-Permissive-1.0"
+          },
+          {
+            "label": "CDLA-Permissive-2.0",
+            "value": "CDLA-Permissive-2.0"
+          },
+          {
+            "label": "CDLA-Sharing-1.0",
+            "value": "CDLA-Sharing-1.0"
+          },
+          {
+            "label": "CECILL-1.0",
+            "value": "CECILL-1.0"
+          },
+          {
+            "label": "CECILL-1.1",
+            "value": "CECILL-1.1"
+          },
+          {
+            "label": "CECILL-2.0",
+            "value": "CECILL-2.0"
+          },
+          {
+            "label": "CECILL-2.1",
+            "value": "CECILL-2.1"
+          },
+          {
+            "label": "CECILL-B",
+            "value": "CECILL-B"
+          },
+          {
+            "label": "CECILL-C",
+            "value": "CECILL-C"
+          },
+          {
+            "label": "CERN-OHL-1.1",
+            "value": "CERN-OHL-1.1"
+          },
+          {
+            "label": "CERN-OHL-1.2",
+            "value": "CERN-OHL-1.2"
+          },
+          {
+            "label": "CERN-OHL-P-2.0",
+            "value": "CERN-OHL-P-2.0"
+          },
+          {
+            "label": "CERN-OHL-S-2.0",
+            "value": "CERN-OHL-S-2.0"
+          },
+          {
+            "label": "CERN-OHL-W-2.0",
+            "value": "CERN-OHL-W-2.0"
+          },
+          {
+            "label": "CFITSIO",
+            "value": "CFITSIO"
+          },
+          {
+            "label": "CMU-Mach",
+            "value": "CMU-Mach"
+          },
+          {
+            "label": "CMU-Mach-nodoc",
+            "value": "CMU-Mach-nodoc"
+          },
+          {
+            "label": "CNRI-Jython",
+            "value": "CNRI-Jython"
+          },
+          {
+            "label": "CNRI-Python",
+            "value": "CNRI-Python"
+          },
+          {
+            "label": "CNRI-Python-GPL-Compatible",
+            "value": "CNRI-Python-GPL-Compatible"
+          },
+          {
+            "label": "COIL-1.0",
+            "value": "COIL-1.0"
+          },
+          {
+            "label": "CPAL-1.0",
+            "value": "CPAL-1.0"
+          },
+          {
+            "label": "CPL-1.0",
+            "value": "CPL-1.0"
+          },
+          {
+            "label": "CPOL-1.02",
+            "value": "CPOL-1.02"
+          },
+          {
+            "label": "CUA-OPL-1.0",
+            "value": "CUA-OPL-1.0"
+          },
+          {
+            "label": "Caldera",
+            "value": "Caldera"
+          },
+          {
+            "label": "Caldera-no-preamble",
+            "value": "Caldera-no-preamble"
+          },
+          {
+            "label": "Catharon",
+            "value": "Catharon"
+          },
+          {
+            "label": "ClArtistic",
+            "value": "ClArtistic"
+          },
+          {
+            "label": "Clips",
+            "value": "Clips"
+          },
+          {
+            "label": "Community-Spec-1.0",
+            "value": "Community-Spec-1.0"
+          },
+          {
+            "label": "Condor-1.1",
+            "value": "Condor-1.1"
+          },
+          {
+            "label": "Cornell-Lossless-JPEG",
+            "value": "Cornell-Lossless-JPEG"
+          },
+          {
+            "label": "Cronyx",
+            "value": "Cronyx"
+          },
+          {
+            "label": "Crossword",
+            "value": "Crossword"
+          },
+          {
+            "label": "CryptoSwift",
+            "value": "CryptoSwift"
+          },
+          {
+            "label": "CrystalStacker",
+            "value": "CrystalStacker"
+          },
+          {
+            "label": "Cube",
+            "value": "Cube"
+          },
+          {
+            "label": "D-FSL-1.0",
+            "value": "D-FSL-1.0"
+          },
+          {
+            "label": "DEC-3-Clause",
+            "value": "DEC-3-Clause"
+          },
+          {
+            "label": "DL-DE-BY-2.0",
+            "value": "DL-DE-BY-2.0"
+          },
+          {
+            "label": "DL-DE-ZERO-2.0",
+            "value": "DL-DE-ZERO-2.0"
+          },
+          {
+            "label": "DOC",
+            "value": "DOC"
+          },
+          {
+            "label": "DRL-1.0",
+            "value": "DRL-1.0"
+          },
+          {
+            "label": "DRL-1.1",
+            "value": "DRL-1.1"
+          },
+          {
+            "label": "DSDP",
+            "value": "DSDP"
+          },
+          {
+            "label": "DocBook-DTD",
+            "value": "DocBook-DTD"
+          },
+          {
+            "label": "DocBook-Schema",
+            "value": "DocBook-Schema"
+          },
+          {
+            "label": "DocBook-Stylesheet",
+            "value": "DocBook-Stylesheet"
+          },
+          {
+            "label": "DocBook-XML",
+            "value": "DocBook-XML"
+          },
+          {
+            "label": "Dotseqn",
+            "value": "Dotseqn"
+          },
+          {
+            "label": "ECL-1.0",
+            "value": "ECL-1.0"
+          },
+          {
+            "label": "ECL-2.0",
+            "value": "ECL-2.0"
+          },
+          {
+            "label": "EFL-1.0",
+            "value": "EFL-1.0"
+          },
+          {
+            "label": "EFL-2.0",
+            "value": "EFL-2.0"
+          },
+          {
+            "label": "EPICS",
+            "value": "EPICS"
+          },
+          {
+            "label": "EPL-1.0",
+            "value": "EPL-1.0"
+          },
+          {
+            "label": "EPL-2.0",
+            "value": "EPL-2.0"
+          },
+          {
+            "label": "ESA-PL-permissive-2.4",
+            "value": "ESA-PL-permissive-2.4"
+          },
+          {
+            "label": "ESA-PL-strong-copyleft-2.4",
+            "value": "ESA-PL-strong-copyleft-2.4"
+          },
+          {
+            "label": "ESA-PL-weak-copyleft-2.4",
+            "value": "ESA-PL-weak-copyleft-2.4"
+          },
+          {
+            "label": "EUDatagrid",
+            "value": "EUDatagrid"
+          },
+          {
+            "label": "EUPL-1.0",
+            "value": "EUPL-1.0"
+          },
+          {
+            "label": "EUPL-1.1",
+            "value": "EUPL-1.1"
+          },
+          {
+            "label": "EUPL-1.2",
+            "value": "EUPL-1.2"
+          },
+          {
+            "label": "Elastic-2.0",
+            "value": "Elastic-2.0"
+          },
+          {
+            "label": "Entessa",
+            "value": "Entessa"
+          },
+          {
+            "label": "ErlPL-1.1",
+            "value": "ErlPL-1.1"
+          },
+          {
+            "label": "Eurosym",
+            "value": "Eurosym"
+          },
+          {
+            "label": "FBM",
+            "value": "FBM"
+          },
+          {
+            "label": "FDK-AAC",
+            "value": "FDK-AAC"
+          },
+          {
+            "label": "FDK-MPEG-H",
+            "value": "FDK-MPEG-H"
+          },
+          {
+            "label": "FSFAP",
+            "value": "FSFAP"
+          },
+          {
+            "label": "FSFAP-no-warranty-disclaimer",
+            "value": "FSFAP-no-warranty-disclaimer"
+          },
+          {
+            "label": "FSFUL",
+            "value": "FSFUL"
+          },
+          {
+            "label": "FSFULLR",
+            "value": "FSFULLR"
+          },
+          {
+            "label": "FSFULLRSD",
+            "value": "FSFULLRSD"
+          },
+          {
+            "label": "FSFULLRWD",
+            "value": "FSFULLRWD"
+          },
+          {
+            "label": "FSL-1.1-ALv2",
+            "value": "FSL-1.1-ALv2"
+          },
+          {
+            "label": "FSL-1.1-MIT",
+            "value": "FSL-1.1-MIT"
+          },
+          {
+            "label": "FTL",
+            "value": "FTL"
+          },
+          {
+            "label": "Fair",
+            "value": "Fair"
+          },
+          {
+            "label": "Ferguson-Twofish",
+            "value": "Ferguson-Twofish"
+          },
+          {
+            "label": "Frameworx-1.0",
+            "value": "Frameworx-1.0"
+          },
+          {
+            "label": "FreeBSD-DOC",
+            "value": "FreeBSD-DOC"
+          },
+          {
+            "label": "FreeImage",
+            "value": "FreeImage"
+          },
+          {
+            "label": "Furuseth",
+            "value": "Furuseth"
+          },
+          {
+            "label": "GCR-docs",
+            "value": "GCR-docs"
+          },
+          {
+            "label": "GD",
+            "value": "GD"
+          },
+          {
+            "label": "GFDL-1.1",
+            "value": "GFDL-1.1"
+          },
+          {
+            "label": "GFDL-1.1-invariants-only",
+            "value": "GFDL-1.1-invariants-only"
+          },
+          {
+            "label": "GFDL-1.1-invariants-or-later",
+            "value": "GFDL-1.1-invariants-or-later"
+          },
+          {
+            "label": "GFDL-1.1-no-invariants-only",
+            "value": "GFDL-1.1-no-invariants-only"
+          },
+          {
+            "label": "GFDL-1.1-no-invariants-or-later",
+            "value": "GFDL-1.1-no-invariants-or-later"
+          },
+          {
+            "label": "GFDL-1.1-only",
+            "value": "GFDL-1.1-only"
+          },
+          {
+            "label": "GFDL-1.1-or-later",
+            "value": "GFDL-1.1-or-later"
+          },
+          {
+            "label": "GFDL-1.2",
+            "value": "GFDL-1.2"
+          },
+          {
+            "label": "GFDL-1.2-invariants-only",
+            "value": "GFDL-1.2-invariants-only"
+          },
+          {
+            "label": "GFDL-1.2-invariants-or-later",
+            "value": "GFDL-1.2-invariants-or-later"
+          },
+          {
+            "label": "GFDL-1.2-no-invariants-only",
+            "value": "GFDL-1.2-no-invariants-only"
+          },
+          {
+            "label": "GFDL-1.2-no-invariants-or-later",
+            "value": "GFDL-1.2-no-invariants-or-later"
+          },
+          {
+            "label": "GFDL-1.2-only",
+            "value": "GFDL-1.2-only"
+          },
+          {
+            "label": "GFDL-1.2-or-later",
+            "value": "GFDL-1.2-or-later"
+          },
+          {
+            "label": "GFDL-1.3",
+            "value": "GFDL-1.3"
+          },
+          {
+            "label": "GFDL-1.3-invariants-only",
+            "value": "GFDL-1.3-invariants-only"
+          },
+          {
+            "label": "GFDL-1.3-invariants-or-later",
+            "value": "GFDL-1.3-invariants-or-later"
+          },
+          {
+            "label": "GFDL-1.3-no-invariants-only",
+            "value": "GFDL-1.3-no-invariants-only"
+          },
+          {
+            "label": "GFDL-1.3-no-invariants-or-later",
+            "value": "GFDL-1.3-no-invariants-or-later"
+          },
+          {
+            "label": "GFDL-1.3-only",
+            "value": "GFDL-1.3-only"
+          },
+          {
+            "label": "GFDL-1.3-or-later",
+            "value": "GFDL-1.3-or-later"
+          },
+          {
+            "label": "GL2PS",
+            "value": "GL2PS"
+          },
+          {
+            "label": "GLWTPL",
+            "value": "GLWTPL"
+          },
+          {
+            "label": "GPL-1.0",
+            "value": "GPL-1.0"
+          },
+          {
+            "label": "GPL-1.0-only",
+            "value": "GPL-1.0-only"
+          },
+          {
+            "label": "GPL-1.0-or-later",
+            "value": "GPL-1.0-or-later"
+          },
+          {
+            "label": "GPL-2.0",
+            "value": "GPL-2.0"
+          },
+          {
+            "label": "GPL-2.0-only",
+            "value": "GPL-2.0-only"
+          },
+          {
+            "label": "GPL-2.0-or-later",
+            "value": "GPL-2.0-or-later"
+          },
+          {
+            "label": "GPL-3.0",
+            "value": "GPL-3.0"
+          },
+          {
+            "label": "GPL-3.0-only",
+            "value": "GPL-3.0-only"
+          },
+          {
+            "label": "GPL-3.0-or-later",
+            "value": "GPL-3.0-or-later"
+          },
+          {
+            "label": "Game-Programming-Gems",
+            "value": "Game-Programming-Gems"
+          },
+          {
+            "label": "Giftware",
+            "value": "Giftware"
+          },
+          {
+            "label": "Glide",
+            "value": "Glide"
+          },
+          {
+            "label": "Glulxe",
+            "value": "Glulxe"
+          },
+          {
+            "label": "Graphics-Gems",
+            "value": "Graphics-Gems"
+          },
+          {
+            "label": "Gutmann",
+            "value": "Gutmann"
+          },
+          {
+            "label": "HDF5",
+            "value": "HDF5"
+          },
+          {
+            "label": "HIDAPI",
+            "value": "HIDAPI"
+          },
+          {
+            "label": "HP-1986",
+            "value": "HP-1986"
+          },
+          {
+            "label": "HP-1989",
+            "value": "HP-1989"
+          },
+          {
+            "label": "HPND",
+            "value": "HPND"
+          },
+          {
+            "label": "HPND-DEC",
+            "value": "HPND-DEC"
+          },
+          {
+            "label": "HPND-Fenneberg-Livingston",
+            "value": "HPND-Fenneberg-Livingston"
+          },
+          {
+            "label": "HPND-INRIA-IMAG",
+            "value": "HPND-INRIA-IMAG"
+          },
+          {
+            "label": "HPND-Intel",
+            "value": "HPND-Intel"
+          },
+          {
+            "label": "HPND-Kevlin-Henney",
+            "value": "HPND-Kevlin-Henney"
+          },
+          {
+            "label": "HPND-MIT-disclaimer",
+            "value": "HPND-MIT-disclaimer"
+          },
+          {
+            "label": "HPND-Markus-Kuhn",
+            "value": "HPND-Markus-Kuhn"
+          },
+          {
+            "label": "HPND-Netrek",
+            "value": "HPND-Netrek"
+          },
+          {
+            "label": "HPND-Pbmplus",
+            "value": "HPND-Pbmplus"
+          },
+          {
+            "label": "HPND-SMC",
+            "value": "HPND-SMC"
+          },
+          {
+            "label": "HPND-UC",
+            "value": "HPND-UC"
+          },
+          {
+            "label": "HPND-UC-export-US",
+            "value": "HPND-UC-export-US"
+          },
+          {
+            "label": "HPND-doc",
+            "value": "HPND-doc"
+          },
+          {
+            "label": "HPND-doc-sell",
+            "value": "HPND-doc-sell"
+          },
+          {
+            "label": "HPND-export-US",
+            "value": "HPND-export-US"
+          },
+          {
+            "label": "HPND-export-US-acknowledgement",
+            "value": "HPND-export-US-acknowledgement"
+          },
+          {
+            "label": "HPND-export-US-modify",
+            "value": "HPND-export-US-modify"
+          },
+          {
+            "label": "HPND-export2-US",
+            "value": "HPND-export2-US"
+          },
+          {
+            "label": "HPND-merchantability-variant",
+            "value": "HPND-merchantability-variant"
+          },
+          {
+            "label": "HPND-sell-MIT-disclaimer-xserver",
+            "value": "HPND-sell-MIT-disclaimer-xserver"
+          },
+          {
+            "label": "HPND-sell-regexpr",
+            "value": "HPND-sell-regexpr"
+          },
+          {
+            "label": "HPND-sell-variant",
+            "value": "HPND-sell-variant"
+          },
+          {
+            "label": "HPND-sell-variant-MIT-disclaimer",
+            "value": "HPND-sell-variant-MIT-disclaimer"
+          },
+          {
+            "label": "HPND-sell-variant-MIT-disclaimer-rev",
+            "value": "HPND-sell-variant-MIT-disclaimer-rev"
+          },
+          {
+            "label": "HPND-sell-variant-critical-systems",
+            "value": "HPND-sell-variant-critical-systems"
+          },
+          {
+            "label": "HTMLTIDY",
+            "value": "HTMLTIDY"
+          },
+          {
+            "label": "HaskellReport",
+            "value": "HaskellReport"
+          },
+          {
+            "label": "Hippocratic-2.1",
+            "value": "Hippocratic-2.1"
+          },
+          {
+            "label": "IBM-pibs",
+            "value": "IBM-pibs"
+          },
+          {
+            "label": "ICU",
+            "value": "ICU"
+          },
+          {
+            "label": "IEC-Code-Components-EULA",
+            "value": "IEC-Code-Components-EULA"
+          },
+          {
+            "label": "IJG",
+            "value": "IJG"
+          },
+          {
+            "label": "IJG-short",
+            "value": "IJG-short"
+          },
+          {
+            "label": "IPA",
+            "value": "IPA"
+          },
+          {
+            "label": "IPL-1.0",
+            "value": "IPL-1.0"
+          },
+          {
+            "label": "ISC",
+            "value": "ISC"
+          },
+          {
+            "label": "ISC-Veillard",
+            "value": "ISC-Veillard"
+          },
+          {
+            "label": "ISO-permission",
+            "value": "ISO-permission"
+          },
+          {
+            "label": "ImageMagick",
+            "value": "ImageMagick"
+          },
+          {
+            "label": "Imlib2",
+            "value": "Imlib2"
+          },
+          {
+            "label": "Info-ZIP",
+            "value": "Info-ZIP"
+          },
+          {
+            "label": "Informatica",
+            "value": "Informatica"
+          },
+          {
+            "label": "Inner-Net-2.0",
+            "value": "Inner-Net-2.0"
+          },
+          {
+            "label": "InnoSetup",
+            "value": "InnoSetup"
+          },
+          {
+            "label": "Intel",
+            "value": "Intel"
+          },
+          {
+            "label": "Intel-ACPI",
+            "value": "Intel-ACPI"
+          },
+          {
+            "label": "Interbase-1.0",
+            "value": "Interbase-1.0"
+          },
+          {
+            "label": "JPL-image",
+            "value": "JPL-image"
+          },
+          {
+            "label": "JPNIC",
+            "value": "JPNIC"
+          },
+          {
+            "label": "JSON",
+            "value": "JSON"
+          },
+          {
+            "label": "Jam",
+            "value": "Jam"
+          },
+          {
+            "label": "JasPer-2.0",
+            "value": "JasPer-2.0"
+          },
+          {
+            "label": "Kastrup",
+            "value": "Kastrup"
+          },
+          {
+            "label": "Kazlib",
+            "value": "Kazlib"
+          },
+          {
+            "label": "Knuth-CTAN",
+            "value": "Knuth-CTAN"
+          },
+          {
+            "label": "LAL-1.2",
+            "value": "LAL-1.2"
+          },
+          {
+            "label": "LAL-1.3",
+            "value": "LAL-1.3"
+          },
+          {
+            "label": "LGPL-2.0",
+            "value": "LGPL-2.0"
+          },
+          {
+            "label": "LGPL-2.0-only",
+            "value": "LGPL-2.0-only"
+          },
+          {
+            "label": "LGPL-2.0-or-later",
+            "value": "LGPL-2.0-or-later"
+          },
+          {
+            "label": "LGPL-2.1",
+            "value": "LGPL-2.1"
+          },
+          {
+            "label": "LGPL-2.1-only",
+            "value": "LGPL-2.1-only"
+          },
+          {
+            "label": "LGPL-2.1-or-later",
+            "value": "LGPL-2.1-or-later"
+          },
+          {
+            "label": "LGPL-3.0",
+            "value": "LGPL-3.0"
+          },
+          {
+            "label": "LGPL-3.0-only",
+            "value": "LGPL-3.0-only"
+          },
+          {
+            "label": "LGPL-3.0-or-later",
+            "value": "LGPL-3.0-or-later"
+          },
+          {
+            "label": "LGPLLR",
+            "value": "LGPLLR"
+          },
+          {
+            "label": "LOOP",
+            "value": "LOOP"
+          },
+          {
+            "label": "LPD-document",
+            "value": "LPD-document"
+          },
+          {
+            "label": "LPL-1.0",
+            "value": "LPL-1.0"
+          },
+          {
+            "label": "LPL-1.02",
+            "value": "LPL-1.02"
+          },
+          {
+            "label": "LPPL-1.0",
+            "value": "LPPL-1.0"
+          },
+          {
+            "label": "LPPL-1.1",
+            "value": "LPPL-1.1"
+          },
+          {
+            "label": "LPPL-1.2",
+            "value": "LPPL-1.2"
+          },
+          {
+            "label": "LPPL-1.3a",
+            "value": "LPPL-1.3a"
+          },
+          {
+            "label": "LPPL-1.3c",
+            "value": "LPPL-1.3c"
+          },
+          {
+            "label": "LZMA-SDK-9.11-to-9.20",
+            "value": "LZMA-SDK-9.11-to-9.20"
+          },
+          {
+            "label": "LZMA-SDK-9.22",
+            "value": "LZMA-SDK-9.22"
+          },
+          {
+            "label": "Latex2e",
+            "value": "Latex2e"
+          },
+          {
+            "label": "Latex2e-translated-notice",
+            "value": "Latex2e-translated-notice"
+          },
+          {
+            "label": "Leptonica",
+            "value": "Leptonica"
+          },
+          {
+            "label": "LiLiQ-P-1.1",
+            "value": "LiLiQ-P-1.1"
+          },
+          {
+            "label": "LiLiQ-R-1.1",
+            "value": "LiLiQ-R-1.1"
+          },
+          {
+            "label": "LiLiQ-Rplus-1.1",
+            "value": "LiLiQ-Rplus-1.1"
+          },
+          {
+            "label": "Libpng",
+            "value": "Libpng"
+          },
+          {
+            "label": "Linux-OpenIB",
+            "value": "Linux-OpenIB"
+          },
+          {
+            "label": "Linux-man-pages-1-para",
+            "value": "Linux-man-pages-1-para"
+          },
+          {
+            "label": "Linux-man-pages-copyleft",
+            "value": "Linux-man-pages-copyleft"
+          },
+          {
+            "label": "Linux-man-pages-copyleft-2-para",
+            "value": "Linux-man-pages-copyleft-2-para"
+          },
+          {
+            "label": "Linux-man-pages-copyleft-var",
+            "value": "Linux-man-pages-copyleft-var"
+          },
+          {
+            "label": "Lucida-Bitmap-Fonts",
+            "value": "Lucida-Bitmap-Fonts"
+          },
+          {
+            "label": "MIPS",
+            "value": "MIPS"
+          },
+          {
+            "label": "MIT",
+            "value": "MIT"
+          },
+          {
+            "label": "MIT-0",
+            "value": "MIT-0"
+          },
+          {
+            "label": "MIT-CMU",
+            "value": "MIT-CMU"
+          },
+          {
+            "label": "MIT-Click",
+            "value": "MIT-Click"
+          },
+          {
+            "label": "MIT-Festival",
+            "value": "MIT-Festival"
+          },
+          {
+            "label": "MIT-Khronos-old",
+            "value": "MIT-Khronos-old"
+          },
+          {
+            "label": "MIT-Modern-Variant",
+            "value": "MIT-Modern-Variant"
+          },
+          {
+            "label": "MIT-STK",
+            "value": "MIT-STK"
+          },
+          {
+            "label": "MIT-Wu",
+            "value": "MIT-Wu"
+          },
+          {
+            "label": "MIT-advertising",
+            "value": "MIT-advertising"
+          },
+          {
+            "label": "MIT-enna",
+            "value": "MIT-enna"
+          },
+          {
+            "label": "MIT-feh",
+            "value": "MIT-feh"
+          },
+          {
+            "label": "MIT-open-group",
+            "value": "MIT-open-group"
+          },
+          {
+            "label": "MIT-testregex",
+            "value": "MIT-testregex"
+          },
+          {
+            "label": "MITNFA",
+            "value": "MITNFA"
+          },
+          {
+            "label": "MMIXware",
+            "value": "MMIXware"
+          },
+          {
+            "label": "MMPL-1.0.1",
+            "value": "MMPL-1.0.1"
+          },
+          {
+            "label": "MPEG-SSG",
+            "value": "MPEG-SSG"
+          },
+          {
+            "label": "MPL-1.0",
+            "value": "MPL-1.0"
+          },
+          {
+            "label": "MPL-1.1",
+            "value": "MPL-1.1"
+          },
+          {
+            "label": "MPL-2.0",
+            "value": "MPL-2.0"
+          },
+          {
+            "label": "MPL-2.0-no-copyleft-exception",
+            "value": "MPL-2.0-no-copyleft-exception"
+          },
+          {
+            "label": "MS-LPL",
+            "value": "MS-LPL"
+          },
+          {
+            "label": "MS-PL",
+            "value": "MS-PL"
+          },
+          {
+            "label": "MS-RL",
+            "value": "MS-RL"
+          },
+          {
+            "label": "MTLL",
+            "value": "MTLL"
+          },
+          {
+            "label": "MVT-1.1",
+            "value": "MVT-1.1"
+          },
+          {
+            "label": "Mackerras-3-Clause",
+            "value": "Mackerras-3-Clause"
+          },
+          {
+            "label": "Mackerras-3-Clause-acknowledgment",
+            "value": "Mackerras-3-Clause-acknowledgment"
+          },
+          {
+            "label": "MakeIndex",
+            "value": "MakeIndex"
+          },
+          {
+            "label": "Martin-Birgmeier",
+            "value": "Martin-Birgmeier"
+          },
+          {
+            "label": "McPhee-slideshow",
+            "value": "McPhee-slideshow"
+          },
+          {
+            "label": "Minpack",
+            "value": "Minpack"
+          },
+          {
+            "label": "MirOS",
+            "value": "MirOS"
+          },
+          {
+            "label": "Motosoto",
+            "value": "Motosoto"
+          },
+          {
+            "label": "MulanPSL-1.0",
+            "value": "MulanPSL-1.0"
+          },
+          {
+            "label": "MulanPSL-2.0",
+            "value": "MulanPSL-2.0"
+          },
+          {
+            "label": "Multics",
+            "value": "Multics"
+          },
+          {
+            "label": "Mup",
+            "value": "Mup"
+          },
+          {
+            "label": "NAIST-2003",
+            "value": "NAIST-2003"
+          },
+          {
+            "label": "NASA-1.3",
+            "value": "NASA-1.3"
+          },
+          {
+            "label": "NBPL-1.0",
+            "value": "NBPL-1.0"
+          },
+          {
+            "label": "NCBI-PD",
+            "value": "NCBI-PD"
+          },
+          {
+            "label": "NCGL-UK-2.0",
+            "value": "NCGL-UK-2.0"
+          },
+          {
+            "label": "NCL",
+            "value": "NCL"
+          },
+          {
+            "label": "NCSA",
+            "value": "NCSA"
+          },
+          {
+            "label": "NGPL",
+            "value": "NGPL"
+          },
+          {
+            "label": "NICTA-1.0",
+            "value": "NICTA-1.0"
+          },
+          {
+            "label": "NIST-PD",
+            "value": "NIST-PD"
+          },
+          {
+            "label": "NIST-PD-TNT",
+            "value": "NIST-PD-TNT"
+          },
+          {
+            "label": "NIST-PD-fallback",
+            "value": "NIST-PD-fallback"
+          },
+          {
+            "label": "NIST-Software",
+            "value": "NIST-Software"
+          },
+          {
+            "label": "NLOD-1.0",
+            "value": "NLOD-1.0"
+          },
+          {
+            "label": "NLOD-2.0",
+            "value": "NLOD-2.0"
+          },
+          {
+            "label": "NLPL",
+            "value": "NLPL"
+          },
+          {
+            "label": "NOSL",
+            "value": "NOSL"
+          },
+          {
+            "label": "NPL-1.0",
+            "value": "NPL-1.0"
+          },
+          {
+            "label": "NPL-1.1",
+            "value": "NPL-1.1"
+          },
+          {
+            "label": "NPOSL-3.0",
+            "value": "NPOSL-3.0"
+          },
+          {
+            "label": "NRL",
+            "value": "NRL"
+          },
+          {
+            "label": "NTIA-PD",
+            "value": "NTIA-PD"
+          },
+          {
+            "label": "NTP",
+            "value": "NTP"
+          },
+          {
+            "label": "NTP-0",
+            "value": "NTP-0"
+          },
+          {
+            "label": "Naumen",
+            "value": "Naumen"
+          },
+          {
+            "label": "Net-SNMP",
+            "value": "Net-SNMP"
+          },
+          {
+            "label": "NetCDF",
+            "value": "NetCDF"
+          },
+          {
+            "label": "Newsletr",
+            "value": "Newsletr"
+          },
+          {
+            "label": "Nokia",
+            "value": "Nokia"
+          },
+          {
+            "label": "Noweb",
+            "value": "Noweb"
+          },
+          {
+            "label": "Nunit",
+            "value": "Nunit"
+          },
+          {
+            "label": "O-UDA-1.0",
+            "value": "O-UDA-1.0"
+          },
+          {
+            "label": "OAR",
+            "value": "OAR"
+          },
+          {
+            "label": "OCCT-PL",
+            "value": "OCCT-PL"
+          },
+          {
+            "label": "OCLC-2.0",
+            "value": "OCLC-2.0"
+          },
+          {
+            "label": "ODC-By-1.0",
+            "value": "ODC-By-1.0"
+          },
+          {
+            "label": "ODbL-1.0",
+            "value": "ODbL-1.0"
+          },
+          {
+            "label": "OFFIS",
+            "value": "OFFIS"
+          },
+          {
+            "label": "OFL-1.0",
+            "value": "OFL-1.0"
+          },
+          {
+            "label": "OFL-1.0-RFN",
+            "value": "OFL-1.0-RFN"
+          },
+          {
+            "label": "OFL-1.0-no-RFN",
+            "value": "OFL-1.0-no-RFN"
+          },
+          {
+            "label": "OFL-1.1",
+            "value": "OFL-1.1"
+          },
+          {
+            "label": "OFL-1.1-RFN",
+            "value": "OFL-1.1-RFN"
+          },
+          {
+            "label": "OFL-1.1-no-RFN",
+            "value": "OFL-1.1-no-RFN"
+          },
+          {
+            "label": "OGC-1.0",
+            "value": "OGC-1.0"
+          },
+          {
+            "label": "OGDL-Taiwan-1.0",
+            "value": "OGDL-Taiwan-1.0"
+          },
+          {
+            "label": "OGL-Canada-2.0",
+            "value": "OGL-Canada-2.0"
+          },
+          {
+            "label": "OGL-UK-1.0",
+            "value": "OGL-UK-1.0"
+          },
+          {
+            "label": "OGL-UK-2.0",
+            "value": "OGL-UK-2.0"
+          },
+          {
+            "label": "OGL-UK-3.0",
+            "value": "OGL-UK-3.0"
+          },
+          {
+            "label": "OGTSL",
+            "value": "OGTSL"
+          },
+          {
+            "label": "OLDAP-1.1",
+            "value": "OLDAP-1.1"
+          },
+          {
+            "label": "OLDAP-1.2",
+            "value": "OLDAP-1.2"
+          },
+          {
+            "label": "OLDAP-1.3",
+            "value": "OLDAP-1.3"
+          },
+          {
+            "label": "OLDAP-1.4",
+            "value": "OLDAP-1.4"
+          },
+          {
+            "label": "OLDAP-2.0",
+            "value": "OLDAP-2.0"
+          },
+          {
+            "label": "OLDAP-2.0.1",
+            "value": "OLDAP-2.0.1"
+          },
+          {
+            "label": "OLDAP-2.1",
+            "value": "OLDAP-2.1"
+          },
+          {
+            "label": "OLDAP-2.2",
+            "value": "OLDAP-2.2"
+          },
+          {
+            "label": "OLDAP-2.2.1",
+            "value": "OLDAP-2.2.1"
+          },
+          {
+            "label": "OLDAP-2.2.2",
+            "value": "OLDAP-2.2.2"
+          },
+          {
+            "label": "OLDAP-2.3",
+            "value": "OLDAP-2.3"
+          },
+          {
+            "label": "OLDAP-2.4",
+            "value": "OLDAP-2.4"
+          },
+          {
+            "label": "OLDAP-2.5",
+            "value": "OLDAP-2.5"
+          },
+          {
+            "label": "OLDAP-2.6",
+            "value": "OLDAP-2.6"
+          },
+          {
+            "label": "OLDAP-2.7",
+            "value": "OLDAP-2.7"
+          },
+          {
+            "label": "OLDAP-2.8",
+            "value": "OLDAP-2.8"
+          },
+          {
+            "label": "OLFL-1.3",
+            "value": "OLFL-1.3"
+          },
+          {
+            "label": "OML",
+            "value": "OML"
+          },
+          {
+            "label": "OPL-1.0",
+            "value": "OPL-1.0"
+          },
+          {
+            "label": "OPL-UK-3.0",
+            "value": "OPL-UK-3.0"
+          },
+          {
+            "label": "OPUBL-1.0",
+            "value": "OPUBL-1.0"
+          },
+          {
+            "label": "OSC-1.0",
+            "value": "OSC-1.0"
+          },
+          {
+            "label": "OSET-PL-2.1",
+            "value": "OSET-PL-2.1"
+          },
+          {
+            "label": "OSL-1.0",
+            "value": "OSL-1.0"
+          },
+          {
+            "label": "OSL-1.1",
+            "value": "OSL-1.1"
+          },
+          {
+            "label": "OSL-2.0",
+            "value": "OSL-2.0"
+          },
+          {
+            "label": "OSL-2.1",
+            "value": "OSL-2.1"
+          },
+          {
+            "label": "OSL-3.0",
+            "value": "OSL-3.0"
+          },
+          {
+            "label": "OSSP",
+            "value": "OSSP"
+          },
+          {
+            "label": "OpenMDW-1.0",
+            "value": "OpenMDW-1.0"
+          },
+          {
+            "label": "OpenPBS-2.3",
+            "value": "OpenPBS-2.3"
+          },
+          {
+            "label": "OpenSSL",
+            "value": "OpenSSL"
+          },
+          {
+            "label": "OpenSSL-standalone",
+            "value": "OpenSSL-standalone"
+          },
+          {
+            "label": "OpenVision",
+            "value": "OpenVision"
+          },
+          {
+            "label": "PADL",
+            "value": "PADL"
+          },
+          {
+            "label": "PDDL-1.0",
+            "value": "PDDL-1.0"
+          },
+          {
+            "label": "PHP-3.0",
+            "value": "PHP-3.0"
+          },
+          {
+            "label": "PHP-3.01",
+            "value": "PHP-3.01"
+          },
+          {
+            "label": "PPL",
+            "value": "PPL"
+          },
+          {
+            "label": "PSF-2.0",
+            "value": "PSF-2.0"
+          },
+          {
+            "label": "ParaType-Free-Font-1.3",
+            "value": "ParaType-Free-Font-1.3"
+          },
+          {
+            "label": "Parity-6.0.0",
+            "value": "Parity-6.0.0"
+          },
+          {
+            "label": "Parity-7.0.0",
+            "value": "Parity-7.0.0"
+          },
+          {
+            "label": "Pixar",
+            "value": "Pixar"
+          },
+          {
+            "label": "Plexus",
+            "value": "Plexus"
+          },
+          {
+            "label": "PolyForm-Noncommercial-1.0.0",
+            "value": "PolyForm-Noncommercial-1.0.0"
+          },
+          {
+            "label": "PolyForm-Small-Business-1.0.0",
+            "value": "PolyForm-Small-Business-1.0.0"
+          },
+          {
+            "label": "PostgreSQL",
+            "value": "PostgreSQL"
+          },
+          {
+            "label": "Python-2.0",
+            "value": "Python-2.0"
+          },
+          {
+            "label": "Python-2.0.1",
+            "value": "Python-2.0.1"
+          },
+          {
+            "label": "QPL-1.0",
+            "value": "QPL-1.0"
+          },
+          {
+            "label": "QPL-1.0-INRIA-2004",
+            "value": "QPL-1.0-INRIA-2004"
+          },
+          {
+            "label": "Qhull",
+            "value": "Qhull"
+          },
+          {
+            "label": "RHeCos-1.1",
+            "value": "RHeCos-1.1"
+          },
+          {
+            "label": "RPL-1.1",
+            "value": "RPL-1.1"
+          },
+          {
+            "label": "RPL-1.5",
+            "value": "RPL-1.5"
+          },
+          {
+            "label": "RPSL-1.0",
+            "value": "RPSL-1.0"
+          },
+          {
+            "label": "RSA-MD",
+            "value": "RSA-MD"
+          },
+          {
+            "label": "RSCPL",
+            "value": "RSCPL"
+          },
+          {
+            "label": "Rdisc",
+            "value": "Rdisc"
+          },
+          {
+            "label": "Ruby",
+            "value": "Ruby"
+          },
+          {
+            "label": "Ruby-pty",
+            "value": "Ruby-pty"
+          },
+          {
+            "label": "SAX-PD",
+            "value": "SAX-PD"
+          },
+          {
+            "label": "SAX-PD-2.0",
+            "value": "SAX-PD-2.0"
+          },
+          {
+            "label": "SCEA",
+            "value": "SCEA"
+          },
+          {
+            "label": "SGI-B-1.0",
+            "value": "SGI-B-1.0"
+          },
+          {
+            "label": "SGI-B-1.1",
+            "value": "SGI-B-1.1"
+          },
+          {
+            "label": "SGI-B-2.0",
+            "value": "SGI-B-2.0"
+          },
+          {
+            "label": "SGI-OpenGL",
+            "value": "SGI-OpenGL"
+          },
+          {
+            "label": "SGMLUG-PM",
+            "value": "SGMLUG-PM"
+          },
+          {
+            "label": "SGP4",
+            "value": "SGP4"
+          },
+          {
+            "label": "SHL-0.5",
+            "value": "SHL-0.5"
+          },
+          {
+            "label": "SHL-0.51",
+            "value": "SHL-0.51"
+          },
+          {
+            "label": "SISSL",
+            "value": "SISSL"
+          },
+          {
+            "label": "SISSL-1.2",
+            "value": "SISSL-1.2"
+          },
+          {
+            "label": "SL",
+            "value": "SL"
+          },
+          {
+            "label": "SMAIL-GPL",
+            "value": "SMAIL-GPL"
+          },
+          {
+            "label": "SMLNJ",
+            "value": "SMLNJ"
+          },
+          {
+            "label": "SMPPL",
+            "value": "SMPPL"
+          },
+          {
+            "label": "SNIA",
+            "value": "SNIA"
+          },
+          {
+            "label": "SOFA",
+            "value": "SOFA"
+          },
+          {
+            "label": "SPL-1.0",
+            "value": "SPL-1.0"
+          },
+          {
+            "label": "SSH-OpenSSH",
+            "value": "SSH-OpenSSH"
+          },
+          {
+            "label": "SSH-short",
+            "value": "SSH-short"
+          },
+          {
+            "label": "SSLeay-standalone",
+            "value": "SSLeay-standalone"
+          },
+          {
+            "label": "SSPL-1.0",
+            "value": "SSPL-1.0"
+          },
+          {
+            "label": "SUL-1.0",
+            "value": "SUL-1.0"
+          },
+          {
+            "label": "SWL",
+            "value": "SWL"
+          },
+          {
+            "label": "Saxpath",
+            "value": "Saxpath"
+          },
+          {
+            "label": "SchemeReport",
+            "value": "SchemeReport"
+          },
+          {
+            "label": "Sendmail",
+            "value": "Sendmail"
+          },
+          {
+            "label": "Sendmail-8.23",
+            "value": "Sendmail-8.23"
+          },
+          {
+            "label": "Sendmail-Open-Source-1.1",
+            "value": "Sendmail-Open-Source-1.1"
+          },
+          {
+            "label": "SimPL-2.0",
+            "value": "SimPL-2.0"
+          },
+          {
+            "label": "Sleepycat",
+            "value": "Sleepycat"
+          },
+          {
+            "label": "Soundex",
+            "value": "Soundex"
+          },
+          {
+            "label": "Spencer-86",
+            "value": "Spencer-86"
+          },
+          {
+            "label": "Spencer-94",
+            "value": "Spencer-94"
+          },
+          {
+            "label": "Spencer-99",
+            "value": "Spencer-99"
+          },
+          {
+            "label": "SugarCRM-1.1.3",
+            "value": "SugarCRM-1.1.3"
+          },
+          {
+            "label": "Sun-PPP",
+            "value": "Sun-PPP"
+          },
+          {
+            "label": "Sun-PPP-2000",
+            "value": "Sun-PPP-2000"
+          },
+          {
+            "label": "SunPro",
+            "value": "SunPro"
+          },
+          {
+            "label": "Symlinks",
+            "value": "Symlinks"
+          },
+          {
+            "label": "TAPR-OHL-1.0",
+            "value": "TAPR-OHL-1.0"
+          },
+          {
+            "label": "TCL",
+            "value": "TCL"
+          },
+          {
+            "label": "TCP-wrappers",
+            "value": "TCP-wrappers"
+          },
+          {
+            "label": "TGPPL-1.0",
+            "value": "TGPPL-1.0"
+          },
+          {
+            "label": "TMate",
+            "value": "TMate"
+          },
+          {
+            "label": "TORQUE-1.1",
+            "value": "TORQUE-1.1"
+          },
+          {
+            "label": "TOSL",
+            "value": "TOSL"
+          },
+          {
+            "label": "TPDL",
+            "value": "TPDL"
+          },
+          {
+            "label": "TPL-1.0",
+            "value": "TPL-1.0"
+          },
+          {
+            "label": "TTWL",
+            "value": "TTWL"
+          },
+          {
+            "label": "TTYP0",
+            "value": "TTYP0"
+          },
+          {
+            "label": "TU-Berlin-1.0",
+            "value": "TU-Berlin-1.0"
+          },
+          {
+            "label": "TU-Berlin-2.0",
+            "value": "TU-Berlin-2.0"
+          },
+          {
+            "label": "TekHVC",
+            "value": "TekHVC"
+          },
+          {
+            "label": "TermReadKey",
+            "value": "TermReadKey"
+          },
+          {
+            "label": "ThirdEye",
+            "value": "ThirdEye"
+          },
+          {
+            "label": "TrustedQSL",
+            "value": "TrustedQSL"
+          },
+          {
+            "label": "UCAR",
+            "value": "UCAR"
+          },
+          {
+            "label": "UCL-1.0",
+            "value": "UCL-1.0"
+          },
+          {
+            "label": "UMich-Merit",
+            "value": "UMich-Merit"
+          },
+          {
+            "label": "UPL-1.0",
+            "value": "UPL-1.0"
+          },
+          {
+            "label": "URT-RLE",
+            "value": "URT-RLE"
+          },
+          {
+            "label": "Ubuntu-font-1.0",
+            "value": "Ubuntu-font-1.0"
+          },
+          {
+            "label": "UnRAR",
+            "value": "UnRAR"
+          },
+          {
+            "label": "Unicode-3.0",
+            "value": "Unicode-3.0"
+          },
+          {
+            "label": "Unicode-DFS-2015",
+            "value": "Unicode-DFS-2015"
+          },
+          {
+            "label": "Unicode-DFS-2016",
+            "value": "Unicode-DFS-2016"
+          },
+          {
+            "label": "Unicode-TOU",
+            "value": "Unicode-TOU"
+          },
+          {
+            "label": "UnixCrypt",
+            "value": "UnixCrypt"
+          },
+          {
+            "label": "Unlicense",
+            "value": "Unlicense"
+          },
+          {
+            "label": "Unlicense-libtelnet",
+            "value": "Unlicense-libtelnet"
+          },
+          {
+            "label": "Unlicense-libwhirlpool",
+            "value": "Unlicense-libwhirlpool"
+          },
+          {
+            "label": "VOSTROM",
+            "value": "VOSTROM"
+          },
+          {
+            "label": "VSL-1.0",
+            "value": "VSL-1.0"
+          },
+          {
+            "label": "Vim",
+            "value": "Vim"
+          },
+          {
+            "label": "Vixie-Cron",
+            "value": "Vixie-Cron"
+          },
+          {
+            "label": "W3C",
+            "value": "W3C"
+          },
+          {
+            "label": "W3C-19980720",
+            "value": "W3C-19980720"
+          },
+          {
+            "label": "W3C-20150513",
+            "value": "W3C-20150513"
+          },
+          {
+            "label": "WTFNMFPL",
+            "value": "WTFNMFPL"
+          },
+          {
+            "label": "WTFPL",
+            "value": "WTFPL"
+          },
+          {
+            "label": "Watcom-1.0",
+            "value": "Watcom-1.0"
+          },
+          {
+            "label": "Widget-Workshop",
+            "value": "Widget-Workshop"
+          },
+          {
+            "label": "WordNet",
+            "value": "WordNet"
+          },
+          {
+            "label": "Wsuipa",
+            "value": "Wsuipa"
+          },
+          {
+            "label": "X11",
+            "value": "X11"
+          },
+          {
+            "label": "X11-distribute-modifications-variant",
+            "value": "X11-distribute-modifications-variant"
+          },
+          {
+            "label": "X11-no-permit-persons",
+            "value": "X11-no-permit-persons"
+          },
+          {
+            "label": "X11-swapped",
+            "value": "X11-swapped"
+          },
+          {
+            "label": "XFree86-1.1",
+            "value": "XFree86-1.1"
+          },
+          {
+            "label": "XSkat",
+            "value": "XSkat"
+          },
+          {
+            "label": "Xdebug-1.03",
+            "value": "Xdebug-1.03"
+          },
+          {
+            "label": "Xerox",
+            "value": "Xerox"
+          },
+          {
+            "label": "Xfig",
+            "value": "Xfig"
+          },
+          {
+            "label": "Xnet",
+            "value": "Xnet"
+          },
+          {
+            "label": "YPL-1.0",
+            "value": "YPL-1.0"
+          },
+          {
+            "label": "YPL-1.1",
+            "value": "YPL-1.1"
+          },
+          {
+            "label": "ZPL-1.1",
+            "value": "ZPL-1.1"
+          },
+          {
+            "label": "ZPL-2.0",
+            "value": "ZPL-2.0"
+          },
+          {
+            "label": "ZPL-2.1",
+            "value": "ZPL-2.1"
+          },
+          {
+            "label": "Zed",
+            "value": "Zed"
+          },
+          {
+            "label": "Zeeff",
+            "value": "Zeeff"
+          },
+          {
+            "label": "Zend-2.0",
+            "value": "Zend-2.0"
+          },
+          {
+            "label": "Zimbra-1.3",
+            "value": "Zimbra-1.3"
+          },
+          {
+            "label": "Zimbra-1.4",
+            "value": "Zimbra-1.4"
+          },
+          {
+            "label": "Zlib",
+            "value": "Zlib"
+          },
+          {
+            "label": "any-OSI",
+            "value": "any-OSI"
+          },
+          {
+            "label": "any-OSI-perl-modules",
+            "value": "any-OSI-perl-modules"
+          },
+          {
+            "label": "atc-game",
+            "value": "atc-game"
+          },
+          {
+            "label": "bcrypt-Solar-Designer",
+            "value": "bcrypt-Solar-Designer"
+          },
+          {
+            "label": "blessing",
+            "value": "blessing"
+          },
+          {
+            "label": "bzip2-1.0.5",
+            "value": "bzip2-1.0.5"
+          },
+          {
+            "label": "bzip2-1.0.6",
+            "value": "bzip2-1.0.6"
+          },
+          {
+            "label": "check-cvs",
+            "value": "check-cvs"
+          },
+          {
+            "label": "checkmk",
+            "value": "checkmk"
+          },
+          {
+            "label": "copyleft-next-0.3.0",
+            "value": "copyleft-next-0.3.0"
+          },
+          {
+            "label": "copyleft-next-0.3.1",
+            "value": "copyleft-next-0.3.1"
+          },
+          {
+            "label": "curl",
+            "value": "curl"
+          },
+          {
+            "label": "cve-tou",
+            "value": "cve-tou"
+          },
+          {
+            "label": "diffmark",
+            "value": "diffmark"
+          },
+          {
+            "label": "dtoa",
+            "value": "dtoa"
+          },
+          {
+            "label": "dvipdfm",
+            "value": "dvipdfm"
+          },
+          {
+            "label": "eGenix",
+            "value": "eGenix"
+          },
+          {
+            "label": "etalab-2.0",
+            "value": "etalab-2.0"
+          },
+          {
+            "label": "fwlw",
+            "value": "fwlw"
+          },
+          {
+            "label": "gSOAP-1.3b",
+            "value": "gSOAP-1.3b"
+          },
+          {
+            "label": "generic-xts",
+            "value": "generic-xts"
+          },
+          {
+            "label": "gnuplot",
+            "value": "gnuplot"
+          },
+          {
+            "label": "gtkbook",
+            "value": "gtkbook"
+          },
+          {
+            "label": "hdparm",
+            "value": "hdparm"
+          },
+          {
+            "label": "hyphen-bulgarian",
+            "value": "hyphen-bulgarian"
+          },
+          {
+            "label": "iMatix",
+            "value": "iMatix"
+          },
+          {
+            "label": "jove",
+            "value": "jove"
+          },
+          {
+            "label": "libpng-1.6.35",
+            "value": "libpng-1.6.35"
+          },
+          {
+            "label": "libpng-2.0",
+            "value": "libpng-2.0"
+          },
+          {
+            "label": "libselinux-1.0",
+            "value": "libselinux-1.0"
+          },
+          {
+            "label": "libtiff",
+            "value": "libtiff"
+          },
+          {
+            "label": "libutil-David-Nugent",
+            "value": "libutil-David-Nugent"
+          },
+          {
+            "label": "lsof",
+            "value": "lsof"
+          },
+          {
+            "label": "magaz",
+            "value": "magaz"
+          },
+          {
+            "label": "mailprio",
+            "value": "mailprio"
+          },
+          {
+            "label": "man2html",
+            "value": "man2html"
+          },
+          {
+            "label": "metamail",
+            "value": "metamail"
+          },
+          {
+            "label": "mpi-permissive",
+            "value": "mpi-permissive"
+          },
+          {
+            "label": "mpich2",
+            "value": "mpich2"
+          },
+          {
+            "label": "mplus",
+            "value": "mplus"
+          },
+          {
+            "label": "ngrep",
+            "value": "ngrep"
+          },
+          {
+            "label": "pkgconf",
+            "value": "pkgconf"
+          },
+          {
+            "label": "pnmstitch",
+            "value": "pnmstitch"
+          },
+          {
+            "label": "psfrag",
+            "value": "psfrag"
+          },
+          {
+            "label": "psutils",
+            "value": "psutils"
+          },
+          {
+            "label": "python-ldap",
+            "value": "python-ldap"
+          },
+          {
+            "label": "radvd",
+            "value": "radvd"
+          },
+          {
+            "label": "snprintf",
+            "value": "snprintf"
+          },
+          {
+            "label": "softSurfer",
+            "value": "softSurfer"
+          },
+          {
+            "label": "ssh-keyscan",
+            "value": "ssh-keyscan"
+          },
+          {
+            "label": "swrule",
+            "value": "swrule"
+          },
+          {
+            "label": "threeparttable",
+            "value": "threeparttable"
+          },
+          {
+            "label": "ulem",
+            "value": "ulem"
+          },
+          {
+            "label": "w3m",
+            "value": "w3m"
+          },
+          {
+            "label": "wwl",
+            "value": "wwl"
+          },
+          {
+            "label": "xinetd",
+            "value": "xinetd"
+          },
+          {
+            "label": "xkeyboard-config-Zinoviev",
+            "value": "xkeyboard-config-Zinoviev"
+          },
+          {
+            "label": "xlock",
+            "value": "xlock"
+          },
+          {
+            "label": "xpp",
+            "value": "xpp"
+          },
+          {
+            "label": "xzoom",
+            "value": "xzoom"
+          },
+          {
+            "label": "zlib-acknowledgement",
+            "value": "zlib-acknowledgement"
+          }
+        ],
+        "help": "Software or data usage license. For online services, this refers to the license of the underlying software or data.",
+        "kind": "string",
+        "label": "License",
+        "maxLength": 300,
+        "minLength": 1,
+        "nullable": false,
+        "path": "license",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaRequired": false,
+        "search": [
+          "license"
+        ],
+        "writable": true
+      },
+      "link": {
+        "empty": false,
+        "help": "A miscellaneous link for the software e.g. repository, issue tracker or mailing list.",
+        "item": {
+          "fields": {
+            "note": {
+              "blank": true,
+              "help": "Comment about the link.",
+              "kind": "string",
+              "label": "Note",
+              "maxLength": 1000,
+              "minLength": 10,
+              "multiline": true,
+              "nullable": false,
+              "path": "link.note",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxLength": 1000,
+              "schemaMinLength": 10,
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            },
+            "type": {
+              "choices": [
+                {
+                  "label": "Discussion forum",
+                  "value": "Discussion forum"
+                },
+                {
+                  "label": "Galaxy service",
+                  "value": "Galaxy service"
+                },
+                {
+                  "label": "Helpdesk",
+                  "value": "Helpdesk"
+                },
+                {
+                  "label": "Issue tracker",
+                  "value": "Issue tracker"
+                },
+                {
+                  "label": "Mailing list",
+                  "value": "Mailing list"
+                },
+                {
+                  "label": "Mirror",
+                  "value": "Mirror"
+                },
+                {
+                  "label": "Software catalogue",
+                  "value": "Software catalogue"
+                },
+                {
+                  "label": "Repository",
+                  "value": "Repository"
+                },
+                {
+                  "label": "Service",
+                  "value": "Service"
+                },
+                {
+                  "label": "Social media",
+                  "value": "Social media"
+                },
+                {
+                  "label": "Technical monitoring",
+                  "value": "Technical monitoring"
+                },
+                {
+                  "label": "Other",
+                  "value": "Other"
+                }
+              ],
+              "empty": false,
+              "help": "Type of thing linked to.",
+              "item": {
+                "blank": false,
+                "kind": "string",
+                "nullable": false,
+                "readOnly": false,
+                "required": true,
+                "schemaRequired": true
+              },
+              "itemLabel": "Type",
+              "kind": "array",
+              "label": "Types",
+              "nullable": false,
+              "path": "link.type",
+              "public": true,
+              "readOnly": false,
+              "required": true,
+              "schemaMaxItems": null,
+              "schemaMinItems": 1,
+              "schemaRequired": true,
+              "search": [
+                "linkType"
+              ],
+              "writable": true
+            },
+            "url": {
+              "blank": false,
+              "help": "A link of some relevance to the software (URL).",
+              "kind": "string",
+              "label": "URL",
+              "nullable": false,
+              "path": "link.url",
+              "public": true,
+              "readOnly": false,
+              "required": true,
+              "schemaPatterns": [
+                "http(s?)://[^\\s/$.?#]*\\.[^\\s]*",
+                "s?ftp://[^\\s/$.?#]*\\.[^\\s]*"
+              ],
+              "schemaRequired": true,
+              "search": [],
+              "writable": true
+            }
+          },
+          "kind": "object",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "Link",
+        "kind": "array",
+        "label": "Links",
+        "nullable": false,
+        "path": "link",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "link"
+        ],
+        "writable": true
+      },
+      "maturity": {
+        "blank": false,
+        "choices": [
+          {
+            "label": "Emerging",
+            "value": "Emerging"
+          },
+          {
+            "label": "Mature",
+            "value": "Mature"
+          },
+          {
+            "label": "Legacy",
+            "value": "Legacy"
+          }
+        ],
+        "help": "How mature the software product is.",
+        "kind": "string",
+        "label": "Maturity",
+        "maxLength": 300,
+        "minLength": 1,
+        "nullable": false,
+        "path": "maturity",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaRequired": false,
+        "search": [
+          "maturity"
+        ],
+        "writable": true
+      },
+      "name": {
+        "blank": false,
+        "help": "Software name.",
+        "kind": "string",
+        "label": "Name",
+        "maxLength": 100,
+        "minLength": 1,
+        "nullable": false,
+        "path": "name",
+        "public": true,
+        "readOnly": false,
+        "required": true,
+        "schemaMaxLength": 100,
+        "schemaMinLength": 1,
+        "schemaPatterns": [
+          "[\\p{Zs}A-Za-z0-9+\\.,\\-_:;()]*"
+        ],
+        "schemaRequired": true,
+        "search": [
+          "name"
+        ],
+        "writable": true
+      },
+      "operatingSystem": {
+        "choices": [
+          {
+            "label": "Linux",
+            "value": "Linux"
+          },
+          {
+            "label": "Windows",
+            "value": "Windows"
+          },
+          {
+            "label": "Mac",
+            "value": "Mac"
+          },
+          {
+            "label": "Android",
+            "value": "Android"
+          },
+          {
+            "label": "iOS",
+            "value": "iOS"
+          }
+        ],
+        "empty": false,
+        "help": "Operating system supported by a downloadable software package.",
+        "item": {
+          "blank": false,
+          "kind": "string",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "Operating system",
+        "kind": "array",
+        "label": "Operating systems",
+        "nullable": false,
+        "path": "operatingSystem",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "operatingSystem"
+        ],
+        "writable": true
+      },
+      "otherID": {
+        "empty": false,
+        "help": "Unique identifier of the software not (typically) assigned by bio.tools.",
+        "item": {
+          "fields": {
+            "type": {
+              "blank": true,
+              "choices": [
+                {
+                  "label": "doi",
+                  "value": "doi"
+                },
+                {
+                  "label": "rrid",
+                  "value": "rrid"
+                },
+                {
+                  "label": "cpe",
+                  "value": "cpe"
+                },
+                {
+                  "label": "biotoolsCURIE",
+                  "value": "biotoolsCURIE"
+                }
+              ],
+              "help": "Type of tool identifier.",
+              "kind": "string",
+              "label": "Identifier type",
+              "nullable": false,
+              "path": "otherID.type",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaRequired": false,
+              "search": [
+                "otherIDType"
+              ],
+              "writable": true
+            },
+            "value": {
+              "blank": false,
+              "help": "Value of tool identifier.",
+              "kind": "string",
+              "label": "Identifier value",
+              "nullable": false,
+              "path": "otherID.value",
+              "public": true,
+              "readOnly": false,
+              "required": true,
+              "schemaPatterns": [
+                "10\\.[0-9]{4,9}/[\\[\\]<>A-Za-z0-9:;\\)\\(_/.-]+",
+                "(rrid|RRID):.+",
+                "(cpe|CPE):.+",
+                "(BIOTOOLS|biotools):[_\\-.0-9a-zA-Z]*"
+              ],
+              "schemaRequired": true,
+              "search": [
+                "otherIDValue"
+              ],
+              "writable": true
+            },
+            "version": {
+              "blank": true,
+              "help": "Software version number.",
+              "kind": "string",
+              "label": "Identifier version",
+              "maxLength": 100,
+              "minLength": 1,
+              "nullable": false,
+              "path": "otherID.version",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxLength": 100,
+              "schemaMinLength": 1,
+              "schemaPatterns": [
+                "[\\p{Zs}A-Za-z0-9+\\.,\\-_:;()~]*"
+              ],
+              "schemaRequired": false,
+              "search": [
+                "otherIDVersion"
+              ],
+              "writable": true
+            }
+          },
+          "kind": "object",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "Identifier",
+        "kind": "array",
+        "label": "Other identifiers",
+        "nullable": false,
+        "path": "otherID",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "otherID"
+        ],
+        "writable": true
+      },
+      "owner": {
+        "blank": false,
+        "help": "",
+        "kind": "string",
+        "label": "Owner",
+        "nullable": false,
+        "path": "owner",
+        "public": true,
+        "readOnly": true,
+        "required": false,
+        "search": [
+          "owner"
+        ],
+        "writable": false
+      },
+      "publication": {
+        "empty": false,
+        "help": "A publication about the software.",
+        "item": {
+          "fields": {
+            "doi": {
+              "blank": false,
+              "help": "Digital Object Identifier.",
+              "kind": "string",
+              "label": "DOI",
+              "nullable": false,
+              "path": "publication.doi",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaChoiceGroup": true,
+              "schemaPatterns": [
+                "10\\.[0-9]{4,9}/[\\[\\]<>A-Za-z0-9:;\\)\\(_/.-]+"
+              ],
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            },
+            "metadata": {
+              "fields": {
+                "abstract": {
+                  "blank": true,
+                  "help": "",
+                  "kind": "string",
+                  "label": "Abstract",
+                  "nullable": true,
+                  "path": "publication.metadata.abstract",
+                  "public": true,
+                  "readOnly": false,
+                  "required": false,
+                  "search": [],
+                  "writable": false
+                },
+                "authors": {
+                  "empty": true,
+                  "help": "",
+                  "item": {
+                    "fields": {
+                      "name": {
+                        "blank": true,
+                        "help": "",
+                        "kind": "string",
+                        "label": "Name",
+                        "nullable": true,
+                        "path": "publication.metadata.authors.name",
+                        "public": true,
+                        "readOnly": false,
+                        "required": false,
+                        "search": [],
+                        "writable": false
+                      }
+                    },
+                    "kind": "object",
+                    "nullable": false,
+                    "readOnly": false,
+                    "required": true
+                  },
+                  "kind": "array",
+                  "label": "Authors",
+                  "nullable": false,
+                  "path": "publication.metadata.authors",
+                  "public": true,
+                  "readOnly": false,
+                  "required": true,
+                  "search": [],
+                  "writable": false
+                },
+                "citationCount": {
+                  "help": "",
+                  "kind": "number",
+                  "label": "Citation count",
+                  "maximum": 2147483647,
+                  "minimum": -2147483648,
+                  "nullable": false,
+                  "path": "publication.metadata.citationCount",
+                  "public": true,
+                  "readOnly": false,
+                  "required": false,
+                  "search": [],
+                  "writable": false
+                },
+                "date": {
+                  "blank": false,
+                  "help": "",
+                  "kind": "string",
+                  "label": "Date",
+                  "nullable": true,
+                  "path": "publication.metadata.date",
+                  "public": true,
+                  "readOnly": false,
+                  "required": false,
+                  "search": [],
+                  "writable": false
+                },
+                "journal": {
+                  "blank": true,
+                  "help": "",
+                  "kind": "string",
+                  "label": "Journal",
+                  "nullable": true,
+                  "path": "publication.metadata.journal",
+                  "public": true,
+                  "readOnly": false,
+                  "required": false,
+                  "search": [],
+                  "writable": false
+                },
+                "title": {
+                  "blank": true,
+                  "help": "",
+                  "kind": "string",
+                  "label": "Title",
+                  "nullable": true,
+                  "path": "publication.metadata.title",
+                  "public": true,
+                  "readOnly": false,
+                  "required": false,
+                  "search": [],
+                  "writable": false
+                }
+              },
+              "help": "",
+              "kind": "object",
+              "label": "Metadata",
+              "nullable": false,
+              "path": "publication.metadata",
+              "public": true,
+              "readOnly": true,
+              "required": false,
+              "search": [],
+              "writable": false
+            },
+            "note": {
+              "blank": true,
+              "help": "Comment about the publication.",
+              "kind": "string",
+              "label": "Note",
+              "maxLength": 1000,
+              "minLength": 10,
+              "multiline": true,
+              "nullable": false,
+              "path": "publication.note",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxLength": 1000,
+              "schemaMinLength": 10,
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            },
+            "pmcid": {
+              "blank": false,
+              "help": "PubMed Central Identifier.",
+              "kind": "string",
+              "label": "PMCID",
+              "nullable": false,
+              "path": "publication.pmcid",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaChoiceGroup": true,
+              "schemaPatterns": [
+                "(PMC)[1-9][0-9]{0,8}"
+              ],
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            },
+            "pmid": {
+              "blank": false,
+              "help": "PubMed Identifier.",
+              "kind": "string",
+              "label": "PMID",
+              "nullable": false,
+              "path": "publication.pmid",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaChoiceGroup": true,
+              "schemaPatterns": [
+                "[1-9][0-9]{0,8}"
+              ],
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            },
+            "type": {
+              "choices": [
+                {
+                  "label": "Primary",
+                  "value": "Primary"
+                },
+                {
+                  "label": "Benchmarking study",
+                  "value": "Benchmarking study"
+                },
+                {
+                  "label": "Method",
+                  "value": "Method"
+                },
+                {
+                  "label": "Usage",
+                  "value": "Usage"
+                },
+                {
+                  "label": "Review",
+                  "value": "Review"
+                },
+                {
+                  "label": "Other",
+                  "value": "Other"
+                },
+                {
+                  "label": "Preprint",
+                  "value": "Preprint"
+                }
+              ],
+              "empty": false,
+              "help": "Type of publication.",
+              "item": {
+                "blank": false,
+                "kind": "string",
+                "nullable": false,
+                "readOnly": false,
+                "required": false,
+                "schemaRequired": false
+              },
+              "itemLabel": "Publication type",
+              "kind": "array",
+              "label": "Publication types",
+              "nullable": false,
+              "path": "publication.type",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxItems": null,
+              "schemaMinItems": 0,
+              "schemaRequired": false,
+              "search": [
+                "publicationType"
+              ],
+              "writable": true
+            },
+            "version": {
+              "blank": false,
+              "help": "Software version number.",
+              "kind": "string",
+              "label": "Publication version",
+              "maxLength": 100,
+              "minLength": 1,
+              "nullable": false,
+              "path": "publication.version",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaMaxLength": 100,
+              "schemaMinLength": 1,
+              "schemaPatterns": [
+                "[\\p{Zs}A-Za-z0-9+\\.,\\-_:;()~]*"
+              ],
+              "schemaRequired": false,
+              "search": [
+                "publicationVersion"
+              ],
+              "writable": true
+            }
+          },
+          "kind": "object",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "Publication",
+        "kind": "array",
+        "label": "Publications",
+        "nullable": false,
+        "path": "publication",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "publication",
+          "publicationID"
+        ],
+        "writable": true
+      },
+      "relation": {
+        "empty": false,
+        "help": "Details of a relationship this software shares with other software registered in bio.tools.",
+        "item": {
+          "fields": {
+            "biotoolsID": {
+              "blank": false,
+              "help": "bio.tools ID (URL) of an existing bio.tools entry which this software is related to.",
+              "kind": "string",
+              "label": "Related tool ID",
+              "nullable": false,
+              "path": "relation.biotoolsID",
+              "public": true,
+              "readOnly": false,
+              "required": true,
+              "schemaPatterns": [
+                "[_\\-.0-9a-zA-Z]*"
+              ],
+              "schemaRequired": true,
+              "search": [],
+              "writable": true
+            },
+            "type": {
+              "blank": true,
+              "choices": [
+                {
+                  "label": "isNewVersionOf",
+                  "value": "isNewVersionOf"
+                },
+                {
+                  "label": "hasNewVersion",
+                  "value": "hasNewVersion"
+                },
+                {
+                  "label": "uses",
+                  "value": "uses"
+                },
+                {
+                  "label": "usedBy",
+                  "value": "usedBy"
+                },
+                {
+                  "label": "includes",
+                  "value": "includes"
+                },
+                {
+                  "label": "includedIn",
+                  "value": "includedIn"
+                }
+              ],
+              "help": "Type of relation between this and another registered software.",
+              "kind": "string",
+              "label": "Relation type",
+              "nullable": false,
+              "path": "relation.type",
+              "public": true,
+              "readOnly": false,
+              "required": true,
+              "schemaRequired": true,
+              "search": [],
+              "writable": true
+            }
+          },
+          "kind": "object",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "Relation",
+        "kind": "array",
+        "label": "Related tools",
+        "nullable": false,
+        "path": "relation",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [],
+        "writable": true
+      },
+      "toolType": {
+        "choices": [
+          {
+            "label": "Bioinformatics portal",
+            "value": "Bioinformatics portal"
+          },
+          {
+            "label": "Command-line tool",
+            "value": "Command-line tool"
+          },
+          {
+            "label": "Database portal",
+            "value": "Database portal"
+          },
+          {
+            "label": "Desktop application",
+            "value": "Desktop application"
+          },
+          {
+            "label": "Library",
+            "value": "Library"
+          },
+          {
+            "label": "Ontology",
+            "value": "Ontology"
+          },
+          {
+            "label": "Plug-in",
+            "value": "Plug-in"
+          },
+          {
+            "label": "Script",
+            "value": "Script"
+          },
+          {
+            "label": "SPARQL endpoint",
+            "value": "SPARQL endpoint"
+          },
+          {
+            "label": "Suite",
+            "value": "Suite"
+          },
+          {
+            "label": "Web application",
+            "value": "Web application"
+          },
+          {
+            "label": "Web API",
+            "value": "Web API"
+          },
+          {
+            "label": "Web service",
+            "value": "Web service"
+          },
+          {
+            "label": "Workbench",
+            "value": "Workbench"
+          },
+          {
+            "label": "Workflow",
+            "value": "Workflow"
+          },
+          {
+            "label": "Mobile application",
+            "value": "Mobile application"
+          }
+        ],
+        "empty": false,
+        "help": "Type of application software. A tool may have more than one type.",
+        "item": {
+          "blank": false,
+          "kind": "string",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "kind": "array",
+        "label": "Tool type",
+        "nullable": false,
+        "path": "toolType",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "toolType"
+        ],
+        "writable": true
+      },
+      "topic": {
+        "empty": false,
+        "help": "Scientific topic (EDAM Topic).",
+        "item": {
+          "fields": {
+            "term": {
+              "blank": true,
+              "help": "EDAM Topic term (preferred label or synonym).",
+              "kind": "string",
+              "label": "Term",
+              "nullable": true,
+              "path": "topic.term",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaChoiceGroup": true,
+              "schemaRequired": false,
+              "search": [],
+              "writable": true
+            },
+            "uri": {
+              "blank": false,
+              "help": "EDAM Topic URL.",
+              "kind": "string",
+              "label": "Uri",
+              "nullable": false,
+              "path": "topic.uri",
+              "public": true,
+              "readOnly": false,
+              "required": false,
+              "schemaChoiceGroup": true,
+              "schemaPatterns": [
+                "http://edamontology\\.org/topic_[0-9]{4}"
+              ],
+              "schemaRequired": false,
+              "search": [
+                "topicID"
+              ],
+              "writable": true
+            }
+          },
+          "kind": "object",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaRequired": false
+        },
+        "itemLabel": "Topic",
+        "kind": "array",
+        "label": "Topics",
+        "nullable": false,
+        "path": "topic",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "topic"
+        ],
+        "writable": true
+      },
+      "validated": {
+        "help": "",
+        "kind": "number",
+        "label": "Validated",
+        "nullable": false,
+        "path": "validated",
+        "public": false,
+        "readOnly": true,
+        "required": false,
+        "search": [],
+        "writable": false
+      },
+      "version": {
+        "empty": false,
+        "help": "Version information (typically a version number) of the software applicable to this bio.tools entry.",
+        "item": {
+          "blank": false,
+          "kind": "string",
+          "nullable": false,
+          "readOnly": false,
+          "required": false,
+          "schemaMaxLength": 100,
+          "schemaMinLength": 1,
+          "schemaPatterns": [
+            "[\\p{Zs}A-Za-z0-9+\\.,\\-_:;()~]*"
+          ],
+          "schemaRequired": false
+        },
+        "itemLabel": "Version",
+        "kind": "array",
+        "label": "Versions",
+        "nullable": false,
+        "path": "version",
+        "public": true,
+        "readOnly": false,
+        "required": false,
+        "schemaMaxItems": null,
+        "schemaMinItems": 0,
+        "schemaRequired": false,
+        "search": [
+          "version"
+        ],
+        "writable": true
+      }
+    },
+    "kind": "object",
+    "nullable": false,
+    "readOnly": false,
+    "required": true
+  },
+  "policyRevision": "db2dd71ec5e0fc8870241f108e2f1144b6f92c392adf97bdd3f199ead56ba6c1",
+  "protocol": 1,
+  "removedValuePolicy": "correction-required",
+  "revision": "41c6bde30ed530b2de333f02fc848b54da4951624662807703e68c47d451277a",
+  "schema": {
+    "artifact": "biotools_3.3.0-singletool.xsd",
+    "sha256": "d34152910ce66ba644fd596d82a37baaf1b4dbbe55abe1bf41935fc12490e3f0",
+    "version": "3.3.0"
+  }
+}

@@ -1,0 +1,8 @@
+schema: spec-driven
+created: 2026-09-09
+goal: Add a Django-rendered public tool detail page as the first production-equivalent migrated page.
+affected_areas:
+  - backend
+  - templates
+  - routing
+  - tool-detail

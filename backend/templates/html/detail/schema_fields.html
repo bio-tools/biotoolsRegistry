@@ -1,0 +1,26 @@
+{% load detail_tags %}
+<dl class="facts schema-facts">
+{% for node in nodes %}
+  <dt>{{ node.label }}</dt><dd>
+  {% if node.entries %}
+    <ul class="plain-list">{% for entry in node.entries %}<li>{% include 'html/detail/schema_fields.html' with nodes=entry %}</li>{% endfor %}</ul>
+  {% else %}
+    {% for item in node.values %}
+      {% if node.name == 'url' or node.name == 'uri' or node.name == 'orcidid' %}{% external_link item.value item.label %}
+      {% elif node.name == 'email' %}{{ item.label|obfuscated_email }}
+      {% elif node.path == 'relation.biotoolsID' %}{% tool_url item.value as related_url %}{% if related_url %}<a href="{{ related_url }}">{{ item.label }}</a>{% else %}{{ item.label }}{% endif %}
+      {% elif node.name == 'doi' or node.name == 'pmid' or node.name == 'pmcid' or node.name == 'rorid' or node.name == 'gridid' or node.name == 'fundrefid' %}{% identifier_link item.value node.name %}
+      {% elif node.path == 'license' %}{% license_link item.value item.label %}
+      {% elif node.path == 'otherID.value' %}{% identifier_link item.value node.identifierType %}
+      {% elif node.path == 'collectionID' %}<a href="{% search_url 'collectionID' item.value %}">{{ item.label }}</a>
+      {% elif node.path == 'elixirPlatform' %}<a href="https://elixir-europe.org/platforms/{{ item.value|lower|urlencode }}">{{ item.label }}</a>
+      {% elif node.path == 'elixirNode' %}<a href="https://elixir-europe.org/about-us/who-we-are/nodes/{{ item.value|slugify }}">{{ item.label }}</a>
+      {% elif node.path == 'elixirCommunity' %}<a href="{% community_url item.value %}">{{ item.label }}</a>
+      {% elif node.path == 'credit.name' %}<a href="{% search_url 'credit' item.value %}">{{ item.label }}</a>
+      {% elif node.name == 'cmd' %}<code>{{ item.label }}</code>
+      {% else %}{{ item.label }}{% endif %}{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+  {% endif %}
+  </dd>
+{% endfor %}
+</dl>

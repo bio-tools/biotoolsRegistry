@@ -1,0 +1,65 @@
+{
+  "minimal": {
+    "name": "Contract minimal",
+    "description": "A minimal resource for editor contract verification.",
+    "homepage": "https://example.org/minimal",
+    "biotoolsID": "contract-minimal"
+  },
+  "rich": {
+    "name": "Contract rich",
+    "description": "A structurally rich resource for editor contract verification.",
+    "homepage": "https://example.org/rich",
+    "biotoolsID": "contract-rich",
+    "biotoolsCURIE": "biotools:contract-rich",
+    "version": ["1.0", "2.0"],
+    "otherID": [{"value": "DOI:10.1234/example", "type": "doi", "version": "1.0"}],
+    "relation": [{"biotoolsID": "contract-related", "type": "uses"}],
+    "function": [
+      {
+        "operation": [{"uri": "http://edamontology.org/operation_0292", "term": "Sequence alignment"}],
+        "input": [{"data": {"uri": "http://edamontology.org/data_0863", "term": "Sequence"}, "format": [{"uri": "http://edamontology.org/format_1929", "term": "FASTA"}]}],
+        "output": [
+          {"data": {"uri": "http://edamontology.org/data_0863", "term": "Sequence"}, "format": [{"uri": "http://edamontology.org/format_1929", "term": "FASTA"}]},
+          {"data": {"uri": "http://edamontology.org/data_2044", "term": "Sequence name"}}
+        ],
+        "note": "A function note retained during unrelated edits.",
+        "cmd": "example --input sequence.fa"
+      },
+      {"operation": [{"uri": "http://edamontology.org/operation_0292", "term": "Sequence alignment"}], "note": "Another function with no inputs or outputs."}
+    ],
+    "toolType": ["Command-line tool", "Web application"],
+    "topic": [{"uri": "http://edamontology.org/topic_0091", "term": "Bioinformatics"}],
+    "operatingSystem": ["Linux", "Mac"],
+    "language": ["Python", "C"],
+    "license": "MIT",
+    "collectionID": ["Contract collection", "Unrelated tag"],
+    "maturity": "Mature",
+    "cost": "Free of charge",
+    "accessibility": "Open access",
+    "elixirPlatform": ["Tools"],
+    "elixirNode": ["Denmark"],
+    "elixirCommunity": ["Proteomics"],
+    "link": [{"url": "https://example.org/source", "type": ["Repository", "Issue tracker"], "note": "A link note retained during unrelated edits."}],
+    "download": [{"url": "https://example.org/archive.tar.gz", "type": "Source code", "version": "2.0", "note": "A download note retained during unrelated edits."}],
+    "documentation": [{"url": "https://example.org/manual", "type": ["User manual"], "note": "A manual note retained during unrelated edits."}],
+    "publication": [
+      {"doi": "10.1234/example", "pmid": "12345", "pmcid": "PMC12345", "type": ["Primary"], "version": "2.0", "note": "A publication note retained during unrelated edits.", "metadata": null},
+      {"pmid": "67890", "type": ["Usage"], "note": ""}
+    ],
+    "credit": [{"name": "Contract Author", "email": "author@example.org", "url": "https://example.org/author", "orcidid": "https://orcid.org/0000-0002-1825-0097", "gridid": "grid.413322.5", "rorid": "03yrm5c26", "fundrefid": "10.13039/501100000781", "typeEntity": "Person", "typeRole": ["Developer", "Maintainer"], "note": "A credit note retained during unrelated edits."}],
+    "owner": "contract-owner",
+    "additionDate": null,
+    "lastUpdate": "2026-09-19T00:00:00Z",
+    "editPermission": {"type": "group", "authors": ["contract-author"]},
+    "validated": 1,
+    "homepage_status": 0,
+    "elixir_badge": 0,
+    "confidence_flag": "tool"
+  },
+  "errors": {
+    "name": ["This field may not be blank."],
+    "function": [{"output": [{}, {"data": {"general_errors": ["Unknown EDAM term."]}}]}, {}],
+    "publication": [{"general_errors": ["Publication requires at least one of DOI, PMID, PMCID"]}, {}],
+    "general_errors": ["The resource could not be saved."]
+  }
+}

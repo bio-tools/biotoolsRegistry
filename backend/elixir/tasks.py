@@ -43,10 +43,11 @@ def backup_stats_with_date(upperDateLimit=datetime.today()):
     statsData.contactAnnotationCount = statsData.data["totalAnnotationCount"]["contactAnnotationCount"]
     statsData.homepageAnnotationCount = statsData.data["totalAnnotationCount"]["homepageAnnotationCount"]
     statsData.publicationAnnotationCount = statsData.data["totalAnnotationCount"]["publicationAnnotationCount"]
+    statsData.toolTypeCounts = statsData.data["toolTypeCounts"]
     statsData.save()
     statsData.date = upperDateLimit
     statsData.save()
-    return "Statistics for " + str(statsData.totalEntries) + " entries saved sucessfully."
+    return "Statistics for " + str(statsData.totalEntries) + " entries saved successfully."
 
 # @shared_task
 def backup_stats():
@@ -108,7 +109,7 @@ def update_pmcid_only_publication_metadata():
 
 
 # @shared_task
-def genereate_missing_stats():
+def generate_missing_stats():
     monthsCount = 12
     currentMonth = datetime.today().replace(day=1)
     for i in range(12):
@@ -149,7 +150,7 @@ def notify_resource_request(type, request_body):
         settings.ADMIN_EMAIL_LIST
     )
 
-# Ecosytem background tasks
+# Ecosystem background tasks
 # import the ecosytem_handle_tool_operations which handles the create, update and delete ecosystem operations
 from elixir.biotools_to_github import ecosytem_handle_tool_operations
 

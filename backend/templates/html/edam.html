@@ -1,0 +1,32 @@
+{% extends "html/base.html" %}
+{% block title %}EDAM annotations | bio.tools{% endblock %}
+{% block content %}
+<h1>EDAM annotations</h1>
+<form method="post" action="{% url 'html:edam-preview' %}" novalidate>
+  {% csrf_token %}
+  {{ form.label.label_tag }}{{ form.label }}{{ form.label.errors }}
+  {% for selector in selectors %}
+  <section style="margin-block: 24px;">
+    <template id="edam-{{ selector.scope }}">{{ selector.config|json_script }}</template>
+    <div data-vue-island="edam-field" data-vue-props="edam-{{ selector.scope }}" hx-disable>
+      <label for="native-{{ selector.scope }}">{{ selector.scope|capfirst }} URI</label>
+      {% for uri in selector.identifiers %}<input name="{{ selector.scope }}" value="{{ uri }}">{% endfor %}
+      <input id="native-{{ selector.scope }}" name="{{ selector.scope }}" type="url">
+    </div>
+    {{ selector.field.errors }}
+  </section>
+  {% endfor %}
+  <button type="submit">Validate annotations</button>
+</form>
+{% if payload %}
+<section style="margin-top: 32px;">
+  <h2>Validated annotations</h2>
+  <p role="status">Selection validated. No registry record was changed.</p>
+  <dl>{% for selector in selectors %}
+    <dt>{{ selector.scope|capfirst }}</dt>
+    {% for term in selector.config.initialTerms %}<dd>{{ term.term }} ({{ term.uri }})</dd>{% empty %}<dd>None</dd>{% endfor %}
+  {% endfor %}</dl>
+  {{ payload|json_script:"validated-edam" }}
+</section>
+{% endif %}
+{% endblock %}

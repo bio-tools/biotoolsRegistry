@@ -1,0 +1,107 @@
+name: api tests
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-production-image:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the migrated production image
+      run: docker build --target prod -t biotools/production-ci .
+    - name: Check Apache and retained assets
+      run: |
+        docker run --rm --entrypoint apache2ctl biotools/production-ci configtest
+        docker run --rm --entrypoint sh biotools/production-ci -c 'test -d /elixir/application/frontend/resources && test -f /elixir/application/frontend/static/modern/manifest.json && test ! -e /elixir/application/frontend/index.html && test ! -e /elixir/application/frontend/dist && test ! -e /elixir/application/frontend/bower_components'
+    - name: Validate production Compose with disposable settings
+      env:
+        BIOTOOLS_SECRET_KEY: ci-only-secret
+        BIOTOOLS_ALLOWED_HOSTS: '["localhost"]'
+        BIOTOOLS_MYSQL_ROOT_PASSWORD: ci-only-root
+        BIOTOOLS_MYSQL_PASSWORD: ci-only-password
+        BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      run: docker compose -f compose.prod.yml config --quiet
+
+  test-modern-contracts:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: frontend-modern/package-lock.json
+    - run: npm ci
+      working-directory: frontend-modern
+    - run: npm run type-check
+      working-directory: frontend-modern
+    - run: npm test
+      working-directory: frontend-modern
+    - run: npm run build
+      working-directory: frontend-modern
+
+  test-compose:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@v4
+
+    - name: set up docker compose
+      uses: docker/setup-compose-action@v1
+
+    - name: build and run
+      run: docker compose up -d --build mysql elasticsearch backend
+
+    - name: wait for services
+      run: sleep 15
+
+    - name: list containers
+      run: docker compose ps
+
+    - name: grant mysql privileges
+      run: docker exec -i biotools-mysql mysql -u root -pelixirroot -e "GRANT ALL PRIVILEGES ON *.* TO 'elixir'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+    
+    - name: run tests
+      run: docker exec biotools-backend python manage.py test
+
+    - name: check activated resource descriptor drift
+      run: docker exec biotools-backend python manage.py resource_schema --check
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+    - name: build browser assets
+      working-directory: frontend-modern
+      run: npm ci && npm run build
+    - name: install browser harness
+      working-directory: tests/browser
+      run: npm ci && npx playwright install --with-deps chromium
+    - name: start deterministic import rehearsal
+      run: |
+        docker compose -f compose.yml -f compose.browser-tests.yml up -d --no-deps backend bridge-stub
+        docker exec biotools-backend python manage.py migrate --noinput
+        docker exec -i -e BIOTOOLS_ALLOW_TEST_SEED=biotools-refresh biotools-backend python manage.py shell < tests/browser/seed_bridge.py
+    - name: verify import review and explicit save
+      working-directory: tests/browser
+      env:
+        BIOTOOLS_BASE_URL: http://localhost:8000
+        BIOTOOLS_TEST_GITHUB_IMPORT: '1'
+        BIOTOOLS_TEST_EDITOR_WRITES: '1'
+        BIOTOOLS_TEST_CUTOVER: '1'
+        BIOTOOLS_TEST_CANONICAL_EDITOR: '1'
+        BIOTOOLS_TEST_ACCOUNTS: '1'
+        BIOTOOLS_TEST_USERNAME: migration-bridge-1440
+        BIOTOOLS_TEST_PASSWORD: Migration-test-only-2026
+      run: npm test -- github-import.spec.js
+
+    - name: tear down
+      # Cleanup also covers a partially started deterministic bridge rehearsal.
+      if: always()
+      run: docker compose -f compose.yml -f compose.browser-tests.yml down

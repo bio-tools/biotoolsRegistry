@@ -1,0 +1,3 @@
+https://localhost {
+	reverse_proxy production-secure:80
+}

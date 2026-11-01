@@ -1,0 +1,7 @@
+{% extends "html/base.html" %}
+{% block title %}Message preview | bio.tools{% endblock %}
+{% block content %}
+<h1>Message preview</h1>
+{% include "html/fragments/preview.html" %}
+<p><a href="{% url 'html:index' %}">Return to bio.tools</a></p>
+{% endblock %}

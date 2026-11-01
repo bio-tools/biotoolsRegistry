@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
-    # do a collation change sql script in the intial migration
+    # do a collation change sql script in the initial migration
     collation_sql = 'ALTER DATABASE ' + \
          settings.DATABASES['default']['NAME'] + ' CHARACTER SET ' + \
               settings.DATABASES['default']['OPTIONS']['charset'] + ' COLLATE ' + \
@@ -28,8 +28,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
-            sql=[(collation_sql)],
-            reverse_sql=[(reverse_collaction_sql)],
+            sql=[collation_sql],
+            reverse_sql=[reverse_collaction_sql],
         ),
 
 

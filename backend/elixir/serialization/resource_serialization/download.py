@@ -1,3 +1,4 @@
+from elixir.resource_options import METADATA_CHOICES
 from rest_framework import serializers
 from elixir.models import *
 from elixir.validators import *
@@ -13,7 +14,7 @@ class DownloadSerializer(serializers.ModelSerializer):
 		fields = ('url', 'type', 'note', 'version')
 
 	def validate_type(self, attrs):
-		enum = ENUMValidator(['API specification', 'Biological data', 'Binaries', 'Command-line specification', 'Container file', 'Tool wrapper (CWL)', 'Icon', 'Screenshot', 'Software package', 'Source code', 'Test data', 'Test script', 'Tool wrapper (Galaxy)', 'Tool wrapper (Taverna)', 'Tool wrapper (Other)', 'VM image', 'Downloads page', 'Other'])
+		enum = ENUMValidator(METADATA_CHOICES['download.type'])
 		attrs = enum(attrs)
 		return attrs
 
@@ -25,7 +26,7 @@ class DownloadSerializer(serializers.ModelSerializer):
 		#p = re.compile('^[\p{Zs}A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
 
 		#this is ok, only allow spaces
-		p = re.compile('^[ A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
+		p = re.compile(r'^[ A-Za-z0-9+\.,\-_:;()]*$', re.IGNORECASE | re.UNICODE)
 
 		if not p.search(attrs):
 			raise serializers.ValidationError('This field can only contain letters, numbers, spaces or these characters: + . , - _ : ; ( )')
