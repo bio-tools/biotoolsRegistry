@@ -24,6 +24,5 @@ defineProps<{ draft: ResourceEditor; fields: Record<string, Field>; endpoint: st
 .metadata-editor select, .metadata-editor textarea { width: 100%; max-width: 100%; min-height: 44px; padding: 10px; font: inherit; color: #333; background: white; border: 1px solid #767676; border-radius: 4px; }
 .metadata-editor textarea { min-height: 80px; resize: vertical; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.editor-sections { display: flex; flex-wrap: wrap; gap: 10px 20px; border-block: 1px solid #ddd; padding-block: 14px; margin-bottom: 24px; }
 @media (max-width: 600px) { .metadata-grid { grid-template-columns: minmax(0, 1fr); } }
 </style>

@@ -19,6 +19,7 @@
   <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/t">Tools</a><span aria-hidden="true">/</span><span>{{ tool.biotoolsID }}</span></nav>
   <header class="tool-heading">
     <div><p class="resource-id">biotools:{{ tool.biotoolsID }}</p><h1>{{ tool.name }}</h1>
+      {% if tool.description %}<p class="tool-summary">{{ tool.description|truncatechars:260 }}</p>{% endif %}
       <div class="homepage">{% external_link tool.homepage %}</div>
     </div>
     <div class="tool-actions"><a href="/{{ tool.biotoolsID }}/manage">Manage record</a>
@@ -37,8 +38,8 @@
   <div class="detail-layout">
     <div class="detail-content">
       <section id="overview" class="detail-section"><h2>Overview</h2>
-        {% if tool.description %}<p class="description">{{ tool.description }}</p>{% endif %}
-        {% if tool.topic.all %}<h3>{{ schema_fields.topic.label }}</h3><ul class="topic-list">{% for topic in tool.topic.all %}<li>{% edam_term topic 'topicID' %}</li>{% endfor %}</ul>{% endif %}
+        {% if tool.description|length > 260 %}<p class="description">{{ tool.description }}</p>{% endif %}
+        {% if tool.topic.all %}<h3>{{ schema_fields.topic.label }}</h3><ul class="topic-list">{% for topic in tool.topic.all %}<li>{% edam_term topic 'topicID' %}</li>{% endfor %}</ul>{% elif tool.description|length <= 260 %}<p class="muted">No topics specified.</p>{% endif %}
       </section>
       {% if tool.function.all %}<section id="functions" class="detail-section"><h2>{{ schema_fields.function.label }}</h2>
         {% for entry in functions %}{% with function=entry.record %}<section class="function-row" aria-labelledby="function-{{ forloop.counter }}">

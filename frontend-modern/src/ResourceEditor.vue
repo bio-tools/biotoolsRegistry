@@ -210,24 +210,26 @@ async function save(validateOnly = false) {
     <p v-if="rawDirty">Unapplied JSON text. Apply it or reload the current draft before saving the form.</p>
     <form @submit.prevent="save()" :aria-busy="pending">
       <nav class="editor-sections" aria-label="Editor sections">
+        <span class="editor-sections-title">Sections</span>
         <a href="#editor-name">Basic information</a><a href="#metadata-labels">Labels</a>
         <a v-for="[name, field] in sections" :key="name" :href="`#nested-${name}`">{{ field.label }}</a>
         <a href="#nested-editPermission">Editing permissions</a>
       </nav>
+      <div class="editor-content">
       <fieldset :disabled="unavailable" class="editor-fields">
         <legend>Basic information</legend>
         <div class="editor-pair">
-          <div><label for="editor-name">{{ fields.name?.label || 'Name' }}</label>
+          <div><label for="editor-name">{{ fields.name?.label || 'Name' }}</label><span v-if="fields.name?.required" class="required-label" aria-hidden="true">(required)</span>
             <input id="editor-name" v-model="draft.name" type="text" :required="fields.name?.required" :maxlength="fields.name?.maxLength" :aria-invalid="fieldErrors('name').length > 0" aria-describedby="error-name">
             <p id="error-name" class="editor-field-error">{{ fieldErrors('name').join(' ') }}</p></div>
-          <div><label for="editor-biotoolsID">{{ fields.biotoolsID?.label || 'bio.tools ID' }}</label>
+          <div><label for="editor-biotoolsID">{{ fields.biotoolsID?.label || 'bio.tools ID' }}</label><span v-if="fields.biotoolsID?.required" class="required-label" aria-hidden="true">(required)</span>
             <input id="editor-biotoolsID" v-model="draft.biotoolsID" type="text" :required="fields.biotoolsID?.required" :maxlength="fields.biotoolsID?.maxLength" :readonly="!!config.revision" :aria-invalid="fieldErrors('biotoolsID').length > 0" aria-describedby="error-biotoolsID">
             <p id="error-biotoolsID" class="editor-field-error">{{ fieldErrors('biotoolsID').join(' ') }}</p></div>
         </div>
-        <label for="editor-homepage">{{ fields.homepage?.label || 'Homepage' }}</label>
+        <label for="editor-homepage">{{ fields.homepage?.label || 'Homepage' }}</label><span v-if="fields.homepage?.required" class="required-label" aria-hidden="true">(required)</span>
         <input id="editor-homepage" v-model="draft.homepage" type="text" inputmode="url" :required="fields.homepage?.required" :maxlength="fields.homepage?.maxLength" :aria-invalid="fieldErrors('homepage').length > 0" aria-describedby="error-homepage">
         <p id="error-homepage" class="editor-field-error">{{ fieldErrors('homepage').join(' ') }}</p>
-        <label for="editor-description">{{ fields.description?.label || 'Description' }}</label>
+        <label for="editor-description">{{ fields.description?.label || 'Description' }}</label><span v-if="fields.description?.required" class="required-label" aria-hidden="true">(required)</span>
         <textarea id="editor-description" v-model="draft.description" :required="fields.description?.required" :minlength="fields.description?.minLength" :maxlength="fields.description?.maxLength" rows="6" :aria-invalid="fieldErrors('description').length > 0" aria-describedby="error-description" />
         <p id="error-description" class="editor-field-error">{{ fieldErrors('description').join(' ') }}</p>
         <fieldset id="editor-toolType" class="editor-types" tabindex="-1" aria-describedby="error-toolType">
@@ -246,15 +248,24 @@ async function save(validateOnly = false) {
         <button type="button" class="secondary" @click="exportDraft">Export draft</button>
         <span role="status" aria-label="Save status">{{ pending ? 'Saving changes...' : dirty ? 'Unsaved changes' : saved ? (config.no_changes ? 'No changes detected.' : 'Changes saved.') : 'No unsaved changes' }}</span>
       </div>
+      </div>
     </form>
   </div>
 </template>
 
 <style scoped>
-.resource-editor { max-width: 920px; }
+.resource-editor { max-width: 1200px; }
 .editor-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 24px; }
 .editor-heading a { white-space: nowrap; }
 .editor-id { color: #575757; margin: 0; overflow-wrap: anywhere; }
+.resource-editor form { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 28px; align-items: start; }
+.editor-sections { position: sticky; top: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 12px; margin: 0; border: 1px solid #dce8ec; border-radius: 8px; background: #f5f9fa; font-size: 14px; }
+.editor-sections a { padding: 6px 8px; text-decoration: none; border-radius: 4px; }
+.editor-sections a:hover { background: #e5f1f5; text-decoration: underline; }
+.editor-sections-title { padding: 6px 8px; color: #425f6b; font-weight: 700; }
+.editor-content { min-width: 0; }
+.required-label { color: #526d79; font-size: 12px; font-weight: 400; }
+.editor-fields label:has(+ .required-label) { display: inline-block; margin-right: 4px; }
 .editor-fields { border: 0; padding: 0; margin: 0; min-width: 0; }
 .editor-fields > legend { font-size: 20px; font-weight: 600; margin-bottom: 20px; padding: 0; }
 .editor-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -266,11 +277,19 @@ input[readonly] { background: #f4f4f4; color: #575757; }
 .editor-types legend { font-weight: 600; margin-bottom: 8px; padding: 0; }
 .editor-types label { display: flex; align-items: center; gap: 10px; min-height: 36px; font-weight: 400; margin: 0; }
 .editor-types input { width: 18px; height: 18px; min-height: 18px; flex: 0 0 18px; accent-color: #337ab7; }
-.editor-actions { border-top: 1px solid #ddd; padding-top: 20px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.editor-actions { border-top: 1px solid #d6e2e7; padding: 16px; margin-top: 24px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; background: #f5f9fa; border-radius: 8px; }
 .editor-actions span { color: #575757; }
 .editor-errors { overflow-wrap: anywhere; }
 .editor-errors h2 { font-size: 18px; margin-bottom: 8px; }
 .editor-errors ul { margin: 0; padding-left: 20px; }
+@media (min-width: 761px) {
+  .editor-actions { position: sticky; bottom: 0; z-index: 2; box-shadow: 0 -4px 16px #173e4b14; }
+}
+@media (max-width: 760px) {
+  .resource-editor form { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .editor-sections { position: static; flex-direction: row; flex-wrap: wrap; gap: 4px; }
+  .editor-sections-title { width: 100%; }
+}
 @media (max-width: 600px) {
   .editor-pair { grid-template-columns: 1fr; gap: 0; }
   .editor-types { grid-template-columns: 1fr; }

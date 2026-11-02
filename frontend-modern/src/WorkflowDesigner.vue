@@ -329,7 +329,8 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
     <p><a href="/workflows/design/">Start a new design</a></p>
   </section>
   <template v-else>
-  <section aria-labelledby="workflow-find"><h2 id="workflow-find">Find a tool function</h2>
+  <div class="workflow-workspace">
+  <section class="workflow-finder" aria-labelledby="workflow-find"><h2 id="workflow-find">Find a tool function</h2>
     <p>Choose a data type and/or format, and optionally an operation. Matches are suggestions for review, not executable workflows.</p>
     <label for="workflow-direction">Find functions that</label><select id="workflow-direction" v-model="direction"><option value="input">Accept input</option><option value="output">Produce output</option></select>
     <div class="selectors">
@@ -350,7 +351,7 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
     </li></ol>
     <button v-if="next" type="button" class="secondary" :disabled="loading" @click="search(next)">More results</button>
   </section>
-  <section aria-labelledby="workflow-draft"><h2 id="workflow-draft">Your workflow design</h2>
+  <section class="workflow-draft" aria-labelledby="workflow-draft"><h2 id="workflow-draft">Your workflow design</h2>
     <p>This design does not run tools or contain analysis data. Download it or sign in to save it privately.</p>
     <label for="workflow-title">Design title</label><input id="workflow-title" v-model="title" maxlength="120">
     <template v-if="signedIn">
@@ -372,6 +373,7 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
     <p v-if="redactedDraft" role="status">Hidden or unavailable functions are shown as placeholders. Save as a new draft to preserve the original stored snapshots.</p>
     <button type="button" @click="download">Download draft</button>
     <label>Restore draft <input type="file" accept="application/json,.json" @change="restore"></label>
+    <p v-if="!graph.steps.length" class="workflow-empty">Your design is empty. Search for a tool function and add it to begin.</p>
     <p v-if="graph.steps.length" class="diagram-hint">Scroll the diagram horizontally to see the connections.</p>
     <div v-if="graph.steps.length" class="diagram" role="region" tabindex="0" aria-label="Workflow diagram, scroll horizontally to see connections">
       <svg :viewBox="`0 0 800 ${graph.steps.length * 90}`" role="img" aria-label="Connections between workflow steps; details and controls follow">
@@ -383,14 +385,14 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
     <ol class="steps-list"><li v-for="(step, index) in graph.steps" :key="step.id">
       <h3>{{ step.resource.name }}</h3><a v-if="step.resource.id" :href="'/' + encodeURIComponent(step.resource.id)">View tool</a>
       <p v-if="needsReview.includes(step.id)" role="status">Stored snapshot needs review. <button type="button" @click="review(step)">Review current function</button></p>
-      <p>Operations: {{ step.function.operations.map(termLabel).join(', ') || 'Unknown' }}</p>
+      <p class="workflow-operation">Operations: {{ step.function.operations.map(termLabel).join(', ') || 'Unknown' }}</p>
       <p>Selected {{ step.selection.direction }} evidence:
         <span v-for="(evidence, scope) in step.selection.evidence" :key="scope"> {{ scope }}: {{ evidence.state }}<template v-if="evidence.obsolete"> (obsolete)</template><template v-if="evidence.relation"> ({{ evidence.relation.replaceAll('_', ' ') }})</template><template v-if="evidence.reasons"> ({{ evidence.reasons.join(', ') }})</template>;</span>
       </p>
       <p v-if="!step.function.input.length">No input annotation recorded.</p>
-      <p v-for="io in step.function.input" :key="io.id">Input: {{ ioLabel(io) }}</p>
+      <p v-for="io in step.function.input" :key="io.id" class="workflow-io">Input: {{ ioLabel(io) }}</p>
       <p v-if="!step.function.output.length">No output annotation recorded.</p>
-      <p v-for="io in step.function.output" :key="io.id">Output: {{ ioLabel(io) }} <button type="button" class="secondary" @click="findNext(io)">Find next tool</button></p>
+      <p v-for="io in step.function.output" :key="io.id" class="workflow-io">Output: {{ ioLabel(io) }} <button type="button" class="secondary" @click="findNext(io)">Find next tool</button></p>
       <label :for="'note-' + step.id">Notes for step {{ index + 1 }}</label><textarea :id="'note-' + step.id" v-model="step.note" maxlength="1000" />
       <button type="button" class="secondary" :aria-label="`Move step ${index + 1} up`" :disabled="index === 0" @click="move(index, -1)">Move up</button>
       <button type="button" class="secondary" :aria-label="`Move step ${index + 1} down`" :disabled="index === graph.steps.length - 1" @click="move(index, 1)">Move down</button>
@@ -411,15 +413,24 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
       <button type="button" class="secondary" :aria-label="`Remove connection ${index + 1}`" @click="graph.connections = graph.connections.filter(item => item.id !== edge.id)">Remove connection</button>
     </li></ol>
   </section>
+  </div>
   </template>
 </template>
 
 <style scoped>
-.selectors { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 1rem 0; }
+.workflow-workspace { display: grid; grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr); gap: 24px; align-items: start; }
+.workflow-finder, .workflow-draft { min-width: 0; margin: 0; padding: 24px; border: 1px solid #d6e5eb; border-radius: 10px; background: #fff; }
+.workflow-finder { background: #f4f9fb; }
+.workflow-finder > h2, .workflow-draft > h2 { color: #173e4b; }
+.workflow-empty { padding: 20px; background: #f4f9fb; border: 1px dashed #a9cbd7; border-radius: 8px; color: #425f6b; }
+.workflow-operation, .workflow-io { padding: 8px 10px; border-left: 3px solid #88b3c3; background: #f5fafb; }
+.workflow-operation { border-color: #005472; background: #e5f2f7; }
+.selectors { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
 .diagram { overflow-x: auto; max-width: 100%; }
 .diagram svg { display: block; width: 800px; max-width: none; }
 .diagram-hint { display: none; }
 @media (max-width: 840px) { .diagram-hint { display: block; } }
+@media (max-width: 850px) { .workflow-workspace { grid-template-columns: minmax(0, 1fr); } }
 section { margin-block: 2rem; }
 .candidate-list > li, .steps-list > li { background: #f5f9fc; border: 1px solid #c9dce9; border-radius: 6px; padding: 1rem; overflow-wrap: anywhere; }
 .steps-list h3 { margin-top: 0; }

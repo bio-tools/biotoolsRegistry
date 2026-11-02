@@ -52,13 +52,13 @@ const path = (item: FunctionItem) => ['function', { itemId: item.id }];
 .nested-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
 .nested-controls { display: flex; gap: 4px; }
 .nested-icon { width: 32px; height: 32px; min-height: 32px; flex: 0 0 32px; padding: 0; font-size: 18px; }
-.function-entry { border-top: 2px solid #337ab7; padding-block: 20px 8px; margin-top: 20px; min-width: 0; }
+.function-entry { border-top: 2px solid #005472; padding-block: 20px 8px; margin-top: 20px; min-width: 0; }
 .function-entry textarea { width: 100%; font: inherit; padding: 10px; border: 1px solid #767676; border-radius: 4px; resize: vertical; min-height: 80px; }
 .function-diagram { display: grid; grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1.1fr) 32px minmax(0, 1fr); align-items: start; gap: 8px; margin-block: 24px; }
-.function-operations { min-width: 0; background: #edf4f8; border: 1px solid #337ab7; border-radius: 4px; padding: 16px; margin-top: 32px; }
+.function-operations { min-width: 0; background: #e5f2f7; border: 1px solid #8baebf; border-radius: 8px; padding: 16px; margin-top: 32px; }
 .function-operations .concept-list { margin: 0; }
 .function-operations .concept-list legend { font-size: 16px; color: #23527c; }
-.flow-arrow { color: #337ab7; text-align: center; font-size: 28px; line-height: 40px; margin-top: 64px; }
+.flow-arrow { color: #005472; text-align: center; font-size: 28px; line-height: 40px; margin-top: 64px; }
 .function-details { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-block: 24px; }
 .function-details > div { min-width: 0; }
 .io-list, .io-entry { min-width: 0; }

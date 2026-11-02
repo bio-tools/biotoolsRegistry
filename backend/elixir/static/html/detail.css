@@ -1,13 +1,14 @@
 .tool-detail { overflow-wrap: anywhere; }
 .breadcrumb { color: #626b70; font-size: 14px; gap: 12px; margin-bottom: 26px; }
 .breadcrumb a { font-weight: 400; }
-.tool-heading { display: flex; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+.tool-heading { display: flex; justify-content: space-between; gap: 24px; margin-bottom: 28px; padding: 28px; background: #f1f8fa; border: 1px solid #d6e7ed; border-radius: 12px; }
 .tool-heading h1 { font-size: 36px; margin-bottom: 14px; color: #173e4b; }
 .resource-id { color: #626b70; font-size: 14px; margin-bottom: 8px; }
+.tool-summary { max-width: 760px; margin: 0 0 16px; line-height: 1.6; }
 .homepage { font-size: 16px; }
 .tool-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; flex-shrink: 0; padding-top: 8px; }
 .tool-actions nav { gap: 18px; font-size: 14px; }
-.section-nav { border-block: 1px solid #dce3e6; padding-block: 16px; gap: 28px; font-size: 14px; }
+.section-nav { border-block: 1px solid #dce3e6; padding-block: 16px; gap: 12px 24px; font-size: 14px; }
 .detail-layout { display: grid; grid-template-columns: minmax(0, 1fr) 258px; gap: 46px; }
 .detail-content, .detail-layout aside { min-width: 0; }
 .detail-section { padding-block: 26px; border-bottom: 1px solid #e2e7e9; scroll-margin-top: 20px; }
@@ -24,8 +25,8 @@
 .edam-term small a { color: #626b70; }
 .function-row { padding-block: 16px; border-top: 1px solid #e2e7e9; }
 .function-flow { display: grid; grid-template-columns: minmax(0, 1fr) 16px minmax(0, 1.1fr) 16px minmax(0, 1fr); gap: 8px; margin-block: 20px; align-items: start; }
-.function-flow > div { min-width: 0; border: 1px solid #c9dce5; border-radius: 6px; padding: 14px; background: #f8fbfc; }
-.function-flow > .operations { background: #edf4f8; border-color: #8baebf; }
+.function-flow > div { min-width: 0; border: 1px solid #c9dce5; border-radius: 8px; padding: 16px; background: #f8fbfc; }
+.function-flow > .operations { background: #e5f2f7; border-color: #8baebf; }
 .function-arrow { align-self: center; color: #005472; font-size: 22px; text-align: center; }
 .function-flow h4 { font-size: 12px; text-transform: uppercase; margin: 0 0 12px; color: #005472; }
 .function-flow .operations h4 { color: #005472; }
@@ -47,6 +48,7 @@ details > p { padding-top: 8px; font-size: 14px; }
 .detail-content .resource-links > li { border: 1px solid #dce3e6; border-radius: 4px; padding: 16px; }
 .detail-layout aside h2 { font-size: 16px; }
 .detail-layout aside { font-size: 14px; }
+.detail-layout aside .detail-section { padding: 20px; margin-top: 20px; border: 1px solid #dce7eb; border-radius: 8px; background: #f9fcfd; }
 .record-notice { padding: 12px 16px; border-left: 3px solid #765078; background: #f5f1f6; font-size: 14px; }
 @media (max-width: 760px) {
   .detail-layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
