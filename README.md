@@ -1,57 +1,57 @@
-[![zenodo](https://zenodo.org/badge/DOI/10.1093/nar/gkv1116.svg)](https://doi.org/10.1093/nar/gkv1116)
-[![github](https://img.shields.io/github/license/bio-tools/biotoolsRegistry)](https://github.com/bio-tools/biotoolsRegistry)
-[![readthedocs](https://readthedocs.org/projects/biotools/badge/?version=latest)](https://biotools.readthedocs.io/en/latest/?badge=latest)
-[![bio.tools](https://img.shields.io/badge/bio.tools-bio.tools-005472)](https://bio.tools/bio.tools)
+# bio.tools registry
 
+[bio.tools](https://bio.tools) is the ELIXIR registry for discovering and
+curating bioinformatics tools and data services. It provides a searchable
+catalogue, an editor, a REST API and a workflow planner based on
+[biotoolsSchema](https://github.com/bio-tools/biotoolsSchema) and EDAM.
 
-# What is biotoolsregistry?
-**biotoolsregistry** (bio.tools) is the Web application of the [ELIXIR Tools & Data Services Registry](https://bio.tools).  It allows the curation and discovery of bioinformatics resources including databases, tools, services and so on, available under a variety of interfaces.
+## Getting started
 
-bio.tools provides a query interface, registration interface and API. The **query interface** allows a user to search the corpus of resource descriptions, display what fields of information are shown and filter and sort the results by various attributes.  The **registration interface** allows the manual creation and editing of resource descriptions.  The HTTP-based **API** allows query as well as automated creation and update of accessions.
+Install Docker Compose and Node.js 22.12 or newer, then run:
 
-bio.tools depends upon a resource description model: [biotoolsSchema](https://github.com/bio-tools/biotoolsSchema).
+```sh
+npm --prefix frontend-modern ci
+npm --prefix frontend-modern run build
+docker compose up -d --build mysql elasticsearch backend
+docker compose exec backend python manage.py migrate --noinput
+docker compose exec -u 0 backend python manage.py collectstatic --noinput
+docker compose up -d caddy
+```
 
-# Motivation
-In support of discoveries in the life sciences, a plethora of databases and tools are deployed, in technically complex and diverse implementations, across a spectrum of scientific disciplines. The corpus of documentation of these resources is fragmented across the Web, with much redundancy, and has lacked a common standard of information. The outcome is that scientists must often struggle to find, understand, compare and use the best resources for the task at hand.  The need - which biotoolsregistry supports - is for a comprehensive and consistent registry of information about bioinformatics resources.
+Open **https://localhost/** and accept the local development certificate. The
+new database is empty: use an authorized data import or disposable test
+fixtures before expecting search results. See [installation](INSTALL.md) for
+setup, the optional GitHub bridge and production configuration.
 
-# Documentation and website
+## Project layout
 
-bio.tools, supported by [ELIXIR](https://www.elixir-europe.org/) — the European infrastructure for biological information - is available at
+- `backend/`: Django models, API, page handlers, templates and static assets.
+- `frontend-modern/`: Vue/TypeScript components and Vite build.
+- `registry-assets/`: retained public schemas, images and static references.
+- `tests/`: browser tests and isolated test/rehearsal configurations.
+- `docs/`: architecture, workflow planning, testing and release guidance.
+- `openspec/`: concise capability specifications and the remaining readiness work.
 
-https://bio.tools (production version)
-https://bio-tools-dev.sdu.dk (latest development version)
+The root `Dockerfile` builds the production image, including the frontend and
+Apache. `backend/Dockerfile` builds the Django development container. The two
+main Compose files are `compose.yml` for development and `compose.prod.yml` for
+production; test configurations are under `tests/rehearsal/`.
 
-Please read the [documentation](http://biotools.readthedocs.io/en/latest/).
+## Documentation
 
-# Development Setup
+- [Architecture](docs/architecture.md)
+- [Workflow planner](docs/workflows.md)
+- [Testing](docs/testing.md)
+- [Production readiness](docs/operations.md)
+- [Contribution guide](CONTRIBUTING.md)
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code quality tools, and contribution guidelines.
-The interface uses Django templates, htmx and Vue/Vite; its source is in
-`backend/templates/html/`, `backend/elixirapp/` and `frontend-modern/`. Retained
-public schema references, images and collected assets are in `registry-assets/`.
-See the [route inventory](docs/frontend-migration/route-ownership.md)
-and [readiness status](docs/frontend-migration/production-readiness.md) before
-changing deployment settings.
+Production readiness remains open: local tests are not approval to deploy. See
+[the readiness checklist](openspec/changes/verify-production-migration-readiness/tasks.md).
 
-# Source code and installation
-*bio.tools* is available under [open license](https://github.com/bio-tools/biotoolsRegistry/blob/master/LICENSE).
+## License and citation
 
-For detailed installation instructions, please see [INSTALL.md](INSTALL.md).
-
-# Data
-The registry content is freely available to all under the Creative Commons Attribution licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/>).
-
-# Governance
-bio.tools development is covered by the emerging [governance model](http://biotools.readthedocs.io/en/latest/governance.html) of the bio.tools project.
-
-# People
-Please see the [contributors page](http://biotools.readthedocs.io/en/latest/contributors.html) for a list of people involved with the project.
-
-# Publications
-If you use bio.tools, please cite:
-
-Ison, J. et al. (2019). [The bio.tools registry of software tools and data resources for the life sciences.](https://link.springer.com/article/10.1186/s13059-019-1772-6) _Genome Biology_.
-
-Ison, J. et al. (2019). [Community curation of bioinformatics software and data resources.](https://academic.oup.com/bib/article/21/5/1697/5560007) _Briefings in Bioinformatics_.
-
-Ison, J. et al. (2015). [Tools and data services registry: a community effort to document bioinformatics resources.](http://nar.oxfordjournals.org/content/early/2015/11/03/nar.gkv1116.long) _Nucleic Acids Research_.
+The source is available under the [project license](LICENSE); registry content is
+available under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Please cite Ison et al., [The bio.tools registry of software tools and data
+resources for the life sciences](https://doi.org/10.1186/s13059-019-1772-6),
+*Genome Biology* (2019).

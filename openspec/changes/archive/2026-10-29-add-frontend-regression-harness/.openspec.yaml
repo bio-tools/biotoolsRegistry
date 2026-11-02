@@ -1,8 +1,0 @@
-schema: spec-driven
-created: 2026-09-09
-goal: Create framework-independent browser regression coverage for critical legacy workflows.
-affected_areas:
-  - frontend
-  - tests
-  - ci
-

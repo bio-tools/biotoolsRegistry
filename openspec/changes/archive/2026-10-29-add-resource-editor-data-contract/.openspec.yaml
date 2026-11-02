@@ -1,8 +1,0 @@
-schema: spec-driven
-created: 2026-09-09
-goal: Define and test a loss-resistant mapping between bio.tools resource data, Vue editor state and backend validation errors.
-affected_areas:
-  - backend
-  - frontend-next
-  - resource-editor
-  - schema

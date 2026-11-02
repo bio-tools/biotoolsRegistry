@@ -1,5 +1,6 @@
 .git
 .previous-checkout-backup.tar.gz
+database_test/
 **/node_modules
 **/__pycache__
 **/*.pyc

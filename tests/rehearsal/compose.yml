@@ -1,0 +1,455 @@
+# Local migration rehearsals; this uses the existing biotools-refresh volumes.
+name: biotools-refresh
+networks:
+  net:
+    name: biotools-refresh-net
+    driver: bridge
+    ipam: {}
+services:
+  backend:
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+      target: dev
+    command: null
+    container_name: biotools-refresh-backend
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+        required: true
+      mysql:
+        condition: service_started
+        required: true
+    entrypoint: null
+    environment:
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://elasticsearch:9200
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      BIOTOOLS_MYSQL_DB: elixir
+      BIOTOOLS_MYSQL_HOST: biotools-mysql
+      BIOTOOLS_MYSQL_PASSWORD: '123'
+      BIOTOOLS_MYSQL_USER: elixir
+      BIOTOOLS_URL_FRONT: https://localhost:8443/
+      BIOTOOLS_WSGI_APPLICATION: elixirapp.dev_wsgi.application
+      BIOTOOLS_CSRF_TRUSTED_ORIGINS: '["https://localhost:8443"]'
+      BIOTOOLS_DEBUG: ''
+      BIOTOOLS_SECURE_PROXY_SSL_HEADER: '["HTTP_X_FORWARDED_PROTO", "https"]'
+    image: biotools-refresh/backend:baseline
+    links:
+    - mysql
+    - elasticsearch
+    networks:
+      net:
+        aliases:
+        - biotools-backend
+    ports:
+    - mode: ingress
+      target: 8000
+      published: '8002'
+      protocol: tcp
+      host_ip: 127.0.0.1
+    volumes:
+    - type: bind
+      source: ../../backend
+      target: /elixir/application/backend
+      bind:
+        create_host_path: true
+    - type: bind
+      source: ../../registry-assets
+      target: /elixir/application/frontend
+      bind:
+        create_host_path: true
+    - type: volume
+      source: backend_data
+      target: /elixir/application/backend/data
+      volume: {}
+    - type: volume
+      source: media_data
+      target: /elixir/application/media_cdn
+      read_only: false
+    restart: 'no'
+  caddy:
+    command: null
+    container_name: biotools-refresh-caddy
+    depends_on:
+      backend:
+        condition: service_started
+        required: true
+    entrypoint: null
+    image: caddy:2
+    networks:
+      net:
+        aliases:
+        - biotools-caddy
+    ports:
+    - mode: ingress
+      target: 80
+      published: '8082'
+      protocol: tcp
+      host_ip: 127.0.0.1
+    - mode: ingress
+      target: 443
+      published: '8443'
+      protocol: tcp
+      host_ip: 127.0.0.1
+    restart: 'no'
+    volumes:
+    - type: bind
+      source: ../../backend/runtime/Caddyfile.native-dev
+      target: /etc/caddy/Caddyfile
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: ../../registry-assets
+      target: /elixir/application/frontend
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: volume
+      source: caddy_data
+      target: /data
+      volume: {}
+    - type: volume
+      source: caddy_config
+      target: /config
+      volume: {}
+    - type: volume
+      source: media_data
+      target: /elixir/application/media_cdn
+      read_only: true
+    environment: {}
+  elasticsearch:
+    command: null
+    container_name: biotools-refresh-elasticsearch
+    entrypoint: null
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: 'false'
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      cluster.routing.allocation.disk.watermark.low: 10gb
+      cluster.routing.allocation.disk.watermark.high: 7gb
+      cluster.routing.allocation.disk.watermark.flood_stage: 5gb
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - curl -fs http://localhost:9200 || exit 1
+      timeout: 5s
+      interval: 10s
+      retries: 10
+    image: elasticsearch:7.12.1
+    networks:
+      net:
+        aliases:
+        - biotools-elasticsearch
+    ports:
+    - mode: ingress
+      target: 9200
+      published: '19200'
+      protocol: tcp
+      host_ip: 127.0.0.1
+    - mode: ingress
+      target: 9300
+      published: '19300'
+      protocol: tcp
+      host_ip: 127.0.0.1
+    restart: 'no'
+    volumes:
+    - type: volume
+      source: data-elasticsearch
+      target: /usr/share/elasticsearch/data
+      volume: {}
+  mysql:
+    command: null
+    container_name: biotools-refresh-mysql
+    entrypoint: null
+    environment:
+      MYSQL_DATABASE: elixir
+      MYSQL_PASSWORD: '123'
+      MYSQL_ROOT_PASSWORD: elixirroot
+      MYSQL_USER: elixir
+    image: mysql:8.0.43
+    networks:
+      net:
+        aliases:
+        - biotools-mysql
+    ports:
+    - mode: ingress
+      target: 3306
+      published: '13306'
+      protocol: tcp
+      host_ip: 127.0.0.1
+    restart: 'no'
+    volumes:
+    - type: volume
+      source: data-mysql
+      target: /var/lib/mysql
+      volume: {}
+  apache:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+      target: prod
+    command: null
+    container_name: biotools-refresh-apache
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+        required: true
+      mysql:
+        condition: service_started
+        required: true
+    entrypoint: null
+    environment:
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://elasticsearch:9200
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      BIOTOOLS_MYSQL_DB: elixir
+      BIOTOOLS_MYSQL_HOST: biotools-mysql
+      BIOTOOLS_MYSQL_PASSWORD: '123'
+      BIOTOOLS_MYSQL_USER: elixir
+      BIOTOOLS_URL_FRONT: http://localhost/
+      BIOTOOLS_DEBUG: ''
+    image: biotools-refresh/apache:migration
+    links:
+    - mysql
+    - elasticsearch
+    networks:
+      net:
+        aliases:
+        - biotools-refresh-apache
+    ports:
+    - target: 80
+      published: '8003'
+      host_ip: 127.0.0.1
+      protocol: tcp
+    volumes:
+    - type: bind
+      source: ../../backend
+      target: /elixir/application/backend
+      bind:
+        create_host_path: true
+    - type: bind
+      source: ../../registry-assets
+      target: /elixir/application/frontend
+      bind:
+        create_host_path: true
+    - type: volume
+      source: backend_data
+      target: /elixir/application/backend/data
+      volume: {}
+    - type: bind
+      source: ../../backend/runtime/apache-native.conf
+      target: /etc/apache2/sites-available/elixir.conf
+      read_only: true
+    - type: volume
+      source: media_data
+      target: /elixir/application/media_cdn
+      read_only: false
+    restart: 'no'
+  native:
+    image: biotools-refresh/production:review
+    build:
+      context: ../..
+      target: prod
+    environment:
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://elasticsearch:9200
+      BIOTOOLS_MYSQL_DB: elixir
+      BIOTOOLS_MYSQL_HOST: biotools-mysql
+      BIOTOOLS_MYSQL_PASSWORD: '123'
+      BIOTOOLS_MYSQL_USER: elixir
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      BIOTOOLS_URL_FRONT: http://localhost:8005/
+      BIOTOOLS_DEBUG: ''
+      BIOTOOLS_CSRF_TRUSTED_ORIGINS: '["https://localhost:8444"]'
+      BIOTOOLS_SECURE_PROXY_SSL_HEADER: '["HTTP_X_FORWARDED_PROTO", "https"]'
+    ports:
+    - 127.0.0.1:8005:80
+    networks:
+    - net
+    volumes:
+    - media_data:/elixir/application/media_cdn:ro
+    profiles:
+    - packaged
+  native-caddy:
+    image: caddy:2
+    ports:
+    - 127.0.0.1:8444:443
+    networks:
+    - net
+    volumes:
+    - ../../backend/runtime/Caddyfile.native:/etc/caddy/Caddyfile:ro
+    - native_caddy_data:/data
+    - native_caddy_config:/config
+    profiles:
+    - packaged
+  production-secure:
+    image: biotools-refresh/production:review
+    environment:
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://elasticsearch:9200
+      BIOTOOLS_MYSQL_DB: elixir
+      BIOTOOLS_MYSQL_HOST: biotools-mysql
+      BIOTOOLS_MYSQL_PASSWORD: '123'
+      BIOTOOLS_MYSQL_USER: elixir
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      BIOTOOLS_URL_FRONT: https://localhost:8447/
+      BIOTOOLS_DEBUG: '0'
+      BIOTOOLS_SECRET_KEY: isolated-rehearsal-only
+      BIOTOOLS_ALLOWED_HOSTS: '["localhost"]'
+      BIOTOOLS_CSRF_TRUSTED_ORIGINS: '["https://localhost:8447"]'
+      BIOTOOLS_SESSION_COOKIE_SECURE: '1'
+      BIOTOOLS_CSRF_COOKIE_SECURE: '1'
+      BIOTOOLS_SECURE_PROXY_SSL_HEADER: '["HTTP_X_FORWARDED_PROTO", "https"]'
+    networks:
+    - net
+    volumes:
+    - media_data:/elixir/application/media_cdn:ro
+    profiles:
+    - secure
+  production-secure-caddy:
+    image: caddy:2
+    ports:
+    - 127.0.0.1:8447:443
+    networks:
+    - net
+    volumes:
+    - ../../backend/runtime/Caddyfile.production-rehearsal:/etc/caddy/Caddyfile:ro
+    - production_caddy_data:/data
+    - production_caddy_config:/config
+    profiles:
+    - secure
+  native-dev:
+    image: biotools-refresh/backend:baseline
+    environment:
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://elasticsearch:9200
+      BIOTOOLS_MYSQL_DB: elixir
+      BIOTOOLS_MYSQL_HOST: biotools-mysql
+      BIOTOOLS_MYSQL_PASSWORD: '123'
+      BIOTOOLS_MYSQL_USER: elixir
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      BIOTOOLS_URL_FRONT: https://localhost:8446/
+      BIOTOOLS_DEBUG: ''
+      BIOTOOLS_WSGI_APPLICATION: elixirapp.dev_wsgi.application
+      BIOTOOLS_MIGRATION_PREVIEW_DEMOS: '0'
+      BIOTOOLS_CSRF_TRUSTED_ORIGINS: '["https://localhost:8446"]'
+      BIOTOOLS_SECURE_PROXY_SSL_HEADER: '["HTTP_X_FORWARDED_PROTO", "https"]'
+    networks:
+    - net
+    volumes:
+    - ../../backend:/elixir/application/backend
+    - backend_data:/elixir/application/backend/data
+    - media_data:/elixir/application/media_cdn:ro
+    profiles:
+    - native-dev
+  native-caddy-dev:
+    image: caddy:2
+    environment:
+      BIOTOOLS_DJANGO_UPSTREAM: native-dev:8000
+    ports:
+    - 127.0.0.1:8446:443
+    networks:
+    - net
+    volumes:
+    - ../../backend/runtime/Caddyfile.native-dev:/etc/caddy/Caddyfile:ro
+    - ../../registry-assets/static:/elixir/application/frontend/static:ro
+    - ../../registry-assets/resources:/elixir/application/frontend/resources:ro
+    - ../../registry-assets/img:/elixir/application/frontend/img:ro
+    - ../../registry-assets/json:/elixir/application/frontend/json:ro
+    - media_data:/elixir/application/media_cdn:ro
+    - native_caddy_dev_data:/data
+    - native_caddy_dev_config:/config
+    profiles:
+    - native-dev
+  backup-mysql:
+    image: mysql:8.0.43
+    environment:
+      MYSQL_ROOT_PASSWORD: rehearsal-root-only
+      MYSQL_DATABASE: backup_source
+      MYSQL_USER: backup_fixture
+      MYSQL_PASSWORD: rehearsal-fixture-only
+    tmpfs:
+    - /var/lib/mysql
+    networks:
+    - net
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - MYSQL_PWD=rehearsal-root-only mysqladmin ping -uroot --silent
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    profiles:
+    - backup
+  backup-previous:
+    image: biotools-refresh/upstream:review
+    environment:
+      BIOTOOLS_MYSQL_DB: backup_restored
+      BIOTOOLS_MYSQL_HOST: backup-mysql
+      BIOTOOLS_MYSQL_USER: backup_fixture
+      BIOTOOLS_MYSQL_PASSWORD: rehearsal-fixture-only
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://unavailable-rehearsal-index:9200
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      BIOTOOLS_URL_FRONT: http://localhost/
+    networks:
+    - net
+    profiles:
+    - backup
+  query-test-elasticsearch:
+    image: elasticsearch:7.12.1
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: 'false'
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      cluster.routing.allocation.disk.watermark.low: 10gb
+      cluster.routing.allocation.disk.watermark.high: 7gb
+      cluster.routing.allocation.disk.watermark.flood_stage: 5gb
+    networks:
+    - net
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - curl -fs http://localhost:9200 || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    profiles:
+    - tests
+  full-test-backend:
+    image: biotools-refresh/backend:baseline
+    command:
+    - sleep
+    - infinity
+    environment:
+      BIOTOOLS_MYSQL_HOST: biotools-mysql
+      BIOTOOLS_MYSQL_DB: elixir
+      BIOTOOLS_MYSQL_USER: elixir
+      BIOTOOLS_MYSQL_PASSWORD: '123'
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://query-test-elasticsearch:9200
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+    networks:
+    - net
+    volumes:
+    - ../../backend:/elixir/application/backend:ro
+    - ../../registry-assets:/elixir/application/frontend:ro
+    - ../../backend/data:/edam-seed:ro
+    tmpfs:
+    - /elixir/application/backend/data:uid=999,gid=999
+    profiles:
+    - tests
+volumes:
+  backend_data:
+    name: biotools-refresh-backend_data
+  caddy_config:
+    name: biotools-refresh-caddy_config
+  caddy_data:
+    name: biotools-refresh-caddy_data
+  data-elasticsearch:
+    name: biotools-refresh-data-elasticsearch
+  data-mysql:
+    name: biotools-refresh-data-mysql
+  media_data:
+    name: biotools-refresh-media_data
+  native_caddy_data: null
+  native_caddy_config: null
+  production_caddy_data: null
+  production_caddy_config: null
+  native_caddy_dev_data: null
+  native_caddy_dev_config: null

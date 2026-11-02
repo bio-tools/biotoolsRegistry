@@ -1,8 +1,0 @@
-schema: spec-driven
-created: 2026-09-09
-goal: Extend the Vue resource editor with nested functions, operations, inputs, outputs and EDAM-backed scientific metadata.
-affected_areas:
-  - frontend-next
-  - backend
-  - resource-editor
-  - edam

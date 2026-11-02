@@ -29,3 +29,6 @@ prerender/
 
 # Private archive of the checkout replaced during consolidation.
 /.previous-checkout-backup.tar.gz
+
+database_test/
+

@@ -23,7 +23,7 @@ test('same-build schema activation, persistence and compatible rollback through 
   let replaced = false;
   function compose(args, fixture = true) {
     try {
-      return execFileSync('docker', ['compose', '-f', 'compose.refresh.json', ...(fixture ? ['-f', override] : []), ...args],
+      return execFileSync('docker', ['compose', '-f', 'tests/rehearsal/compose.yml', ...(fixture ? ['-f', override] : []), ...args],
         { cwd: root, encoding: 'utf8', timeout: 180000, maxBuffer: 8 * 1024 * 1024 });
     } catch (error) {
       throw new Error(`${error.message}\n${error.stdout || ''}\n${error.stderr || ''}`, { cause: error });

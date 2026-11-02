@@ -1,8 +1,0 @@
-schema: spec-driven
-created: 2026-09-09
-goal: Add extensible post-search filtering and result-analysis state to the Vue search workspace without unbounded browser data transfer.
-affected_areas:
-  - frontend-next
-  - backend
-  - search
-  - analysis

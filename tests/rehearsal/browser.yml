@@ -1,0 +1,80 @@
+# Fully disposable browser acceptance stack; database, index and media use tmpfs.
+name: biotools-browser-isolated
+services:
+  browser-db:
+    image: mysql:8.0.43
+    environment:
+      MYSQL_ROOT_PASSWORD: isolated-root-only
+      MYSQL_DATABASE: elixir
+      MYSQL_USER: elixir
+      MYSQL_PASSWORD: isolated-fixture-only
+    tmpfs:
+    - /var/lib/mysql
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - MYSQL_PWD=isolated-root-only mysqladmin ping -uroot --silent
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  browser-search:
+    image: elasticsearch:7.12.1
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: 'false'
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      cluster.routing.allocation.disk.watermark.low: 10gb
+      cluster.routing.allocation.disk.watermark.high: 7gb
+      cluster.routing.allocation.disk.watermark.flood_stage: 5gb
+    tmpfs:
+    - /usr/share/elasticsearch/data:uid=1000,gid=0
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - curl -fs http://localhost:9200
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  browser-bridge:
+    image: biotools-refresh/production:review
+    command: python /fixtures/bridge_stub.py
+    environment:
+      BIOTOOLS_ALLOW_TEST_SEED: biotools-refresh
+    volumes:
+    - ../browser:/fixtures:ro
+  browser-app:
+    image: biotools-refresh/production:review
+    environment:
+      BIOTOOLS_MYSQL_HOST: browser-db
+      BIOTOOLS_MYSQL_DB: elixir
+      BIOTOOLS_MYSQL_USER: elixir
+      BIOTOOLS_MYSQL_PASSWORD: isolated-fixture-only
+      BIOTOOLS_ELASTIC_SEARCH_URLS: http://browser-search:9200
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      BIOTOOLS_URL_FRONT: http://localhost:8010/
+      BIOTOOLS_SECRET_KEY: isolated-browser-only
+      BIOTOOLS_ALLOWED_HOSTS: '["localhost","testserver"]'
+      BIOTOOLS_DEBUG: '0'
+      BIOTOOLS_SESSION_COOKIE_SECURE: '0'
+      BIOTOOLS_CSRF_COOKIE_SECURE: '0'
+      BIOTOOLS_MIGRATION_PREVIEW_DEMOS: '1'
+      BIOTOOLS_GITHUB_BRIDGE_URL: http://browser-bridge:8000/github-to-biotools
+    ports:
+    - 127.0.0.1:8010:80
+    volumes:
+    - ../../backend/data:/edam-seed:ro
+    - ../browser:/fixtures:ro
+    tmpfs:
+    - /elixir/application/backend/data
+    - /elixir/application/media_cdn
+    depends_on:
+      browser-db:
+        condition: service_healthy
+      browser-search:
+        condition: service_healthy
+  browser-caddy:
+    image: caddy:2
+    ports:
+    - 127.0.0.1:8011:80
+    volumes:
+    - ./Caddyfile:/etc/caddy/Caddyfile:ro

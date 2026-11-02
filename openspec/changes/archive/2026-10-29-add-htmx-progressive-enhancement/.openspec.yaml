@@ -1,8 +1,0 @@
-schema: spec-driven
-created: 2026-09-09
-goal: Establish htmx fragment conventions and a reproducible modern asset entry point for Django-rendered pages.
-affected_areas:
-  - backend
-  - frontend-next
-  - templates
-  - static-assets

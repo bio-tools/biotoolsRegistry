@@ -85,7 +85,7 @@ jobs:
       run: npm ci && npx playwright install --with-deps chromium
     - name: start deterministic import rehearsal
       run: |
-        docker compose -f compose.yml -f compose.browser-tests.yml up -d --no-deps backend bridge-stub
+        docker compose -f compose.yml -f tests/rehearsal/ci.yml up -d --no-deps backend bridge-stub
         docker exec biotools-backend python manage.py migrate --noinput
         docker exec -i -e BIOTOOLS_ALLOW_TEST_SEED=biotools-refresh biotools-backend python manage.py shell < tests/browser/seed_bridge.py
     - name: verify import review and explicit save
@@ -104,4 +104,4 @@ jobs:
     - name: tear down
       # Cleanup also covers a partially started deterministic bridge rehearsal.
       if: always()
-      run: docker compose -f compose.yml -f compose.browser-tests.yml down
+      run: docker compose -f compose.yml -f tests/rehearsal/ci.yml down
