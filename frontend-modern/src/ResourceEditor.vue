@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { browserRequest, BrowserRequestError } from './browser-auth';
 import FunctionEditor from './FunctionEditor.vue';
 import UiIcon from './UiIcon.vue';
@@ -9,30 +9,32 @@ import PermissionEditor from './PermissionEditor.vue';
 import GithubImport from './GithubImport.vue';
 import { applySuggestions } from './github-import';
 import { errorLocation, nestedTarget } from './nested-editor';
-import { backendErrorsToEditor, editorToResource, editorToSubmission, newEditorItem,
-  resourceToEditor, supportedSchema, type EditorError, type Resource, type ResourceSchema } from './resource-editor';
+import { backendErrorsToEditor, editorShapeError, editorToResource, editorToSubmission, newEditorItem,
+  resourceToEditor, supportedSchema, type EditorError, type Json, type Resource, type ResourceSchema } from './resource-editor';
 
-type Config = { resource: Resource; revision: string | null; endpoint: string; validateEndpoint?: string;
+type Config = { resource: Resource; revision: string | null; endpoint: string; validateEndpoint?: string; previewEndpoint?: string;
   schema?: ResourceSchema | null; schemaRevision?: string | null; bridgeEndpoint?: string | null;
   editUrl: string | null; detailUrl: string | null; toolTypes: string[]; edamEndpoint: string; metadataOptions?: Record<string, string[]>; canManagePermissions?: boolean; no_changes?: boolean };
 const props = defineProps<Config>();
 const config = ref<Config>({ ...props });
 const draft = ref(resourceToEditor(props.resource));
 const baseline = ref(JSON.stringify(props.resource));
-const raw = ref('');
-const rawSource = ref('');
-const rawLoaded = ref('');
-const rawDirty = computed(() => raw.value !== rawLoaded.value);
-const dirty = computed(() => rawDirty.value || JSON.stringify(editorToResource(draft.value)) !== baseline.value);
+const raw = ref(JSON.stringify(editorToResource(draft.value), null, 2));
+const rawError = ref('');
+const dirty = computed(() => !!rawError.value || JSON.stringify(editorToResource(draft.value)) !== baseline.value);
 const validationMessage = ref('');
 const pending = ref(false);
 const saved = ref(false);
 const errors = ref<EditorError[]>([]);
 const errorSummary = ref<HTMLElement>();
 const root = ref<HTMLElement>();
+const previewHtml = ref('');
+const previewSnapshot = ref('');
+const previewPending = ref(false);
+const previewError = ref('');
 const controller = new AbortController();
 const schemaReady = computed(() => supportedSchema(config.value.schema, config.value.schemaRevision));
-const unavailable = computed(() => pending.value || !schemaReady.value);
+const unavailable = computed(() => pending.value || !schemaReady.value || !!rawError.value);
 const snapshot = computed(() => editorToSubmission(draft.value, config.value.schema?.contract));
 const fields = computed(() => config.value.schema?.contract.fields || {});
 const sections = computed(() => Object.entries(fields.value).filter(([, field]) => field.writable &&
@@ -43,6 +45,39 @@ const types = computed(() => {
   return [...choices, ...selectedTypes.value.filter((value): value is string => typeof value === 'string' &&
     !choices.some(item => item.value === value)).map(value => ({ value, label: value + ' (no longer allowed)' }))];
 });
+let applyingJSON = false;
+let jsonSequence = 0;
+watch(draft, () => {
+  if (!applyingJSON && !rawError.value) raw.value = JSON.stringify(editorToResource(draft.value), null, 2);
+}, { deep: true, flush: 'post' });
+
+function updateJSON(event: Event) {
+  raw.value = (event.target as HTMLTextAreaElement).value;
+  validationMessage.value = '';
+  try {
+    const value: unknown = JSON.parse(raw.value);
+    const shapeError = editorShapeError(value, config.value.schema?.contract);
+    if (shapeError) throw new Error(shapeError);
+    const record = value as Record<string, Json>;
+    applyingJSON = true;
+    const current = ++jsonSequence;
+    applySuggestions(draft.value, record);
+    for (const key of Object.keys(draft.value)) if (!Object.hasOwn(record, key)) Reflect.deleteProperty(draft.value, key);
+    rawError.value = '';
+    errors.value = [];
+    saved.value = false;
+    validationMessage.value = '';
+    nextTick(() => { if (current === jsonSequence) applyingJSON = false; });
+  } catch (error) {
+    ++jsonSequence; applyingJSON = false;
+    rawError.value = error instanceof SyntaxError ? 'The JSON is incomplete or invalid.'
+      : error instanceof Error ? error.message : 'The JSON record could not be read.';
+  }
+}
+function restoreJSON() {
+  ++jsonSequence; applyingJSON = false; rawError.value = '';
+  raw.value = JSON.stringify(editorToResource(draft.value), null, 2);
+}
 
 function changeType(type: string, checked: boolean) {
   const values = draft.value.toolType || [];
@@ -89,11 +124,11 @@ function discard() {
   draft.value = resourceToEditor(JSON.parse(baseline.value));
   errors.value = [];
   saved.value = false;
-  raw.value = rawLoaded.value = rawSource.value = '';
+  restoreJSON();
   validationMessage.value = '';
 }
 function exportDraft() {
-  const url = URL.createObjectURL(new Blob([rawDirty.value ? raw.value : JSON.stringify(editorToResource(draft.value), null, 2)], { type: 'application/json' }));
+  const url = URL.createObjectURL(new Blob([rawError.value ? raw.value : JSON.stringify(editorToResource(draft.value), null, 2)], { type: 'application/json' }));
   const link = document.createElement('a');
   link.href = url;
   link.download = `${draft.value.biotoolsID || 'resource'}-draft.json`;
@@ -101,47 +136,27 @@ function exportDraft() {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-function loadRaw() {
-  if (rawDirty.value && !window.confirm('Replace the unapplied JSON text with the current draft?')) return;
-  rawSource.value = JSON.stringify(editorToResource(draft.value));
-  raw.value = rawLoaded.value = JSON.stringify(JSON.parse(rawSource.value), null, 2);
-}
-
-async function applyRaw() {
-  if (unavailable.value || !config.value.validateEndpoint) return;
-  const text = raw.value;
-  validationMessage.value = '';
-  if (JSON.stringify(editorToResource(draft.value)) !== rawSource.value) {
-    validationMessage.value = 'The form draft changed. Export your JSON text, then load the current draft before applying it.';
-    return;
-  }
-  pending.value = true;
+async function previewRecord() {
+  if (!config.value.previewEndpoint || unavailable.value || previewPending.value) return;
+  const resource = editorToResource(draft.value);
+  const snapshot = JSON.stringify(resource);
+  previewPending.value = true;
+  previewError.value = '';
   try {
-    const value = JSON.parse(text);
-    const candidate = resourceToEditor(value as Resource);
-    const submission = editorToSubmission(candidate, config.value.schema?.contract);
-    if (submission.blockers.length) throw new Error('Unsupported fields or values remain in the JSON text. Correct them before applying.');
-    await browserRequest(config.value.validateEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ resource: submission.payload, revision: config.value.revision, schemaRevision: config.value.schemaRevision }),
+    const response = await browserRequest(config.value.previewEndpoint, { method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ resource, schemaRevision: config.value.schemaRevision }),
       signal: AbortSignal.any([controller.signal, AbortSignal.timeout(30000)]) });
-    if (text !== raw.value || JSON.stringify(editorToResource(draft.value)) !== rawSource.value) {
-      throw new Error('The draft changed during validation. Review it and apply again.');
-    }
-    applySuggestions(draft.value, value);
-    for (const key of Object.keys(draft.value)) if (!(key in value)) Reflect.deleteProperty(draft.value, key);
-    rawLoaded.value = raw.value;
-    rawSource.value = JSON.stringify(editorToResource(draft.value));
-    saved.value = false;
-    errors.value = [];
-    validationMessage.value = 'JSON applied to the draft. Nothing was saved.';
+    previewHtml.value = await response.text();
+    previewSnapshot.value = snapshot;
   } catch (error) {
-    if (!controller.signal.aborted) validationMessage.value = error instanceof BrowserRequestError && error.body
-      ? JSON.stringify(error.body) : error instanceof Error ? error.message : 'JSON validation failed. Your text is retained.';
-  } finally { pending.value = false; }
+    if (!controller.signal.aborted) previewError.value = error instanceof BrowserRequestError && error.body && typeof error.body === 'object' && 'detail' in error.body
+      ? String(error.body.detail) : 'Preview could not be loaded. Your draft is unchanged.';
+  } finally { previewPending.value = false; }
 }
 
 async function save(validateOnly = false) {
-  if (unavailable.value || rawDirty.value || snapshot.value.blockers.length) return;
+  if (unavailable.value || snapshot.value.blockers.length) return;
   const submission = snapshot.value;
   pending.value = true;
   saved.value = false;
@@ -185,6 +200,18 @@ async function save(validateOnly = false) {
         <p v-if="config.revision" class="editor-id">biotools:{{ draft.biotoolsID }}</p></div>
       <a v-if="config.detailUrl" :href="config.detailUrl">View record</a>
     </div>
+    <section v-if="config.previewEndpoint" class="editor-preview" aria-label="Record preview">
+      <div class="preview-heading">
+        <button type="button" class="secondary" :disabled="unavailable || previewPending" @click="previewRecord">{{ previewPending ? 'Loading preview...' : previewHtml ? 'Refresh preview' : 'Preview record' }}</button>
+        <button v-if="previewHtml" type="button" class="secondary" :disabled="previewPending" @click="previewHtml = ''">Close preview</button>
+        <span v-if="previewHtml && JSON.stringify(editorToResource(draft)) !== previewSnapshot" role="status">Draft changed. Refresh the preview to see the latest changes.</span>
+      </div>
+      <p v-if="previewError" role="alert">{{ previewError }}</p>
+      <template v-if="previewHtml">
+        <p>Preview of your draft. Live publication metrics are omitted. Save changes to publish the record.</p>
+        <iframe title="Preview of the tool record" :srcdoc="previewHtml" sandbox="" />
+      </template>
+    </section>
     <div v-if="errors.length" ref="errorSummary" tabindex="-1" role="alert" class="message error editor-errors">
       <h2>Changes not saved</h2>
       <ul><li v-for="(error, index) in errors" :key="index">
@@ -201,15 +228,14 @@ async function save(validateOnly = false) {
       :current="editorToResource(draft)" :identifier="config.revision ? String(draft.biotoolsID) : null" :disabled="unavailable"
       @apply="applySuggestions(draft, $event)" />
     <p v-else-if="schemaReady">GitHub import is unavailable. You can enter metadata manually.</p>
-    <details>
-      <summary>Raw JSON draft</summary>
-      <p>Load the current draft, edit its JSON, then validate and apply it. Saving remains a separate action. Invalid text stays available for export.</p>
-      <button type="button" class="secondary" :disabled="unavailable" @click="loadRaw">Load current draft as JSON</button>
-      <label for="editor-json">Resource JSON</label><textarea id="editor-json" v-model="raw" rows="14" :disabled="pending" spellcheck="false" />
-      <button type="button" :disabled="unavailable || !rawDirty || !config.validateEndpoint" @click="applyRaw">Validate and apply JSON</button>
+    <details class="editor-json-panel">
+      <summary>JSON record <span class="editor-help" tabindex="0" role="img" aria-label="The current record in JSON format. Changes in the form and JSON are synchronized; save to publish them." title="The current record in JSON format. Changes in the form and JSON are synchronized; save to publish them.">ⓘ</span></summary>
+      <p>This is the current record in JSON format. Form and JSON changes update each other. Save changes to publish them.</p>
+      <label for="editor-json">Resource JSON</label><textarea id="editor-json" :value="raw" rows="14" :disabled="pending" :readonly="!schemaReady" spellcheck="false" @input="updateJSON" />
     </details>
+    <div v-if="rawError" role="alert" class="json-error"><p>{{ rawError }} Correct the JSON or restore the last valid form values. Form editing and saving are paused.</p>
+      <button type="button" class="secondary" @click="restoreJSON">Restore JSON from form</button></div>
     <p v-if="validationMessage" role="status" aria-label="Validation status">{{ validationMessage }}</p>
-    <p v-if="rawDirty">Unapplied JSON text. Apply it or reload the current draft before saving the form.</p>
     <form @submit.prevent="save()" :aria-busy="pending">
       <nav class="editor-sections" aria-label="Editor sections">
         <span class="editor-sections-title">Sections</span>
@@ -218,7 +244,7 @@ async function save(validateOnly = false) {
         <a href="#nested-editPermission"><UiIcon name="lock" />Editing permissions</a>
       </nav>
       <div class="editor-content">
-      <fieldset :disabled="unavailable" class="editor-fields">
+      <section class="editor-card"><fieldset :disabled="unavailable" class="editor-fields">
         <legend>Basic information</legend>
         <div class="editor-pair">
           <div><label for="editor-name">{{ fields.name?.label || 'Name' }}</label><span v-if="fields.name?.required" class="required-label" aria-hidden="true">(required)</span>
@@ -239,13 +265,13 @@ async function save(validateOnly = false) {
           <label v-for="type in types" :key="type.value"><input type="checkbox" :value="type.value" :checked="selectedTypes.includes(type.value)" @change="changeType(type.value, ($event.target as HTMLInputElement).checked)">{{ type.label }}</label>
         </fieldset>
         <p id="error-toolType" class="editor-field-error">{{ fieldErrors('toolType').join(' ') }}</p>
-      </fieldset>
+      </fieldset></section>
       <FunctionEditor v-model="draft.function" :schema="fields.function" :endpoint="config.edamEndpoint" :errors="errors" :disabled="unavailable" />
       <MetadataEditor :draft="draft" :fields="fields" :endpoint="config.edamEndpoint" :errors="errors" :disabled="unavailable" />
       <PermissionEditor v-model="draft.editPermission" :can-manage="config.canManagePermissions === true" :errors="errors" :disabled="unavailable" />
       <div class="editor-actions">
-        <button type="submit" :disabled="unavailable || rawDirty || !!snapshot.blockers.length">{{ pending ? 'Working...' : 'Save changes' }}</button>
-        <button v-if="config.validateEndpoint" type="button" class="secondary" :disabled="unavailable || rawDirty || !!snapshot.blockers.length" @click="save(true)">Validate without saving</button>
+        <button type="submit" :disabled="unavailable || !!snapshot.blockers.length">{{ pending ? 'Working...' : 'Save changes' }}</button>
+        <button v-if="config.validateEndpoint" type="button" class="secondary" :disabled="unavailable || !!snapshot.blockers.length" @click="save(true)">Validate without saving</button>
         <button type="button" class="secondary" :disabled="pending || !dirty" @click="discard">Discard changes</button>
         <button type="button" class="secondary" @click="exportDraft">Export draft</button>
         <span role="status" aria-label="Save status">{{ pending ? 'Saving changes...' : dirty ? 'Unsaved changes' : saved ? (config.no_changes ? 'No changes detected.' : 'Changes saved.') : 'No unsaved changes' }}</span>
@@ -259,7 +285,18 @@ async function save(validateOnly = false) {
 .resource-editor { max-width: 1200px; }
 .editor-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 24px; }
 .editor-heading a { white-space: nowrap; }
+.editor-preview { margin-bottom: 20px; }
+.preview-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.editor-preview iframe { width: 100%; height: 75vh; min-height: 500px; border: 1px solid #dce8ed; border-radius: 8px; background: white; }
 .editor-id { color: #575757; margin: 0; overflow-wrap: anywhere; }
+.editor-card, .editor-json-panel { min-width: 0; padding: 24px; border: 1px solid #dce8ed; border-radius: 10px; background: #fff; box-shadow: 0 2px 10px #173e4b0a; }
+.editor-json-panel { margin-bottom: 20px; }
+.editor-json-panel summary { color: #005472; font-weight: 700; }
+.editor-json-panel > p { margin: 12px 0 16px; color: #526d79; }
+.editor-json-panel textarea { min-height: 240px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: var(--text-ui); }
+.editor-help { color: #526d79; margin-left: 4px; cursor: help; }
+.json-error { margin-top: 12px; padding: 12px; border-left: 3px solid #a94442; background: #fff4f2; color: #842b29; }
+.json-error p { margin-bottom: 10px; }
 .resource-editor form { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start; }
 .editor-sections { position: sticky; top: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 12px; margin: 0; border: 1px solid #dce8ec; border-radius: 8px; background: #f5f9fa; font-size: var(--text-ui); }
 .editor-sections a { display: flex; align-items: center; gap: 8px; padding: 6px 8px; text-decoration: none; border-radius: 4px; }

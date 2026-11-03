@@ -12,6 +12,7 @@ from django.views.decorators.http import require_safe
 from elasticsearch.exceptions import TransportError
 
 from elixir.queries import public_domains
+from elixir.models import Domain
 from elixir.stats import StatsInfo
 
 
@@ -75,6 +76,12 @@ def page(request, name=''):
         return domains(request, context)
     if name == 'stats':
         return statistics(request, context)
+    if not name:
+        try:
+            examples = Domain.objects.filter(visibility=1, is_private=False).values_list('name', 'title').distinct().order_by('name')[:2]
+            context['featured_domains'] = [{'name': title or name, 'url': '/t?' + urlencode({'domain': name})} for name, title in examples]
+        except DatabaseError:
+            logger.warning('Home page collection examples unavailable', exc_info=True)
     template = 'home' if not name else 'communities' if name == 'community' else name
     return render(request, 'html/public/' + template + '.html', context)
 

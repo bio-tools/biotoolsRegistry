@@ -19,6 +19,9 @@ prerender/
 *.sh
 .venv/
 .vscode/
+.env
+.env.*
+!.env.example
 
 # Collected migration assets; sources live under backend/elixir/static/.
 /registry-assets/static/html/

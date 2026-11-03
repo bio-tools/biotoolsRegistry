@@ -5,11 +5,12 @@ import requests
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.test import Client, SimpleTestCase, TestCase, override_settings
+from rest_framework.exceptions import ValidationError
 
 from elixir.models import Resource
 from elixir.resource_ui import resource_descriptor
 from elixir.serializers import ResourceSerializer
-from elixirapp.github_bridge import MAX_RESPONSE, fetch, repository, suggestions
+from elixirapp.github_bridge import MAX_RESPONSE, error_message, fetch, repository, suggestions
 from elixirapp.test_resource_editor_contract import FIXTURES
 
 
@@ -24,13 +25,32 @@ class BridgeContractTests(SimpleTestCase):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 repository(value)
 
-    def test_unknown_protected_nested_and_incompatible_suggestions_are_explained(self):
+    def test_protected_fields_are_ignored_and_invalid_suggestions_are_explained(self):
         accepted, rejected = suggestions({'name': 'Suggested name', 'biotoolsID': 'hijacked', 'owner': 'stranger',
             'unknown': 'value', 'editPermission': {'type': 'public'}, 'license': 'invented-license',
             'publication': [{'doi': '10.1093/bioinformatics/btv111', 'metadata': {'title': 'Forged'}}],
             'otherID': [{'value': 'biotools:replacement', 'type': 'Primary'}], 'description': ['bad type']}, resource_descriptor())
-        self.assertEqual(accepted, {'name': 'Suggested name'})
-        self.assertEqual(len(rejected), 8)
+        self.assertEqual(accepted, {'name': 'Suggested name', 'publication': [{'doi': '10.1093/bioinformatics/btv111'}]})
+        self.assertEqual(len(rejected), 3)
+        self.assertNotIn('ErrorDetail', str(rejected))
+
+    def test_empty_values_are_omitted_and_valid_list_items_survive(self):
+        accepted, rejected = suggestions({
+            'biotoolsID': 'CITEViz', 'version': [], 'otherID': [],
+            'language': ['R', 'not-a-language'],
+            'credit': [{'name': 'Example author', 'typeRole': []}],
+        }, resource_descriptor())
+        self.assertEqual(accepted['language'], ['R'])
+        self.assertEqual(accepted['credit'], [{'name': 'Example author'}])
+        self.assertEqual(len(rejected), 1)
+        self.assertEqual(rejected[0]['path'], 'language')
+        self.assertNotIn('ErrorDetail', rejected[0]['reason'])
+        self.assertNotIn('version', accepted)
+        self.assertNotIn('biotoolsID', accepted)
+
+    def test_edam_validation_error_is_readable(self):
+        message = error_message(ValidationError([{}, {'general_errors': ['Invalid URI: http://edamontology.org/topic_4021.']}]))
+        self.assertEqual(message, 'EDAM term is not in the current registry ontology: http://edamontology.org/topic_4021.')
 
     @override_settings(GITHUB_BRIDGE_URL='http://bridge:8000/github-to-biotools')
     def test_service_object_string_size_redirect_and_json_boundaries(self):
@@ -76,7 +96,7 @@ class BridgeTransportTests(TestCase):
         response = self.post()
         self.assertEqual(response.status_code, 200, response.content)
         self.assertEqual(response.json()['suggestions'], {'name': 'Suggestion'})
-        self.assertEqual(response.json()['rejected'][0]['path'], 'owner')
+        self.assertEqual(response.json()['rejected'], [])
         self.provider.assert_called_once_with({'owner': 'bio-tools', 'repo': 'registry', 'biotools_id': self.resource.biotoolsID})
         self.assertEqual(Resource.objects.count(), count)
         self.resource.refresh_from_db()

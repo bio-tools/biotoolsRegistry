@@ -49,7 +49,7 @@ function emptyValue(field: Field): unknown {
           :errors="errors" :disabled="disabled || readonly" :endpoint="endpoint" />
         <p v-else class="nested-error">Invalid stored value; retained in the draft.</p>
       </EditorRecords>
-      <section v-else-if="field.kind === 'object'" :id="fieldId([...path, name])" class="schema-wide" :aria-label="field.label || name">
+      <section v-else-if="field.kind === 'object'" :id="fieldId([...path, name])" class="schema-wide metadata-section" :aria-label="field.label || name">
         <h3><UiIcon :name="sectionIcon(field.path, field.kind)" />{{ field.label || name }}</h3>
         <SchemaFields v-if="object(record[name])" :record="object(record[name])!" :fields="field.fields || {}" :path="[...path, name]"
           :errors="errors" :disabled="disabled" :endpoint="endpoint" />

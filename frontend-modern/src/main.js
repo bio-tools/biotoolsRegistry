@@ -1,4 +1,5 @@
 import htmx from 'htmx.org';
+import './home-search.js';
 import CounterDemo from './CounterDemo.vue';
 import SearchWorkspace from './SearchWorkspace.vue';
 import EdamField from './EdamField.vue';

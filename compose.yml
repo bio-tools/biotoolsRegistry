@@ -14,10 +14,10 @@ services:
     image: mysql:8.0.43
     restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=elixirroot
-      - MYSQL_DATABASE=elixir
-      - MYSQL_USER=elixir
-      - MYSQL_PASSWORD=123
+      - MYSQL_ROOT_PASSWORD=${BIOTOOLS_MYSQL_ROOT_PASSWORD:-elixirroot}
+      - MYSQL_DATABASE=${BIOTOOLS_MYSQL_DB:-elixir}
+      - MYSQL_USER=${BIOTOOLS_MYSQL_USER:-elixir}
+      - MYSQL_PASSWORD=${BIOTOOLS_MYSQL_PASSWORD:-123}
     volumes:
       - "data-mysql:/var/lib/mysql"
     ports:
@@ -52,14 +52,29 @@ services:
       context: ./backend
       target: dev
     environment:
-      - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
-      - BIOTOOLS_URL_FRONT=https://localhost/
+      - BIOTOOLS_ELASTIC_SEARCH_URLS=${BIOTOOLS_ELASTIC_SEARCH_URLS:-http://elasticsearch:9200}
+      - BIOTOOLS_URL_FRONT=${BIOTOOLS_URL_FRONT:-https://localhost/}
       - BIOTOOLS_GITHUB_BRIDGE_URL=${BIOTOOLS_GITHUB_BRIDGE_URL:-}
-      - BIOTOOLS_MYSQL_DB=elixir
+      - BIOTOOLS_GITHUB_ECOSYSTEM_ON=${BIOTOOLS_GITHUB_ECOSYSTEM_ON:-0}
+      - BIOTOOLS_DEBUG=${BIOTOOLS_DEBUG:-1}
+      - BIOTOOLS_SECRET_KEY=${BIOTOOLS_SECRET_KEY:-local-development-key}
+      - BIOTOOLS_MYSQL_DB=${BIOTOOLS_MYSQL_DB:-elixir}
       - BIOTOOLS_MYSQL_HOST=biotools-mysql
-      - BIOTOOLS_MYSQL_PASSWORD=123
-      - BIOTOOLS_MYSQL_USER=elixir
-      - BIOTOOLS_EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+      - BIOTOOLS_MYSQL_PASSWORD=${BIOTOOLS_MYSQL_PASSWORD:-123}
+      - BIOTOOLS_MYSQL_USER=${BIOTOOLS_MYSQL_USER:-elixir}
+      - BIOTOOLS_EMAIL_BACKEND=${BIOTOOLS_EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
+      - BIOTOOLS_EMAIL_HOST=${BIOTOOLS_EMAIL_HOST:-smtp.zoho.com}
+      - BIOTOOLS_EMAIL_PORT=${BIOTOOLS_EMAIL_PORT:-465}
+      - BIOTOOLS_EMAIL_USE_SSL=${BIOTOOLS_EMAIL_USE_SSL:-1}
+      - BIOTOOLS_EMAIL_USE_TLS=${BIOTOOLS_EMAIL_USE_TLS:-0}
+      - BIOTOOLS_EMAIL_HOST_USER=${BIOTOOLS_EMAIL_HOST_USER:-support@bio.tools}
+      - BIOTOOLS_EMAIL_HOST_PASSWORD=${BIOTOOLS_EMAIL_HOST_PASSWORD:-}
+      - BIOTOOLS_DEFAULT_FROM_EMAIL=${BIOTOOLS_DEFAULT_FROM_EMAIL:-support@bio.tools}
+      - BIOTOOLS_ORCID_BASE_DOMAIN=${BIOTOOLS_ORCID_BASE_DOMAIN:-sandbox.orcid.org}
+      - BIOTOOLS_ORCID_MEMBER_API=${BIOTOOLS_ORCID_MEMBER_API:-0}
+      - BIOTOOLS_ORCID_CLIENT_ID=${BIOTOOLS_ORCID_CLIENT_ID:-}
+      - BIOTOOLS_ORCID_CLIENT_SECRET=${BIOTOOLS_ORCID_CLIENT_SECRET:-}
+      - BIOTOOLS_ORCID_CALLBACK_URL=${BIOTOOLS_ORCID_CALLBACK_URL:-https://localhost/orcid/callback/}
       - BIOTOOLS_WSGI_APPLICATION=elixirapp.dev_wsgi.application
       - 'BIOTOOLS_SECURE_PROXY_SSL_HEADER=["HTTP_X_FORWARDED_PROTO","https"]'
       - 'BIOTOOLS_CSRF_TRUSTED_ORIGINS=["https://localhost"]'
@@ -101,6 +116,38 @@ services:
     networks:
       - net
     restart: unless-stopped
+
+  taskrunner:
+    image: biotools/backend:latest
+    profiles: [ecosystem]
+    environment:
+      - BIOTOOLS_SECRET_KEY=${BIOTOOLS_SECRET_KEY:-local-development-key}
+      - BIOTOOLS_ELASTIC_SEARCH_URLS=${BIOTOOLS_ELASTIC_SEARCH_URLS:-http://elasticsearch:9200}
+      - BIOTOOLS_MYSQL_DB=${BIOTOOLS_MYSQL_DB:-elixir}
+      - BIOTOOLS_MYSQL_HOST=biotools-mysql
+      - BIOTOOLS_MYSQL_PASSWORD=${BIOTOOLS_MYSQL_PASSWORD:-123}
+      - BIOTOOLS_MYSQL_USER=${BIOTOOLS_MYSQL_USER:-elixir}
+      - BIOTOOLS_EMAIL_BACKEND=${BIOTOOLS_EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
+      - BIOTOOLS_EMAIL_HOST=${BIOTOOLS_EMAIL_HOST:-smtp.zoho.com}
+      - BIOTOOLS_EMAIL_PORT=${BIOTOOLS_EMAIL_PORT:-465}
+      - BIOTOOLS_EMAIL_USE_SSL=${BIOTOOLS_EMAIL_USE_SSL:-1}
+      - BIOTOOLS_EMAIL_USE_TLS=${BIOTOOLS_EMAIL_USE_TLS:-0}
+      - BIOTOOLS_EMAIL_HOST_USER=${BIOTOOLS_EMAIL_HOST_USER:-support@bio.tools}
+      - BIOTOOLS_EMAIL_HOST_PASSWORD=${BIOTOOLS_EMAIL_HOST_PASSWORD:-}
+      - BIOTOOLS_DEFAULT_FROM_EMAIL=${BIOTOOLS_DEFAULT_FROM_EMAIL:-support@bio.tools}
+      - ECO_GITHUB_ORGANIZATION_NAME=${ECO_GITHUB_ORGANIZATION_NAME:-}
+      - ECO_GITHUB_REPO_NAME=${ECO_GITHUB_REPO_NAME:-}
+      - ECO_PERSONAL_TOKEN=${ECO_PERSONAL_TOKEN:-}
+      - ECO_MASTER_BRANCH=${ECO_MASTER_BRANCH:-master}
+      - ECO_ROOT_GITHUB_FOLDER=${ECO_ROOT_GITHUB_FOLDER:-data}
+    volumes:
+      - ./backend:/elixir/application/backend:consistent
+      - ./registry-assets:/elixir/application/frontend
+      - backend_data:/elixir/application/backend/data
+      - media_data:/elixir/application/media_cdn
+    depends_on: [backend]
+    networks: [net]
+    command: python manage.py process_tasks
 
   bridge:
     image: anitamnd/bridge@sha256:d9dc5a5484247b9eedc9e204aea999bcd82fce79e5fea8bdfe4681b50203ec61

@@ -47,6 +47,35 @@ function isObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
+/** Check only the shapes needed by the form; the server validates field values on save. */
+export function editorShapeError(value: unknown, contract?: Field): string | null {
+  if (!isObject(value)) return 'The JSON record must be an object.';
+  if (Object.hasOwn(value, '__proto__')) return 'The JSON record contains an unsupported field: __proto__.';
+  function check(item: unknown, field: Field, path: string): string | null {
+    if (item === null) return null;
+    if (field.kind === 'object') {
+      if (!isObject(item)) return `${path} must be an object.`;
+      for (const [name, child] of Object.entries(item)) {
+        const childField = field.fields && Object.hasOwn(field.fields, name) ? field.fields[name] : undefined;
+        if (childField) {
+          const error = check(child, childField, path ? `${path}.${name}` : name);
+          if (error) return error;
+        }
+      }
+    } else if (field.kind === 'array') {
+      if (!Array.isArray(item)) return `${path} must be a list.`;
+      if (field.item) for (const [index, child] of item.entries()) {
+        const error = check(child, field.item, `${path}[${index}]`);
+        if (error) return error;
+      }
+    } else if (field.kind === 'number' ? typeof item !== 'number' || !Number.isFinite(item) : typeof item !== field.kind) {
+      return `${path} must be ${field.kind === 'string' ? 'text' : `a ${field.kind}`}.`;
+    }
+    return null;
+  }
+  return contract ? check(value, contract, '') : null;
+}
+
 function load(value: unknown, ancestors = new Set<unknown>()): unknown {
   if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;
   if (typeof value === 'number' && Number.isFinite(value)) return value;

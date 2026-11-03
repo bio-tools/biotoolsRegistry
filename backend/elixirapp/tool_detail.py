@@ -21,6 +21,14 @@ def publication_identifiers(publication):
     }
 
 
+def elixir_badges(mask):
+    return [(label, url, logo) for bit, label, url, logo in (
+        (1, 'ELIXIR Deposition Database', 'https://elixir-europe.org/platforms/data/elixir-deposition-databases', 'edd.png'),
+        (2, 'ELIXIR Core Data Resource', 'https://elixir-europe.org/platforms/data/core-data-resources', 'cdr.png'),
+        (4, 'Recommended Interoperability Resource', 'https://elixir-europe.org/platforms/interoperability/rir-selection', 'rir.png'),
+    ) if isinstance(mask, int) and 0 < mask < 8 and mask & bit]
+
+
 @require_safe
 @never_cache
 def detail(request, identifier):
@@ -33,11 +41,7 @@ def detail(request, identifier):
     if canonical and request.path != path:
         query = request.META.get('QUERY_STRING', '')
         return HttpResponseRedirect(path + ('?' + query if query else ''))
-    badges = [(label, url, logo) for mask, label, url, logo in (
-        (1, 'ELIXIR Deposition Database', 'https://elixir-europe.org/platforms/data/elixir-deposition-databases', 'edd.png'),
-        (2, 'ELIXIR Core Data Resource', 'https://elixir-europe.org/platforms/data/core-data-resources', 'cdr.png'),
-        (4, 'Recommended Interoperability Resource', 'https://elixir-europe.org/platforms/interoperability/rir-selection', 'rir.png'),
-    ) if 0 < tool.elixir_badge < 8 and tool.elixir_badge & mask]
+    badges = elixir_badges(tool.elixir_badge)
     try:
         descriptor = resource_descriptor()
     except SchemaUnavailable:

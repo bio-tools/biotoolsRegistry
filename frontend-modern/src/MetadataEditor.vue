@@ -1,20 +1,29 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import SchemaFields from './SchemaFields.vue';
 import type { EditorError, Field, ResourceEditor } from './resource-editor';
-defineProps<{ draft: ResourceEditor; fields: Record<string, Field>; endpoint: string; errors: EditorError[]; disabled: boolean }>();
+const props = defineProps<{ draft: ResourceEditor; fields: Record<string, Field>; endpoint: string; errors: EditorError[]; disabled: boolean }>();
+const visible = computed(() => Object.entries(props.fields).filter(([name, field]) => field.writable &&
+  !['name', 'description', 'homepage', 'toolType', 'function'].includes(name)));
+const basicFields = computed(() => Object.fromEntries(visible.value.filter(([name, field]) => name === 'topic' ||
+  (field.kind !== 'object' && field.item?.kind !== 'object'))));
+const recordFields = computed(() => Object.fromEntries(visible.value.filter(([name, field]) => name !== 'topic' &&
+  (field.kind === 'object' || field.item?.kind === 'object'))));
 </script>
 <template>
   <div id="metadata-labels" class="metadata-editor" tabindex="-1">
-    <SchemaFields :record="draft" :fields="fields" :path="[]"
-      :exclude="['name', 'description', 'homepage', 'toolType', 'function']"
-      :endpoint="endpoint" :errors="errors" :disabled="disabled" />
+    <section v-if="Object.keys(basicFields).length" class="metadata-section" aria-label="Additional details">
+      <h2>Additional details</h2>
+      <SchemaFields :record="draft" :fields="basicFields" :path="[]" :endpoint="endpoint" :errors="errors" :disabled="disabled" />
+    </section>
+    <SchemaFields :record="draft" :fields="recordFields" :path="[]" :endpoint="endpoint" :errors="errors" :disabled="disabled" />
   </div>
 </template>
 <style>
-.metadata-section { border-top: 1px solid #ddd; padding-block: 24px; margin-top: 24px; min-width: 0; }
+.metadata-section { padding: 24px; margin-top: 20px; min-width: 0; border: 1px solid #dce8ed; border-radius: 10px; background: #fff; box-shadow: 0 2px 10px #173e4b0a; }
 .metadata-section h2 { font-size: 20px; margin: 0 0 16px; }
 .metadata-section h3 { font-size: 16px; margin: 0; }
-.metadata-record { border-top: 1px solid #d6dfe5; padding-block: 20px; }
+.metadata-record { border: 1px solid #dce8ed; border-radius: 8px; padding: 16px; margin-block: 12px; background: #f8fbfc; }
 .metadata-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; margin-block: 16px; }
 .metadata-field, .metadata-strings { min-width: 0; }
 .metadata-strings { border: 0; padding: 0; margin: 0; }

@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="{% static 'html/detail.css' %}">
 {% endblock %}
 {% block scripts %}
-  {% if has_publication_metrics %}
+  {% if has_publication_metrics and not preview_mode %}
   <script async src="https://badge.dimensions.ai/static/ai/badge.js" charset="utf-8"></script>
   <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
   {% if has_publication_doi %}<script async src="https://cdn.jsdelivr.net/gh/athenarc/bip-plugin@main/embed.min.js"></script>{% endif %}
@@ -39,13 +39,13 @@
       </ul>
     </div>
     <div class="tool-actions"><a class="openebench-link" href="https://openebench.bsc.es/tool/{{ tool.biotoolsID|lower|urlencode }}"><img src="/img/opeb_logo.gif" alt="OpenEBench" width="72"><span>Monitoring &amp; benchmarking</span></a>
-      <div class="record-actions">
+      {% if not preview_mode %}<div class="record-actions">
       {% if request.user.is_authenticated %}
       <a href="/{{ tool.biotoolsID }}/manage">Manage record</a>
       {% if request.canonical %}<a href="{{ edit_url }}">Edit record</a>{% elif can_edit %}<a href="{% url 'html:editor-edit' identifier=tool.biotoolsID %}">Edit record</a>{% endif %}
       {% endif %}
       <nav aria-label="Export record"><a href="{{ api_url }}?format=json">JSON</a><a href="{{ api_url }}?format=xml">XML</a></nav>
-      </div>
+      </div>{% endif %}
     </div>
   </header>
   {% if tool.confidence_flag and tool.confidence_flag != 'tool' %}<p class="record-notice">Automatically generated entry. Confidence: <strong>{{ tool.confidence_flag }}</strong>.</p>{% endif %}
@@ -92,7 +92,7 @@
           </ul>
           {% if pub.version %}<p>Version {{ pub.version }}</p>{% endif %}{% if pub.note %}<p class="metadata-note">{{ pub.note }}</p>{% endif %}
           {% if pub.metadata.abstract %}<details><summary>Abstract</summary><p>{{ pub.metadata.abstract }}</p></details>{% endif %}
-          {% if entry.identifiers.doi or entry.identifiers.pmid %}
+          {% if not preview_mode and entry.identifiers.doi or not preview_mode and entry.identifiers.pmid %}
           <div class="publication-metrics" aria-label="Publication metrics from external services">
             <span class="__dimensions_badge_embed__" {% if entry.identifiers.doi %}data-doi="{{ entry.identifiers.doi }}"{% else %}data-pmid="{{ entry.identifiers.pmid }}"{% endif %} data-style="small_circle" data-legend="hover-right"></span>
             {% if entry.identifiers.doi %}<span class="bip-embed" data-doi="{{ entry.identifiers.doi }}"></span>{% endif %}
@@ -123,7 +123,7 @@
         {% if tool.additionDate %}<dt>Added</dt><dd><time datetime="{{ tool.additionDate|date:'c' }}">{{ tool.additionDate|date:'j F Y' }}</time></dd>{% endif %}
         {% if tool.lastUpdate %}<dt>Updated</dt><dd><time datetime="{{ tool.lastUpdate|date:'c' }}">{{ tool.lastUpdate|date:'j F Y' }}</time></dd>{% endif %}
         <dt>Owner</dt><dd>{{ tool.owner.username }}</dd>
-      </dl><a href="{% url 'html:request-create' identifier=tool.biotoolsID %}">Request editing rights or ownership</a></section>
+      </dl>{% if not preview_mode %}<a href="{% url 'html:request-create' identifier=tool.biotoolsID %}">Request editing rights or ownership</a>{% endif %}</section>
     </aside>
   </div>
 </article>

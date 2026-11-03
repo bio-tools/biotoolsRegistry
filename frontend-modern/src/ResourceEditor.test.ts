@@ -9,6 +9,7 @@ import schema from '../../backend/elixir/biotoolsSchema/resource-ui.generated.js
 const fetchMock = vi.fn();
 vi.mock('./EdamSelector.vue', () => ({ default: { template: '<div />' } }));
 const initial = { resource: fixtures.rich as Resource, revision: 'original', endpoint: '/editor/tool/contract-rich/save/',
+  previewEndpoint: '/editor/tool/contract-rich/record-preview/',
   schema, schemaRevision: schema.revision,
   editUrl: '/editor/tool/contract-rich/', detailUrl: '/tool/contract-rich/', toolTypes: ['Command-line tool', 'Web application'], edamEndpoint: '/edam/terms/' };
 let wrapper: VueWrapper;
@@ -24,6 +25,20 @@ async function save() { await wrapper.get('form').trigger('submit'); await flush
 const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status });
 
 describe('basic resource editor', () => {
+  it('previews the unsaved record and indicates when the preview needs refreshing', async () => {
+    await wrapper.get('#editor-name').setValue('Unsaved preview name');
+    fetchMock.mockResolvedValueOnce(new Response('<h1>Unsaved preview name</h1>', { status: 200, headers: { 'Content-Type': 'text/html' } }));
+    await wrapper.findAll('button').find(button => button.text() === 'Preview record')!.trigger('click');
+    await flushPromises();
+    const sent = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(sent.resource.name).toBe('Unsaved preview name');
+    expect(wrapper.get('iframe').attributes('srcdoc')).toContain('Unsaved preview name');
+    expect(wrapper.get('iframe').attributes()).toHaveProperty('sandbox');
+    await wrapper.get('#editor-name').setValue('Updated after preview');
+    expect(wrapper.text()).toContain('Draft changed. Refresh the preview');
+    expect((wrapper.get('#editor-name').element as HTMLInputElement).value).toBe('Updated after preview');
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
   it('keeps rich out-of-scope fields in the snapshot and adopts authoritative readback', async () => {
     await wrapper.get('#editor-name').setValue('Basic edit');
     const updated = { ...initial, revision: 'next', resource: { ...fixtures.rich, name: 'Basic edit' } };

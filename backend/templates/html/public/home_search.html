@@ -1,5 +1,13 @@
-<form method="get" action="/t" class="public-search">
+<form method="get" action="/t" class="public-search" data-home-search
+  data-edam-url="{% if request.canonical %}/_edam/terms/{% else %}{% url 'html:edam-lookup' %}{% endif %}">
   <label for="home-query">Search bio.tools</label>
-  <div class="search-controls"><input id="home-query" name="q" type="search" maxlength="256" placeholder="Name, description, topic..."><button type="submit">Search</button></div>
-  <p class="home-quick-links"><a href="/t">Browse tools and filters</a><a href="/domains">Explore domains</a><a href="/workflows/design/">Design a workflow</a></p>
+  <div class="search-controls">
+    <div class="home-search-combobox">
+      <input id="home-query" name="q" type="search" maxlength="256" placeholder="Tool, topic, operation, data or format" aria-describedby="home-suggestion-status">
+      <ul id="home-suggestions" class="home-suggestions" role="listbox" aria-label="EDAM concept suggestions" hidden></ul>
+    </div>
+    <button type="submit">Search</button>
+  </div>
+  <p id="home-suggestion-status" class="home-suggestion-status" role="status" aria-live="polite"></p>
+  <p class="home-example">Try an example: <a href="/t?operationID=%22operation_0492%22&amp;inputDataFormatID=%22format_1929%22&amp;toolType=%22Command-line+tool%22">Command-line tools for multiple sequence alignment with FASTA input</a></p>
 </form>

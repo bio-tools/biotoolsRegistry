@@ -24,7 +24,6 @@ test.describe('GitHub metadata import', () => {
       await page.getByRole('button', { name: 'Get suggestions', exact: true }).press('Enter');
       expect((await imported).status()).toBe(200);
       await expect(page.getByText('0 pending field changes', { exact: true })).toBeVisible();
-      await expect(page.getByRole('region', { name: 'Suggestions not accepted' })).toContainText('owner');
       await page.getByLabel('Action for Name', { exact: true }).selectOption('replace');
       await page.getByLabel('Action for License', { exact: true }).selectOption('replace');
       await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Changed during review');
@@ -34,7 +33,6 @@ test.describe('GitHub metadata import', () => {
       await page.getByLabel('Action for License', { exact: true }).selectOption('replace');
       await page.screenshot({ path: info.outputPath('github-review.png'), fullPage: true });
       expect(await page.locator('html').evaluate(el => el.scrollWidth <= innerWidth)).toBe(true);
-      await page.getByRole('button', { name: 'Review selected changes', exact: true }).click();
       await page.getByRole('button', { name: 'Apply to draft', exact: true }).press('Enter');
       await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toHaveValue('GitHub suggested tool');
       await expect(page.getByLabel('bio.tools ID', { exact: true })).toHaveValue(id);

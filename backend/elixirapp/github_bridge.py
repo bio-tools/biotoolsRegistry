@@ -67,24 +67,74 @@ def check_shape(value, field, path):
             raise ValueError(path + ': value is not in the active vocabulary.')
 
 
+def without_empty(value):
+    if isinstance(value, dict):
+        return {key: cleaned for key, item in value.items() if (cleaned := without_empty(item)) not in (None, '', [], {})}
+    if isinstance(value, list):
+        return [cleaned for item in value if (cleaned := without_empty(item)) not in (None, '', [], {})]
+    return value
+
+
+def error_message(error):
+    def messages(value):
+        if isinstance(value, dict):
+            return [message for item in value.values() for message in messages(item)]
+        if isinstance(value, (list, tuple)):
+            return [message for item in value for message in messages(item)]
+        return [str(value)]
+    result = []
+    for message in messages(error.detail if isinstance(error, ValidationError) else error):
+        if message.startswith('Invalid URI: http://edamontology.org/'):
+            message = 'EDAM term is not in the current registry ontology: ' + message[len('Invalid URI: '):]
+        result.append(message)
+    return '; '.join(dict.fromkeys(result))
+
+
 def suggestions(raw, descriptor):
     serializer = ResourceUpdateSerializer()
     accepted, rejected = {}, []
-    for name, value in raw.items():
+
+    def validate(name, value, field):
+        check_shape(value, field, name)
+        if name == 'otherID' and any(item.get('value', '').lower().startswith('biotools:') for item in value):
+            raise ValueError('Registry identifiers are protected.')
+        parsed = serializer.fields[name].run_validation(value)
+        validator = getattr(serializer, 'validate_' + name, None)
+        if validator:
+            validator(parsed)
+
+    errors = (ValueError, TypeError, KeyError, AttributeError, ValidationError)
+    for name, raw_value in raw.items():
         field = descriptor['contract']['fields'].get(name)
+        if not field or not field.get('writable'):
+            continue
+        if name == 'publication' and isinstance(raw_value, list):
+            # Provider enrichment is display-only; the registry owns publication metadata.
+            raw_value = [{key: item for key, item in publication.items() if key not in {'metadata', 'title'}}
+                         if isinstance(publication, dict) else publication for publication in raw_value]
+        value = without_empty(raw_value)
+        if value in (None, '', [], {}):
+            continue
         try:
-            if not field or not field.get('writable'):
-                raise ValueError('Unknown or protected field.')
-            check_shape(value, field, name)
-            if name == 'otherID' and any(item.get('value', '').lower().startswith('biotools:') for item in value):
-                raise ValueError('Registry identifiers are protected.')
-            parsed = serializer.fields[name].run_validation(value)
-            validator = getattr(serializer, 'validate_' + name, None)
-            if validator:
-                validator(parsed)
+            validate(name, value, field)
             accepted[name] = value
-        except (ValueError, TypeError, KeyError, AttributeError, ValidationError) as exc:
-            rejected.append({'path': name, 'reason': str(exc)})
+        except errors as exc:
+            if field['kind'] != 'array' or not isinstance(value, list) or len(value) > 100:
+                rejected.append({'path': name, 'reason': error_message(exc)})
+                continue
+            valid = []
+            for item in value:
+                try:
+                    validate(name, [item], field)
+                    valid.append(item)
+                except errors as item_error:
+                    rejected.append({'path': name, 'reason': error_message(item_error)})
+            if valid:
+                try:
+                    validate(name, valid, field)
+                    accepted[name] = valid
+                except errors as combined_error:
+                    rejected.append({'path': name, 'reason': error_message(combined_error)})
     return accepted, rejected
 
 

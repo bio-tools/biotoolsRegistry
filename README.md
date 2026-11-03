@@ -10,6 +10,7 @@ catalogue, an editor, a REST API and a workflow planner based on
 Install Docker Compose and Node.js 22.12 or newer, then run:
 
 ```sh
+cp .env.example .env
 npm --prefix frontend-modern ci
 npm --prefix frontend-modern run build
 docker compose up -d --build mysql elasticsearch backend
@@ -21,7 +22,8 @@ docker compose up -d caddy
 Open **https://localhost/** and accept the local development certificate. The
 new database is empty: use an authorized data import or disposable test
 fixtures before expecting search results. See [installation](INSTALL.md) for
-setup, the optional GitHub bridge and production configuration.
+setup, the optional GitHub bridge and production configuration. Edit `.env`
+for your installation and keep it private; use a separate file for production.
 
 ## Project layout
 

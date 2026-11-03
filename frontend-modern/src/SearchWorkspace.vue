@@ -43,6 +43,29 @@ const scientific = [
   { key: 'dataTypeID', scope: 'data', label: 'EDAM data type' },
   { key: 'dataFormatID', scope: 'format', label: 'EDAM format' },
 ] as const;
+const directionKeys = {
+  dataTypeID: { any: 'dataTypeID', input: 'inputDataTypeID', output: 'outputDataTypeID' },
+  dataFormatID: { any: 'dataFormatID', input: 'inputDataFormatID', output: 'outputDataFormatID' },
+} as const;
+type DirectionalKey = keyof typeof directionKeys;
+type Direction = 'any' | 'input' | 'output';
+const directions = ref<Record<DirectionalKey, Direction>>({ dataTypeID: 'any', dataFormatID: 'any' });
+function isDirectional(key: string): key is DirectionalKey { return key in directionKeys; }
+function currentKey(key: string) { return isDirectional(key) ? directionKeys[key][directions.value[key]] : key; }
+watch(() => state.value.filters, filters => {
+  for (const key of Object.keys(directionKeys) as DirectionalKey[]) {
+    const active = (Object.keys(directionKeys[key]) as Direction[]).filter(direction => filters[directionKeys[key][direction]]?.trim());
+    if (active.length && !active.includes(directions.value[key])) directions.value[key] = active[0]!;
+  }
+}, { immediate: true, deep: true });
+function changeDirection(key: DirectionalKey, direction: Direction) {
+  const previous = currentKey(key), target = directionKeys[key][direction];
+  directions.value[key] = direction;
+  const value = state.value.filters[previous];
+  if (previous !== target && value && !state.value.filters[target]) {
+    update({ filters: { ...state.value.filters, [previous]: '', [target]: value } });
+  }
+}
 const excluded = new Set(['topic', 'topicID', 'function', 'operation', 'operationID', 'dataType', 'dataTypeID',
   'dataFormat', 'dataFormatID', 'input', 'inputID', 'inputDataFormat', 'inputDataFormatID', 'inputDataType',
   'inputDataTypeID', 'output', 'outputID', 'outputDataFormat', 'outputDataFormatID', 'outputDataType',
@@ -114,8 +137,13 @@ function options(key: string) {
           <summary>EDAM annotations</summary>
           <p>Find tools by scientific annotations. Multiple selections must all match.</p>
           <div v-for="item in scientific" :key="item.key" class="scientific-field">
-            <EdamSelector v-if="edamEndpoint" :model-value="edamValue(item.key, item.scope)" :endpoint="edamEndpoint"
-              :scope="item.scope" :label="item.label" multiple :max-selections="10" @update:model-value="setEdam(item.key, $event)" />
+            <label v-if="isDirectional(item.key)" :for="`direction-${item.key}`">Match {{ item.label }} in</label>
+            <select v-if="isDirectional(item.key)" :id="`direction-${item.key}`" :value="directions[item.key]"
+              :aria-label="`Match ${item.label} in`" @change="changeDirection(item.key, text($event) as Direction)">
+              <option value="any">Input or output</option><option value="input">Input only</option><option value="output">Output only</option>
+            </select>
+            <EdamSelector v-if="edamEndpoint" :model-value="edamValue(currentKey(item.key), item.scope)" :endpoint="edamEndpoint"
+              :scope="item.scope" :label="item.label" multiple :max-selections="10" @update:model-value="setEdam(currentKey(item.key), $event)" />
           </div>
         </details>
         <SearchFilterGroup v-for="group in groups" :key="group.id" :group="group" :values="state.filters">
@@ -302,6 +330,8 @@ function options(key: string) {
 aside { background: #f8fbfc; border: 1px solid #d5e5eb; border-radius: 12px; padding: 20px; min-width: 0; }
 .scientific-filters p, .filter-help { color: #526d79; font-size: var(--text-caption); line-height: 1.45; margin: 8px 0 14px; }
 .scientific-field { padding: 10px 0; }
+.scientific-field select { margin-bottom: 10px; }
+.scientific-field > label { font-size: var(--text-ui); }
 .scientific-field :deep(.edam-selector > button) { width: 100%; text-align: left; }
 .filter-list select { width: 100%; }
 .filter-list :deep(.filter-field input) { width: 100%; }

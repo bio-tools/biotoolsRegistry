@@ -7,69 +7,54 @@
 	
 	<div class="container">
 	
-		<div class="jumbotron home-summary home-text">
-			<h1>bio.tools</h1>
-			<p>Essential scientific and technical information about software tools, databases and services for bioinformatics and the life sciences.</p>
-			<div>{% include 'html/public/home_search.html' %}</div>
+        <section class="home-hero" aria-labelledby="home-heading">
+          <h1 id="home-heading">bio.tools</h1>
+          <p class="home-intro">Find bioinformatics software, connect tools, and share resources with your community.</p>
+          {% include 'html/public/home_search.html' %}
+        </section>
 
-			<p class="description-text">
-				Explore <em>bio.tools</em> by the most popular bioinformatics concepts, or <a href="/t?page=1" title="Browse all tools in bio.tools"><span class="bolder-text">view all tools</span></a>.</p>
-			<p class="description-text">
-			Concepts are defined in the <a href="https://github.com/edamontology/edamontology" target="_blank" rel="noopener noreferrer"><span class="bolder-text">EDAM ontology</span></a> 
-			which you can browse at <a href="https://www.ebi.ac.uk/ols/ontologies/edam/" target="_blank" rel="noopener noreferrer"><span class="bolder-text">OLS</span></a>, 
-			<a href="https://bioportal.bioontology.org/ontologies/EDAM/?p=classes&amp;conceptid=root" target="_blank" rel="noopener noreferrer"><span class="bolder-text">BioPortal</span></a> 
-			or in the <a href="https://edamontology.github.io/edam-browser/" target="_blank" rel="noopener noreferrer"><span class="bolder-text">EDAM Browser</span></a>. 
-			</p>
+        <section class="home-journeys" aria-labelledby="journeys-heading">
+          <h2 id="journeys-heading">What would you like to do?</h2>
+          <div class="journey-grid">
+            <article class="journey-card">
+              <svg class="journey-icon" aria-hidden="true"><use href="{% static 'html/field-icons.svg' %}#topic"></use></svg>
+              <h3>Find a tool</h3>
+              <p>Explore tools by scientific topic, operation, data type, or format.</p>
+              <a href="/t">Browse tools and filters <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="journey-card">
+              <svg class="journey-icon" aria-hidden="true"><use href="{% static 'html/field-icons.svg' %}#function"></use></svg>
+              <h3>Plan a workflow</h3>
+              <p>Find tools with matching inputs and outputs. Create a workflow plan to review; it cannot be executed.</p>
+              <a href="/workflows/design/">Plan a workflow <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="journey-card">
+              <svg class="journey-icon" aria-hidden="true"><use href="{% static 'html/field-icons.svg' %}#people"></use></svg>
+              <h3>Explore collections</h3>
+              <p>Browse software selected by communities or create a collection for your group.</p>
+              {% if featured_domains %}<p class="journey-examples">Examples: {% for domain in featured_domains %}<a href="{{ domain.url }}">{{ domain.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+              <div class="journey-links"><a href="/domains">Explore collections <span aria-hidden="true">→</span></a><a href="/edit-domain/">Create a collection</a></div>
+              {% if not user.is_authenticated %}<small>Sign in to create or manage a collection.</small>{% endif %}
+            </article>
+            <article class="journey-card">
+              <svg class="journey-icon" aria-hidden="true"><use href="{% static 'html/field-icons.svg' %}#link"></use></svg>
+              <h3>Use tools with other services</h3>
+              <p>Explore links to training in TeSS and, where available, monitoring and benchmarking in OpenEBench.</p>
+              <div class="journey-links"><a href="/t">Find a tool <span aria-hidden="true">→</span></a><a href="https://biotools.readthedocs.io/en/latest/api_reference.html">Use the API</a></div>
+            </article>
+          </div>
+        </section>
 
-		</div>
+        <section class="home-contribute" aria-label="Contribute to bio.tools">
+          <div><h2>Share your software</h2><p>Register a tool or improve its description so others can find and reuse it.{% if not user.is_authenticated %} Sign in to contribute.{% endif %}</p></div>
+          <a class="home-register" href="{% url 'html:editor-new' %}">Register a tool</a>
+        </section>
 
-		<div class="jumbotron home-summary home-text">
-			<h2>What is bio.tools?</h2>
-			<p class="description-text">
-				<em>bio.tools</em> is a community-driven registry of bioinformatics software and data resources. It provides detailed information about 
-				software tools, databases, analysis workflows, and services that are used in bioinformatics and the life sciences.
-			</p>
-			<p class="description-text">
-				Each <em>bio.tools</em> entry has a unique identifier based on the resource name, e.g., <a href="/signalp" target="_blank" rel="noopener noreferrer"><span class="bolder-text">biotools:signalp</span></a>.
-			</p>
-			<p class="description-text">
-				All the <em>bio.tools</em> data and technical components are available under <span class="bolder-text">open license</span> and we warmly welcome 
-				you to <a href="https://biotools.readthedocs.io/en/latest/what_is_biotools.html#getting-involved-a-quick-start-guide" target="_blank" rel="noopener noreferrer">
-					<span class="bolder-text">get involved</span></a>.
-			</p>
-			<p class="description-text">
-				Find out more in <a href="https://biotools.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer"><span class="bolder-text">bio.tools documentation</span></a> 
-				and in the <a href="/about"><span class="bolder-text">About section</span></a>.
-			</p>
-			<div class="supported-by">
-			<p>
-				<a target="_blank" href="https://www.elixir-europe.org/" rel="noopener noreferrer">
-					<img src="{% static 'public/img/ELIXIR_logo_white_background.png' %}" alt="ELIXIR" title="ELIXIR">
-				</a>
-				<em>bio.tools is supported by ELIXIR Europe</em>
-			</p>
-			</div>
-		</div>
-
-		<div class="jumbotron home-summary home-text">
-			<h2>Communities in bio.tools</h2>
-			<p class="description-text">
-				Explore <b><a href="/communities">communities</a></b> in <em>bio.tools</em> and see what resources are used by different scientific communities.
-			</p>
-			<p class="description-text">
-				We strongly encourage everyone to take part in the community effort and contribute. <a href="mailto:support-bio-tools@sdu.dk">Email us</a> for more info.
-			</p>
-
-			<h4>Communities and domains</h4>
-			<p class="description-text">
-				In <em>bio.tools</em> we try, with the help of the community, to create content domains or "slices" relevant to a specific community, research area or task 
-				(e.g. <a href="/t?domain=proteomics" title="Search bio.tools for tools in this domain">Proteomics</a>, and <a href="/t?domain=rare-diseases" title="Search bio.tools for tools in this domain">Rare diseases</a>).
-			</p>
-			<p class="description-text">
-				Explore and search <em>bio.tools</em> <a href="/domains">domains</a> and <a href="/domain-manager">manage</a> your own domains. Read more about <em>bio.tools</em> 
-				domains <a href="https://biotools.readthedocs.io/en/latest/biotools_domains.html" target="_blank" rel="noopener noreferrer">here</a>.
-			</p>
-		</div>
+        <section class="home-about">
+          <h2>About bio.tools</h2>
+          <p>bio.tools is a community-driven registry of software and data resources for the life sciences. Each entry has a stable identifier and can be described with EDAM concepts.</p>
+          <p><a href="/about">Learn about bio.tools</a> · <a href="/communities">Communities</a> · <a href="https://biotools.readthedocs.io/">Documentation</a></p>
+        </section>
 	</div>
 
 

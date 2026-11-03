@@ -2,12 +2,14 @@ from pathlib import Path
 from unittest.mock import patch
 
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.staticfiles import finders
 from django.db import OperationalError
 from django.test import TestCase, override_settings
 from django.urls import get_script_prefix, set_script_prefix
 
 from elixir.queries import public_domains
+from elixir.models import Domain
 from elixirapp.html import canonical_family
 from elixirapp.public_pages import PAGES, REDIRECTS
 from elixirapp.test_html import HTML_REQUEST
@@ -50,6 +52,35 @@ class PublicPagesTests(TestCase):
                          f"{settings.STATIC_URL.rstrip('/')}/html/favicon.ico")
         self.assertEqual(self.get('/about/?from=old')['Location'], '/about?from=old')
         self.assertContains(self.client.get('/public/about', **HTML_REQUEST), 'name="robots" content="noindex, follow"')
+
+    def test_home_journeys_have_searchable_fallback_and_auth_aware_links(self):
+        response = self.get('/')
+        for text in ('Find a tool', 'Plan a workflow', 'Explore collections', 'Use tools with other services',
+                     'Command-line tools for multiple sequence alignment with FASTA input', 'Sign in to create or manage a collection.',
+                     'data-edam-url="/_edam/terms/"', 'inputDataFormatID=%22format_1929%22'):
+            self.assertContains(response, text)
+        self.assertContains(response, 'action="/t"')
+        self.client.force_login(User.objects.create_user('home-test-user'))
+        response = self.get('/')
+        self.assertNotContains(response, 'Sign in to create or manage a collection.')
+        self.assertContains(response, 'href="/edit-domain/"')
+
+    def test_home_examples_include_only_public_domains(self):
+        owner = User.objects.create_user('domain-owner')
+        Domain.objects.create(name='bio-public', title='Biology', owner=owner)
+        Domain.objects.create(name='bio-private', title='Private project', owner=owner, is_private=True)
+        Domain.objects.create(name='bio-hidden', title='Hidden project', owner=owner, visibility=0)
+        response = self.get('/')
+        self.assertContains(response, 'href="/t?domain=bio-public"')
+        self.assertNotContains(response, 'Private project')
+        self.assertNotContains(response, 'Hidden project')
+
+    @patch('elixirapp.public_pages.Domain.objects.filter', side_effect=OperationalError('offline'))
+    def test_home_search_remains_available_without_collection_examples(self, _filter):
+        with self.assertLogs('elixirapp.public_pages', level='WARNING'):
+            response = self.get('/')
+        self.assertContains(response, 'action="/t"')
+        self.assertContains(response, 'Explore collections')
 
     def test_fixed_redirects_ignore_untrusted_destinations_and_keep_fragments(self):
         for path, destination in REDIRECTS.items():

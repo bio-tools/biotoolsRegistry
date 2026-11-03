@@ -1,7 +1,6 @@
 {% extends 'html/base.html' %}
 {% block title %}{% if editing %}Edit {{ resource.name }}{% else %}Register a tool{% endif %} | bio.tools{% endblock %}
 {% block content %}
-{% if editing %}<p><a href="{% url 'html:requests' %}">Ownership &amp; editing requests</a></p>{% endif %}
 <template id="editor-config">{{ editor_config|json_script }}</template>
 <div data-vue-island="resource-editor" data-vue-props="editor-config" hx-disable>
   <h1>{% if editing %}Edit tool{% else %}Register a tool{% endif %}</h1>

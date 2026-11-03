@@ -41,8 +41,8 @@ ECO_POST_GITHUB_ISSUE = getenv('ECO_POST_GITHUB_ISSUE', False, castf=bool)
 ECO_SEND_EMAIL = getenv('ECO_SEND_EMAIL', False, castf=bool)
 ECO_EMAIL_RECIPIENTS = getenv('ECO_EMAIL_RECIPIENTS', [], castf=json.loads)
 
-# not set by default, needs to be set in __secret_settings__.py
-ECO_PERSONAL_TOKEN = getenv('ECO_LOGGER_NAME', '')
+# Keep the older token name usable for existing deployments.
+ECO_PERSONAL_TOKEN = getenv('ECO_PERSONAL_TOKEN', ECO_GITHUB_TOKEN or '')
 
 # Secret settings from "__secret_settings__.py" file that can override the ones above
 # Can also leave the "__secret_settings__.py" file empty if you use environment variables

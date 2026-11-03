@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { flushPromises, mount, type VueWrapper } from '@vue/test-utils';
-import { nextTick } from 'vue';
+import { defineComponent, nextTick } from 'vue';
 import SearchWorkspace from './SearchWorkspace.vue';
 import { defaultState, parseSearch, serializeSearch, type SearchConfig, type SearchResponse } from './search-state';
 
@@ -41,6 +41,32 @@ describe('canonical state', () => {
 });
 
 describe('workspace', () => {
+  it('retains input and output constraints when changing EDAM search direction', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));
+    const selector = defineComponent({ name: 'EdamSelector', props: ['label', 'modelValue'], emits: ['update:modelValue'], template: '<div />' });
+    const filters = { ...config.filters, dataTypeID: 'Data', inputDataTypeID: 'Input data', outputDataTypeID: 'Output data',
+      dataFormatID: 'Format', inputDataFormatID: 'Input format', outputDataFormatID: 'Output format' };
+    history.replaceState(null, '', '/?inputDataFormatID=%22format_1929%22');
+    wrapper = mount(SearchWorkspace, { props: { ...config, filters, edamEndpoint: '/edam/' }, global: { stubs: { EdamSelector: selector } } });
+    await vi.advanceTimersByTimeAsync(0); await flushPromises();
+    expect((wrapper.get('#direction-dataFormatID').element as HTMLSelectElement).value).toBe('input');
+    await wrapper.get('#direction-dataFormatID').setValue('output');
+    await vi.advanceTimersByTimeAsync(0); await flushPromises();
+    expect(new URLSearchParams(location.search).get('outputDataFormatID')).toBe('"format_1929"');
+    expect(new URLSearchParams(location.search).has('inputDataFormatID')).toBe(false);
+    history.replaceState(null, '', '/?inputDataFormatID=%22format_1929%22&outputDataFormatID=%22format_1915%22');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    await vi.advanceTimersByTimeAsync(0); await flushPromises();
+    await wrapper.get('#direction-dataFormatID').setValue('input');
+    expect(new URLSearchParams(location.search).get('outputDataFormatID')).toBe('"format_1915"');
+    expect(new URLSearchParams(location.search).get('inputDataFormatID')).toBe('"format_1929"');
+    await wrapper.get('#direction-dataTypeID').setValue('input');
+    const dataPicker = wrapper.findAllComponents(selector).find(item => item.props('label') === 'EDAM data type')!;
+    dataPicker.vm.$emit('update:modelValue', ['http://edamontology.org/data_0863']);
+    await vi.advanceTimersByTimeAsync(0); await flushPromises();
+    expect(new URLSearchParams(location.search).get('inputDataTypeID')).toBe('"data_0863"');
+  });
   it('searches used values locally and toggles selected values without losing domain scope', async () => {
     vi.useFakeTimers();
     const data = { ...response(), facets: { toolType: { truncated: false, values: Array.from({ length: 8 }, (_, i) => ({ value: 'Type ' + i, count: 10 - i })) } } };
