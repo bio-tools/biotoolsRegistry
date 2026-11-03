@@ -29,10 +29,21 @@ rebuild. Existing values are preserved when editing; incompatible updates requir
 an explicit compatibility decision. Specialized function diagrams and publication
 views must not hide newly advertised schema fields.
 
+Decorative field icons use descriptor kinds and a small optional section mapping;
+unknown fields receive a generic icon. Icons do not control visibility, choices,
+validation or saved values. The local SVG sprite also works without JavaScript.
+
 Search state and supported filters are represented in URLs. Server results are
 authoritative; local filtering is limited to the loaded candidates and is labeled
 accordingly. Async responses must not replace newer requests. EDAM selectors store
 stable concept URIs and support keyboard navigation.
+
+Tool pages link to OpenEBench, TeSS and relevant ELIXIR or SciCrunch resources.
+For valid publication identifiers, the browser loads Dimensions, BIP! and
+Altmetric badges from those providers. Citations and their identifier links
+remain usable if a provider is unavailable or has no matching data. The header
+tool count comes from search and is cached in browser session storage for five
+minutes; search remains usable when the count cannot be loaded.
 
 ## Workflow planning
 

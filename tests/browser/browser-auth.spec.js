@@ -36,8 +36,21 @@ test.describe('migrated browser authentication', () => {
       const cookie = (await context.cookies()).find(cookie => cookie.name === 'sessionid');
       expect(cookie.httpOnly).toBe(true);
       expect(cookie.sameSite).toBe('Lax');
-      expect(await page.evaluate(() => ({ local: { ...localStorage }, session: { ...sessionStorage } })))
+      const storage = await page.evaluate(() => ({ local: { ...localStorage }, session: { ...sessionStorage } }));
+      if (storage.session['biotools-tool-count']) {
+        expect(JSON.parse(storage.session['biotools-tool-count']).count).toBeGreaterThanOrEqual(0);
+        delete storage.session['biotools-tool-count'];
+      }
+      expect(storage)
         .toEqual({ local: {}, session: { 'htmx-current-path-for-history': mount + '/account/' } });
+      if (width === 1440) {
+        const alignment = await page.locator('.site-header nav').evaluate(nav => {
+          const first = nav.querySelector('a').getBoundingClientRect();
+          const logout = nav.querySelector('.nav-button').getBoundingClientRect();
+          return Math.abs(first.y + first.height / 2 - logout.y - logout.height / 2);
+        });
+        expect(alignment).toBeLessThanOrEqual(2);
+      }
       await page.screenshot({ path: testInfo.outputPath('account.png'), fullPage: true });
       expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
       const logout = page.waitForResponse(response => response.url().endsWith('/auth/logout/'));

@@ -2,7 +2,7 @@
 {% block title %}{% if domain %}Edit {{ domain.name }}{% else %}Create domain{% endif %} | bio.tools{% endblock %}
 {% block content %}
 <h1>{% if domain %}Edit domain: {{ domain.name }}{% else %}Create a domain{% endif %}</h1>
-<p><a href="/domain-manager">Manage domains</a>{% if domain %} · <a href="/t?domain={{ domain.name|urlencode }}">Browse domain tools</a>{% endif %}</p>
+<p><a href="/domain-manager">Manage domains</a>{% if domain %} · <a href="/t?domain={{ domain.name|urlencode }}" title="Search bio.tools for tools in this domain">Browse domain tools</a>{% endif %}</p>
 {% if form.errors %}<div role="alert" class="message error">{{ form.errors }}</div>{% endif %}
 <form method="post" class="domain-form">{% csrf_token %}{{ form.revision }}
 {% for field in form.visible_fields %}

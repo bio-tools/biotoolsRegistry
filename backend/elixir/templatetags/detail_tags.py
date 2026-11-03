@@ -1,5 +1,5 @@
 import re
-from urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, urlsplit
 
 from django import template
 from django.core.exceptions import ValidationError
@@ -13,19 +13,42 @@ validate_url = URLValidator(schemes=['http', 'https', 'ftp', 'ftps'])
 
 
 @register.simple_tag
-def external_link(url, label=None):
+def field_icon(kind):
+    return kind if kind in {'string', 'number', 'boolean', 'array', 'object'} else 'object'
+
+
+@register.simple_tag
+def external_link(url, label=None, title=None):
     """Stored metadata is untrusted, including URLs that predate API validation."""
     label = label or url or ''
     try:
         validate_url(url or '')
     except ValidationError:
         return conditional_escape(label)
+    if title:
+        return format_html('<a href="{}" rel="noopener noreferrer" title="{}">{}</a>', url, title, label)
     return format_html('<a href="{}" rel="noopener noreferrer">{}</a>', url, label)
 
 
 @register.simple_tag
 def search_url(field, value):
     return '/t?' + urlencode({field: '"' + str(value) + '"'})
+
+
+@register.simple_tag
+def workflow_annotation_link(url, edam_uri=None):
+    if url:
+        try:
+            parsed = urlsplit(url)
+            match = re.fullmatch(r'/(?:tool/)?(?:biotools:)?([A-Za-z0-9.~_-]{1,100})(?:/version/[^/]+)?/?', parsed.path)
+            if parsed.scheme in ('http', 'https') and parsed.hostname in ('bio.tools', 'www.bio.tools') and match:
+                return format_html('<a href="/{}" title="Open this tool’s bio.tools entry">bio.tools entry</a>', match.group(1))
+            if parsed.hostname == 'edamontology.org':
+                return external_link(url, 'EDAM concept', 'Open this term in the EDAM ontology')
+        except ValueError:
+            pass
+        return external_link(url, 'Open annotation')
+    return external_link(edam_uri, 'EDAM concept', 'Open this term in the EDAM ontology') if edam_uri else ''
 
 
 @register.inclusion_tag('html/detail/term.html')

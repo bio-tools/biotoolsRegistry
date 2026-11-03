@@ -5,6 +5,7 @@ const test = base.extend({
     // Optional legacy decoration/analytics must not gate local application tests.
     await page.route(/^https:\/\/(fonts\.googleapis\.com|fonts\.gstatic\.com|plausible\.galaxyproject\.eu|d1bxh8uas1mnw7\.cloudfront\.net|badge\.dimensions\.ai)\//,
       route => route.abort());
+    await page.route('https://cdn.jsdelivr.net/gh/athenarc/bip-plugin@main/**', route => route.abort());
     const diagnostics = [];
     page.on('console', message => {
       if (['warning', 'error'].includes(message.type())) {

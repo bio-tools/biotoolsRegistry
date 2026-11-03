@@ -66,22 +66,22 @@ describe('workspace', () => {
   it('opens active ancestor groups and keeps nested fields wired to URL state', async () => {
     vi.useFakeTimers();
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));
-    history.replaceState(null, '', '/?topic=Analysis');
-    wrapper = mount(SearchWorkspace, { props: { ...config, filterGroups: [
+    history.replaceState(null, '', '/?creditOrcidID=Example');
+    wrapper = mount(SearchWorkspace, { props: { ...config, filters: { ...config.filters, creditOrcidID: 'ORCID' }, filterGroups: [
       { id: 'science', label: 'Science', keys: [], children: [
-        { id: 'science.topic', label: 'Topics', keys: ['topic'], children: [] },
+        { id: 'science.credit', label: 'Credits', keys: ['creditOrcidID'], children: [] },
       ] }, { id: 'basic', label: 'Tool details', keys: ['toolType'], children: [] },
     ] } });
     await vi.advanceTimersByTimeAsync(0); await flushPromises();
     expect(wrapper.get('[data-filter-group="science"]').attributes('open')).toBeDefined();
-    expect(wrapper.get('[data-filter-group="science.topic"]').attributes('open')).toBeDefined();
+    expect(wrapper.get('[data-filter-group="science.credit"]').attributes('open')).toBeDefined();
     expect(wrapper.get('[data-filter-group="basic"]').attributes('open')).toBeUndefined();
-    expect(wrapper.findAll('#filter-topic')).toHaveLength(1);
-    await wrapper.get('#filter-topic').setValue('Sequence');
+    expect(wrapper.findAll('#filter-creditOrcidID')).toHaveLength(1);
+    await wrapper.get('#filter-creditOrcidID').setValue('Another');
     await vi.advanceTimersByTimeAsync(0); await flushPromises();
-    expect(new URLSearchParams(location.search).get('topic')).toBe('Sequence');
+    expect(new URLSearchParams(location.search).get('creditOrcidID')).toBe('Another');
     expect(wrapper.get('[data-filter-group="science"] > summary').text()).toContain('1 active');
-    await wrapper.get('[aria-label="Remove topic filter"]').trigger('click');
+    await wrapper.get('[aria-label="Remove creditOrcidID filter"]').trigger('click');
     await vi.advanceTimersByTimeAsync(0); await flushPromises();
     expect(wrapper.get('[data-filter-group="science"] > summary').text()).not.toContain('active');
   });

@@ -230,6 +230,13 @@ class ManagementTests(TestCase):
         invalid = SimpleNamespace(startX=float('nan'), startY=0, endX=50, endY=50)
         self.assertIsNone(annotation_box(invalid, 100, 100))
 
+    def test_workflow_annotation_links_distinguish_tools_and_edam(self):
+        from elixir.templatetags.detail_tags import workflow_annotation_link
+        self.assertIn('href="/MUSCLE"', workflow_annotation_link('https://bio.tools/tool/MUSCLE/version/1'))
+        self.assertIn('bio.tools entry', workflow_annotation_link('https://bio.tools/tool/MUSCLE/version/1'))
+        self.assertIn('EDAM concept', workflow_annotation_link('http://edamontology.org/data_3497'))
+        self.assertNotIn('href=', workflow_annotation_link('javascript:alert(1)'))
+
     def test_workflow_data_failure_is_not_an_empty_success(self):
         from django.db import DatabaseError
         with patch('elixirapp.workflows.Workflow.objects.all', side_effect=DatabaseError('offline')), self.assertLogs('elixirapp.workflows'):

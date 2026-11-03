@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { errorsAt, fieldId } from './nested-editor';
 import EditorField from './EditorField.vue';
+import UiIcon from './UiIcon.vue';
 import { newEditorItem, type EditorError, type EditorItem, type EditorPath, type Field } from './resource-editor';
 type Item = EditorItem<string | number | boolean | null>;
 const props = defineProps<{ modelValue?: Item[] | null; path: EditorPath; label: string; itemLabel: string;
@@ -10,7 +11,7 @@ const itemPath = (id: string) => [...props.path, { itemId: id }];
 </script>
 <template>
   <fieldset :id="fieldId(path)" class="metadata-strings" :disabled="disabled" tabindex="-1">
-    <legend>{{ label }}</legend>
+    <legend><UiIcon name="array" />{{ label }}</legend>
     <p v-if="schema?.help" class="schema-help">{{ schema.help }}</p>
     <p class="nested-error">{{ errorsAt(errors, path).join(' ') }}</p>
     <div v-for="(item, index) in modelValue" :key="item.id" class="metadata-string">

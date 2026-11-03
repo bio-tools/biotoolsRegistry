@@ -2,6 +2,8 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import { browserRequest, BrowserRequestError } from './browser-auth';
 import FunctionEditor from './FunctionEditor.vue';
+import UiIcon from './UiIcon.vue';
+import { sectionIcon } from './ui-icons';
 import MetadataEditor from './MetadataEditor.vue';
 import PermissionEditor from './PermissionEditor.vue';
 import GithubImport from './GithubImport.vue';
@@ -211,9 +213,9 @@ async function save(validateOnly = false) {
     <form @submit.prevent="save()" :aria-busy="pending">
       <nav class="editor-sections" aria-label="Editor sections">
         <span class="editor-sections-title">Sections</span>
-        <a href="#editor-name">Basic information</a><a href="#metadata-labels">Labels</a>
-        <a v-for="[name, field] in sections" :key="name" :href="`#nested-${name}`">{{ field.label }}</a>
-        <a href="#nested-editPermission">Editing permissions</a>
+        <a href="#editor-name"><UiIcon name="object" />Basic information</a><a href="#metadata-labels"><UiIcon name="topic" />Labels</a>
+        <a v-for="[name, field] in sections" :key="name" :href="`#nested-${name}`"><UiIcon :name="sectionIcon(field.path, field.kind)" />{{ field.label }}</a>
+        <a href="#nested-editPermission"><UiIcon name="lock" />Editing permissions</a>
       </nav>
       <div class="editor-content">
       <fieldset :disabled="unavailable" class="editor-fields">
@@ -258,13 +260,13 @@ async function save(validateOnly = false) {
 .editor-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 24px; }
 .editor-heading a { white-space: nowrap; }
 .editor-id { color: #575757; margin: 0; overflow-wrap: anywhere; }
-.resource-editor form { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 28px; align-items: start; }
-.editor-sections { position: sticky; top: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 12px; margin: 0; border: 1px solid #dce8ec; border-radius: 8px; background: #f5f9fa; font-size: 14px; }
-.editor-sections a { padding: 6px 8px; text-decoration: none; border-radius: 4px; }
+.resource-editor form { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start; }
+.editor-sections { position: sticky; top: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 12px; margin: 0; border: 1px solid #dce8ec; border-radius: 8px; background: #f5f9fa; font-size: var(--text-ui); }
+.editor-sections a { display: flex; align-items: center; gap: 8px; padding: 6px 8px; text-decoration: none; border-radius: 4px; }
 .editor-sections a:hover { background: #e5f1f5; text-decoration: underline; }
 .editor-sections-title { padding: 6px 8px; color: #425f6b; font-weight: 700; }
 .editor-content { min-width: 0; }
-.required-label { color: #526d79; font-size: 12px; font-weight: 400; }
+.required-label { color: #526d79; font-size: var(--text-caption); font-weight: 400; }
 .editor-fields label:has(+ .required-label) { display: inline-block; margin-right: 4px; }
 .editor-fields { border: 0; padding: 0; margin: 0; min-width: 0; }
 .editor-fields > legend { font-size: 20px; font-weight: 600; margin-bottom: 20px; padding: 0; }

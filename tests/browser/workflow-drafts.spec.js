@@ -25,10 +25,10 @@ test('private drafts, read-only links, revocation and expired sessions preserve 
     await page.getByRole('dialog').getByRole('option').first().click();
     await page.getByRole('button', { name: 'Apply selection' }).click();
     await page.getByRole('button', { name: 'Search functions' }).click();
-    const candidate = page.locator('li').filter({ hasText: 'Sequence Workbench (demo)' }).filter({ has: page.getByRole('button', { name: 'Add function' }) }).first();
+    const candidate = page.locator('li').filter({ hasText: 'Sequence Workbench (demo)' }).filter({ has: page.getByRole('button', { name: 'Add tool to workflow' }) }).first();
     await expect(candidate).toBeVisible();
-    await candidate.getByRole('button', { name: 'Add function' }).click();
-    await candidate.getByRole('button', { name: 'Add function' }).click();
+    await candidate.getByRole('button', { name: 'Add tool to workflow' }).click();
+    await candidate.getByRole('button', { name: 'Add tool to workflow' }).click();
     await expect(page.getByRole('heading', { name: 'Sequence Workbench (demo)' })).toHaveCount(2);
     await page.getByLabel('Output', { exact: true }).selectOption({ index: 1 });
     await page.getByLabel('Input', { exact: true }).selectOption({ index: 2 });

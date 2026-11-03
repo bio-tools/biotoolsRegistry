@@ -8,9 +8,11 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_safe
 from django.views.decorators.cache import never_cache
+from django.db import DatabaseError
 from elasticsearch.exceptions import TransportError
 
 from elixir.queries import FACET_LIMIT, InvalidQuery, SearchPageNotFound, search_tools
+from elixir.models import Credit, CollectionID, Domain, Resource
 from elixir.advanced_filters import filter_values, parse_filters, score_metadata
 from elixir.edam_lookup import EdamUnavailable, EdamVocabulary
 from elixir.resource_ui import SchemaUnavailable, resource_descriptor, search_metadata, public_fields
@@ -122,6 +124,8 @@ def summary(item, canonical=False, descriptor=None):
         nodes = public_fields(item, descriptor['contract'])
         result['comparison'] = {node['name']: text(node) for node in nodes}
         for node in nodes:
+            if node['name'] in ('additionDate', 'lastUpdate'):
+                result['comparison'][node['name']] = result['added' if node['name'] == 'additionDate' else 'updated']
             if node['name'] == 'function':
                 for entry in node.get('entries', []):
                     for child in entry:
@@ -152,6 +156,7 @@ def page(request):
               'schemaRevision': descriptor['revision'], 'sorts': SORTS,
               'pageSizes': PAGE_SIZES, 'maxWindow': MAX_WINDOW, 'scores': score_metadata(),
               'comparisonFields': comparison,
+              'optionsEndpoint': reverse('canonical-search-options') if getattr(request, 'canonical', False) else reverse('html:search-options'),
               'edamEndpoint': reverse('canonical-edam-lookup') if getattr(request, 'canonical', False) else reverse('html:edam-lookup')}
     body, status, elapsed = search_payload(request)
     if request.GET.get('view') == 'table':
@@ -248,3 +253,27 @@ def data(request):
     if elapsed is not None:
         response['Server-Timing'] = f'search;dur={elapsed:.2f}'
     return response
+
+
+@require_safe
+@never_cache
+def options(request):
+    field = request.GET.get('field', '')
+    query = request.GET.get('q', '').strip()
+    if field not in ('domain', 'creditName', 'collectionID', 'name') or len(query) > 80 or re.search(r'[\x00-\x1f\x7f]', query):
+        return JsonResponse({'error': 'Invalid lookup.'}, status=400)
+    try:
+        if field == 'domain':
+            values = [{'value': name, 'label': title or name} for name, title in
+                      Domain.objects.filter(visibility=1, is_private=False).values_list('name', 'title').distinct().order_by('name')]
+            return JsonResponse({'items': values})
+        if len(query) < 2:
+            return JsonResponse({'items': []})
+        model = {'creditName': Credit, 'collectionID': CollectionID, 'name': Resource}[field]
+        visibility = {'visibility': 1} if field == 'name' else {'resource__visibility': 1}
+        names = model.objects.filter(**visibility, name__icontains=query).exclude(name='').values_list('name', flat=True).distinct().order_by('name')[:21]
+        values = list(names)
+        return JsonResponse({'items': [{'value': name, 'label': name} for name in values[:20]], 'more': len(values) > 20})
+    except (DatabaseError, TransportError, TimeoutError):
+        logger.exception('Search options unavailable')
+        return JsonResponse({'error': 'Options are temporarily unavailable.'}, status=503)

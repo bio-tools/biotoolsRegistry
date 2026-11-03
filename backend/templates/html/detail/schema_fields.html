@@ -1,7 +1,7 @@
-{% load detail_tags %}
+{% load static detail_tags %}
 <dl class="facts schema-facts">
 {% for node in nodes %}
-  <dt>{{ node.label }}</dt><dd>
+  <dt>{% field_icon node.kind as icon %}<svg class="ui-icon" aria-hidden="true" focusable="false"><use href="{% static 'html/field-icons.svg' %}#{{ icon }}"></use></svg>{{ node.label }}</dt><dd>
   {% if node.entries %}
     <ul class="plain-list">{% for entry in node.entries %}<li>{% include 'html/detail/schema_fields.html' with nodes=entry %}</li>{% endfor %}</ul>
   {% else %}
@@ -12,11 +12,11 @@
       {% elif node.name == 'doi' or node.name == 'pmid' or node.name == 'pmcid' or node.name == 'rorid' or node.name == 'gridid' or node.name == 'fundrefid' %}{% identifier_link item.value node.name %}
       {% elif node.path == 'license' %}{% license_link item.value item.label %}
       {% elif node.path == 'otherID.value' %}{% identifier_link item.value node.identifierType %}
-      {% elif node.path == 'collectionID' %}<a href="{% search_url 'collectionID' item.value %}">{{ item.label }}</a>
+      {% elif node.path == 'collectionID' %}<a href="{% search_url 'collectionID' item.value %}" title="Search bio.tools for tools in {{ item.label }}">{{ item.label }}</a>
       {% elif node.path == 'elixirPlatform' %}<a href="https://elixir-europe.org/platforms/{{ item.value|lower|urlencode }}">{{ item.label }}</a>
       {% elif node.path == 'elixirNode' %}<a href="https://elixir-europe.org/about-us/who-we-are/nodes/{{ item.value|slugify }}">{{ item.label }}</a>
       {% elif node.path == 'elixirCommunity' %}<a href="{% community_url item.value %}">{{ item.label }}</a>
-      {% elif node.path == 'credit.name' %}<a href="{% search_url 'credit' item.value %}">{{ item.label }}</a>
+      {% elif node.path == 'credit.name' %}<a href="{% search_url 'credit' item.value %}" title="Search bio.tools for tools credited to {{ item.label }}">{{ item.label }}</a>
       {% elif node.name == 'cmd' %}<code>{{ item.label }}</code>
       {% else %}{{ item.label }}{% endif %}{% if not forloop.last %}, {% endif %}
     {% endfor %}

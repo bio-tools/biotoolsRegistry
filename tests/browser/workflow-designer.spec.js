@@ -4,6 +4,13 @@ test.describe('workflow designer', () => {
   test.setTimeout(60000);
   test.skip(process.env.BIOTOOLS_TEST_WORKFLOW_MATCHING !== '1', 'Requires the local detail-demo fixture and EDAM data.');
 
+  test('keeps the draft controls within a narrow screen', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.goto('/workflows/design/');
+    await expect(page.getByLabel('Restore draft')).toBeVisible();
+    expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
+  });
+
   for (const width of [1440, 390]) {
     test(`select functions and build a recoverable design at ${width}px`, async ({ page }, testInfo) => {
       await page.setViewportSize({ width, height: 900 });
@@ -22,11 +29,11 @@ test.describe('workflow designer', () => {
       await page.getByRole('dialog').getByRole('option').first().click();
       await page.getByRole('button', { name: 'Apply selection' }).click();
       await page.getByRole('button', { name: 'Search functions' }).click();
-      const item = page.locator('li').filter({ hasText: 'Sequence Workbench (demo)' }).filter({ has: page.getByRole('button', { name: 'Add function' }) }).first();
+      const item = page.locator('li').filter({ hasText: 'Sequence Workbench (demo)' }).filter({ has: page.getByRole('button', { name: 'Add tool to workflow' }) }).first();
       await expect(item).toBeVisible();
-      await item.getByRole('button', { name: 'Add function' }).click();
-      await item.getByRole('button', { name: 'Add function' }).click();
-      await item.getByRole('button', { name: 'Add function' }).click();
+      await item.getByRole('button', { name: 'Add tool to workflow' }).click();
+      await item.getByRole('button', { name: 'Add tool to workflow' }).click();
+      await item.getByRole('button', { name: 'Add tool to workflow' }).click();
       await expect(page.getByRole('heading', { name: 'Sequence Workbench (demo)' })).toHaveCount(3);
       await expect(page.getByRole('img', { name: /Connections between workflow steps/ })).toBeVisible();
       await page.getByLabel('Output', { exact: true }).selectOption({ index: 1 });
@@ -118,12 +125,12 @@ test.describe('workflow designer', () => {
     await expect(picker).toBeFocused();
     await page.getByRole('button', { name: 'Search functions' }).focus();
     await page.keyboard.press('Enter');
-    const item = page.locator('li').filter({ hasText: 'Sequence Workbench (demo)' }).filter({ has: page.getByRole('button', { name: 'Add function' }) }).first();
+    const item = page.locator('li').filter({ hasText: 'Sequence Workbench (demo)' }).filter({ has: page.getByRole('button', { name: 'Add tool to workflow' }) }).first();
     await expect(item).toBeVisible();
-    await item.getByRole('button', { name: 'Add function' }).focus();
+    await item.getByRole('button', { name: 'Add tool to workflow' }).focus();
     await page.keyboard.press('Enter');
     await expect(page.getByRole('heading', { name: 'Sequence Workbench (demo)' })).toHaveCount(1);
-    await item.getByRole('button', { name: 'Add function' }).focus();
+    await item.getByRole('button', { name: 'Add tool to workflow' }).focus();
     await page.keyboard.press('Enter');
     await expect(page.getByRole('heading', { name: 'Sequence Workbench (demo)' })).toHaveCount(2);
     await page.getByLabel('Output', { exact: true }).focus();

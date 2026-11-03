@@ -10,8 +10,9 @@ from elasticsearch import Elasticsearch
 
 from elixir.models import (Resource, EditPermission, Function, Operation, Input, Data,
                            Format, Relation, Publication, PublicationMetadata,
-                           PublicationAuthor, PublicationType, Credit, CreditTypeRole)
+                           PublicationAuthor, PublicationType, Credit, CreditTypeRole, OtherID)
 from elixir.queries import get_tool_detail
+from elixir.templatetags.detail_tags import field_icon
 from elixirapp.tests.detail_fixtures import create_detail_fixture
 
 
@@ -64,8 +65,20 @@ class ToolDetailTests(TestCase):
             self.assertIn(href, links)
         self.assertContains(response, 'noindex, nofollow')
         self.assertContains(response, '<details>')
-        self.assertNotContains(response, '<script')
+        self.assertContains(response, 'class="bip-embed"')
+        self.assertContains(response, 'class="altmetric-embed"')
+        self.assertContains(response, 'class="__dimensions_badge_embed__"')
+        self.assertContains(response, 'https://badge.dimensions.ai/static/ai/badge.js')
+        self.assertContains(response, '/static/html/field-icons.svg#function')
+        self.assertContains(response, '/static/html/field-icons.svg#publication')
+        self.assertContains(response, 'title="Open this term in the EDAM ontology"')
+        self.assertContains(response, 'title="Search bio.tools for tools annotated with Sequence analysis"')
+        self.assertContains(response, 'title="Search bio.tools for tools credited to Example Research Team"')
         self.assertNotContains(response, '<object')
+
+    def test_unknown_field_type_uses_a_generic_decorative_icon(self):
+        self.assertEqual(field_icon('number'), 'number')
+        self.assertEqual(field_icon('new-schema-type'), 'object')
 
     def test_sparse_record_omits_optional_sections(self):
         response = self.page('migration-fixture')
@@ -82,6 +95,42 @@ class ToolDetailTests(TestCase):
         response = self.page()
         self.assertContains(response, '<h3>Publication 1</h3>')
         self.assertContains(response, 'https://doi.org/10.5555/detail-demo')
+
+    def test_publication_badges_use_valid_identifiers_and_fall_back(self):
+        publication = self.rich.publication.first()
+        PublicationMetadata.objects.filter(pk=publication.metadata_id).update(citationCount=330)
+        Publication.objects.filter(pk=publication.pk).update(doi='https://doi.org/10.5555/detail-demo', pmid='12345')
+        response = self.page()
+        self.assertContains(response, 'data-doi="10.5555/detail-demo"', count=3)
+        self.assertNotContains(response, 'Citation count')
+        self.assertContains(response, 'https://europepmc.org/search?query=CITES%3A12345_MED')
+        self.assertContains(response, 'https://cdn.jsdelivr.net/gh/athenarc/bip-plugin@main/embed.min.js')
+
+        Publication.objects.filter(pk=publication.pk).update(doi='', pmid='12345')
+        response = self.page()
+        self.assertContains(response, 'data-pmid="12345"', count=2)
+        self.assertNotContains(response, 'class="bip-embed"')
+        self.assertNotContains(response, 'bip-plugin@main')
+
+        Publication.objects.filter(pk=publication.pk).update(doi='invalid"doi', pmid='bad-123')
+        response = self.page()
+        self.assertNotContains(response, 'class="bip-embed"')
+        self.assertNotContains(response, 'class="altmetric-embed"')
+        self.assertNotContains(response, 'badge.dimensions.ai')
+        self.assertNotContains(response, 'CITES%3A')
+        self.assertContains(response, 'invalid&quot;doi')
+
+    def test_partner_branding_and_identifiers_are_visible_when_present(self):
+        self.rich.elixir_badge = 7
+        self.rich.save(update_fields=['elixir_badge'])
+        OtherID.objects.create(resource=self.rich, type='RRID', value='RRID:SCR_000001')
+        response = self.page()
+        for text in ('/img/opeb_logo.gif', '/img/tess_logo.png', '/img/edd.png', '/img/cdr.png',
+                     '/img/rir.png', '/img/scicrunch.png', 'https://scicrunch.org/resolver/RRID%3ASCR_000001',
+                     'https://openebench.bsc.es/tool/detail-demo', 'Version 2.4.0', 'Command-line tool'):
+            self.assertContains(response, text)
+        sparse = self.page('migration-fixture')
+        self.assertNotContains(sparse, '/img/scicrunch.png')
 
     def test_missing_hidden_and_malformed_identifiers(self):
         for identifier in ('missing-detail', 'hidden-detail', 'bad:id', 'x' * 101, '<script>'):

@@ -119,7 +119,7 @@ describe('candidate workspace', () => {
     expect(apply.attributes()).toHaveProperty('disabled');
     await wrapper!.findAll('button').find(button => button.text() === 'Clear candidate filters')!.trigger('click');
     expect(wrapper!.find('[role="alert"]').exists()).toBe(false);
-    await wrapper!.get('#candidate-type').setValue('Absent');
+    await wrapper!.get('#candidate-added-min').setValue('2099-01-01');
     expect(wrapper!.text()).toContain('No candidates match');
     expect(wrapper!.get('.candidate-scope').text()).toContain('0 of 6 loaded tools');
     expect(fetcher).toHaveBeenCalledTimes(1);

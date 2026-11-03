@@ -43,7 +43,7 @@ def canonical_family(path):
             r'/(?:register/?|register/(?:save|validate)/|[A-Za-z0-9.~_-]{1,100}/edit(?:/(?:save|validate)/|/?)|'
             r'requests/?|requests/conclude/|requests/tool/[A-Za-z0-9.~_-]{1,100}/)', path):
         return 'requests' if path.split('/')[1] == 'requests' else 'editor'
-    if path in ('/t', '/t/', '/_search/data/'):
+    if path in ('/t', '/t/', '/_search/data/', '/_search/options/'):
         return 'search'
     if path.strip('/') not in RESERVED and re.fullmatch(
             r'/(?:(?:tool|t)/)?(?:biotools:)?[A-Za-z0-9.~_-]{1,100}/?', path):

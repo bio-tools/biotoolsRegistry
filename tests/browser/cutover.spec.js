@@ -59,8 +59,8 @@ test.describe('canonical cutover', () => {
       await page.goBack();
       await expect(page.locator('[data-vue-island="search-workspace"]')).toHaveAttribute('data-v-app', '');
       await page.goForward();
-      await page.getByRole('link', { name: 'Manage record', exact: true }).click();
-      await expect(page.getByRole('heading', { name: 'Sign in', exact: true })).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Manage record', exact: true })).toHaveCount(0);
+      await expect(page.getByRole('link', { name: 'Edit record', exact: true })).toHaveCount(0);
     });
   }
 });

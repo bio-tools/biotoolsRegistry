@@ -18,12 +18,15 @@ const fetchMock = vi.fn();
 let wrapper: VueWrapper;
 const button = (scope: VueWrapper | DOMWrapper<Element>, text: string) => scope.findAll('button').find(item => item.text() === text)!;
 beforeEach(() => {
+  Object.defineProperty(HTMLDialogElement.prototype, 'showModal', { configurable: true, value: function (this: HTMLDialogElement) { this.open = true; } });
+  Object.defineProperty(HTMLDialogElement.prototype, 'close', { configurable: true, value: function (this: HTMLDialogElement) { this.open = false; } });
   vi.stubGlobal('fetch', fetchMock);
   vi.spyOn(window, 'confirm').mockReturnValue(true);
   document.head.innerHTML = '<meta name="csrf-token" content="' + 'a'.repeat(64) + '">';
   wrapper = mount(ResourceEditor, { props: config, global: { stubs: { EdamSelector: Selector } } });
 });
-afterEach(() => { wrapper.unmount(); fetchMock.mockReset(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+afterEach(() => { wrapper.unmount(); fetchMock.mockReset(); vi.restoreAllMocks(); vi.unstubAllGlobals();
+  Reflect.deleteProperty(HTMLDialogElement.prototype, 'showModal'); Reflect.deleteProperty(HTMLDialogElement.prototype, 'close'); });
 async function submit(errors: unknown = { detail: 'Captured snapshot' }) {
   fetchMock.mockResolvedValueOnce(new Response(JSON.stringify(errors), { status: 400 }));
   await wrapper.get('form').trigger('submit');
@@ -45,7 +48,9 @@ it('renders all 19 missing schema fields and preserves rich typed payloads witho
 });
 
 it('edits scalar metadata and adds credits, publications and topic through their dedicated controls', async () => {
-  await wrapper.get('#nested-license').setValue('Apache-2.0');
+  await wrapper.get('#nested-license').trigger('click');
+  await wrapper.get('.choice-dialog input[type="search"]').setValue('Apache-2.0');
+  await button(wrapper, 'Apache-2.0').trigger('click');
   await button(wrapper, 'Add version').trigger('click');
   await wrapper.get('#nested-version').findAll('input').at(-1)!.setValue('3.0');
   await button(wrapper, 'Add credit').trigger('click');
@@ -116,7 +121,8 @@ it('saves enriched records, locks existing protected IDs and clears enrichment o
 });
 
 it('explicitly clears optional values while retaining untouched nested data and distinct type cardinalities', async () => {
-  await wrapper.get('#nested-license').setValue('');
+  await wrapper.get('#nested-license').trigger('click');
+  await button(wrapper, 'Clear selection').trigger('click');
   const download = wrapper.get('#nested-download');
   await download.get('input[id$="-version"]').setValue('');
   await download.get('select[id$="-type"]').setValue('Software package');

@@ -3,5 +3,5 @@
 {% block content %}
 <h1>Manage domains</h1>
 <p><a href="/edit-domain/">Create a domain</a> · <a href="/domains">Public domain directory</a></p>
-<ul>{% for domain in domains %}<li><a href="/edit-domain/{{ domain.name }}">{{ domain.title|default:domain.name }}</a> ({{ domain.name }}) · <a href="/t?domain={{ domain.name|urlencode }}">Browse tools</a></li>{% empty %}<li>You do not own or edit any domains.</li>{% endfor %}</ul>
+<ul>{% for domain in domains %}<li><a href="/edit-domain/{{ domain.name }}">{{ domain.title|default:domain.name }}</a> ({{ domain.name }}) · <a href="/t?domain={{ domain.name|urlencode }}" title="Search bio.tools for tools in this domain">Browse tools</a></li>{% empty %}<li>You do not own or edit any domains.</li>{% endfor %}</ul>
 {% endblock %}

@@ -9,6 +9,7 @@ urlpatterns = [
     path('t', search_workspace.canonical_page, name='canonical-search'),
     path('t/', search_workspace.canonical_page),
     path('_search/data/', search_workspace.data, name='canonical-search-data'),
+    path('_search/options/', search_workspace.options, name='canonical-search-options'),
     path('_edam/terms/', edam.lookup, name='canonical-edam-lookup'),
     path('_workflow/matches/', workflow_matching.candidates, name='workflow-matches'),
     path('_workflow/function/', workflow_matching.function, name='workflow-function'),

@@ -4,6 +4,8 @@ import EditorField from './EditorField.vue';
 import EditorStrings from './EditorStrings.vue';
 import EditorRecords from './EditorRecords.vue';
 import EdamConcepts from './EdamConcepts.vue';
+import UiIcon from './UiIcon.vue';
+import { sectionIcon } from './ui-icons';
 import { fieldId, type ConceptItem } from './nested-editor';
 import { newEditorItem, type EditorError, type EditorItem, type EditorPath, type Field } from './resource-editor';
 
@@ -41,14 +43,14 @@ function emptyValue(field: Field): unknown {
         :path="[...path, name]" :label="field.label || name" :item-label="field.itemLabel || field.label || name" :errors="errors" :disabled="disabled" />
       <EditorRecords v-else-if="field.kind === 'array' && field.item?.kind === 'object'" class="schema-wide"
         :model-value="records(record[name])" @update:model-value="record[name] = $event" :empty="() => emptyValue(field.item!) as Record<string, unknown>" :field="name"
-        :parent-path="[...path, name]" :label="field.label || name" :item-label="field.itemLabel || field.label || name"
+        :parent-path="[...path, name]" :label="field.label || name" :item-label="field.itemLabel || field.label || name" :icon="sectionIcon(field.path, field.kind)"
         :errors="errors" :disabled="disabled" :readonly-ids="field.path === 'otherID' ? protectedIds : undefined" v-slot="{ item, path: itemPath, readonly }">
         <SchemaFields v-if="object(item.value)" :record="object(item.value)!" :fields="field.item.fields || {}" :path="itemPath"
           :errors="errors" :disabled="disabled || readonly" :endpoint="endpoint" />
         <p v-else class="nested-error">Invalid stored value; retained in the draft.</p>
       </EditorRecords>
       <section v-else-if="field.kind === 'object'" :id="fieldId([...path, name])" class="schema-wide" :aria-label="field.label || name">
-        <h3>{{ field.label || name }}</h3>
+        <h3><UiIcon :name="sectionIcon(field.path, field.kind)" />{{ field.label || name }}</h3>
         <SchemaFields v-if="object(record[name])" :record="object(record[name])!" :fields="field.fields || {}" :path="[...path, name]"
           :errors="errors" :disabled="disabled" :endpoint="endpoint" />
         <button v-else type="button" class="secondary" :disabled="disabled" @click="record[name] = emptyValue(field)">Add {{ field.label || name }}</button>

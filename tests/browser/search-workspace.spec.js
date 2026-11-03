@@ -14,6 +14,11 @@ test.describe('Vue search workspace', () => {
       page.on('pageerror', error => errors.push(error.message));
       await page.setViewportSize({ width, height: 900 });
       await page.goto(route + '?q=Workspace+sample&per_page=10&page=2&sort=name&ord=asc');
+      const querySizes = await page.locator('.query-form').evaluate(form => ({
+        field: getComputedStyle(form.querySelector('input')).fontSize,
+        label: getComputedStyle(form.querySelector('label')).fontSize,
+      }));
+      expect(querySizes.field).toBe(querySizes.label);
       const items = page.locator('article[data-tool-id]');
       await expect(items).toHaveCount(3);
       await expect(items.first()).toContainText('Workspace sample 11');

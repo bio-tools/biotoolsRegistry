@@ -26,6 +26,7 @@ page_patterns = [
         path('islands/', html.islands, name='islands'),
         path('search/', search_workspace.page, name='search'),
         path('search/data/', search_workspace.data, name='search-data'),
+        path('search/options/', search_workspace.options, name='search-options'),
         path('edam/', edam.preview, name='edam-preview'),
         path('edam/terms/', edam.lookup, name='edam-lookup'),
         re_path(r'^tool/(?:biotools:)?(?P<identifier>[A-Za-z0-9.~_-]{1,100})/$',

@@ -34,6 +34,10 @@ it('renders newly advertised nested fields inside the unchanged function diagram
   expect(view.text()).toContain('Command for this annotation.');
   const entry = view.findAll('.function-entry')[0];
   await entry.findAll('button').find(button => button.text() === 'Add Additional annotation')!.trigger('click');
+  const enabledIcon = entry.get('label[for$="-extra-enabled"] svg');
+  expect(enabledIcon.attributes('aria-hidden')).toBe('true');
+  expect(enabledIcon.get('use').attributes('href')).toContain('#boolean');
+  expect(entry.text()).toContain('Additional annotation');
   await entry.get('input[id$="-extra-enabled"]').setValue(true);
   await entry.get('input[id$="-extra-score"]').setValue('2.5');
   await entry.findAll('button').find(button => button.text() === 'Add label')!.trigger('click');

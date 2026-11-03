@@ -121,6 +121,7 @@ test('failed workflow image retains annotation details and recovery', async ({ p
   await page.route('**/media/workflows/**', route => route.abort());
   await page.goto('/workflows?q=management-workflow');
   await expect(page.getByRole('alert')).toContainText('workflow image could not be loaded');
+  await page.locator('.workflow-details summary').first().click();
   await expect(page.getByRole('heading', { name: 'Align sequences', exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Open or retry full-size image' })).toBeVisible();
 });

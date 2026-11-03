@@ -2,18 +2,22 @@
 {% block title %}Workflows | bio.tools{% endblock %}
 {% block content %}
 <h1>Workflows</h1>
-<p><a href="/workflows/design/">Design a workflow from tool functions</a></p>
-<form method="get"><label for="workflow-query">Search workflows and annotations</label><input id="workflow-query" name="q" value="{{ query }}" maxlength="200"><button type="submit">Search workflows</button> <a href="/workflows">Clear</a></form>
+<p>Explore annotated workflows or <a href="/workflows/design/">design your own workflow</a>.</p>
+<form method="get" class="workflow-search"><label for="workflow-query">Search workflows and annotations</label><div class="search-controls"><input id="workflow-query" name="q" value="{{ query }}" maxlength="200"><button type="submit">Search workflows</button> <a href="/workflows">Clear</a></div></form>
 {% if unavailable %}<p role="alert">Workflows could not be loaded. <a href="">Try again</a>.</p>{% else %}
-{% for item in workflows %}<section class="workflow"><h2>{{ item.record.biotoolsID }}</h2><p>{{ item.record.description }}</p>
-{% if item.record.sourceURL %}<p>{% external_link item.record.sourceURL 'Workflow source' %}</p>{% endif %}
+<div class="workflow-grid">
+{% for item in workflows %}<section class="workflow"><h2>{{ item.record.biotoolsID }}</h2><p>{{ item.record.description|default:''|truncatechars:200 }}</p>
 {% if item.image %}<div class="workflow-image">
 <img src="{{ item.image }}" alt="Annotated workflow {{ item.record.biotoolsID }}" width="{{ item.record.image_width }}" height="{{ item.record.image_height }}" data-workflow-image>
 {% for annotation in item.annotations %}{% if annotation.box %}<a class="workflow-region" style="{{ annotation.box }}" href="#annotation-{{ item.record.pk }}-{{ forloop.counter }}" aria-label="Inspect {{ annotation.record.title|default:'annotation' }}"><span class="visually-hidden">{{ annotation.record.title|default:'Annotation' }}</span></a>{% endif %}{% endfor %}
 </div><p data-workflow-error hidden role="alert">The workflow image could not be loaded. Annotation details remain available below.</p>
 <p><a href="{{ item.image }}">Open or retry full-size image</a></p>
-{% else %}<p role="alert">The workflow image is unavailable. Annotation details remain available below.</p>{% endif %}
+{% else %}<p class="workflow-image-note">The workflow image is unavailable.</p>
+<ul class="workflow-preview" aria-label="Annotations in {{ item.record.biotoolsID }}">{% for annotation in item.annotations|slice:':6' %}<li><a href="#annotation-{{ item.record.pk }}-{{ forloop.counter }}">{{ annotation.record.title|default:annotation.record.edam_term|default:'Annotation' }}</a></li>{% endfor %}</ul>{% endif %}
+<details class="workflow-details"><summary>Annotations ({{ item.annotations|length }})</summary>
+{% if item.record.description|length > 200 %}<p>{{ item.record.description }}</p>{% endif %}
 <ol>{% for annotation in item.annotations %}<li id="annotation-{{ item.record.pk }}-{{ forloop.counter }}" tabindex="-1" class="workflow-annotation"><h3>{{ annotation.record.title|default:'Annotation' }}</h3><p>{{ annotation.record.description }}</p><p>{{ annotation.record.edam_term }}</p>
-{% if annotation.record.url %}{% external_link annotation.record.url 'Annotation link' %}{% elif annotation.record.edam_uri %}{% external_link annotation.record.edam_uri 'EDAM concept' %}{% endif %}</li>{% empty %}<li>No annotations recorded.</li>{% endfor %}</ol>
-</section>{% empty %}<p>No matching workflows.</p>{% endfor %}{% endif %}
+{% workflow_annotation_link annotation.record.url annotation.record.edam_uri %}</li>{% empty %}<li>No annotations recorded.</li>{% endfor %}</ol>
+</details></section>{% empty %}<p>No matching workflows.</p>{% endfor %}
+</div>{% endif %}
 {% endblock %}

@@ -18,6 +18,7 @@ export interface SearchConfig {
   maxWindow: number;
   scores?: ScoreDefinition[];
   edamEndpoint?: string;
+  optionsEndpoint?: string;
   comparisonFields?: Record<string, string>;
 }
 

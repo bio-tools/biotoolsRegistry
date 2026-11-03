@@ -123,6 +123,9 @@ function remove(uri: string, staged = false) {
   }
 }
 function hint(term: EdamTerm) { query.value = term.term; lookup(); input.value?.focus(); }
+function blur(event: FocusEvent) {
+  if (!dialog.value?.contains(event.relatedTarget as Node | null)) expanded.value = false;
+}
 function keydown(event: KeyboardEvent) {
   if (event.key === 'Escape') {
     event.preventDefault();
@@ -144,7 +147,7 @@ function keydown(event: KeyboardEvent) {
 }
 
 watch(() => [props.scope, props.branch, props.endpoint], () => { close(); cache.value.clear(); vocabularyRevision = ''; resolveSelection(true); });
-watch(() => props.modelValue, () => { if (open.value) close(); resolveSelection(); }, { immediate: true, deep: true });
+watch(() => props.modelValue.join('\u0000'), () => { if (open.value) close(); resolveSelection(); }, { immediate: true });
 watch(editable, value => { if (!value) close(); });
 onUnmounted(() => { cancelLookup(); resolveSequence++; resolver?.abort(); dialog.value?.close(); });
 </script>
@@ -178,7 +181,7 @@ onUnmounted(() => { cancelLookup(); resolveSequence++; resolver?.abort(); dialog
       <input :id="`${id}-query`" ref="input" v-model="query" type="text" role="combobox" autocomplete="off" maxlength="128"
         aria-autocomplete="list" aria-haspopup="listbox" :aria-expanded="expanded" :aria-controls="`${id}-choices`"
         :aria-activedescendant="expanded && active >= 0 && choices[active] ? `${id}-option-${active}` : undefined"
-        :aria-describedby="`${id}-status`" @input="lookup()" @keydown="keydown" @blur="expanded = false">
+        :aria-describedby="`${id}-status`" @input="lookup()" @keydown="keydown" @blur="blur">
       <p :id="`${id}-status`" role="status" class="lookup-status">
         <template v-if="loading">Loading terms...</template>
         <template v-else-if="error">Lookup unavailable.</template>
@@ -206,7 +209,7 @@ onUnmounted(() => { cancelLookup(); resolveSequence++; resolver?.abort(); dialog
 <style scoped>
 .edam-selector { min-width: 0; }
 .edam-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-.edam-selector button { font-size: 14px; }
+.edam-selector button { font-size: var(--text-control); }
 .concept-picker { width: 100%; min-height: 40px; text-align: left; white-space: normal; overflow-wrap: anywhere; }
 .concept-picker.has-selection { color: #23527c; border-color: transparent; background: transparent; padding: 6px 0; font-weight: 600; }
 .concept-picker.has-selection:hover { text-decoration: underline; background: #edf4f8; }
@@ -215,10 +218,10 @@ onUnmounted(() => { cancelLookup(); resolveSequence++; resolver?.abort(); dialog
 .remove-term { width: 32px; height: 32px; padding: 0; border: 0; background: transparent; color: #23527c; flex-shrink: 0; font-size: 22px !important; }
 .edam-dialog { box-sizing: border-box; width: min(680px, calc(100% - 24px)); max-height: calc(100dvh - 32px); padding: 24px; border: 1px solid #767676; border-radius: 4px; color: #333; overflow: auto; }
 .edam-dialog::backdrop { background: rgb(0 0 0 / 35%); }
-.edam-dialog h2 { font-size: 22px; margin: 0 0 16px; }
+.edam-dialog h2 { font-size: var(--text-heading); margin: 0 0 16px; }
 .edam-dialog input { width: 100%; box-sizing: border-box; }
 .lookup-status { font-size: 13px; color: #555; margin: 8px 0; }
-.edam-choices { list-style: none; padding: 0; margin: 0; border: 1px solid #d5dce0; max-height: 310px; overflow-y: auto; }
+.edam-choices { list-style: none; padding: 0; margin: 0; border: 1px solid #d5dce0; max-height: 310px; overflow-y: auto; background: #fff; color: #263a43; }
 .edam-choices li { padding: 12px; border-bottom: 1px solid #ddd; cursor: pointer; overflow-wrap: anywhere; }
 .edam-choices li:last-child { border: 0; }
 .edam-choices li.active, .edam-choices li:hover { background: #edf4f8; box-shadow: inset 3px 0 #337ab7; }

@@ -8,9 +8,11 @@
   <meta name="csrf-token" content="{{ csrf_token }}">
   <meta name="session-url" content="{% url 'html:session' %}">
   <meta name="session-user" content="{% if user.is_authenticated %}{{ user.pk }}{% endif %}">
+  <meta name="ui-icons-url" content="{% static 'html/field-icons.svg' %}">
   <title>{% block title %}bio.tools{% endblock %}</title>
   <link rel="icon" href="{% static 'html/favicon.ico' %}">
   <link rel="stylesheet" href="{% static 'html/shell.css' %}">
+  <script defer src="{% static 'html/header-search.js' %}"></script>
   {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -20,6 +22,12 @@
       <a class="brand" href="/" aria-label="bio.tools home">
         <img src="{% static 'html/biotools-white.svg' %}" alt="bio.tools" width="156" height="80">
       </a>
+      <form class="header-search" method="get" action="/t" role="search" aria-label="Site-wide search">
+        <label class="header-search-label" for="header-query">Search registry</label>
+        <input id="header-query" name="q" type="search" maxlength="256" placeholder="Search bio.tools">
+        <button type="submit" aria-label="Search registry">Search</button>
+        <span class="header-search-count" data-count-url="{% if request.canonical %}/_search/data/{% else %}{% url 'html:search-data' %}{% endif %}" hidden></span>
+      </form>
       <nav aria-label="Main navigation">
         {% block navigation %}
         <a href="/t">Tools</a>

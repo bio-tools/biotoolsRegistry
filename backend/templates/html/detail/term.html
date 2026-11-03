@@ -1,5 +1,5 @@
 {% load detail_tags %}
 {% if label %}<span class="edam-term">
-  {% if search %}<a href="{{ search }}">{{ label }}</a>{% else %}{{ label }}{% endif %}
-  {% if uri %}<small>{% external_link uri identifier|default:uri %}</small>{% endif %}
+  {% if search %}<a href="{{ search }}" title="Search bio.tools for tools annotated with {{ label }}">{{ label }}</a>{% else %}{{ label }}{% endif %}
+  {% if uri %}<small>{% external_link uri identifier|default:uri 'Open this term in the EDAM ontology' %}</small>{% endif %}
 </span>{% endif %}

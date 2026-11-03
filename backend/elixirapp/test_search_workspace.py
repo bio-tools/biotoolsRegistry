@@ -17,6 +17,27 @@ from elixirapp.test_html import HTML_REQUEST
 
 
 class SearchWorkspaceTests(SimpleTestCase):
+    def test_option_lookup_limits_fields_and_public_domains(self):
+        for query in ('field=owner&q=ab', 'field=creditName&q=x%00', 'field=creditName&q=' + 'a' * 81):
+            self.assertEqual(self.client.get('/search/options/?' + query, **HTML_REQUEST).status_code, 400)
+        with patch('elixirapp.search_workspace.Domain.objects') as domains:
+            domains.filter.return_value.values_list.return_value.distinct.return_value.order_by.return_value = [('public', 'Public domain')]
+            response = self.client.get('/search/options/?field=domain', **HTML_REQUEST)
+            self.assertEqual(response.json()['items'], [{'value': 'public', 'label': 'Public domain'}])
+            domains.filter.assert_called_once_with(visibility=1, is_private=False)
+        with patch('elixirapp.search_workspace.Credit.objects') as credits:
+            self.assertEqual(self.client.get('/search/options/?field=creditName&q=a', **HTML_REQUEST).json()['items'], [])
+            credits.filter.assert_not_called()
+            credits.filter.return_value.exclude.return_value.values_list.return_value.distinct.return_value.order_by.return_value = ['Anna']
+            response = self.client.get('/search/options/?field=creditName&q=an', **HTML_REQUEST)
+            self.assertEqual(response.json()['items'], [{'value': 'Anna', 'label': 'Anna'}])
+            credits.filter.assert_called_once_with(resource__visibility=1, name__icontains='an')
+        with patch('elixirapp.search_workspace.CollectionID.objects') as collections:
+            collections.filter.return_value.exclude.return_value.values_list.return_value.distinct.return_value.order_by.return_value = ['3D-BioInfo']
+            response = self.client.get('/search/options/?field=collectionID&q=3D', **HTML_REQUEST)
+            self.assertEqual(response.json()['items'], [{'value': '3D-BioInfo', 'label': '3D-BioInfo'}])
+            collections.filter.assert_called_once_with(resource__visibility=1, name__icontains='3D')
+
     def test_validation_is_strict_and_separate_from_legacy(self):
         for query in ('page=0', 'page=-1', 'page=1.5', 'page=nan', 'page=10001',
                       'per_page=0', 'per_page=101', 'per_page=bad', 'page=101&per_page=100',

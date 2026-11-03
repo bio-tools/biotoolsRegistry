@@ -13,7 +13,13 @@
   <link rel="alternate" type="application/ld+json" href="{{ api_url }}?format=jsonld">
   <link rel="stylesheet" href="{% static 'html/detail.css' %}">
 {% endblock %}
-{% block scripts %}{% endblock %}
+{% block scripts %}
+  {% if has_publication_metrics %}
+  <script async src="https://badge.dimensions.ai/static/ai/badge.js" charset="utf-8"></script>
+  <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+  {% if has_publication_doi %}<script async src="https://cdn.jsdelivr.net/gh/athenarc/bip-plugin@main/embed.min.js"></script>{% endif %}
+  {% endif %}
+{% endblock %}
 {% block content %}
 <article class="tool-detail">
   <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/t">Tools</a><span aria-hidden="true">/</span><span>{{ tool.biotoolsID }}</span></nav>
@@ -21,10 +27,25 @@
     <div><p class="resource-id">biotools:{{ tool.biotoolsID }}</p><h1>{{ tool.name }}</h1>
       {% if tool.description %}<p class="tool-summary">{{ tool.description|truncatechars:260 }}</p>{% endif %}
       <div class="homepage">{% external_link tool.homepage %}</div>
+      <ul class="tool-summary-tags" aria-label="Key tool attributes">
+        {% if schema_fields.version.public %}{% for version in tool.version.all %}<li>Version {{ version.version }}</li>{% endfor %}{% endif %}
+        {% if schema_fields.maturity.public and tool.maturity %}<li>{{ tool.maturity }}</li>{% endif %}
+        {% if schema_fields.license.public and tool.license %}<li>{% license_link tool.license %}</li>{% endif %}
+        {% if schema_fields.cost.public and tool.cost %}<li>{{ tool.cost }}</li>{% endif %}
+        {% if schema_fields.accessibility.public and tool.accessibility %}<li>{{ tool.accessibility }}</li>{% endif %}
+        {% if schema_fields.toolType.public %}{% for type in tool.toolType.all %}<li>{{ type.name }}</li>{% endfor %}{% endif %}
+        {% if schema_fields.language.public %}{% for language in tool.language.all %}<li>{{ language.name }}</li>{% endfor %}{% endif %}
+        {% if schema_fields.operatingSystem.public %}{% for system in tool.operatingSystem.all %}<li>{{ system.name }}</li>{% endfor %}{% endif %}
+      </ul>
     </div>
-    <div class="tool-actions"><a href="/{{ tool.biotoolsID }}/manage">Manage record</a>
+    <div class="tool-actions"><a class="openebench-link" href="https://openebench.bsc.es/tool/{{ tool.biotoolsID|lower|urlencode }}"><img src="/img/opeb_logo.gif" alt="OpenEBench" width="72"><span>Monitoring &amp; benchmarking</span></a>
+      <div class="record-actions">
+      {% if request.user.is_authenticated %}
+      <a href="/{{ tool.biotoolsID }}/manage">Manage record</a>
       {% if request.canonical %}<a href="{{ edit_url }}">Edit record</a>{% elif can_edit %}<a href="{% url 'html:editor-edit' identifier=tool.biotoolsID %}">Edit record</a>{% endif %}
+      {% endif %}
       <nav aria-label="Export record"><a href="{{ api_url }}?format=json">JSON</a><a href="{{ api_url }}?format=xml">XML</a></nav>
+      </div>
     </div>
   </header>
   {% if tool.confidence_flag and tool.confidence_flag != 'tool' %}<p class="record-notice">Automatically generated entry. Confidence: <strong>{{ tool.confidence_flag }}</strong>.</p>{% endif %}
@@ -41,7 +62,7 @@
         {% if tool.description|length > 260 %}<p class="description">{{ tool.description }}</p>{% endif %}
         {% if tool.topic.all %}<h3>{{ schema_fields.topic.label }}</h3><ul class="topic-list">{% for topic in tool.topic.all %}<li>{% edam_term topic 'topicID' %}</li>{% endfor %}</ul>{% elif tool.description|length <= 260 %}<p class="muted">No topics specified.</p>{% endif %}
       </section>
-      {% if tool.function.all %}<section id="functions" class="detail-section"><h2>{{ schema_fields.function.label }}</h2>
+      {% if tool.function.all %}<section id="functions" class="detail-section"><h2><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="{% static 'html/field-icons.svg' %}#function"></use></svg>{{ schema_fields.function.label }}</h2>
         {% for entry in functions %}{% with function=entry.record %}<section class="function-row" aria-labelledby="function-{{ forloop.counter }}">
           <h3 id="function-{{ forloop.counter }}">Function {{ forloop.counter }}</h3>
           <div class="function-flow" role="group" aria-label="Function {{ forloop.counter }}: inputs to operations to outputs">
@@ -57,7 +78,7 @@
       {% for node in metadata_sections %}<section id="metadata-{{ node.name }}" class="detail-section"><h2>{{ node.label }}</h2>
         <ul class="resource-links">{% for entry in node.entries %}<li>{% include 'html/detail/schema_fields.html' with nodes=entry %}</li>{% endfor %}</ul>
       </section>{% endfor %}
-      {% if tool.publication.all %}<section id="publications" class="detail-section"><h2>{{ schema_fields.publication.label }}</h2>
+      {% if tool.publication.all %}<section id="publications" class="detail-section"><h2><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="{% static 'html/field-icons.svg' %}#publication"></use></svg>{{ schema_fields.publication.label }}</h2>
         <ol class="citation-list publication-list">{% for entry in publications %}{% with pub=entry.record %}<li>
           <h3>{% if pub.metadata.title %}{{ pub.metadata.title }}{% else %}Publication {{ forloop.counter }}{% endif %}</h3>
           {% if pub.type.all %}<p class="publication-type">{% for type in pub.type.all %}{{ type.type }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}
@@ -67,9 +88,17 @@
             {% if pub.doi %}<li>DOI {% identifier_link pub.doi 'doi' %}</li>{% endif %}
             {% if pub.pmid %}<li>PMID {% identifier_link pub.pmid 'pmid' %}</li>{% endif %}
             {% if pub.pmcid %}<li>PMCID {% identifier_link pub.pmcid 'pmcid' %}</li>{% endif %}
+            {% if entry.identifiers.pmid %}<li><a href="https://europepmc.org/search?query=CITES%3A{{ entry.identifiers.pmid }}_MED">Cited by in Europe PMC</a></li>{% endif %}
           </ul>
           {% if pub.version %}<p>Version {{ pub.version }}</p>{% endif %}{% if pub.note %}<p class="metadata-note">{{ pub.note }}</p>{% endif %}
           {% if pub.metadata.abstract %}<details><summary>Abstract</summary><p>{{ pub.metadata.abstract }}</p></details>{% endif %}
+          {% if entry.identifiers.doi or entry.identifiers.pmid %}
+          <div class="publication-metrics" aria-label="Publication metrics from external services">
+            <span class="__dimensions_badge_embed__" {% if entry.identifiers.doi %}data-doi="{{ entry.identifiers.doi }}"{% else %}data-pmid="{{ entry.identifiers.pmid }}"{% endif %} data-style="small_circle" data-legend="hover-right"></span>
+            {% if entry.identifiers.doi %}<span class="bip-embed" data-doi="{{ entry.identifiers.doi }}"></span>{% endif %}
+            <span class="altmetric-embed" data-badge-type="donut" data-badge-popover="right" data-hide-no-mentions="true" {% if entry.identifiers.doi %}data-doi="{{ entry.identifiers.doi }}"{% else %}data-pmid="{{ entry.identifiers.pmid }}"{% endif %}></span>
+          </div>
+          {% endif %}
           {% if entry.extra %}{% include 'html/detail/schema_fields.html' with nodes=entry.extra %}{% endif %}
         </li>{% endwith %}{% endfor %}</ol>
       </section>{% endif %}
@@ -77,13 +106,18 @@
     <aside aria-label="Tool metadata">
       <section class="detail-section"><h2>Tool information</h2>{% include 'html/detail/schema_fields.html' with nodes=metadata_facts %}</section>
       {% if badges %}<section class="detail-section"><h2>ELIXIR</h2><ul class="plain-list">
-        {% for label, url in badges %}<li>{% external_link url label %}</li>{% endfor %}
+        {% for label, url, logo in badges %}<li><a class="partner-link" href="{{ url }}"><img src="/img/{{ logo }}" alt="" width="48">{{ label }}</a></li>{% endfor %}
       </ul></section>{% endif %}
       <section class="detail-section"><h2>Training &amp; evaluation</h2><ul class="plain-list">
+        <li><a class="partner-link" href="https://tess.elixir-europe.org/"><img src="/img/tess_logo.png" alt="TeSS" width="64">ELIXIR training portal</a></li>
         <li><a href="https://tess.elixir-europe.org/materials?q={{ tool.name|urlencode }}">Training materials</a></li>
         <li><a href="https://tess.elixir-europe.org/events?q={{ tool.name|urlencode }}">Training events</a></li>
         <li><a href="https://openebench.bsc.es/tool/{{ tool.biotoolsID|lower|urlencode }}">OpenEBench</a></li>
       </ul></section>
+      {% if rrids %}<section class="detail-section"><h2>Research resource identifiers</h2>
+        <a class="partner-link" href="https://scicrunch.org/"><img src="/img/scicrunch.png" alt="SciCrunch" width="64">SciCrunch</a>
+        <ul class="plain-list">{% for rrid in rrids %}<li>{% identifier_link rrid 'rrid' %}</li>{% endfor %}</ul>
+      </section>{% endif %}
       <section id="record" class="detail-section"><h2>Registry record</h2><dl class="facts">
         <dt>Identifier</dt><dd>biotools:{{ tool.biotoolsID }}</dd>
         {% if tool.additionDate %}<dt>Added</dt><dd><time datetime="{{ tool.additionDate|date:'c' }}">{{ tool.additionDate|date:'j F Y' }}</time></dd>{% endif %}

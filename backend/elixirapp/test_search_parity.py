@@ -54,6 +54,12 @@ class SearchParityTests(SimpleTestCase):
         self.assertNotIn('editPermission', data)
         self.assertNotIn('secret-value', json.dumps(data))
 
+    def test_comparison_dates_are_day_only(self):
+        record = {**FIXTURE['resource'], 'additionDate': '2024-01-23T14:35:46Z', 'lastUpdate': '2025-08-09T01:02:03Z'}
+        data = summary(record, descriptor=resource_descriptor())['comparison']
+        self.assertEqual(data['additionDate'], '2024-01-23')
+        self.assertEqual(data['lastUpdate'], '2025-08-09')
+
     def test_function_columns_follow_public_schema_children(self):
         descriptor = resource_descriptor()
         record = {**FIXTURE['resource'], 'function': [{'operation': [{'term': 'Align'}],

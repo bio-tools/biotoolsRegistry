@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import EdamSelector from './EdamSelector.vue';
+import ChoiceSelector from './ChoiceSelector.vue';
 import { BrowserRequestError, browserRequest } from './browser-auth';
 import { connect, readDraft, type Graph, type Step, type IO } from './workflow-graph';
 
@@ -141,7 +142,7 @@ const endpointKey = (step: string, io: string) => JSON.stringify([step, io]);
 const outputs = computed(() => graph.value.steps.flatMap(step => step.function.output.map(io => ({ step, io }))));
 const inputs = computed(() => graph.value.steps.flatMap(step => step.function.input.map(io => ({ step, io }))));
 const termLabel = (term: { uri: string | null; term: string | null } | null) =>
-  term ? [term.term, term.uri].filter(Boolean).join(' — ') || 'Unknown' : 'Unknown';
+  term ? term.term || (term.uri ? 'Unlabelled EDAM term' : 'Unknown') : 'Unknown';
 const ioLabel = (io: IO) => [termLabel(io.data), io.formats.map(termLabel).join(', ') || 'Unknown format'].join(' / ');
 const describeEndpoint = (stepId: string, ioId: string, direction: 'input' | 'output') => {
   const index = graph.value.steps.findIndex(item => item.id === stepId), step = graph.value.steps[index];
@@ -247,10 +248,26 @@ function move(index: number, offset: number) {
   if (target < 0 || target >= graph.value.steps.length) return;
   [graph.value.steps[index], graph.value.steps[target]] = [graph.value.steps[target], graph.value.steps[index]];
 }
-function findNext(io: IO) {
-  direction.value = 'input'; data.value = io.data?.uri ? [io.data.uri] : [];
-  format.value = io.formats.find(item => item.uri)?.uri ? [io.formats.find(item => item.uri)!.uri!] : [];
-  operation.value = []; status.value = 'Output selected for a new input search. Choose an operation if desired, then search.';
+function findNext(io: IO, stepId?: string) {
+  if (stepId) from.value = endpointKey(stepId, io.id);
+  const canonical = (uri: string | null | undefined, scope: 'data' | 'format') =>
+    !!uri && new RegExp(`^http://edamontology\\.org/${scope}_[0-9]{4}$`).test(uri);
+  const formats = io.formats.filter(item => canonical(item.uri, 'format'));
+  const unavailable = (!!io.data && !canonical(io.data.uri, 'data')) || formats.length !== io.formats.length;
+  direction.value = 'input'; data.value = canonical(io.data?.uri, 'data') ? [io.data!.uri!] : [];
+  format.value = formats[0]?.uri ? [formats[0].uri] : [];
+  operation.value = [];
+  status.value = !data.value.length && !format.value.length
+    ? 'This output has no usable EDAM data type or format. Choose one to search for the next tool.'
+    : `Output selected for an input search.${formats.length > 1 ? ' The first output format is selected; you can choose another.' : ''}${unavailable ? ' Some annotations lack usable EDAM identifiers; review the search fields.' : ''} Choose an operation if desired, then search.`;
+}
+function selectOutput(value: string) {
+  if (!value) return;
+  try {
+    const [stepId, ioId] = JSON.parse(value);
+    const io = graph.value.steps.find(step => step.id === stepId)?.function.output.find(item => item.id === ioId);
+    if (io) findNext(io);
+  } catch { /* An invalid or removed endpoint leaves the search unchanged. */ }
 }
 function download() {
   const blob = new Blob([JSON.stringify({ ...graph.value, title: title.value }, null, 2)], { type: 'application/json' });
@@ -338,16 +355,15 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
       <EdamSelector v-model="format" scope="format" label="Format" endpoint="/_edam/terms/" :multiple="false" />
       <EdamSelector v-model="operation" scope="operation" label="Operation" endpoint="/_edam/terms/" :multiple="false" />
     </div>
-    <label><input v-model="related" type="checkbox"> Include related EDAM terms</label>
-    <label><input v-model="includeUnknown" type="checkbox"> Include missing or uncertain annotations</label>
-    <p>Including missing annotations can require several pages. Turn it off to search only confirmed annotation matches.</p>
+    <label title="Also include broader and narrower EDAM terms. Related terms are suggestions and do not guarantee compatibility."><input v-model="related" type="checkbox"> Include related EDAM terms <span tabindex="0" role="img" aria-label="Includes broader and narrower terms; compatibility still needs review." title="Includes broader and narrower EDAM terms; compatibility still needs review.">ⓘ</span></label>
+    <label title="Include tools with missing, obsolete or unrecognized annotations, which may not match. Results can take several pages."><input v-model="includeUnknown" type="checkbox"> Include missing or uncertain annotations <span tabindex="0" role="img" aria-label="Includes tools with missing, obsolete or unrecognized annotations; they may not match." title="Includes tools with missing, obsolete or unrecognized annotations; they may not match.">ⓘ</span></label>
     <p><button type="button" :disabled="loading || (!data.length && !format.length)" @click="search()">Search functions</button></p>
     <p role="status">{{ status }}</p><p v-if="error" role="alert">{{ error }}</p>
     <ol class="candidate-list"><li v-for="item in results" :key="item.referenceFingerprint">
       <strong>{{ item.resource.name }}</strong> — {{ ioLabel(item.io) }}
       <span v-for="(evidence, scope) in item.evidence" :key="scope"> · {{ scope }}: {{ evidence.state }}<template v-if="evidence.obsolete"> (obsolete)</template><template v-if="evidence.relation"> ({{ evidence.relation.replaceAll('_', ' ') }})</template><template v-if="evidence.reasons"> ({{ evidence.reasons.join(', ') }})</template></span>
       <p>Operations: {{ item.function.operations.map(termLabel).join(', ') || 'Unknown' }}</p>
-      <button type="button" @click="add(item)">Add function</button> <a :href="'/' + encodeURIComponent(item.resource.id)">View tool</a>
+      <button type="button" @click="add(item)">Add tool to workflow</button> <a :href="'/' + encodeURIComponent(item.resource.id)">View tool</a>
     </li></ol>
     <button v-if="next" type="button" class="secondary" :disabled="loading" @click="search(next)">More results</button>
   </section>
@@ -392,15 +408,17 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
       <p v-if="!step.function.input.length">No input annotation recorded.</p>
       <p v-for="io in step.function.input" :key="io.id" class="workflow-io">Input: {{ ioLabel(io) }}</p>
       <p v-if="!step.function.output.length">No output annotation recorded.</p>
-      <p v-for="io in step.function.output" :key="io.id" class="workflow-io">Output: {{ ioLabel(io) }} <button type="button" class="secondary" @click="findNext(io)">Find next tool</button></p>
+      <p v-for="io in step.function.output" :key="io.id" class="workflow-io">Output: {{ ioLabel(io) }} <button type="button" class="secondary" @click="findNext(io, step.id)">Find next tool</button></p>
       <label :for="'note-' + step.id">Notes for step {{ index + 1 }}</label><textarea :id="'note-' + step.id" v-model="step.note" maxlength="1000" />
       <button type="button" class="secondary" :aria-label="`Move step ${index + 1} up`" :disabled="index === 0" @click="move(index, -1)">Move up</button>
       <button type="button" class="secondary" :aria-label="`Move step ${index + 1} down`" :disabled="index === graph.steps.length - 1" @click="move(index, 1)">Move down</button>
       <button type="button" class="secondary" :aria-label="`Remove step ${index + 1}`" @click="removeStep(step.id)">Remove step</button>
     </li></ol>
     <fieldset :disabled="connecting"><legend>Connect steps</legend>
-      <label for="workflow-from">Output</label><select id="workflow-from" v-model="from"><option value="">Choose output</option><option v-for="entry in outputs" :key="endpointKey(entry.step.id, entry.io.id)" :value="endpointKey(entry.step.id, entry.io.id)">{{ describeEndpoint(entry.step.id, entry.io.id, 'output') }}</option></select>
-      <label for="workflow-to">Input</label><select id="workflow-to" v-model="to"><option value="">Choose input</option><option v-for="entry in inputs" :key="endpointKey(entry.step.id, entry.io.id)" :value="endpointKey(entry.step.id, entry.io.id)">{{ describeEndpoint(entry.step.id, entry.io.id, 'input') }}</option></select>
+      <label for="workflow-from">Output</label><ChoiceSelector v-if="outputs.length > 20" id="workflow-from" v-model="from" label="Output" :choices="outputs.map(entry => ({ value: endpointKey(entry.step.id, entry.io.id), label: describeEndpoint(entry.step.id, entry.io.id, 'output') }))" @update:model-value="selectOutput" />
+      <select v-else id="workflow-from" v-model="from" @change="selectOutput(($event.target as HTMLSelectElement).value)"><option value="">Choose output</option><option v-for="entry in outputs" :key="endpointKey(entry.step.id, entry.io.id)" :value="endpointKey(entry.step.id, entry.io.id)">{{ describeEndpoint(entry.step.id, entry.io.id, 'output') }}</option></select>
+      <label for="workflow-to">Input</label><ChoiceSelector v-if="inputs.length > 20" id="workflow-to" v-model="to" label="Input" :choices="inputs.map(entry => ({ value: endpointKey(entry.step.id, entry.io.id), label: describeEndpoint(entry.step.id, entry.io.id, 'input') }))" />
+      <select v-else id="workflow-to" v-model="to"><option value="">Choose input</option><option v-for="entry in inputs" :key="endpointKey(entry.step.id, entry.io.id)" :value="endpointKey(entry.step.id, entry.io.id)">{{ describeEndpoint(entry.step.id, entry.io.id, 'input') }}</option></select>
       <label for="workflow-reason">Reason for an uncertain connection</label><input id="workflow-reason" v-model="reason" maxlength="1000">
       <button type="button" @click="addConnection">{{ editing ? 'Update connection' : 'Connect' }}</button>
       <button v-if="editing" type="button" class="secondary" @click="editing = ''; reason = ''">Cancel edit</button>
@@ -425,6 +443,7 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
 .workflow-empty { padding: 20px; background: #f4f9fb; border: 1px dashed #a9cbd7; border-radius: 8px; color: #425f6b; }
 .workflow-operation, .workflow-io { padding: 8px 10px; border-left: 3px solid #88b3c3; background: #f5fafb; }
 .workflow-operation { border-color: #005472; background: #e5f2f7; }
+.workflow-draft input[type="file"] { display: block; max-width: 100%; }
 .selectors { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
 .diagram { overflow-x: auto; max-width: 100%; }
 .diagram svg { display: block; width: 800px; max-width: none; }

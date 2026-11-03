@@ -34,6 +34,25 @@ async function begin() {
 }
 function button(name: string) { return wrapper.findAll('button').find(button => button.text() === name)!; }
 
+it('keeps the dialog open when a parent renders the same selection again', async () => {
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));
+  wrapper = mount(EdamSelector, { props });
+  await begin();
+  await wrapper.setProps({ modelValue: [] });
+  expect(wrapper.get('dialog').element.open).toBe(true);
+  await wrapper.setProps({ modelValue: [bio.uri] });
+  expect(wrapper.get('dialog').element.open).toBe(false);
+});
+
+it('keeps the choices in place while focus moves to Apply', async () => {
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));
+  wrapper = mount(EdamSelector, { props, attachTo: document.body });
+  await begin();
+  const input = wrapper.get('[role="combobox"]');
+  await input.trigger('blur', { relatedTarget: button('Apply selection').element });
+  expect(input.attributes('aria-expanded')).toBe('true');
+});
+
 it('stages keyboard multiple selection, commits IDs only, and keeps cancel separate', async () => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));
   wrapper = mount(EdamSelector, { props, attachTo: document.body });

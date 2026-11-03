@@ -72,6 +72,10 @@ test.describe('Native public pages', () => {
             await expect.poll(() => images.evaluateAll(nodes => nodes.every(image => image.complete && image.naturalWidth > 0))).toBe(true);
             expect(await page.locator('html').evaluate(node => node.scrollWidth <= innerWidth)).toBe(true);
             if (path === '/about') {
+              await expect(page.locator('.about-summary-cell .fa[aria-hidden="true"]')).toHaveCount(12);
+              const icon = page.locator('.about-summary-cell .fa-globe');
+              await expect(icon).toHaveCSS('font-family', '"bio.tools icons"');
+              expect(await icon.evaluate(el => getComputedStyle(el, '::before').content)).not.toBe('none');
               await expect(page.locator('.citation-list > li')).toHaveCount(5);
               await expect(page.getByRole('link', { name: '10.1093/nar/gkag420', exact: true })).toHaveAttribute('href', 'https://doi.org/10.1093/nar/gkag420');
               await page.locator('.about-section').filter({ has: page.getByRole('heading', { name: 'Publications and citing' }) })

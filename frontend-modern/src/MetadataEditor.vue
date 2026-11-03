@@ -21,7 +21,7 @@ defineProps<{ draft: ResourceEditor; fields: Record<string, Field>; endpoint: st
 .metadata-strings legend { font-weight: 600; padding: 0; margin-bottom: 8px; }
 .metadata-string { display: grid; grid-template-columns: minmax(0, 1fr) 32px; gap: 8px; align-items: center; margin-bottom: 8px; }
 .metadata-string .nested-error { grid-column: 1 / -1; margin: 0; }
-.metadata-editor select, .metadata-editor textarea { width: 100%; max-width: 100%; min-height: 44px; padding: 10px; font: inherit; color: #333; background: white; border: 1px solid #767676; border-radius: 4px; }
+.metadata-editor select, .metadata-editor textarea { width: 100%; max-width: 100%; min-height: 44px; padding: 10px; font-family: inherit; font-size: var(--text-body); color: #333; background: white; border: 1px solid #767676; border-radius: 4px; }
 .metadata-editor textarea { min-height: 80px; resize: vertical; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 600px) { .metadata-grid { grid-template-columns: minmax(0, 1fr); } }

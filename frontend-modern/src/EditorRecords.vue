@@ -1,8 +1,9 @@
 <script setup lang="ts" generic="T">
 import { errorsAt, fieldId, moveItem, removeSection } from './nested-editor';
 import type { EditorError, EditorPath } from './resource-editor';
+import UiIcon from './UiIcon.vue';
 const props = defineProps<{ modelValue?: { id: string; value: T }[] | null; empty: () => T; field: string; label: string;
-  itemLabel: string; errors: EditorError[]; disabled: boolean; readonlyIds?: Set<string>; parentPath?: EditorPath }>();
+  itemLabel: string; errors: EditorError[]; disabled: boolean; readonlyIds?: Set<string>; parentPath?: EditorPath; icon?: string }>();
 const emit = defineEmits<{ 'update:modelValue': [value: { id: string; value: T }[]] }>();
 const basePath = (): EditorPath => props.parentPath || [props.field];
 const path = (id: string): EditorPath => [...basePath(), { itemId: id }];
@@ -10,7 +11,7 @@ function add() { emit('update:modelValue', [...(props.modelValue || []), { id: c
 </script>
 <template>
   <section :id="fieldId(basePath())" class="metadata-section" tabindex="-1" :aria-label="label">
-    <header class="nested-heading"><h2>{{ label }}</h2>
+    <header class="nested-heading"><h2><UiIcon :name="icon || 'array'" />{{ label }}</h2>
       <button type="button" class="secondary" :disabled="disabled" @click="add">Add {{ itemLabel.toLowerCase() }}</button></header>
     <p class="nested-error">{{ errorsAt(errors, basePath()).join(' ') }}</p>
     <section v-for="(item, index) in modelValue" :key="item.id" :id="fieldId(path(item.id))" class="metadata-record" tabindex="-1" :aria-label="`${itemLabel} ${index + 1}`">

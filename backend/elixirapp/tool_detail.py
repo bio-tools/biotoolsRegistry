@@ -1,3 +1,4 @@
+import re
 from urllib.parse import quote
 
 from django.http import Http404, HttpResponseRedirect
@@ -9,6 +10,15 @@ from elixir.queries import get_tool_detail, ToolNotFound
 from elixir.serializers import ResourceSerializer
 from elixir.resource_ui import SchemaUnavailable, public_fields, resource_descriptor
 from elixirapp.resource_editor import can_edit
+
+
+def publication_identifiers(publication):
+    doi = re.sub(r'^(?:https?://(?:dx\.)?doi\.org/|doi:\s*)', '', (publication.doi or '').strip(), flags=re.I)
+    pmid = (publication.pmid or '').strip()
+    return {
+        'doi': doi if re.fullmatch(r'''10\.\d{4,9}/[^\s<>"']+''', doi, flags=re.I) else '',
+        'pmid': pmid if re.fullmatch(r'[0-9]+', pmid) else '',
+    }
 
 
 @require_safe
@@ -23,10 +33,10 @@ def detail(request, identifier):
     if canonical and request.path != path:
         query = request.META.get('QUERY_STRING', '')
         return HttpResponseRedirect(path + ('?' + query if query else ''))
-    badges = [(label, url) for mask, label, url in (
-        (1, 'ELIXIR Deposition Database', 'https://elixir-europe.org/platforms/data/elixir-deposition-databases'),
-        (2, 'ELIXIR Core Data Resource', 'https://elixir-europe.org/platforms/data/core-data-resources'),
-        (4, 'Recommended Interoperability Resource', 'https://elixir-europe.org/platforms/interoperability/rir-selection'),
+    badges = [(label, url, logo) for mask, label, url, logo in (
+        (1, 'ELIXIR Deposition Database', 'https://elixir-europe.org/platforms/data/elixir-deposition-databases', 'edd.png'),
+        (2, 'ELIXIR Core Data Resource', 'https://elixir-europe.org/platforms/data/core-data-resources', 'cdr.png'),
+        (4, 'Recommended Interoperability Resource', 'https://elixir-europe.org/platforms/interoperability/rir-selection', 'rir.png'),
     ) if 0 < tool.elixir_badge < 8 and tool.elixir_badge & mask]
     try:
         descriptor = resource_descriptor()
@@ -44,8 +54,10 @@ def detail(request, identifier):
     functions = [{'record': record, 'extra': public_fields(value, fields['function']['item'], handled=concept_paths)}
                  for record, value in zip(tool.function.all(), data.get('function') or [])]
     publication_paths = {'publication.' + path for path in ('doi', 'pmid', 'pmcid', 'type', 'version', 'note',
-        'metadata.title', 'metadata.authors.name', 'metadata.journal', 'metadata.date', 'metadata.abstract')}
-    publications = [{'record': record, 'extra': public_fields(value, fields['publication']['item'], handled=publication_paths)}
+        'metadata.title', 'metadata.authors.name', 'metadata.journal', 'metadata.date', 'metadata.abstract',
+        'metadata.citationCount')}
+    publications = [{'record': record, 'identifiers': publication_identifiers(record),
+                     'extra': public_fields(value, fields['publication']['item'], handled=publication_paths)}
                     for record, value in zip(tool.publication.all(), data.get('publication') or [])]
     return render(request, 'html/tool_detail.html', {
         'tool': tool, 'edit_url': path + '/edit',
@@ -53,6 +65,10 @@ def detail(request, identifier):
         'api_url': '/api/t' + path, 'badges': badges, 'can_edit': can_edit(request.user, tool),
         'schema_fields': fields, 'schema_revision': descriptor['revision'],
         'functions': functions, 'publications': publications,
+        'rrids': [item.value for item in tool.otherID.all() if (item.type or '').lower() == 'rrid']
+                 if fields.get('otherID', {}).get('public') else [],
+        'has_publication_metrics': any(entry['identifiers']['doi'] or entry['identifiers']['pmid'] for entry in publications),
+        'has_publication_doi': any(entry['identifiers']['doi'] for entry in publications),
         'metadata_sections': [node for node in metadata if 'entries' in node],
         'metadata_facts': [node for node in metadata if 'entries' not in node],
     })

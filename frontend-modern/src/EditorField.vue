@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import UiIcon from './UiIcon.vue';
+import ChoiceSelector from './ChoiceSelector.vue';
+import { fieldIcon } from './ui-icons';
 import { errorsAt, fieldId } from './nested-editor';
 import type { EditorError, EditorPath, Field } from './resource-editor';
 const props = defineProps<{ record: Record<string, unknown>; field: string; label: string; path: EditorPath;
@@ -23,11 +26,19 @@ function update(event: Event) {
   else if (props.schema?.kind === 'number') props.record[props.field] = input.valueAsNumber;
   else props.record[props.field] = text;
 }
+function updateChoice(text: string) {
+  if (text === '' && props.retainEmpty) props.record[props.field] = '';
+  else if (text === '') delete props.record[props.field];
+  else props.record[props.field] = text;
+}
 </script>
 <template>
   <div class="metadata-field">
-    <label :for="fieldId(path)" :class="{ 'visually-hidden': hideLabel }">{{ label }}</label>
-    <select v-if="choices" :id="fieldId(path)" :value="value" :disabled="disabled" :aria-invalid="!!messages.length || deprecated" :required="schema?.required"
+    <label :for="fieldId(path)" :class="{ 'visually-hidden': hideLabel }"><UiIcon :name="fieldIcon(schema?.kind, !!choices)" />{{ label }}</label>
+    <ChoiceSelector v-if="choices && choices.length > 20" :id="fieldId(path)" :model-value="String(value)" :label="label"
+      :choices="choices" :disabled="disabled" :invalid="!!messages.length || deprecated" :required="schema?.required" native-validation
+      :describedby="fieldId(path) + '-errors'" @update:model-value="updateChoice" />
+    <select v-else-if="choices" :id="fieldId(path)" :value="value" :disabled="disabled" :aria-invalid="!!messages.length || deprecated" :required="schema?.required"
       :aria-describedby="fieldId(path) + '-errors'" @change="update">
       <option value="">Not specified</option><option v-if="deprecated" :value="value" disabled>{{ value }} (no longer allowed)</option>
       <option v-for="choice in choices" :key="choice.value" :value="choice.value">{{ choice.label }}</option>

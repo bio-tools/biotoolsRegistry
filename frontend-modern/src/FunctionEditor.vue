@@ -2,6 +2,7 @@
 import EdamConcepts from './EdamConcepts.vue';
 import FunctionIO from './FunctionIO.vue';
 import SchemaFields from './SchemaFields.vue';
+import UiIcon from './UiIcon.vue';
 import { newEditorItem, type EditorError, type Field } from './resource-editor';
 import { errorsAt, fieldId, moveItem, removeSection, type FunctionItem } from './nested-editor';
 
@@ -12,7 +13,7 @@ const path = (item: FunctionItem) => ['function', { itemId: item.id }];
 </script>
 <template>
   <section id="nested-function" class="function-editor" aria-labelledby="functions-title" tabindex="-1">
-    <header class="nested-heading"><h2 id="functions-title">{{ schema?.label || 'Functions' }}</h2>
+    <header class="nested-heading"><h2 id="functions-title"><UiIcon name="function" />{{ schema?.label || 'Functions' }}</h2>
       <button type="button" class="secondary" :disabled="disabled" @click="add">Add function</button></header>
     <p class="nested-error">{{ errorsAt(errors, ['function']).join(' ') }}</p>
     <p v-if="!modelValue?.length" class="empty-functions">No functions.</p>

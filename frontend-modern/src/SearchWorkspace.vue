@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useSearch } from './use-search';
 import type { SearchConfig } from './search-state';
 import AdvancedFilters from './AdvancedFilters.vue';
 import SearchFilterGroup from './SearchFilterGroup.vue';
+import ChoiceSelector from './ChoiceSelector.vue';
+import EdamSelector from './EdamSelector.vue';
+import type { SearchFilterGroup as FilterGroup } from './search-state';
 import { filterLabel } from './advanced-filters';
 import { defaultColumns, layoutKey, readColumns } from './search-layout';
 
@@ -34,10 +37,49 @@ function columnWidth(event: Event, index: number) {
 const pageInput = ref(1);
 const filtersOpen = ref(false);
 const optionSearch = ref<Record<string, string>>({});
-const groups = computed(() => props.filterGroups || [{ id: '', label: 'Tool details', keys: Object.keys(props.filters), children: [] }]);
+const scientific = [
+  { key: 'topicID', scope: 'topic', label: 'EDAM topic' },
+  { key: 'operationID', scope: 'operation', label: 'EDAM operation' },
+  { key: 'dataTypeID', scope: 'data', label: 'EDAM data type' },
+  { key: 'dataFormatID', scope: 'format', label: 'EDAM format' },
+] as const;
+const excluded = new Set(['topic', 'topicID', 'function', 'operation', 'operationID', 'dataType', 'dataTypeID',
+  'dataFormat', 'dataFormatID', 'input', 'inputID', 'inputDataFormat', 'inputDataFormatID', 'inputDataType',
+  'inputDataTypeID', 'output', 'outputID', 'outputDataFormat', 'outputDataFormatID', 'outputDataType',
+  'outputDataTypeID', 'credit']);
+function visibleGroup(group: FilterGroup): FilterGroup | null {
+  if (group.id === 'function' || group.id.startsWith('function.') || group.id === 'topic') return null;
+  const children = group.children.map(visibleGroup).filter((child): child is FilterGroup => !!child);
+  const keys = group.keys.filter(key => !excluded.has(key));
+  return keys.length || children.length ? { ...group, keys, children } : null;
+}
+const groups = computed(() => (props.filterGroups || [{ id: '', label: 'Tool details', keys: Object.keys(props.filters), children: [] }])
+  .map(visibleGroup).filter((group): group is FilterGroup => !!group));
+const domains = ref<{ value: string; label: string }[]>([]);
+const domainError = ref('');
+onMounted(async () => {
+  if (!props.optionsEndpoint) return;
+  try {
+    const response = await fetch(`${props.optionsEndpoint}?field=domain`);
+    if (!response.ok) throw new Error();
+    domains.value = (await response.json()).items;
+  } catch { domainError.value = 'Domains are temporarily unavailable.'; }
+});
+function edamValue(key: string, scope: string) {
+  const value = state.value.filters[key] || '';
+  const matches = value.match(new RegExp(`${scope}_[0-9]+`, 'g')) || [];
+  return [...new Set(matches)].map(id => `http://edamontology.org/${id}`);
+}
+function setEdam(key: string, values: string[]) {
+  filter(key, values.map(value => `"${value.split('/').pop()}"`).join(' '));
+}
 function text(event: Event) { return (event.target as HTMLInputElement).value; }
 function filter(key: string, value: string) {
   update({ filters: { ...state.value.filters, [key]: value } });
+}
+function choiceValue(key: string) { return (state.value.filters[key] || '').replace(/^"(.*)"$/, '$1'); }
+function setChoice(key: string, value: string) {
+  filter(key, !value || key === 'domain' || /["\\]/.test(value) ? value : `"${value}"`);
 }
 function usedOptions(key: string) {
   const query = (optionSearch.value[key] || '').toLocaleLowerCase();
@@ -68,8 +110,34 @@ function options(key: string) {
           aria-controls="workspace-filters" :aria-expanded="filtersOpen" @click="filtersOpen = !filtersOpen">{{ filtersOpen ? 'Hide filters' : 'Show filters' }}</button>
           <button class="secondary" type="button" @click="reset">Clear all</button></div>
         <div id="workspace-filters" class="filter-list">
+        <details class="scientific-filters" open>
+          <summary>EDAM annotations</summary>
+          <p>Find tools by scientific annotations. Multiple selections must all match.</p>
+          <div v-for="item in scientific" :key="item.key" class="scientific-field">
+            <EdamSelector v-if="edamEndpoint" :model-value="edamValue(item.key, item.scope)" :endpoint="edamEndpoint"
+              :scope="item.scope" :label="item.label" multiple :max-selections="10" @update:model-value="setEdam(item.key, $event)" />
+          </div>
+        </details>
         <SearchFilterGroup v-for="group in groups" :key="group.id" :group="group" :values="state.filters">
           <template #default="{ filterKey: key }">
+          <template v-if="key === 'domain' && domains.length <= 20">
+            <label :for="`filter-${key}`">{{ filters[key] }}</label>
+            <select :id="`filter-${key}`" :value="state.filters[key] || ''" @change="filter(key, text($event))">
+              <option value="">Any domain</option>
+              <option v-if="state.filters[key] && !domains.some(domain => domain.value === state.filters[key])" :value="state.filters[key]">{{ state.filters[key] }}</option>
+              <option v-for="domain in domains" :key="domain.value" :value="domain.value">{{ domain.label }} ({{ domain.value }})</option>
+            </select>
+            <small v-if="domainError" role="alert">{{ domainError }}</small>
+          </template>
+          <template v-else-if="(optionsEndpoint && ['creditName', 'collectionID', 'name'].includes(key)) || key === 'domain' || options(key).length > 20">
+            <label :for="`filter-${key}`">{{ filters[key] }}</label>
+            <ChoiceSelector :id="`filter-${key}`" :model-value="choiceValue(key)" :label="filters[key] || key"
+              :choices="key === 'domain' ? domains : options(key)" :field="key"
+              :endpoint="['creditName', 'collectionID', 'name'].includes(key) ? optionsEndpoint : undefined"
+              @update:model-value="setChoice(key, $event)" />
+            <small v-if="key === 'domain' && domainError" role="alert">{{ domainError }}</small>
+          </template>
+          <template v-else>
           <label :for="`filter-${key}`">{{ filters[key] }}</label>
           <input :id="`filter-${key}`" type="text" :list="`values-${key}`" :value="state.filters[key] || ''"
                  maxlength="256" @change="filter(key, text($event))">
@@ -91,7 +159,26 @@ function options(key: string) {
           </ul>
           <p v-if="optionSearch[key] && !usedOptions(key).length">No matching used values.</p>
           </template>
+          </template>
         </SearchFilterGroup>
+        <details class="advanced-panel">
+          <summary>Publication, dates and scores<span v-if="state.advanced.length || localFilters.length" class="active-filter">Active</span></summary>
+          <div v-if="state.advanced.length" class="server-filters">
+            <h3>Applied to all matches</h3>
+            <ul><li v-for="(condition, index) in state.advanced" :key="index">
+              <span>{{ filterLabel(condition, scores) }}</span>
+              <button type="button" class="secondary" :aria-label="`Remove ${filterLabel(condition, scores)}`"
+                @click="update({ advanced: state.advanced.filter((_, position) => position !== index) })">Remove</button>
+            </li></ul>
+          </div>
+          <p class="filter-help">Preview these filters on loaded tools, then apply them to all matches.</p>
+          <AdvancedFilters :filters="localFilters" :scores="scores || []" :disabled="loading || !result" @change="setLocalFilters" />
+          <p v-if="localError" role="alert">{{ localError }}</p>
+          <div class="advanced-actions">
+            <button type="button" :disabled="!localFilters.length || !!localError || loading" @click="promote">Apply to all matches</button>
+            <button type="button" class="secondary" :disabled="(!localFilters.length && !localError) || loading" @click="setLocalFilters([])">Clear candidate filters</button>
+          </div>
+        </details>
         </div>
       </aside>
       <section class="workspace-results" aria-label="Search results" :aria-busy="loading">
@@ -101,24 +188,6 @@ function options(key: string) {
             <button type="button" class="secondary" :aria-label="`Remove ${key} filter`" @click="filter(key, '')">&#215;</button>
           </li></template>
         </ul>
-        <details class="advanced-panel">
-          <summary>Advanced filters<span v-if="state.advanced.length || localFilters.length" class="active-filter">Active</span></summary>
-          <div v-if="state.advanced.length" class="server-filters">
-            <h3>Applied to all matches</h3>
-            <ul><li v-for="(condition, index) in state.advanced" :key="index">
-              <span>{{ filterLabel(condition, scores) }}</span>
-              <button type="button" class="secondary" :aria-label="`Remove ${filterLabel(condition, scores)}`"
-                @click="update({ advanced: state.advanced.filter((_, position) => position !== index) })">Remove</button>
-            </li></ul>
-          </div>
-          <AdvancedFilters :filters="localFilters" :scores="scores || []" :disabled="loading || !result" :edam-endpoint="edamEndpoint"
-            :tool-types="options('toolType').map(option => option.value)" @change="setLocalFilters" />
-          <p v-if="localError" role="alert">{{ localError }}</p>
-          <div class="advanced-actions">
-            <button type="button" :disabled="!localFilters.length || !!localError || loading" @click="promote">Apply to all matches</button>
-            <button type="button" class="secondary" :disabled="(!localFilters.length && !localError) || loading" @click="setLocalFilters([])">Clear candidate filters</button>
-          </div>
-        </details>
         <div class="results-toolbar">
           <div><label for="search-sort">Sort by</label><select id="search-sort" :value="state.sort" @change="update({ sort: text($event) })">
             <option v-for="(label, value) in sorts" :key="value" :value="value">{{ label }}</option>
@@ -211,7 +280,7 @@ function options(key: string) {
 <style scoped>
 .search-workspace { margin-top: 24px; }
 .active-constraints { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.active-constraints li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 6px 4px 12px; background: #e8f3f7; border: 1px solid #c8dfe8; border-radius: 20px; font-size: 13px; overflow-wrap: anywhere; }
+.active-constraints li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 6px 4px 12px; background: #e8f3f7; border: 1px solid #c8dfe8; border-radius: 20px; font-size: var(--text-ui); overflow-wrap: anywhere; }
 .active-constraints button { padding: 4px 10px; flex-shrink: 0; }
 .comparison-columns p { margin-block: 12px; font-size: 14px; }
 .column-settings { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px; }
@@ -223,30 +292,37 @@ function options(key: string) {
 .comparison-columns input { min-height: 0; }
 .advanced-panel { margin-bottom: 16px; border-bottom: 1px solid #ddd; }
 .advanced-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.advanced-actions button, .server-filters button { font-size: 13px; padding: 7px 10px; }
+.advanced-actions button, .server-filters button { font-size: var(--text-control); padding: 7px 10px; }
 .server-filters h3 { font-size: 14px; margin: 16px 0 8px; }
 .server-filters ul { list-style: none; padding: 0; }
-.server-filters li { display: flex; align-items: center; gap: 8px; justify-content: space-between; padding-block: 4px; font-size: 13px; overflow-wrap: anywhere; }
+.server-filters li { display: flex; align-items: center; gap: 8px; justify-content: space-between; padding-block: 4px; font-size: var(--text-ui); overflow-wrap: anywhere; }
 .candidate-scope { border-left: 3px solid #31708f; padding: 8px 12px; font-size: 14px; background: #edf4f8; }
 .query-form { margin-bottom: 28px; }
-.workspace-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 28px; align-items: start; }
-aside { background: #f5f9fa; border: 1px solid #dce8ec; border-radius: 10px; padding: 18px; min-width: 0; }
+.workspace-layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 28px; align-items: start; }
+aside { background: #f8fbfc; border: 1px solid #d5e5eb; border-radius: 12px; padding: 20px; min-width: 0; }
+.scientific-filters p, .filter-help { color: #526d79; font-size: var(--text-caption); line-height: 1.45; margin: 8px 0 14px; }
+.scientific-field { padding: 10px 0; }
+.scientific-field :deep(.edam-selector > button) { width: 100%; text-align: left; }
+.filter-list select { width: 100%; }
+.filter-list :deep(.filter-field input) { width: 100%; }
+.filter-list :deep(.filter-field small) { display: block; margin-top: 5px; line-height: 1.4; }
 .filter-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
 .filter-heading h2 { margin: 0; }
-.filter-heading button { padding: 4px 10px; font-size: 13px; }
+.filter-heading button { padding: 4px 10px; font-size: var(--text-control); }
 .filter-toggle { display: none; }
 details { border-top: 1px solid #ddd; padding-block: 12px; }
 summary { cursor: pointer; font-weight: 600; overflow-wrap: anywhere; }
-.filter-field label { font-size: 13px; }
-.filter-field small { font-size: 11px; color: #666; font-weight: normal; overflow-wrap: anywhere; }
-.active-filter { font-size: 11px; margin-left: 8px; color: #286044; }
+.scientific-filters > summary, .advanced-panel > summary { font-size: var(--text-ui); }
+.filter-field label { font-size: var(--text-ui); }
+.filter-field small { font-size: var(--text-caption); color: #666; font-weight: normal; overflow-wrap: anywhere; }
+.active-filter { font-size: var(--text-caption); margin-left: 8px; color: #286044; }
 .facet-options { margin: 8px 0 0; padding: 0; list-style: none; }
-.facet-option { display: flex; justify-content: space-between; gap: 8px; background: none; color: #23527c; border: 0; width: 100%; padding: 6px 0; text-align: left; font-size: 13px; }
+.facet-option { display: flex; justify-content: space-between; gap: 8px; background: none; color: #23527c; border: 0; width: 100%; padding: 6px 0; text-align: left; font-size: var(--text-control); }
 .facet-option span:first-child { overflow-wrap: anywhere; }
 .facet-option:hover { background: #edf4f8; }
 .results-toolbar { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; padding-bottom: 16px; border-bottom: 1px solid #dce8ec; }
-.results-toolbar label, legend { font-size: 13px; margin-bottom: 4px; }
-select { min-height: 40px; max-width: 100%; padding: 6px; background: white; color: #333; border: 1px solid #767676; border-radius: 4px; font: inherit; font-size: 14px; }
+.results-toolbar label, legend { font-size: var(--text-ui); margin-bottom: 4px; }
+select { min-height: 40px; max-width: 100%; padding: 6px; background: white; color: #333; border: 1px solid #767676; border-radius: 4px; font-family: inherit; font-size: var(--text-body); }
 .view-switch { display: flex; gap: 12px; border: 0; margin: 0; padding: 0; }
 .view-switch label { display: flex; align-items: center; gap: 5px; margin: 0; min-height: 40px; }
 .view-switch input { min-height: 0; }
@@ -254,13 +330,13 @@ select { min-height: 40px; max-width: 100%; padding: 6px; background: white; col
 .result-cards { display: grid; gap: 16px; }
 .tool-result { border: 1px solid #d5e3e8; border-left: 4px solid #005472; border-radius: 9px; padding: 20px; background: #fff; box-shadow: 0 2px 8px #173e4b0a; min-width: 0; overflow-wrap: anywhere; }
 .tool-result h2 { margin-bottom: 4px; font-size: 20px; }
-.tool-id { display: block; font-size: 12px; color: #526d79; margin-bottom: 10px; }
-.tool-result p { font-size: 14px; margin-bottom: 12px; white-space: pre-line; }
+.tool-id { display: block; font-size: var(--text-caption); color: #526d79; margin-bottom: 10px; }
+.tool-result p { font-size: var(--text-body); margin-bottom: 12px; white-space: pre-line; }
 .tool-types { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 12px 0; }
-.tool-types li { background: #e6f3f7; color: #005472; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-dl { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 4px 12px; font-size: 13px; }
+.tool-types li { background: #e6f3f7; color: #005472; padding: 4px 10px; border-radius: 20px; font-size: var(--text-caption); font-weight: 600; }
+dl { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 4px 12px; font-size: var(--text-ui); }
 dt { font-weight: 600; } dd { margin: 0; }
-.record-dates { display: flex; flex-wrap: wrap; gap: 16px; font-size: 12px; color: #666; }
+.record-dates { display: flex; flex-wrap: wrap; gap: 16px; font-size: var(--text-caption); color: #666; }
 .result-table { overflow: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 td, th { padding: 12px 8px; text-align: left; vertical-align: top; border-bottom: 1px solid #ddd; min-width: 105px; overflow-wrap: anywhere; }

@@ -27,7 +27,7 @@ test.describe('Server-rendered tool detail', () => {
           .toHaveAttribute('href', 'https://doi.org/10.5555/detail-demo');
         await expect(page.getByRole('link', { name: 'Sequence analysis', exact: true }))
           .toHaveAttribute('href', '/t?topicID=%22topic_0080%22');
-        await expect(page.getByRole('link', { name: 'MIT', exact: true }))
+        await expect(page.locator('.tool-summary-tags').getByRole('link', { name: 'MIT', exact: true }))
           .toHaveAttribute('href', 'https://spdx.org/licenses/MIT');
         const summary = page.locator('summary').filter({ hasText: 'Abstract' });
         await summary.focus();
@@ -36,6 +36,23 @@ test.describe('Server-rendered tool detail', () => {
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
         expect(await page.locator('.site-header').evaluate(el => getComputedStyle(el).backgroundColor)).toBe('rgb(0, 84, 114)');
         expect(await page.locator('.brand img').evaluate(img => img.complete && img.naturalWidth > 0)).toBeTruthy();
+        const icon = await page.locator('.schema-facts dt .ui-icon').first().evaluate(svg => {
+          const image = svg.getBoundingClientRect();
+          const text = [...svg.parentNode.childNodes].find(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+          const range = document.createRange();
+          range.selectNodeContents(text);
+          const label = range.getBoundingClientRect();
+          return { size: image.width, alignment: Math.abs(image.y + image.height / 2 - label.y - label.height / 2) };
+        });
+        expect(icon.size).toBe(16);
+        expect(icon.alignment).toBeLessThanOrEqual(2);
+        const logo = await page.locator('.openebench-link').evaluate(link => {
+          const image = link.querySelector('img').getBoundingClientRect();
+          const text = link.querySelector('span').getBoundingClientRect();
+          return { width: image.width, alignment: Math.abs(image.y + image.height / 2 - text.y - text.height / 2) };
+        });
+        expect(logo.width).toBe(72);
+        expect(logo.alignment).toBeLessThanOrEqual(2);
         expect(requested.every(url => new URL(url).origin === new URL(baseURL).origin)).toBeTruthy();
         await page.screenshot({ path: testInfo.outputPath('tool-detail.png'), fullPage: true });
         await page.locator('#publications').screenshot({ path: testInfo.outputPath('publications.png') });
@@ -74,6 +91,14 @@ test.describe('Server-rendered tool detail', () => {
     }
     await page.goto('/_migration/html/tool/detail-demo/');
     await expect(page.getByRole('heading', { name: 'Sequence Workbench (demo)' })).toBeVisible();
-    expect(await page.locator('script').count()).toBe(0);
+    await expect(page.locator('.__dimensions_badge_embed__')).toHaveAttribute('data-doi', '10.5555/detail-demo');
+    await expect(page.locator('.bip-embed')).toHaveAttribute('data-doi', '10.5555/detail-demo');
+    await expect(page.locator('.altmetric-embed')).toHaveAttribute('data-doi', '10.5555/detail-demo');
+    await expect(page.locator('.openebench-link')).toHaveAttribute('href', 'https://openebench.bsc.es/tool/detail-demo');
+    await expect(page.locator('img[alt="TeSS"]')).toBeVisible();
+    await expect(page.locator('.header-search-count')).toHaveText(/\d+ tools/);
+    await page.getByRole('searchbox', { name: 'Search registry', exact: true }).fill('Sequence Workbench');
+    await page.getByRole('button', { name: 'Search registry', exact: true }).click();
+    await expect(page).toHaveURL(url => url.pathname === '/t' && url.searchParams.get('q') === 'Sequence Workbench');
   });
 });

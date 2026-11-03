@@ -35,9 +35,9 @@ class CutoverTests(TestCase):
             with self.assertLogs('biotools.routes', level='INFO') as logs:
                 response = self.get('/detail-demo', HTTP_USER_AGENT=agent)
             self.assertContains(response, '<h1>Sequence Workbench (demo)</h1>')
-            self.assertContains(response, 'href="/detail-demo/manage"')
+            self.assertNotContains(response, 'href="/detail-demo/manage"')
             self.assertNotContains(response, '_legacy=1')
-            self.assertContains(response, 'href="/detail-demo/edit"')
+            self.assertNotContains(response, 'href="/detail-demo/edit"')
             self.assertContains(response, 'href="/migration-fixture"')
             self.assertNotContains(response, 'Migration preview')
             self.assertContains(response, 'name="robots" content="index, follow"')
@@ -46,6 +46,10 @@ class CutoverTests(TestCase):
             self.assertIn('no-store', response['Cache-Control'])
             self.assertIn('route;dur=', response['Server-Timing'])
             self.assertIn('route=detail method=GET status=200 duration_ms=', logs.output[0])
+        self.client.force_login(User.objects.get(username='detail-owner'))
+        response = self.get('/detail-demo')
+        self.assertContains(response, 'href="/detail-demo/manage"')
+        self.assertContains(response, 'href="/detail-demo/edit"')
 
     def test_aliases_and_case_preserve_queries_without_permanent_redirects(self):
         for path in ('/tool/detail-demo', '/t/detail-demo/', '/biotools:detail-demo', '/DETAIL-DEMO/'):
