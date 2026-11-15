@@ -21,7 +21,8 @@ angular.module('elixir_front')
 		"Plant Sciences": "plant-sciences",
 		"Proteomics": "proteomics",
 		"Rare Diseases": "rare-diseases",
-		"Systems Biology": "systems-biology"
+		"Systems Biology": "systems-biology",
+		"Toxicology": "toxicology"
 	}
 
 	$scope.hasRRID = function(){
