@@ -158,17 +158,23 @@ angular
                         var suggestedList = Array.isArray(suggested) ? suggested : [suggested];
 
                         // build merged item list, deduplicating exact matches
+                        // protect curated data on edit
+                        var action = currentList.length ? 'keep' : 'replace';
                         var seen = {};
                         var items = [];
                         currentList.forEach(function (item) {
                             seen[def.dedupeKey(item)] = true;
-                            items.push({ source: 'current', item: item, checked: true, duplicate: false });
+                            var entry = { source: 'current', item: item, duplicate: false };
+                            entry.checked = defaultChecked(entry, action);
+                            items.push(entry);
                         });
                         suggestedList.forEach(function (item) {
                             var k = def.dedupeKey(item);
                             var dup = !!seen[k];
                             if (!dup) seen[k] = true;
-                            items.push({ source: 'suggested', item: item, checked: !dup, duplicate: dup });
+                            var entry = { source: 'suggested', item: item, duplicate: dup };
+                            entry.checked = defaultChecked(entry, action);
+                            items.push(entry);
                         });
 
                         choices.push({
@@ -177,13 +183,32 @@ angular
                             suggested: suggestedList,
                             items: items,
                             itemLabel: def.itemLabel,
-                            // protect curated data on edit
-                            action: currentList.length ? 'keep' : 'replace',
+                            action: action,
                         });
                     }
                 });
 
                 return choices;
+            }
+
+            // default checkbox state of a list item for an action. A suggested
+            // duplicate only stands in for its current twin when replacing, so
+            // a value present on both sides is never dropped or emitted twice.
+            function defaultChecked(item, action) {
+                return item.source === 'current' ? action !== 'replace' : action === 'replace';
+            }
+
+            // true when the checkboxes still match the defaults of the action
+            function isDefaultSelection(choice) {
+                return choice.items.every(function (i) {
+                    return i.checked === defaultChecked(i, choice.action);
+                });
+            }
+
+            function selectedItems(choice) {
+                return choice.items
+                    .filter(function (i) { return i.checked; })
+                    .map(function (i) { return i.item; });
             }
 
             // re-sync the "current" side of the choices with the live
@@ -208,35 +233,37 @@ angular
                         ? software[def.key]
                         : [];
 
-                    // remember the user's checkbox state by dedupe key so it
-                    // survives the rebuild for items that still exist
+                    // remember the user's checkbox state per source and dedupe
+                    // key, so a current item and its suggested duplicate don't
+                    // overwrite each other, and it survives the rebuild
                     var previous = {};
                     choice.items.forEach(function (i) {
-                        previous[def.dedupeKey(i.item)] = i.checked;
+                        previous[i.source + '|' + def.dedupeKey(i.item)] = i;
                     });
+
+                    function build(source, item, dup) {
+                        var entry = { source: source, item: item, duplicate: dup };
+                        var old = previous[source + '|' + def.dedupeKey(item)];
+                        // duplicates are derived from the action; their state
+                        // is only reused when the item was not a duplicate before
+                        // and still isn't
+                        entry.checked = old && !dup && !old.duplicate
+                            ? old.checked
+                            : defaultChecked(entry, choice.action);
+                        return entry;
+                    }
 
                     var seen = {};
                     var items = [];
                     currentList.forEach(function (item) {
-                        var k = def.dedupeKey(item);
-                        seen[k] = true;
-                        items.push({
-                            source: 'current',
-                            item: item,
-                            checked: k in previous ? previous[k] : true,
-                            duplicate: false,
-                        });
+                        seen[def.dedupeKey(item)] = true;
+                        items.push(build('current', item, false));
                     });
                     choice.suggested.forEach(function (item) {
                         var k = def.dedupeKey(item);
                         var dup = !!seen[k];
                         if (!dup) seen[k] = true;
-                        items.push({
-                            source: 'suggested',
-                            item: item,
-                            checked: k in previous ? previous[k] : !dup,
-                            duplicate: dup,
-                        });
+                        items.push(build('suggested', item, dup));
                     });
 
                     choice.current = currentList;
@@ -258,25 +285,11 @@ angular
                         return;
                     }
                     // list fields: every action is a checkbox selection now
-                    var isDefault;
-                    if (choice.action === 'keep') {
-                        // default keep = all current items checked, no suggested
-                        isDefault = choice.items.every(function (i) {
-                            return i.checked === (i.source === 'current' || i.duplicate);
-                        });
-                    } else if (choice.action === 'replace') {
-                        // default replace = all suggested items checked, no current
-                        isDefault = choice.items.every(function (i) {
-                            return i.checked === (i.source === 'suggested' || i.duplicate);
-                        });
-                    }
-                    if (choice.action == 'keep' && isDefault) {
+                    if (choice.action === 'keep' && isDefaultSelection(choice)) {
                         return; // unchanged from the default for this action
                     }
 
-                    var merged = choice.items
-                        .filter(function (i) { return i.checked; })
-                        .map(function (i) { return i.item; });
+                    var merged = selectedItems(choice);
                     applied++;
                     if (merged.length) {
                         software[choice.field] = merged;
@@ -376,6 +389,9 @@ angular
             return {
                 isGithubUrl: isGithubUrl,
                 sync: syncChoices,
+                defaultChecked: defaultChecked,
+                isDefaultSelection: isDefaultSelection,
+                selectedItems: selectedItems,
                 run: run,
                 apply: apply,
                 discard: discard,
@@ -436,14 +452,9 @@ angular
                     } else {
                         if (choice.action === 'keep') {
                             // keep is only a change if checkboxes deviate
-                            var isDefault = choice.items.every(function (i) {
-                                return i.checked === (i.source === 'current' || i.duplicate);
-                            });
-                            if (isDefault) return;
+                            if (Bridge.isDefaultSelection(choice)) return;
                         }
-                        value = choice.items
-                            .filter(function (i) { return i.checked; })
-                            .map(function (i) { return i.item; });
+                        value = Bridge.selectedItems(choice);
                     }
                     changes[choice.field] = value;
                 });
@@ -507,12 +518,11 @@ angular
             // called when a list field's radio changes
             vm.actionChanged = function (choice) {
                 choice.items.forEach(function (i) {
-                    if (choice.action === 'keep') {
-                        i.checked = i.source === 'current' || i.duplicate;
-                    } else if (choice.action === 'replace') {
-                        i.checked = i.source === 'suggested' || i.duplicate;
+                    // merge: leave the user's selection untouched, except for
+                    // duplicates, which are derived from the action
+                    if (choice.action !== 'merge' || i.duplicate) {
+                        i.checked = Bridge.defaultChecked(i, choice.action);
                     }
-                    // merge: leave the user's current selection untouched
                 });
             };
 
@@ -521,9 +531,7 @@ angular
                 if (choice.kind === 'scalar') {
                     return choice.action === 'replace' ? choice.suggested : choice.current;
                 }
-                return choice.items
-                    .filter(function (i) { return i.checked; })
-                    .map(function (i) { return i.item; });
+                return Bridge.selectedItems(choice);
             };
         },
     ]);
