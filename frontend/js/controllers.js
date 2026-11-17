@@ -276,7 +276,7 @@ angular
                 $scope.canEditToolPermissions = false;
                 // Owner can edit anything.
                 if (!_.isEmpty($scope.software)) {
-                    if ($scope.software.owner == $scope.User.getUsername()) {
+                    if ($scope.software.owner == $scope.User.getUsername() || $scope.User.isSuperuser()) {
                         $scope.canEditTool = true;
                         $scope.canEditToolPermissions = true;
                     } else if ($scope.software.editPermission != undefined) {
