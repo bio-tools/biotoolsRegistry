@@ -60,7 +60,9 @@
                     <i class="fa fa-circle-o-notch fa-spin" style="margin-top:5px;"
                        ng-show="userSearch.loading"></i>
                     <h6 class="text-danger" style="margin-top:5px;"
-                        ng-show="!userSearch.loading && !userSearch.error && userSearch.query.length >= 2 && userSearch.results.length == 0 && userSearch.showDropdown == false && false"></h6>
+                        ng-show="!userSearch.loading && !userSearch.error && userSearch.query.length >= 2 && userSearch.results.length == 0">
+                        No users found.
+                    </h6>
                     <h6 class="text-danger" style="margin-top:5px;"
                         ng-show="userSearch.error">User search failed. Please try again.</h6>
                 </div>
