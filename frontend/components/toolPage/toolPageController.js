@@ -11,16 +11,21 @@ angular.module('elixir_front')
 	$scope.elixirCommunityIndex = {
 		"3D-BioInfo": "3d-bioinfo",
 		"Biodiversity": "biodiversity",	
+		"Cancer Data": "cancer-data",
 		"Federated Human Data": "human-data",
+		"Food and Nutrition": "food-and-nutrition",
 		"Galaxy": "galaxy",
 		"Human Copy Number Variation": "hcnv",
 		"Intrinsically Disordered Proteins": "intrinsically-disordered-proteins",
 		"Marine Metagenomics": "marine-metagenomics",
 		"Metabolomics": "metabolomics",
+		"Microbiome": "microbiome",
 		"Microbial Biotechnology": "microbial-biotechnology",
 		"Plant Sciences": "plant-sciences",
 		"Proteomics": "proteomics",
 		"Rare Diseases": "rare-diseases",
+		"Research Data Management": "research-data-management",
+		"Single-Cell Omics": "single-cell-omics",		
 		"Systems Biology": "systems-biology",
 		"Toxicology": "toxicology"
 	}
