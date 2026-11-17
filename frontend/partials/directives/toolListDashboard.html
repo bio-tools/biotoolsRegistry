@@ -1,0 +1,35 @@
+<div class="row dashboard-container">
+    <!-- Filter sidebar -->
+    <div class="col-md-3 dashboard-sidebar">
+        <div class="dashboard-sidebar-title">Filters</div>
+        <div ng-repeat="section in filterSections" class="dashboard-filter-section">
+            <a href="" class="dashboard-filter-toggle" ng-click="toggleSection(section)">
+                <span class="dashboard-filter-toggle-label">
+                    {{ section.label }}<span ng-if="activeValue(section)">: {{ activeValue(section) }}</span>
+                </span>
+                <span class="dashboard-filter-caret" ng-class="{'dashboard-filter-caret-open': openSections[section.param]}">&#9662;</span>
+            </a>
+            <div class="dashboard-filter-dropdown" ng-if="openSections[section.param]">
+                <!-- text filter to narrow down the options -->
+                <input type="text" class="form-control dashboard-filter-input" ng-model="optionFilter[section.param]" placeholder="Filter {{ section.label.toLowerCase() }}...">
+                <ul class="dashboard-filter-list dashboard-filter-list-scrollable">
+                    <li ng-repeat="option in filteredOptions(section) track by $index">
+                        <a href="" class="dashboard-filter-value" ng-class="{'dashboard-filter-value-active': activeValue(section) === option}" ng-click="filterClicked(section, option)" tooltips tooltip-content="Click to filter by this value">{{ option }}</a>
+                    </li>
+                    <li ng-if="!filteredOptions(section).length" class="dashboard-filter-empty">No matches</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Results area -->
+    <div class="col-md-9 dashboard-results">
+        <div ng-if="!ToolList.loading && ToolList.count && ToolList.count != 0">
+            <div bindonce bo-name="" ng-repeat="tool in ToolList.list track by tool.biotoolsID" dir="" ng-cloak>
+                <div ng-include="'partials/directives/toolCard.html'"></div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <div tool-paginator></div>
+        </div>
+    </div>
+</div>

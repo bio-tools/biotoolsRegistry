@@ -23,6 +23,8 @@
     "gulp-plumber": "^1.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "~1.6.0",
-    "gulp-uglify": "^3.0.2"
+    "gulp-uglify": "^3.0.2",
+    "plugin-error": "^2.0.1",
+    "through2": "^4.0.2"
   }
 }

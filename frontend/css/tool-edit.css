@@ -9,3 +9,180 @@
     margin-bottom: 8px;
     font-size: 12px;
   }
+
+/* GitHub metadata bridge review */
+.bridge-review-body {
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+.bridge-review td {
+    vertical-align: middle;
+}
+
+.bridge-review td:nth-child(2),
+.bridge-review td:nth-child(3) {
+    white-space: normal;
+    word-break: break-word;
+    max-width: 300px;
+    padding-right: 24px;
+}
+
+.bridge-review tr.bridge-changed > td {
+    background-color: #eaf5ea;
+}
+
+.bridge-review .radio-inline {
+    margin-right: 10px;
+}
+
+.bridge-review td.bridge-align-top {
+    vertical-align: top;
+    text-align: left;
+}
+
+/* radios: stacked vertically, flush left, even row height */
+.bridge-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.bridge-actions .bridge-action {
+    margin: 0;
+    padding-left: 0;
+}
+
+.bridge-actions .bridge-action input[type='radio'] {
+    margin-right: 4px;
+}
+
+/* item rows: checkbox on the left, label text beside it, centered on one line */
+.bridge-item-list {
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.bridge-item-list li {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.bridge-item-label {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+    margin-bottom: 2px;
+}
+
+.bridge-item-label input[type='checkbox'] {
+    flex: 0 0 auto;
+    margin: 0 6px 0 0;
+}
+
+.bridge-item-text {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.bridge-item-unchecked {
+    opacity: 0.55;
+}
+
+.bridge-confirm-json {
+    max-height: 50vh;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+/* GitHub metadata bridge form */
+.github-bridge-panel {
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(31, 35, 40, 0.08);
+}
+
+.github-bridge-heading {
+  padding: 14px 16px;
+  color: #1f2328;
+  background: #f6f8fa;
+  border-bottom: 1px solid #d0d7de;
+}
+
+.github-bridge-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.github-bridge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #1f2328;
+  font-size: 20px;
+}
+
+.github-bridge-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 6px;
+  border: 1px solid #d0d7de;
+  border-radius: 999px;
+  color: #656d76;
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.github-bridge-form {
+  max-width: 760px;
+}
+
+.github-bridge-form .input-group {
+  width: 100%;
+}
+
+.github-bridge-form .form-control {
+  height: 38px;
+  border-color: #d0d7de;
+  box-shadow: none;
+  width: 65%;
+}
+
+.github-bridge-form .btn {
+  height: 38px;
+  margin-top: 5px;
+  padding-right: 14px;
+  padding-left: 14px;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .github-bridge-form {
+    max-width: 760px;
+  }
+}
+
+@media (max-width: 767px) {
+  .github-bridge-form .input-group {
+    display: block;
+  }
+
+  .github-bridge-form .form-control,
+  .github-bridge-form .input-group-btn,
+  .github-bridge-form .btn {
+    display: block;
+    width: 100%;
+  }
+
+  .github-bridge-form .input-group-btn {
+    margin-top: 8px;
+  }
+}

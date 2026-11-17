@@ -1,8 +1,8 @@
-# docker-compose file to setup:
+# docker compose file to setup:
 # - mysql
 # - elasticsearch
 # - backend: depends on mysql and elasticsearch
-# - frontend: depends on backend
+# - frontend
 # - caddy: reverse proxy for backend and frontend
 
 # This file is meant to aid local development and testing. It *must not* be
@@ -51,6 +51,7 @@ services:
     image: biotools/backend:latest
     build:
       context: ./backend
+      dockerfile: Dockerfile.dev
       target: dev
     environment:
       - BIOTOOLS_ELASTIC_SEARCH_URLS=http://elasticsearch:9200
@@ -82,6 +83,8 @@ services:
     image: biotools/frontend:latest
     build:
       context: ./frontend
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
     networks:
       - net
     depends_on:
@@ -108,6 +111,16 @@ services:
     networks:
       - net
     restart: unless-stopped
+
+  metadata-bridge:
+    container_name: biotools-metadata-bridge
+    image: anitamnd/bridge:latest
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      HUGGINGFACE_TOKEN: ${HUGGINGFACE_TOKEN}
+    restart: unless-stopped
+    networks:
+      - net
 
 networks:
   net:

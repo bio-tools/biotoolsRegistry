@@ -140,7 +140,7 @@ angular.module('elixir_front.controllers')
 
 
 }])
-.controller('SubdomainController', ['$scope', '$state',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', 'UserSuggestionsProvider', 'User', function($scope, $state, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms, UserSuggestionsProvider, User) {
+.controller('SubdomainController', ['$scope', '$state',  '$stateParams', 'ToolListOverviewConnection', 'DomainDetailConnection', 'DomainConnection', '$q', 'UsedTerms', '$http', 'User', function($scope, $state, $stateParams, ToolListOverviewConnection, DomainDetailConnection, DomainConnection, $q, UsedTerms, $http, User) {
 	var vm = this;
 	$scope.ToolListOverviewConnection = ToolListOverviewConnection;
 	$scope.User = User;
@@ -190,24 +190,106 @@ angular.module('elixir_front.controllers')
 		
 	}
 
-	// Handle users search
-	$scope.userSuggestions = function(prefix) {
-		return UserSuggestionsProvider.getSuggestions(prefix).then(function(data) {
-			var suggestions = _.map(data, function(obj){
-				return obj.username;
-			});
-			return _.difference(suggestions, $scope.subdomain.editors);
-		});
+	// Handle users search (plain dropdown picker, no uib-typeahead)
+	$scope.userSearch = {
+		query: '',
+		results: [],
+		loading: false,
+		error: false,
+		showDropdown: false,
+		highlighted: -1
 	};
 
-	$scope.userSelected = function($item, $model, $label) {
-		// Initialize authors if not present.
+	$scope.searchUsers = function() {
+		var query = ($scope.userSearch.query || '').trim();
+
+		if (query.length < 2) {
+			$scope.userSearch.results = [];
+			$scope.userSearch.showDropdown = false;
+			$scope.userSearch.highlighted = -1;
+			return;
+		}
+
+		$scope.userSearch.loading = true;
+		$scope.userSearch.error = false;
+
+		$http.get('/api/user-list', { params: { term: query } }).then(
+			function(response) {
+				// Ignore stale responses
+				if ($scope.userSearch.query.trim() !== query) {
+					return;
+				}
+				$scope.userSearch.loading = false;
+				var excluded = $scope.subdomain.editors || [];
+				$scope.userSearch.results = _.map(response.data, function(obj) {
+						return obj.username;
+				})
+					.filter(function(username) {
+							return excluded.indexOf(username) === -1;
+					})
+					.slice(0, 10);
+				$scope.userSearch.showDropdown = $scope.userSearch.results.length > 0;
+				$scope.userSearch.highlighted = $scope.userSearch.results.length > 0 ? 0 : -1;
+			},
+			function() {
+				$scope.userSearch.loading = false;
+				$scope.userSearch.error = true;
+				$scope.userSearch.results = [];
+				$scope.userSearch.showDropdown = false;
+			}
+		);
+	};
+
+	$scope.selectEditor = function(username) {
+		if (!username) {
+			return;
+		}
 		if ($scope.subdomain.editors == undefined) {
 			$scope.subdomain.editors = [];
 		}
-		// Clear the input field on selection.
-		$scope.userSuggestion = '';
-		$scope.subdomain.editors.push($model);
+		if ($scope.subdomain.editors.indexOf(username) === -1) {
+			$scope.subdomain.editors.push(username);
+		}
+		// Reset the search box.
+		$scope.userSearch.query = '';
+		$scope.userSearch.results = [];
+		$scope.userSearch.showDropdown = false;
+		$scope.userSearch.highlighted = -1;
+	};
+
+	// Keyboard navigation: arrow up/down + enter, escape closes.
+	$scope.userSearchKeydown = function($event) {
+		var s = $scope.userSearch;
+
+		switch ($event.keyCode) {
+			case 40: // down
+				if (s.results.length) {
+					s.highlighted = (s.highlighted + 1) % s.results.length;
+					$event.preventDefault();
+				}
+				break;
+			case 38: // up
+				if (s.results.length) {
+					s.highlighted = s.highlighted <= 0 ? s.results.length - 1 : s.highlighted - 1;
+					$event.preventDefault();
+				}
+				break;
+			case 13: // enter
+				if (s.showDropdown && s.highlighted >= 0) {
+					$scope.selectEditor(s.results[s.highlighted]);
+					$event.preventDefault();
+				}
+				break;
+			case 27: // escape
+				s.showDropdown = false;
+				break;
+		}
+	};
+
+	$scope.showDropdown = function() {
+		if ($scope.userSearch.results.length > 0) {
+			$scope.userSearch.showDropdown = true;
+		}
 	};
 
 	$scope.isDomainOwner = function() {
@@ -467,20 +549,3 @@ angular.module('elixir_front.controllers')
 	}
 }]);
 
-
-// Services and Factories
-angular.module('elixir_front').factory('UserSuggestionsProvider', ['$http', function ($http) {
-	return {
-		getSuggestions: function(prefix) {
-			return $http({
-				method: 'GET',
-				url: '/api/user-list',
-				params: {term: prefix}
-			}).then(function successCallback(response) {
-				return response.data;
-			}, function errorCallback(response) {
-				return {};
-			})
-		}
-	};
-}]);

@@ -4,9 +4,6 @@ import dateutil.parser
 import requests
 
 
-############################################################################
-# Publication Metadata
-############################################################################
 def extract_publication_data(response):
     title = ''
     abstract = ''
@@ -68,7 +65,7 @@ def publication_metadata_needs_update(publication):
                 return False
     return True
 
-def save_publication_data(data, citation_count, publication):
+def save_publication_data(data, publication):
     if publication.metadata is not None:
         metadata = publication.metadata
     else:
@@ -104,7 +101,6 @@ def save_publication_data(data, citation_count, publication):
 def update_publication(publication):
     try:
         data = None
-        
         if publication.doi:
             if publication_metadata_needs_update(publication):
                 data = fetch_publication_data('DOI', publication.doi.replace('doi:', ''), 'core')
@@ -115,6 +111,6 @@ def update_publication(publication):
             if publication_metadata_needs_update(publication):
                 data = fetch_publication_data('PMC', publication.pmcid.replace('PMC', ''), 'core')
         if data:
-            save_publication_data(data, publication)
+            save_publication_data(data=data, publication=publication)
     except Exception as e:
         print("Warning: Publication could not be processed.", e)
