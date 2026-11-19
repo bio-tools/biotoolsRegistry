@@ -15,6 +15,7 @@ const labels = { operation: 'Operation', format: 'Format', topic: 'Topic' };
 <template>
   <fieldset :id="fieldId(path)" class="concept-list" tabindex="-1" :aria-describedby="fieldId(path) + '-errors'" :disabled="disabled">
     <legend>{{ schema?.label || labels[scope] + 's' }}</legend>
+    <p v-if="schema?.help" class="schema-help">{{ schema.help }}</p>
     <p :id="fieldId(path) + '-errors'" class="nested-error">{{ errorsAt(errors, path).join(' ') }}</p>
     <div v-for="(item, index) in modelValue" :key="item.id" :id="fieldId(itemPath(item))" class="concept-row" tabindex="-1"
       :aria-describedby="fieldId(itemPath(item)) + '-errors'" :data-concept-id="item.id">

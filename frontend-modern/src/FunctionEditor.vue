@@ -15,6 +15,7 @@ const path = (item: FunctionItem) => ['function', { itemId: item.id }];
   <section id="nested-function" class="function-editor" aria-labelledby="functions-title" tabindex="-1">
     <header class="nested-heading"><h2 id="functions-title"><UiIcon name="function" />{{ schema?.label || 'Functions' }}</h2>
       <button type="button" class="secondary" :disabled="disabled" @click="add">Add function</button></header>
+    <p v-if="schema?.help" class="schema-help">{{ schema.help }}</p>
     <p class="nested-error">{{ errorsAt(errors, ['function']).join(' ') }}</p>
     <p v-if="!modelValue?.length" class="empty-functions">No functions.</p>
     <section v-for="(item, index) in modelValue" :key="item.id" :id="fieldId(path(item))" class="function-entry" tabindex="-1"
@@ -47,16 +48,16 @@ const path = (item: FunctionItem) => ['function', { itemId: item.id }];
 </template>
 
 <style>
-.function-editor { margin-top: 20px; padding: 24px; border: 1px solid #dce8ed; border-radius: 10px; background: #fff; box-shadow: 0 2px 10px #173e4b0a; }
-.function-editor h2, .function-editor h3, .function-editor h4 { margin: 0; font-size: 18px; }
+.function-editor { margin-top: 24px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.function-editor h2, .function-editor h3, .function-editor h4 { margin: 0; font-size: var(--text-heading); font-weight: 600; }
 .function-editor h4 { font-size: 16px; }
 .nested-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
 .nested-controls { display: flex; gap: 4px; }
 .nested-icon { width: 32px; height: 32px; min-height: 32px; flex: 0 0 32px; padding: 0; font-size: 18px; }
-.function-entry { border: 1px solid #dce8ed; border-radius: 8px; padding: 16px; margin-top: 16px; min-width: 0; background: #f8fbfc; }
+.function-entry { border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin-top: 16px; min-width: 0; background: #fff; }
 .function-entry textarea { width: 100%; font: inherit; padding: 10px; border: 1px solid #767676; border-radius: 4px; resize: vertical; min-height: 80px; }
 .function-diagram { display: grid; grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1.1fr) 32px minmax(0, 1fr); align-items: center; gap: 8px; margin-block: 24px; }
-.function-operations { min-width: 0; background: #e5f2f7; border: 1px solid #8baebf; border-radius: 8px; padding: 16px; }
+.function-operations { min-width: 0; background: var(--edam-operation); border: 0; border-radius: 8px; padding: 12px; }
 .function-operations .concept-list { margin: 0; }
 .function-operations .concept-list legend { font-size: 16px; color: #23527c; }
 .flow-arrow { color: #005472; text-align: center; font-size: 28px; line-height: 40px; }

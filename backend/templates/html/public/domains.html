@@ -18,6 +18,7 @@
   <h2><a href="{{ entry.url }}">{{ entry.domain }}</a></h2>
   <p>{{ entry.resources|length }} tools{% if entry.title %} &middot; {{ entry.title }}{% endif %}</p>
   {% if entry.sub_title %}<p>{{ entry.sub_title }}</p>{% endif %}
+  {% if entry.description_html %}<details class="domain-description"><summary>Description</summary><div>{{ entry.description_html }}</div></details>{% endif %}
   <ul class="public-tags">{% for collection in entry.collections %}<li><a href="{{ collection.url }}">{{ collection.name }}</a></li>{% endfor %}{% for tag in entry.tag %}<li>{{ tag }}</li>{% endfor %}</ul>
 </article>
 {% empty %}<p>No domains found.</p>{% endfor %}

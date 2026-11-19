@@ -84,7 +84,8 @@ class DomainForm(forms.Form):
     domain = forms.RegexField(r'^[A-Za-z0-9-]{2,40}$', label='Domain identifier', max_length=40)
     title = forms.CharField(required=False, max_length=50)
     sub_title = forms.CharField(label='Subtitle', required=False, max_length=150)
-    description = forms.CharField(required=False, widget=forms.Textarea)
+    description = forms.CharField(required=False, widget=forms.Textarea,
+        help_text='HTML headings, paragraphs, lists, emphasis, links and tables are supported. Unsafe elements are removed when displayed.')
     is_private = forms.BooleanField(label='Private domain setting', required=False,
         help_text='This existing setting does not hide the domain from the public directory.')
     resources = forms.CharField(label='Tool identifiers (one per line)', required=False, widget=forms.Textarea)
@@ -180,4 +181,6 @@ def domain(request, identifier=None):
     matches = Resource.objects.filter(visibility=1).filter(Q(name__icontains=query) | Q(biotoolsID__icontains=query))[:30] if query else []
     return render(request, 'html/manage_domain.html', {'form': form, 'domain': current, 'query': query, 'matches': matches,
         'can_manage': owner, 'can_delete': current and owner and current.name not in NOT_DELETABLE_DOMAINS,
-        'editors_config': {'initial': str(form['editors'].value() or '').splitlines()}}, status=status)
+        'editors_config': {'initial': str(form['editors'].value() or '').splitlines()},
+        'resources_config': {'initial': str(form['resources'].value() or '').splitlines(),
+            'names': {item.biotoolsID: item.name for item in current.resource.all()} if current else {}}}, status=status)

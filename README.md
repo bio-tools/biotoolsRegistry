@@ -42,6 +42,9 @@ production; test configurations are under `tests/rehearsal/`.
 ## Documentation
 
 - [Architecture](docs/architecture.md)
+- [Research Software Ecosystem integration](docs/rsec-integration.md)
+- [Search and private drafts](docs/search.md)
+- [Open GitHub issue triage](docs/github-issue-triage.md)
 - [Workflow planner](docs/workflows.md)
 - [Testing](docs/testing.md)
 - [Production readiness](docs/operations.md)

@@ -1,4 +1,7 @@
+import json
 from html.parser import HTMLParser
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from django.contrib.auth.models import User
@@ -8,11 +11,11 @@ from django.test.utils import CaptureQueriesContext
 from django.urls import get_script_prefix, set_script_prefix
 from elasticsearch import Elasticsearch
 
-from elixir.models import (Resource, EditPermission, Function, Operation, Input, Data,
+from elixir.models import (Resource, EditPermission, Function, Operation, Input, Data, Ontology,
                            Format, Relation, Publication, PublicationMetadata,
                            PublicationAuthor, PublicationType, Credit, CreditTypeRole, OtherID)
 from elixir.queries import get_tool_detail
-from elixir.templatetags.detail_tags import field_icon
+from elixir.templatetags.detail_tags import community_icon, field_icon, section_icon
 from elixirapp.tests.detail_fixtures import create_detail_fixture
 
 
@@ -71,14 +74,69 @@ class ToolDetailTests(TestCase):
         self.assertContains(response, 'https://badge.dimensions.ai/static/ai/badge.js')
         self.assertContains(response, '/static/html/field-icons.svg#function')
         self.assertContains(response, '/static/html/field-icons.svg#publication')
-        self.assertContains(response, 'title="Open this term in the EDAM ontology"')
-        self.assertContains(response, 'title="Search bio.tools for tools annotated with Sequence analysis"')
+        self.assertContains(response, '/static/html/community-icons/proteomics.svg')
+        self.assertContains(response, 'data-edam-scope="topic"')
+        self.assertContains(response, 'data-edam-scope="operation"')
+        self.assertContains(response, 'data-edam-scope="data"')
+        self.assertContains(response, 'data-edam-scope="format"')
+        self.assertContains(response, 'title="Open this term in the EDAM ontology: topic_0080"')
+        self.assertNotContains(response, '>topic_0080</a>')
+        self.assertNotContains(response, '>format_1929</a>')
+        self.assertContains(response, 'Search bio.tools for tools annotated with Sequence analysis')
         self.assertContains(response, 'title="Search bio.tools for tools credited to Example Research Team"')
+        self.assertContains(response, 'A tool with a text-based (command-line) interface.')
         self.assertNotContains(response, '<object')
+
+    @patch('elixir.templatetags.detail_tags.edam_definitions')
+    def test_edam_definition_and_icon_are_available_on_term_links(self, vocabulary):
+        vocabulary.return_value = {'http://edamontology.org/topic_0080': 'Analysis of biological sequences.',
+                                   'http://edamontology.org/data_2044': 'A sequence of biological residues.',
+                                   'http://edamontology.org/format_1929': 'A sequence file format.'}
+        response = self.page()
+        self.assertContains(response, 'Analysis of biological sequences. — Search bio.tools for tools annotated with Sequence analysis')
+        self.assertContains(response, 'A sequence of biological residues. — Search bio.tools for tools annotated with Sequence')
+        self.assertContains(response, 'A sequence file format. — Search bio.tools for tools annotated with FASTA')
+        self.assertContains(response, 'aria-label="Open this term in the EDAM ontology: topic_0080"')
+        self.assertContains(response, '/static/html/edam-logo.svg')
+        self.assertContains(response, '/static/html/field-icons.svg#terminal')
+        self.assertContains(response, '/static/html/field-icons.svg#license')
+        self.assertContains(response, '/static/html/field-icons.svg#desktop')
+        vocabulary.assert_called_once()
+
+    def test_edam_definition_comes_from_active_vocabulary(self):
+        Ontology.objects.create(name='EDAM_topic', data=json.dumps({
+            'data': {'uri': 'http://edamontology.org/topic_0080'}, 'text': 'Sequence analysis',
+            'definition': 'Analysis of biological sequences.', 'children': []}))
+        self.assertContains(self.page(), 'Analysis of biological sequences. — Search bio.tools')
+
+    @patch('elixirapp.tool_detail.tool_links')
+    def test_ecosystem_links_are_shown_without_repeating_curated_links(self, lookup):
+        lookup.return_value = {'updated': '2026-11-11T10:00:00+00:00', 'services': {
+            'Bioconda': [{'label': 'sequence-workbench', 'url': 'https://anaconda.org/bioconda/sequence-workbench'}],
+            'Documentation': [{'label': 'Manual', 'url': 'https://example.org/sequence-workbench/docs'}]}}
+        response = self.page()
+        self.assertContains(response, 'Use this tool')
+        self.assertContains(response, 'https://anaconda.org/bioconda/sequence-workbench')
+        self.assertContains(response, 'Links from')
+        self.assertNotContains(response, '>Manual</a>')
+
+    def test_ecosystem_links_are_loaded_from_the_local_json_index(self):
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / 'links.json'
+            path.write_text(json.dumps({'updated': '2026-11-17', 'tools': {'detail-demo': {
+                'Bioconda': [{'label': 'example', 'url': 'https://anaconda.org/bioconda/example'}]}}}))
+            with override_settings(RSEC_INDEX_PATH=str(path)):
+                response = self.page()
+            self.assertContains(response, 'https://anaconda.org/bioconda/example')
+            self.assertContains(response, '2026-11-17')
 
     def test_unknown_field_type_uses_a_generic_decorative_icon(self):
         self.assertEqual(field_icon('number'), 'number')
         self.assertEqual(field_icon('new-schema-type'), 'object')
+        self.assertEqual(section_icon('credit', 'array'), 'people')
+        self.assertEqual(section_icon('new-schema-field', 'array'), 'array')
+        self.assertEqual(community_icon('Food and Nutrition')['icon'], 'food')
+        self.assertIsNone(community_icon('New schema community')['icon'])
 
     def test_sparse_record_omits_optional_sections(self):
         response = self.page('migration-fixture')

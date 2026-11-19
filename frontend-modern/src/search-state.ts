@@ -13,6 +13,7 @@ export interface SearchConfig {
   filterChoices?: Record<string, { value: string; label: string }[]>;
   filterGroups?: SearchFilterGroup[];
   schemaRevision?: string;
+  scientificHelp?: Record<string, string>;
   sorts: Record<string, string>;
   pageSizes: number[];
   maxWindow: number;
@@ -24,31 +25,40 @@ export interface SearchConfig {
 
 export interface SearchState {
   q: string;
+  qmode: '' | 'boolean';
   sort: string;
   ord: 'asc' | 'desc';
   page: number;
   per_page: number;
   filters: Record<string, string>;
   advanced: AdvancedFilter[];
+  edamMatch: 'all' | 'any';
+  edamExpand: 'exact' | 'narrower';
   view: 'cards' | 'table';
 }
 
 export function defaultState(): SearchState {
-  return { q: '', sort: 'lastUpdate', ord: 'desc', page: 1, per_page: 50, filters: {}, advanced: [], view: 'cards' };
+  return { q: '', qmode: '', sort: 'lastUpdate', ord: 'desc', page: 1, per_page: 50, filters: {}, advanced: [], edamMatch: 'all', edamExpand: 'exact', view: 'cards' };
 }
 
 export function parseSearch(search: string, config: SearchConfig): SearchState {
   const params = new URLSearchParams(search);
-  const allowed = new Set(['q', 'sort', 'ord', 'page', 'per_page', 'advanced', 'view', ...Object.keys(config.filters)]);
+  const allowed = new Set(['q', 'qmode', 'sort', 'ord', 'page', 'per_page', 'advanced', 'view', 'edamMatch', 'edamExpand', ...Object.keys(config.filters)]);
   for (const key of params.keys()) {
     if (!allowed.has(key)) throw new Error(`Unsupported search parameter: ${key}`);
   }
   // Django QueryDict and the public search use the last repeated value.
   for (const key of new Set(params.keys())) params.set(key, params.getAll(key).at(-1)!);
   const state = defaultState();
+  const qmode = params.get('qmode') ?? '';
+  if (!['', 'boolean'].includes(qmode)) throw new Error('Choose a supported search mode.');
+  state.qmode = qmode as SearchState['qmode'];
   const view = params.get('view') ?? 'cards';
   if (!['cards', 'table'].includes(view)) throw new Error('Choose cards or table.');
   state.view = view as SearchState['view'];
+  const match = params.get('edamMatch') ?? 'all', expand = params.get('edamExpand') ?? 'exact';
+  if (!['all', 'any'].includes(match) || !['exact', 'narrower'].includes(expand)) throw new Error('Choose a supported EDAM match and expansion mode.');
+  state.edamMatch = match as SearchState['edamMatch']; state.edamExpand = expand as SearchState['edamExpand'];
   for (const key of ['page', 'per_page'] as const) {
     const value = params.get(key) ?? String(state[key]);
     if (!/^[0-9]{1,5}$/.test(value) || Number(value) < 1) throw new Error(`Invalid ${key}. Use a positive whole number.`);
@@ -74,6 +84,7 @@ export function parseSearch(search: string, config: SearchConfig): SearchState {
 export function serializeSearch(state: SearchState): string {
   const params = new URLSearchParams();
   if (state.q.trim()) params.set('q', state.q.trim());
+  if (state.qmode) params.set('qmode', state.qmode);
   for (const key of Object.keys(state.filters).sort()) {
     if (state.filters[key].trim()) params.set(key, state.filters[key].trim());
   }
@@ -82,6 +93,8 @@ export function serializeSearch(state: SearchState): string {
   if (state.per_page !== 50) params.set('per_page', String(state.per_page));
   if (state.page !== 1) params.set('page', String(state.page));
   if (state.advanced.length) params.set('advanced', JSON.stringify(state.advanced));
+  if (state.edamMatch !== 'all') params.set('edamMatch', state.edamMatch);
+  if (state.edamExpand !== 'exact') params.set('edamExpand', state.edamExpand);
   if (state.view === 'table') params.set('view', 'table');
   return params.toString();
 }
@@ -89,6 +102,7 @@ export function serializeSearch(state: SearchState): string {
 export interface ToolSummary {
   id: string; name: string; description: string; url: string;
   toolTypes: string[]; topics: string[]; operations: string[]; added: string; updated: string;
+  publicationSortDate?: string;
   filterValues?: FilterValues;
   comparison?: Record<string, string>;
 }

@@ -30,10 +30,14 @@ migrated or verified. The remaining tasks are in the [readiness checklist](../op
    verification/reset in an authorized environment. None is currently
    available. Verify optional GitHub bridge provenance, credentials and
    capacity if enabled.
+   Django 6.1's database checks also report that MySQL cannot enforce allauth's
+   conditional uniqueness constraints for primary and verified email addresses.
+   Audit existing account data and decide how to enforce those invariants before
+   production cutover; this limitation also applied to the previous MySQL setup.
 3. Confirm robots, sitemap, canonical URLs and security at the actual origin.
-   The image currently denies indexing; production Compose also publishes MySQL
-   and Elasticsearch ports with Elasticsearch security disabled, so operators
-   must verify network isolation and the intended policy.
+   The image currently denies indexing. Production Compose keeps MySQL and
+   Elasticsearch on the internal Docker network, but Elasticsearch security is
+   disabled; operators must verify actual network isolation and indexing policy.
 4. Agree and measure representative search, editor and management performance
    and error budgets. The accepted workflow measurements above do not cover them.
 5. Verify restorable production database and media backups, index recovery,

@@ -1,4 +1,5 @@
 from collections import defaultdict, deque
+from django.db import IntegrityError, transaction
 from django.forms.models import model_to_dict
 from elixir.resource_options import METADATA_CHOICES
 from rest_framework import serializers
@@ -249,6 +250,7 @@ class RelationSerializer(serializers.ModelSerializer):
 
 
 class ResourceSerializer(serializers.ModelSerializer):
+    reserves_new_identifier = True
 
     # instead of the id we use biotoolsID to identify the resources from the user point of view
     lookup_field = "biotoolsID"
@@ -268,8 +270,8 @@ class ResourceSerializer(serializers.ModelSerializer):
         allow_blank=False,
         validators=[
             UniqueValidator(
-                queryset=Resource.objects.filter(visibility=1),
-                message="A resource with this ID already exists. bio.tools IDs need to be unique",
+                queryset=Resource.objects.all(), lookup='iexact',
+                message="This bio.tools ID has already been assigned and cannot be reused.",
             )
         ],
     )
@@ -441,6 +443,8 @@ class ResourceSerializer(serializers.ModelSerializer):
             )
         if attrs.endswith("."):
             raise serializers.ValidationError("The biotoolsID cannot end with a dot")
+        if self.reserves_new_identifier and ResourceIdentifier.objects.filter(pk=attrs.lower()).exists():
+            raise serializers.ValidationError("This bio.tools ID has already been assigned and cannot be reused.")
         return attrs
 
     def validate_homepage(self, attrs):
@@ -479,7 +483,14 @@ class ResourceSerializer(serializers.ModelSerializer):
         return attrs
 
     # creating the resource
+    @transaction.atomic
     def create(self, validated_data):
+        if self.reserves_new_identifier:
+            try:
+                with transaction.atomic():
+                    ResourceIdentifier.objects.create(identifier=validated_data['biotoolsID'].lower())
+            except IntegrityError as exc:
+                raise serializers.ValidationError({'biotoolsID': ['This bio.tools ID has already been assigned and cannot be reused.']}) from exc
         pop = lambda l, k: l.pop(k) if k in list(l.keys()) else []
         uniq = lambda l, k: [
             dict(t) for t in set([tuple(d.items()) for d in pop(l, k)])
@@ -785,6 +796,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 
 
 class ResourceUpdateSerializer(ResourceSerializer):
+    reserves_new_identifier = False
     # removed the uniqueness constraint, since this is an 'update'
     # id = serializers.CharField(source="biotoolsID", read_only=True)
     # curie = serializers.CharField(source="biotoolsCURIE", read_only=True)

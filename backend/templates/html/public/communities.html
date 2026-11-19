@@ -1,5 +1,5 @@
 {% extends 'html/public/base.html' %}
-{% load static %}
+{% load static detail_tags %}
 {% block title %}Communities | bio.tools{% endblock %}
 {% block content %}
 <div class="public-copy public-communities">
@@ -28,18 +28,17 @@
         See the current communities and their corresponding bio.tools domains below.
     </p>
     
-    <br>
-    <hr> 
+    <div class="communities-grid">
 
     <section class="elixir-community">
            
         <div class="community-content">
-            <h4 class="community-name">3D-BioInfo</h4>
+            <h4 class="community-name">{% community_icon "3D-BioInfo" %}3D-BioInfo</h4>
             <p class="description-text comm-desc">
                 3D-Bioinfo aims to establish formal platforms to integrate tools and resources in the field of structural bioinformatics
             </p>
             
-            <div class="comm-subdomain">
+            <details class="comm-subdomain"><summary>Explore related domains</summary>
                 <span class="domain-title">3D-BioInfo</span> (
                 <a target="_blank" href="/t?domain=3d-bioinfo" rel="noopener noreferrer" title="Search bio.tools for tools in this domain">3d-bioinfo</a> )
                 <p>
@@ -76,66 +75,57 @@
                     Brings together researchers who are involved in generating data in protein engineering with researchers interested in interrogating such data
                 </p>
                 
-            </div>
+            </details>
             
         </div>
         
     </section>
-
-    <hr>
-
-    <section class="elixir-community"> 
+<section class="elixir-community">
         <div class="community-content">
-            <h4 class="community-name">Biodiversity</h4>
+            <h4 class="community-name">{% community_icon "Biodiversity" %}Biodiversity</h4>
             <p class="description-text comm-desc">
                 Software and services for biodiversity studies and interventions, ecology, and natural history
             </p>
             
-            <div class="comm-subdomain">
-                <span class="domain-title">ELIXIR hCNV</span> (
+            <details class="comm-subdomain"><summary>Explore related domains</summary>
+                <span class="domain-title">Biodiversity</span> (
                 <a target="_blank" href="/t?domain=biodiversity" rel="noopener noreferrer" title="Search bio.tools for tools in this domain">biodiversity</a> )
                 <p>
                     Biodiversity and Ecology
                 </p>
-            </div>
+            </details>
             
         </div>
         
     </section>
-
-    <hr>
-
-    <section class="elixir-community">
+<section class="elixir-community">
         <div class="community-content">
-            <h4 class="community-name">Human Copy Number Variation</h4>
+            <h4 class="community-name">{% community_icon "Human Copy Number Variation" %}Human Copy Number Variation</h4>
             <p class="description-text comm-desc">
                 Aims to make it easier to detect, annotate and interpret human Copy Number Variations (hCNVs).
             </p>
             
-            <div class="comm-subdomain">
+            <details class="comm-subdomain"><summary>Explore related domains</summary>
                 <span class="domain-title">ELIXIR hCNV</span> (
                 <a target="_blank" href="/t?domain=elixir-hcnv" rel="noopener noreferrer" title="Search bio.tools for tools in this domain">elixir-hcnv</a> )
                 <p>
                     ELIXIR hCNV community - CNV detection tools
                 </p>
-            </div>
+            </details>
             
         </div>
         
     </section>
-
-    <hr>
-
-    <section class="elixir-community"> 
+<section class="elixir-community">
         <div class="community-content">
-            <h4 class="community-name">Intrinsically Disordered Proteins</h4>
+            <h4 class="community-name">{% community_icon "Intrinsically Disordered Proteins" %}Intrinsically Disordered Proteins</h4>
             <p class="description-text comm-desc">
                 Intrinsically disordered proteins (IDP) are proteins containing regions that lack a stable secondary or tertiary structure. 
                 <br>
                 These regions are called intrinsically disordered regions (IDRs) and play a central role in cell regulation, they are also thought to be involved many human diseases including cancer and neurodegenerative diseases.
             </p>
             
-            <div class="comm-subdomain">
+            <details class="comm-subdomain"><summary>Explore related domains</summary>
                 <span class="domain-title">Intrinsically Disordered Proteins</span> (
                 <a target="_blank" href="/t?domain=disordered-proteins" rel="noopener noreferrer" title="Search bio.tools for tools in this domain">disordered-proteins</a> )
                 <p>
@@ -148,43 +138,37 @@
                     Biomolecular condensates and membraneless organelles formed by liquid-liquid phase separation
                 </p>
                 
-            </div>
+            </details>
             
         </div>
         
     </section>
-
-    <hr>
-
-    <section class="elixir-community"> 
+<section class="elixir-community">
         <div class="community-content">
-            <h4 class="community-name">Proteomics</h4>
+            <h4 class="community-name">{% community_icon "Proteomics" %}Proteomics</h4>
             <p class="description-text comm-desc">
                 Bioinformatics resource catalogue for proteomics research
             </p>
             
-            <div class="comm-subdomain">
+            <details class="comm-subdomain"><summary>Explore related domains</summary>
                 <span class="domain-title">Proteomics</span> (
                 <a target="_blank" href="/t?domain=proteomics" rel="noopener noreferrer" title="Search bio.tools for tools in this domain">proteomics</a> )
                 <p>
                     Proteomics software tools and databases
                 </p>
-            </div>
+            </details>
             
         </div>
         
     </section>
-
-    <hr>
-
-    <section id="rare-diseases">
+<section id="rare-diseases">
         <div class="community-content">
-            <h4 class="community-name">Rare Diseases</h4>
+            <h4 class="community-name">{% community_icon "Rare Diseases" %}Rare Diseases</h4>
             <p class="description-text comm-desc">
                 Tools and services catalogues useful for rare disease research provided by the Rare Disease Community
             </p>
 
-            <div class="comm-subdomain">
+            <details class="comm-subdomain"><summary>Explore related domains</summary>
                 <span class="domain-title">Rare diseases registry</span> (
                 <a target="_blank" href="/t?domain=rare-diseases" rel="noopener noreferrer" title="Search bio.tools for tools in this domain">rare-diseases</a> )
                 <p>
@@ -209,17 +193,14 @@
                     Resources part of the European Joint Programme on Rare Diseases (EJP-RD)
                 </p>
 
-            </div>
+            </details>
             
         </div>
         
     </section>
-    
-    <hr>
-
-    <section class="elixir-community"> 
+<section class="elixir-community">
         <div class="community-content">
-            <h4 class="community-name">Systems Biology</h4>
+            <h4 class="community-name">{% community_icon "Systems Biology" %}Systems Biology</h4>
             <p class="description-text comm-desc">
                 Systems biology aims to understand how biological functions emerge from interactions between the multiple components of living systems by modelling the (dynamics of) interactions and processes. It studies what makes the whole different from the sum of its parts. A key feature of systems biology is often the integration of data, which is often in large volumes and heterogeneous, at multiple scales, both in space and in time.
             </p>
@@ -230,7 +211,7 @@
                 If you have any questions or suggestions regarding this domain in bio.tools, please contact: <a href="mailto:systems-biology@elixir-europe.org">systems-biology@elixir-europe.org</a>.
             </p>
             
-            <div class="comm-subdomain">
+            <details class="comm-subdomain"><summary>Explore related domains</summary>
                 <span class="domain-title">Logical and qualitative modelling</span> (
                 <a target="_blank" href="/t?domain=qual-logical-models" rel="noopener noreferrer" title="Search bio.tools for tools in this domain">qual-logical-models</a> )
                 <p>
@@ -249,11 +230,12 @@
                     Rule-based modelling in systems biology
                 </p>
                 
-            </div>
+            </details>
             
         </div>
         
     </section>
+    </div>
 
 </div>
 </div>

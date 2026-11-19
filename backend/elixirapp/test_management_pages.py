@@ -154,6 +154,19 @@ class ManagementTests(TestCase):
         self.assertEqual(self.post('/edit-domain/', data).status_code, 400)
         self.assertEqual(Domain.objects.filter(name='new-domain', visibility=1).count(), 1)
 
+    def test_domain_description_html_survives_creation_and_editing(self):
+        self.load('/edit-domain/')
+        description = '<p>Welcome to <strong>our collection</strong>.</p>'
+        self.assertEqual(self.post('/edit-domain/', {'domain': 'html-domain', 'description': description}).status_code, 302)
+        current = Domain.objects.get(name='html-domain', visibility=1)
+        self.assertEqual(current.description, description)
+        page = self.load('/edit-domain/html-domain')
+        self.assertContains(page, '&lt;strong&gt;our collection&lt;/strong&gt;')
+        updated = '<p>Updated <a href="https://example.org">documentation</a>.</p>'
+        body = {**domain_initial(current), 'description': updated}
+        self.assertEqual(self.post('/edit-domain/html-domain', body).status_code, 302)
+        self.assertEqual(Domain.objects.get(name='html-domain', visibility=1).description, updated)
+
     def test_failed_domain_creation_rolls_back_lock_and_can_be_retried(self):
         self.load('/edit-domain/')
         data = {'domain': 'retry-domain', 'title': 'Preserved draft'}

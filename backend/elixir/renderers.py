@@ -66,6 +66,10 @@ class XMLSchemaRenderer(BaseRenderer):
             xslt2 = lxmletree.parse(curr_dir + "/biotoolsSchema/removeEmptyElements.xslt")
             transform2 = lxmletree.XSLT(xslt2)
             newdom2 = transform2(newdom)
+            newdom2.getroot().set(
+                '{http://www.w3.org/2001/XMLSchema-instance}schemaLocation',
+                'biotoolsSchema https://raw.githubusercontent.com/bio-tools/biotoolsSchema/main/versions/biotools-3.3.0/biotools_3.3.0.xsd',
+            )
 
         except (lxmletree.XMLSyntaxError, Exception) as e:
             raise ParseError(

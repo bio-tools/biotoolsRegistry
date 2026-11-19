@@ -50,3 +50,14 @@ it('ignores stale responses and allows plain search when lookup fails', async ()
   expect(document.querySelector('#home-suggestion-status')!.textContent).toContain('still search by text');
   expect(document.querySelector<HTMLFormElement>('form')!.getAttribute('data-home-search')).not.toBeNull();
 });
+it('offers schema-derived choices alongside EDAM terms', async () => {
+  document.querySelector<HTMLFormElement>('form')!.dataset.optionsUrl = '/_search/options/';
+  vi.stubGlobal('fetch', vi.fn((url: URL) => Promise.resolve(url.searchParams.get('field') === 'schema'
+    ? { ok: true, json: async () => ({ items: [{ field: 'toolType', fieldLabel: 'Tool type', value: 'New type', label: 'New type' }] }) }
+    : response(url.searchParams.get('scope')!, 'EDAM term'))));
+  new Function(source)(); input('new');
+  await vi.advanceTimersByTimeAsync(350); await flushPromises();
+  const link = [...document.querySelectorAll<HTMLAnchorElement>('[role="option"]')].find(item => item.textContent?.includes('New type'))!;
+  expect(link.getAttribute('href')).toBe('/t?toolType=%22New+type%22');
+  expect(link.textContent).toContain('Tool type');
+});

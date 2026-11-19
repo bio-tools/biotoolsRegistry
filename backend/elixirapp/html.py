@@ -25,6 +25,8 @@ def canonical_family(path):
         return 'bridge'
     if path == '/_edam/terms/':
         return 'edam'
+    if re.fullmatch(r'/_resource-drafts/(?:[a-f0-9-]{36}/)?', path):
+        return 'editor'
     if re.fullmatch(r'/_workflow/(?:matches/|function/|compare/|shared/|designs/(?:[a-f0-9-]{36}/(?:share/)?)?)', path):
         return 'workflow-matches'
     if re.fullmatch(
@@ -40,7 +42,7 @@ def canonical_family(path):
                             'components', 'partials', 'bower_components', 'node_modules'}:
         return None
     if re.fullmatch(
-            r'/(?:register/?|register/(?:save|validate)/|[A-Za-z0-9.~_-]{1,100}/edit(?:/(?:save|validate)/|/?)|'
+            r'/(?:register/?|register/(?:save|validate|record-preview)/|[A-Za-z0-9.~_-]{1,100}/edit(?:/(?:save|validate|record-preview)/|/?)|'
             r'requests/?|requests/conclude/|requests/tool/[A-Za-z0-9.~_-]{1,100}/)', path):
         return 'requests' if path.split('/')[1] == 'requests' else 'editor'
     if path in ('/t', '/t/', '/_search/data/', '/_search/options/'):

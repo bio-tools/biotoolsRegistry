@@ -96,6 +96,17 @@ class ResourceSchemaTests(SimpleTestCase):
         self.assertEqual(field['help'], 'Field help.')
         self.assertNotEqual(field['label'], 'Choice label only.')
 
+    def test_choice_help_comes_from_the_selected_schema(self):
+        field = self.field('maturity')
+        info = etree.SubElement(field.find(XS + 'annotation'), XS + 'appinfo')
+        enum = etree.SubElement(info, 'enum')
+        item = etree.SubElement(enum, 'enumItem')
+        etree.SubElement(item, 'term').text = 'Mature'
+        etree.SubElement(item, 'uiTip').text = 'Description from the selected schema.'
+        choices = self.generate()['contract']['fields']['maturity']['choices']
+        self.assertEqual(next(choice['help'] for choice in choices if choice['value'] == 'Mature'),
+                         'Description from the selected schema.')
+
     def test_removed_value_is_correction_required_not_replaced(self):
         field = self.field('maturity')
         item = field.find('.//' + XS + 'enumeration')

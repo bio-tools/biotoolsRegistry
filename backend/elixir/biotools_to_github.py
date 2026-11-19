@@ -94,7 +94,7 @@ def ecosytem_handle_tool_operations(biotools_user, tool, operation):
     
     if operation not in [CREATE, UPDATE, DELETE]:
         handle_ecosystem_error(logger, 'Incorrect operation:' + operation)
-        return
+        raise ValueError('Incorrect ecosystem operation: ' + operation)
             
     
     bt = None
@@ -124,24 +124,24 @@ def ecosytem_handle_tool_operations(biotools_user, tool, operation):
         # Log BioTools Exception
         # Send email with the issue
         handle_ecosystem_error(logger, e)
-        return  
+        raise
     except EcosystemLoginException as e:
         # Log EcosystemLoginException
         # Send email with the issue
         handle_ecosystem_error(logger, e, bt)
-        return
+        raise
     except (ToolCreationException, ToolUpdateException, ToolDeleteException, EcosystemException) as e:
         # Log ToolCreationException, ToolUpdateException, ToolDeleteException
         # Send email with the issue
         # create issue on GitHub
         handle_ecosystem_error(logger, e, bt, False, True)
-        return
+        raise
     except GithubException as e:
         # Log any generic GithubException
         # Send email with the issue
         # return from function
         handle_ecosystem_error(logger, e, bt)
-        return
+        raise
     except Exception as e:
         # Log any other Exception
         # check logger is a valid Logger object, perhaps Exception got triggered by the logger
@@ -149,5 +149,6 @@ def ecosytem_handle_tool_operations(biotools_user, tool, operation):
             handle_ecosystem_error(logger, e, None, True, False)
         else:
             handle_ecosystem_error(None, e)
+        raise
 
     return

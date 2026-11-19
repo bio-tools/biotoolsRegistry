@@ -1,32 +1,72 @@
 {% extends 'html/public/base.html' %}
+{% load l10n %}
 {% block title %}Statistics | bio.tools{% endblock %}
 {% block content %}
-<h1>Registry statistics</h1>
-{% for section in sections %}
-<section class="statistics-section" aria-label="{{ section.title }}">
-  <h2>{{ section.title }}</h2>
-  {% if section.unavailable %}<div role="alert"><p>This dataset is temporarily unavailable.</p><a href="">Retry</a></div>
-  {% elif section.empty %}<p>No historical measurements available.</p>
-  {% else %}
-    {% if section.date %}<p>{{ section.date }}</p>{% endif %}
-    {% if section.counts %}<dl class="statistics-totals">{% for item in section.counts %}<div><dt>{{ item.label }}</dt><dd>{{ item.value }}</dd></div>{% endfor %}</dl>{% endif %}
-    {% if section.annotations %}
-    <details><summary>Annotations by type</summary><table class="public-table"><thead><tr><th>Annotation</th><th>Count</th></tr></thead><tbody>
-      {% for item in section.annotations %}<tr><th scope="row">{{ item.label }}</th><td>{{ item.value }}</td></tr>{% endfor %}
-      <tr><th scope="row">Total</th><td>{{ section.annotation_total }}</td></tr>
-    </tbody></table></details>
+<div class="statistics-page">
+  <header class="statistics-header">
+    <p class="statistics-eyebrow">Explore the registry</p>
+    <h1>Registry statistics</h1>
+    <p>Discover the tools, annotations and people that make up bio.tools.</p>
+  </header>
+  {% for section in sections %}
+  <section class="statistics-section" aria-label="{{ section.title }}">
+    <div class="statistics-section-heading">
+      <h2>{{ section.title }}</h2>
+      {% if section.date %}<p>Snapshot: {{ section.date|date:"j M Y" }}</p>{% endif %}
+    </div>
+    {% if section.unavailable %}<div class="statistics-notice" role="alert"><p>This dataset is temporarily unavailable.</p><a href="">Retry</a></div>
+    {% elif section.empty %}<p class="statistics-notice">No historical measurements available.</p>
+    {% else %}
+      {% if section.counts %}
+      <dl class="statistics-totals">{% for item in section.counts %}<div><dt>{{ item.label }}</dt><dd>{{ item.value|floatformat:"0g" }}</dd></div>{% endfor %}</dl>
+      <p class="statistics-note">Counts describe public entries and their annotations; an entry can have more than one annotation.</p>
+      {% endif %}
+      {% if section.annotations or section.breakdowns %}<div class="statistics-charts">
+        {% if section.annotations %}
+        <details class="statistics-chart"><summary>Annotations by type</summary><div class="statistics-chart-body"><table class="public-table"><thead><tr><th>Annotation</th><th>Count</th></tr></thead><tbody>
+          {% for item in section.annotations %}<tr><th scope="row">{{ item.label }}</th><td>{{ item.value|floatformat:"0g" }}</td></tr>{% endfor %}
+          <tr><th scope="row">Total</th><td>{{ section.annotation_total|floatformat:"0g" }}</td></tr>
+        </tbody></table></div></details>
+        {% endif %}
+        {% for chart in section.breakdowns %}
+        <details class="statistics-chart"><summary>{{ chart.label }}</summary><div class="statistics-chart-body">
+          {% for item in chart.values %}<div class="stat-bar"><span>{{ item.label }}</span><meter min="0" max="{{ chart.maximum }}" value="{{ item.value }}" aria-label="{{ item.label }}">{{ item.value }}</meter><span>{{ item.value|floatformat:"0g" }}</span></div>{% empty %}<p>No measurements available.</p>{% endfor %}
+        </div></details>
+        {% endfor %}
+      </div>{% endif %}
+      {% if section.charts %}
+      {% if section.estimated %}<p class="statistics-note">Estimated from creation dates of records currently in the registry. Deleted or replaced records and past visibility changes are not included.</p>
+      {% elif section.title == 'Content and EDAM growth' %}<p class="statistics-note">Monthly values come from saved registry snapshots{% if section.has_current %}; the latest point shows the current registry{% endif %}. Gaps between snapshots are connected.</p>
+      {% elif section.title == 'Contributor growth' %}<p class="statistics-note">Based on the registration dates of accounts currently in the database.</p>
+      {% else %}<p class="statistics-note">Monthly totals come from saved registry snapshots. Gaps between snapshots are connected.</p>{% endif %}
+      <div class="growth-charts">
+        {% for chart in section.charts %}
+        <article class="growth-chart">
+          <h3>{{ chart.title }}</h3>
+          <div class="growth-legend">{% for line in chart.series %}<span><i class="growth-key growth-color-{{ line.index }}" aria-hidden="true"></i>{{ line.label }}</span>{% endfor %}</div>
+          <div class="growth-plot">
+            <svg viewBox="0 0 800 245" role="img" aria-label="{{ chart.title }}. Open the data table for exact values.">
+              {% for tick in chart.y_ticks %}<line class="growth-gridline" x1="70" y1="{{ tick.y|unlocalize }}" x2="770" y2="{{ tick.y|unlocalize }}"/><text class="growth-axis" x="60" y="{{ tick.y|unlocalize }}" text-anchor="end" dominant-baseline="middle">{{ tick.value|floatformat:"0g" }}</text>{% endfor %}
+              {% for tick in chart.x_ticks %}<text class="growth-axis" x="{{ tick.x|unlocalize }}" y="229" text-anchor="middle">{{ tick.date|date:"M Y" }}</text>{% endfor %}
+              {% for line in chart.series %}<polyline class="growth-line growth-color-{{ line.index }}" points="{{ line.coordinates }}"/>{% for point in line.points %}<circle class="growth-point growth-color-{{ line.index }}" cx="{{ point.x|unlocalize }}" cy="{{ point.y|unlocalize }}" r="3"><title>{{ line.label }}: {{ point.value|floatformat:"0g" }} ({{ point.date|date:"j M Y" }})</title></circle>{% endfor %}{% endfor %}
+            </svg>
+          </div>
+          <details class="growth-data"><summary>View chart data</summary>
+            {% for line in chart.series %}<table class="public-table"><caption>{{ line.label }}</caption><thead><tr><th scope="col">Date</th><th scope="col">Count</th></tr></thead><tbody>{% for point in line.points %}<tr><th scope="row">{{ point.date|date:"Y-m-d" }}</th><td>{{ point.value|floatformat:"0g" }}</td></tr>{% endfor %}</tbody></table>{% endfor %}
+          </details>
+        </article>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% if section.series %}<div class="statistics-charts">
+        {% for chart in section.series %}
+        <details class="statistics-chart"><summary>{{ chart.label }}</summary><div class="statistics-chart-body">
+          {% for item in chart.values %}<div class="stat-bar"><span>{% if item.date.year %}{{ item.date|date:"Y-m-d" }}{% else %}{{ item.date|slice:":10" }}{% endif %}</span><meter min="0" max="{{ chart.maximum }}" value="{{ item.value }}" aria-label="{{ chart.label }}: {{ item.date }}">{{ item.value }}</meter><span>{{ item.value|floatformat:"0g" }}</span></div>{% endfor %}
+        </div></details>
+        {% endfor %}
+      </div>{% endif %}
     {% endif %}
-    {% for chart in section.breakdowns %}
-    <details><summary>{{ chart.label }}</summary>
-      {% for item in chart.values %}<div class="stat-bar"><span>{{ item.label }}</span><meter min="0" max="{{ chart.maximum }}" value="{{ item.value }}" aria-label="{{ item.label }}">{{ item.value }}</meter><span>{{ item.value }}</span></div>{% empty %}<p>No measurements available.</p>{% endfor %}
-    </details>
-    {% endfor %}
-    {% for chart in section.series %}
-    <details {% if forloop.first %}open{% endif %}><summary>{{ chart.label }}</summary>
-      {% for item in chart.values %}<div class="stat-bar"><span>{{ item.date }}</span><meter min="0" max="{{ chart.maximum }}" value="{{ item.value }}" aria-label="{{ chart.label }}: {{ item.date }}">{{ item.value }}</meter><span>{{ item.value }}</span></div>{% endfor %}
-    </details>
-    {% endfor %}
-  {% endif %}
-</section>
-{% endfor %}
+  </section>
+  {% endfor %}
+</div>
 {% endblock %}

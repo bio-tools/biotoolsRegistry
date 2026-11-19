@@ -3,17 +3,20 @@ import logging
 import re
 from urllib.parse import urlencode
 
+import nh3
 from django import forms
 from django.db import DatabaseError
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 from django.views.decorators.http import require_safe
 from elasticsearch.exceptions import TransportError
 
 from elixir.queries import public_domains
 from elixir.models import Domain
 from elixir.stats import StatsInfo
+from elixirapp.statistics import contributor_months, estimated_growth, line_chart
 
 
 logger = logging.getLogger(__name__)
@@ -32,6 +35,11 @@ REDIRECTS = {
 PAGES = {'', 'about', 'community', 'communities', 'domains', 'stats', '404', *REDIRECTS}
 DOMAIN_FIELDS = [('title', 'Title'), ('sub_title', 'Subtitle'), ('collection', 'Collection'),
                  ('tag', 'Tags'), ('description', 'Description'), ('resources', 'Tools')]
+DOMAIN_HTML = nh3.Cleaner(
+    tags={'a', 'b', 'blockquote', 'br', 'code', 'em', 'h2', 'h3', 'h4', 'hr', 'i', 'li', 'ol', 'p', 'pre', 'span', 'strong', 'table', 'tbody', 'td', 'th', 'thead', 'tr', 'u', 'ul'},
+    attributes={'a': {'href', 'title'}, 'th': {'colspan', 'rowspan'}, 'td': {'colspan', 'rowspan'}},
+    url_schemes={'http', 'https', 'mailto'},
+)
 
 
 class DomainSearchForm(forms.Form):
@@ -101,6 +109,7 @@ def domains(request, context):
     fields = form.cleaned_data['field'] if form.is_bound else form.fields['field'].initial
     for entry in entries:
         entry['url'] = '/t?' + urlencode({'domain': entry['domain']})
+        entry['description_html'] = mark_safe(DOMAIN_HTML.clean(str(entry.get('description') or '')))
         entry['collections'] = [{'name': value, 'url': '/t?' + urlencode({'collectionID': '"' + value + '"'})}
                                 for value in entry.get('collection', [])]
     context.update(domains=[entry for entry in entries if domain_matches(entry, query, fields)],
@@ -110,7 +119,9 @@ def domains(request, context):
 
 def label(key):
     key = re.sub(r'Counts?$', '', key)
-    return re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', key).strip().capitalize().replace('Edam', 'EDAM')
+    key = re.sub(r'(?<=[A-Z])(?=[A-Z][a-z])', ' ', key)
+    key = re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', key).strip().capitalize()
+    return re.sub(r'\b(edam|id)\b', lambda match: match.group().upper(), key, flags=re.IGNORECASE)
 
 
 def count(value):
@@ -133,16 +144,19 @@ def statistics(request, context):
     source = StatsInfo()
     sections = []
     failed = False
+    as_of = timezone.now()
+    current = None
     for title, read in (
-            ('Current registry', lambda: source.statsData(10, timezone.now())),
-            ('Content and EDAM growth', lambda: source.totalEntriesForLast(24)),
+            ('Current registry', lambda: source.statsData(10, as_of)),
+            ('Content and EDAM growth', lambda: source.totalEntriesForLast(None)),
             ('Contributor growth', source.userGrowthByMonth),
-            ('Annotation history', lambda: source.totalAnnotationsCountForLast(24))):
+            ('Annotation history', lambda: source.totalAnnotationsCountForLast(None))):
         section = {'title': title}
         try:
             data = read()
             if title == 'Current registry':
-                section['date'] = data['date']
+                current = data
+                section['date'] = as_of
                 section['counts'] = [{'label': label(key), 'value': count(value)} for key, value in data.items()
                                      if isinstance(value, int)]
                 section['annotations'] = [{'label': label(key), 'value': count(value)}
@@ -155,9 +169,37 @@ def statistics(request, context):
                                     'value': count(item['count'])} for item in values]
                         section['breakdowns'].append({'label': label(key), 'values': entries,
                             'maximum': max([1, *(row['value'] for row in entries)])})
+            elif title == 'Content and EDAM growth':
+                if not data:
+                    data = estimated_growth(as_of)
+                    section['estimated'] = bool(data)
+                elif current:
+                    section['has_current'] = True
+                    data = [*data, {'date': as_of, 'entriesCount': current['totalEntries'],
+                                    **{key: current[key] for key in (
+                                        'edamAnnotationsCount', 'topicAnnotationsCount', 'functionAnnotationsCount',
+                                        'dataTypeAnnotationsCount', 'formatAnnotationsCount') if key in current}}]
+                section['empty'] = not data
+                if data:
+                    section['charts'] = [
+                        {'title': 'Tool growth', **line_chart(data, [('entriesCount', 'Tools')])},
+                        {'title': 'EDAM annotation growth', **line_chart(data, [
+                            ('edamAnnotationsCount', 'Total'), ('topicAnnotationsCount', 'Topics'),
+                            ('functionAnnotationsCount', 'Operations'), ('dataTypeAnnotationsCount', 'Data types'),
+                            ('formatAnnotationsCount', 'Formats')])},
+                    ]
+            elif title == 'Contributor growth':
+                section['empty'] = not data
+                if data:
+                    section['charts'] = [{'title': 'Contributors over time', **line_chart(contributor_months(data), [
+                        ('totalUsersCount', 'Total contributors'), ('newUsersCount', 'New contributors per month')])}]
             else:
                 section['series'] = series(data)
                 section['empty'] = not data
+                if data:
+                    totals = [{'date': row['date'], 'total': sum(count(value) for key, value in row.items() if key != 'date')}
+                              for row in data]
+                    section['charts'] = [{'title': 'Total annotations', **line_chart(totals, [('total', 'Annotations')])}]
         except (DatabaseError, ValueError, KeyError, TypeError, StopIteration):
             logger.exception('Public statistics unavailable: %s', title)
             section = {'title': title, 'unavailable': True}

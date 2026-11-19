@@ -10,7 +10,7 @@ RUN npm run type-check && npm run build
 
 # PROD STAGE
 # Apache + mod_wsgi
-FROM ubuntu:22.04 AS runtime
+FROM ubuntu:24.04 AS runtime
 
 LABEL maintainer="SDU support-bio-tools@sdu.dk"
 ENV PYTHONUNBUFFERED=1
@@ -21,7 +21,7 @@ WORKDIR /elixir/application/backend
 
 # Install Python + Apache + mod_wsgi
 RUN apt-get update -y && \
-    apt-get install -y python3 python3-pip python3-dev default-libmysqlclient-dev build-essential \
+    apt-get install -y python3 python3-pip python3-dev default-libmysqlclient-dev build-essential pkg-config \
                        apache2 apache2-utils ssl-cert libapache2-mod-wsgi-py3 curl && \
     ln -sf /usr/bin/python3 /usr/bin/python && \
     ln -sf /usr/bin/pip3 /usr/bin/pip
@@ -29,7 +29,7 @@ RUN apt-get update -y && \
 
 # Install Python dependencies
 COPY backend/requirements.txt ./
-RUN pip install -r requirements.txt
+RUN pip install --break-system-packages -r requirements.txt
 
 # Keep source and assets in the image; production does not mount the checkout.
 COPY backend/ /elixir/application/backend/

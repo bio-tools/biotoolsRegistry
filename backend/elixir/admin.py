@@ -5,7 +5,13 @@ from .models import Resource
 
 @admin.register(Resource)
 class ResourceAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('biotoolsID', 'biotoolsCURIE')
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 

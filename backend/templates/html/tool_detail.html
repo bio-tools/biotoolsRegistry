@@ -30,12 +30,12 @@
       <ul class="tool-summary-tags" aria-label="Key tool attributes">
         {% if schema_fields.version.public %}{% for version in tool.version.all %}<li>Version {{ version.version }}</li>{% endfor %}{% endif %}
         {% if schema_fields.maturity.public and tool.maturity %}<li>{{ tool.maturity }}</li>{% endif %}
-        {% if schema_fields.license.public and tool.license %}<li>{% license_link tool.license %}</li>{% endif %}
+        {% if schema_fields.license.public and tool.license %}<li><svg class="ui-icon" aria-hidden="true"><use href="{% static 'html/field-icons.svg' %}#license"></use></svg>{% license_link tool.license %}</li>{% endif %}
         {% if schema_fields.cost.public and tool.cost %}<li>{{ tool.cost }}</li>{% endif %}
         {% if schema_fields.accessibility.public and tool.accessibility %}<li>{{ tool.accessibility }}</li>{% endif %}
-        {% if schema_fields.toolType.public %}{% for type in tool.toolType.all %}<li>{{ type.name }}</li>{% endfor %}{% endif %}
+        {% if schema_fields.toolType.public %}{% for type in tool.toolType.all %}{% choice_help schema_fields.toolType type.name as tip %}{% value_icon 'toolType' type.name as icon %}<li><svg class="ui-icon" aria-hidden="true"><use href="{% static 'html/field-icons.svg' %}#{{ icon }}"></use></svg>{% if tip %}<abbr title="{{ tip }}" tabindex="0">{{ type.name }}</abbr>{% else %}{{ type.name }}{% endif %}</li>{% endfor %}{% endif %}
         {% if schema_fields.language.public %}{% for language in tool.language.all %}<li>{{ language.name }}</li>{% endfor %}{% endif %}
-        {% if schema_fields.operatingSystem.public %}{% for system in tool.operatingSystem.all %}<li>{{ system.name }}</li>{% endfor %}{% endif %}
+        {% if schema_fields.operatingSystem.public %}{% for system in tool.operatingSystem.all %}<li><svg class="ui-icon" aria-hidden="true"><use href="{% static 'html/field-icons.svg' %}#desktop"></use></svg>{{ system.name }}</li>{% endfor %}{% endif %}
       </ul>
     </div>
     <div class="tool-actions"><a class="openebench-link" href="https://openebench.bsc.es/tool/{{ tool.biotoolsID|lower|urlencode }}"><img src="/img/opeb_logo.gif" alt="OpenEBench" width="72"><span>Monitoring &amp; benchmarking</span></a>
@@ -65,17 +65,17 @@
       {% if tool.function.all %}<section id="functions" class="detail-section"><h2><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="{% static 'html/field-icons.svg' %}#function"></use></svg>{{ schema_fields.function.label }}</h2>
         {% for entry in functions %}{% with function=entry.record %}<section class="function-row" aria-labelledby="function-{{ forloop.counter }}">
           <h3 id="function-{{ forloop.counter }}">Function {{ forloop.counter }}</h3>
-          <div class="function-flow" role="group" aria-label="Function {{ forloop.counter }}: inputs to operations to outputs">
-            <div><h4>Input</h4>{% include 'html/detail/io.html' with items=function.input.all data_field='inputDataTypeID' format_field='inputDataFormatID' only %}</div>
-            <span class="function-arrow" aria-hidden="true">&#8594;</span>
-            <div class="operations"><h4>Operation</h4>{% for operation in function.operation.all %}{% edam_term operation 'operationID' %}{% empty %}<span class="muted">Not specified</span>{% endfor %}</div>
-            <span class="function-arrow" aria-hidden="true">&#8594;</span>
-            <div><h4>Output</h4>{% include 'html/detail/io.html' with items=function.output.all data_field='outputDataTypeID' format_field='outputDataFormatID' only %}</div>
+          <div class="function-flow" role="group" aria-label="Function {{ forloop.counter }}: input to operation to output">
+            <div class="function-branch"><h4>Input</h4><div>{% include 'html/detail/io.html' with items=function.input.all data_field='inputDataTypeID' format_field='inputDataFormatID' %}</div></div>
+            <span class="function-arrow" aria-hidden="true">→</span>
+            <div class="operations"><h4>Operation</h4><svg class="operation-icon" aria-hidden="true"><use href="{% static 'html/field-icons.svg' %}#function"></use></svg><div>{% for operation in function.operation.all %}{% edam_term operation 'operationID' %}{% empty %}<span class="muted">Not specified</span>{% endfor %}</div></div>
+            <span class="function-arrow" aria-hidden="true">→</span>
+            <div class="function-branch"><h4>Output</h4><div>{% include 'html/detail/io.html' with items=function.output.all data_field='outputDataTypeID' format_field='outputDataFormatID' %}</div></div>
           </div>
           {% if entry.extra %}{% include 'html/detail/schema_fields.html' with nodes=entry.extra %}{% endif %}
         </section>{% endwith %}{% endfor %}
       </section>{% endif %}
-      {% for node in metadata_sections %}<section id="metadata-{{ node.name }}" class="detail-section"><h2>{{ node.label }}</h2>
+      {% for node in metadata_sections %}<section id="metadata-{{ node.name }}" class="detail-section"><h2>{% section_icon node.name node.kind as icon %}<svg class="ui-icon" aria-hidden="true" focusable="false"><use href="{% static 'html/field-icons.svg' %}#{{ icon }}"></use></svg>{{ node.label }}</h2>
         <ul class="resource-links">{% for entry in node.entries %}<li>{% include 'html/detail/schema_fields.html' with nodes=entry %}</li>{% endfor %}</ul>
       </section>{% endfor %}
       {% if tool.publication.all %}<section id="publications" class="detail-section"><h2><svg class="ui-icon" aria-hidden="true" focusable="false"><use href="{% static 'html/field-icons.svg' %}#publication"></use></svg>{{ schema_fields.publication.label }}</h2>
@@ -105,6 +105,13 @@
     </div>
     <aside aria-label="Tool metadata">
       <section class="detail-section"><h2>Tool information</h2>{% include 'html/detail/schema_fields.html' with nodes=metadata_facts %}</section>
+      {% if ecosystem.services %}<section class="detail-section ecosystem-links"><h2>Use this tool</h2>
+        {% for service, links in ecosystem.services.items %}
+          {% if links|length == 1 %}<p>{{ service }}: <a href="{{ links.0.url }}" rel="noopener noreferrer">{{ links.0.label }}</a></p>
+          {% else %}<details><summary>{{ service }} ({{ links|length }})</summary><ul class="plain-list">{% for link in links %}<li><a href="{{ link.url }}" rel="noopener noreferrer">{{ link.label }}</a></li>{% endfor %}</ul></details>{% endif %}
+        {% endfor %}
+        <p class="ecosystem-source">Links from <a href="https://research-software-ecosystem.org/">RSEc</a> and <a href="https://galaxyproject.github.io/galaxy_codex/">Galaxy CoDex</a>; updated {{ ecosystem.updated|slice:':10' }}.</p>
+      </section>{% endif %}
       {% if badges %}<section class="detail-section"><h2>ELIXIR</h2><ul class="plain-list">
         {% for label, url, logo in badges %}<li><a class="partner-link" href="{{ url }}"><img src="/img/{{ logo }}" alt="" width="48">{{ label }}</a></li>{% endfor %}
       </ul></section>{% endif %}

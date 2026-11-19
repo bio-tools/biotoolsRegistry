@@ -11,7 +11,7 @@ services:
 
   mysql:
     container_name: biotools-mysql
-    image: mysql:8.0.43
+    image: ${BIOTOOLS_MYSQL_IMAGE:?Set BIOTOOLS_MYSQL_IMAGE after preparing a MySQL 8.4 database}
     restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=${BIOTOOLS_MYSQL_ROOT_PASSWORD:-elixirroot}
@@ -56,7 +56,9 @@ services:
       - BIOTOOLS_URL_FRONT=${BIOTOOLS_URL_FRONT:-https://localhost/}
       - BIOTOOLS_GITHUB_BRIDGE_URL=${BIOTOOLS_GITHUB_BRIDGE_URL:-}
       - BIOTOOLS_GITHUB_ECOSYSTEM_ON=${BIOTOOLS_GITHUB_ECOSYSTEM_ON:-0}
+      - BIOTOOLS_RSEC_INDEX_PATH=${BIOTOOLS_RSEC_INDEX_PATH:-/elixir/application/backend/data/rsec/links.json}
       - BIOTOOLS_DEBUG=${BIOTOOLS_DEBUG:-1}
+      - BIOTOOLS_DEPLOYMENT=${BIOTOOLS_DEPLOYMENT:-dev}
       - BIOTOOLS_SECRET_KEY=${BIOTOOLS_SECRET_KEY:-local-development-key}
       - BIOTOOLS_MYSQL_DB=${BIOTOOLS_MYSQL_DB:-elixir}
       - BIOTOOLS_MYSQL_HOST=biotools-mysql
@@ -148,6 +150,18 @@ services:
     depends_on: [backend]
     networks: [net]
     command: python manage.py process_tasks
+
+  rsec-updater:
+    image: biotools/backend:latest
+    network_mode: ${BIOTOOLS_RSEC_NETWORK_MODE:-bridge}
+    environment:
+      - BIOTOOLS_RSEC_INDEX_PATH=${BIOTOOLS_RSEC_INDEX_PATH:-/elixir/application/backend/data/rsec/links.json}
+    volumes:
+      - ./backend:/elixir/application/backend:consistent
+      - backend_data:/elixir/application/backend/data
+    depends_on: [backend]
+    restart: unless-stopped
+    command: ["sh", "-c", "while true; do if python manage.py update_rsec_links; then sleep 86400; else sleep 3600; fi; done"]
 
   bridge:
     image: anitamnd/bridge@sha256:d9dc5a5484247b9eedc9e204aea999bcd82fce79e5fea8bdfe4681b50203ec61

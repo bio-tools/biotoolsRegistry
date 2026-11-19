@@ -4,6 +4,11 @@ from elixir.model.resource_model.editPermission import *
 from django.contrib.auth.models import User
 
 
+class ResourceIdentifier(models.Model):
+    # This reservation is independent of resource rows and survives deletion.
+    identifier = models.CharField(max_length=100, primary_key=True, db_collation='utf8mb4_unicode_ci')
+
+
 class Resource(models.Model):
     
     YES_NO_CHOICES = (

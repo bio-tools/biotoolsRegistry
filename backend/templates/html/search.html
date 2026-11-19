@@ -31,8 +31,8 @@
     <p role="status">{{ search_result.count }} tools &middot; Page {{ search_result.pagination.page }} of {{ search_result.pagination.pages }}</p>
     {% if search_values.view == 'table' and search_result.count %}
     <div class="native-comparison" tabindex="0" role="region" aria-label="Tool results table">
-      <table><thead><tr><th>{{ search_config.comparisonFields.name }}</th>{% for key, label in search_config.comparisonFields.items %}{% if key != 'name' %}<th>{{ label }}</th>{% endif %}{% endfor %}</tr></thead>
-      <tbody>{% for tool in search_result.items %}<tr data-tool-id="{{ tool.id }}"><th scope="row"><a href="{{ tool.url }}">{{ tool.name }}</a></th>{% for cell in tool.comparisonCells %}<td>{{ cell|default:'-' }}</td>{% endfor %}</tr>{% endfor %}</tbody></table>
+      <table><thead><tr><th>{{ search_config.comparisonFields.name }}</th>{% for key, label in search_config.comparisonFields.items %}{% if key != 'name' %}<th>{{ label }}</th>{% endif %}{% endfor %}{% if search_values.sort == 'citationDate' %}<th>Publication date</th>{% endif %}</tr></thead>
+      <tbody>{% for tool in search_result.items %}<tr data-tool-id="{{ tool.id }}"><th scope="row"><a href="{{ tool.url }}">{{ tool.name }}</a></th>{% for cell in tool.comparisonCells %}<td>{{ cell|default:'-' }}</td>{% endfor %}{% if search_values.sort == 'citationDate' %}<td>{{ tool.publicationSortDate|default:'Not available' }}</td>{% endif %}</tr>{% endfor %}</tbody></table>
     </div>
     {% else %}
     {% for tool in search_result.items %}
@@ -41,7 +41,7 @@
       <p>{{ tool.description }}</p><p>{{ tool.toolTypes|join:', ' }}</p>
       {% if tool.topics %}<p>Topics: {{ tool.topics|join:', ' }}</p>{% endif %}
       {% if tool.operations %}<p>Operations: {{ tool.operations|join:', ' }}</p>{% endif %}
-      <small>Added {{ tool.added|default:'-' }} &middot; Updated {{ tool.updated|default:'-' }}</small>
+      <small>Added {{ tool.added|default:'-' }} &middot; Updated {{ tool.updated|default:'-' }}{% if search_values.sort == 'citationDate' %} &middot; Publication date {{ tool.publicationSortDate|default:'Not available' }}{% endif %}</small>
     </article>
     {% empty %}<h2>No tools found</h2>{% endfor %}
     {% endif %}

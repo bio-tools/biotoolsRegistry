@@ -38,9 +38,69 @@ describe('canonical state', () => {
     expect(state.page).toBe(3);
     expect(parseSearch(serializeSearch(state), config)).toEqual(state);
   });
+  it('round trips EDAM match and hierarchy options', () => {
+    const state = parseSearch('edamMatch=any&edamExpand=narrower', config);
+    expect(state.edamMatch).toBe('any');
+    expect(state.edamExpand).toBe('narrower');
+    expect(parseSearch(serializeSearch(state), config)).toEqual(state);
+    expect(() => parseSearch('edamMatch=unknown', config)).toThrow();
+  });
+  it('round trips Boolean search mode', () => {
+    const state = parseSearch('qmode=boolean&q=name%3Aalpha+OR+name%3Abeta', config);
+    expect(state.qmode).toBe('boolean');
+    expect(parseSearch(serializeSearch(state), config)).toEqual(state);
+    expect(() => parseSearch('qmode=unknown', config)).toThrow();
+  });
 });
 
 describe('workspace', () => {
+  it('shows schema-provided explanations for scientific filters', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));
+    wrapper = mount(SearchWorkspace, { props: { ...config, scientificHelp: { topicID: 'Scientific area of the software.',
+      input: 'Data accepted.', output: 'Data produced.' } } });
+    expect(wrapper.text()).toContain('Scientific area of the software.');
+    expect(wrapper.text()).toContain('Data accepted. Data produced.');
+  });
+
+  it('searches by tool type without losing other filters', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));
+    history.replaceState(null, '', '/?domain=example&q=sequence');
+    wrapper = mount(SearchWorkspace, { props: { ...config, filters: { ...config.filters, domain: 'Domain', name: 'Name' } } });
+    await vi.advanceTimersByTimeAsync(0); await flushPromises();
+    await wrapper.get('#workspace-query-scope').setValue('toolType');
+    await wrapper.get('#workspace-query').setValue('Web application');
+    await vi.advanceTimersByTimeAsync(300); await flushPromises();
+    const params = new URLSearchParams(location.search);
+    expect(params.get('toolType')).toBe('Web application');
+    expect(params.get('domain')).toBe('example');
+    expect(params.get('q')).toBe('sequence');
+    expect(wrapper.find('[aria-label="Remove general search"]').exists()).toBe(true);
+  });
+
+  it('offers the current schema tool types in the scoped search', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));
+    wrapper = mount(SearchWorkspace, { props: { ...config, filterChoices: { toolType: [{ value: 'New type', label: 'New type' }] } } });
+    await wrapper.get('#workspace-query-scope').setValue('toolType');
+    expect(wrapper.get('#workspace-query').attributes('list')).toBe('workspace-type-suggestions');
+    expect(wrapper.get('#workspace-type-suggestions option').attributes('value')).toBe('New type');
+  });
+
+  it('selects every table column and saves the layout', async () => {
+    vi.useFakeTimers();
+    localStorage.removeItem('biotools.search.columns.v1');
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));
+    history.replaceState(null, '', '/?view=table');
+    wrapper = mount(SearchWorkspace, { props: { ...config, comparisonFields: { name: 'Name', description: 'Description', topic: 'Topic' } } });
+    await vi.advanceTimersByTimeAsync(0); await flushPromises();
+    const checkboxes = wrapper.findAll('.column-settings input[type="checkbox"]');
+    expect((checkboxes[2]!.element as HTMLInputElement).checked).toBe(false);
+    await wrapper.findAll('button').find(button => button.text() === 'Select all columns')!.trigger('click');
+    expect(checkboxes.every(box => (box.element as HTMLInputElement).checked)).toBe(true);
+    expect(JSON.parse(localStorage.getItem('biotools.search.columns.v1')!).every((column: { visible: boolean }) => column.visible)).toBe(true);
+    localStorage.removeItem('biotools.search.columns.v1');
+  });
+
   it('retains input and output constraints when changing EDAM search direction', async () => {
     vi.useFakeTimers();
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));

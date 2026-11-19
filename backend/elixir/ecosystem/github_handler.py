@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from github import Github
 from github import GithubException
 from github import Auth
+from github import InputGitTreeElement
 from github import BadCredentialsException
 from github import UnknownObjectException
 import elixir.ecosystem.settings as ecosystem_settings
@@ -36,6 +37,7 @@ class GithubToolHandler:
         """
         Creates a central handler object from which the main GitHub operations are called. 
         """
+        self.__username = None
         try:
             self.__auth = Auth.Token(ecosystem_settings.ECO_PERSONAL_TOKEN)
             self.__g = Github(auth = self.__auth)
@@ -98,8 +100,10 @@ class GithubToolHandler:
         try:
             self.__repo.get_contents(filepath, ref=branch_name)
             return True
-        except GithubException:
-            return False
+        except GithubException as exc:
+            if exc.status == 404:
+                return False
+            raise
     
     def __get_sha(self, file_path, branch_name):
         """
@@ -130,6 +134,7 @@ class GithubToolHandler:
         else:
             from_where = self.MASTER_BRANCH
 
+        mb = None
         try:
             mb = self.__repo.get_branch(from_where)
             self.__repo.create_git_ref(ref='refs/heads/' + branch_name, sha=mb.commit.sha)
@@ -138,7 +143,7 @@ class GithubToolHandler:
                 'Could not create branch from master branch.' + str(e),
                 branch = branch_name,
                 filepath = self.__filepath,
-                sha = mb.commit.sha,
+                sha = mb.commit.sha if mb else None,
                 username = self.__bt.username,
                 tool_id = self.__bt.tool_id
             )
@@ -231,7 +236,30 @@ class GithubToolHandler:
                 sha = file_sha,
                 branch = delete_branch_name
             )
-        except GithubException as e:  
+        except GithubException as e:
+            if e.status in (500, 502, 503, 504):
+                # The contents API can time out on large repositories; use an atomic Git ref update.
+                ref = self.__repo.get_git_ref('heads/' + delete_branch_name)
+                parent = self.__repo.get_git_commit(ref.object.sha)
+                changes = self.__repo.compare(self.MASTER_BRANCH, parent.sha)
+                if any(item.filename != delete_file_path for item in changes.files):
+                    raise ToolDeleteException('Existing branch contains different work; manual review is required.',
+                                              branch=delete_branch_name, filepath=delete_file_path) from e
+                try:
+                    current = self.__repo.get_contents(delete_file_path, ref=parent.sha)
+                except GithubException as lookup:
+                    if lookup.status == 404 and [(item.filename, item.status) for item in changes.files] == [(delete_file_path, 'removed')]:
+                        return None
+                    raise
+                if current.sha != file_sha:
+                    raise ToolDeleteException('File changed during deletion; manual review is required.',
+                                              branch=delete_branch_name, filepath=delete_file_path) from e
+                tree = self.__repo.create_git_tree(
+                    [InputGitTreeElement(path=delete_file_path, mode='100644', type='blob', sha=None)],
+                    base_tree=self.__repo.get_git_tree(parent.tree.sha))
+                commit = self.__repo.create_git_commit(commit_message, tree, [parent])
+                ref.edit(commit.sha, force=False)
+                return commit
             raise ToolDeleteException(
                 'Could not delete file.' + str(e),
                 branch = delete_branch_name,
@@ -331,44 +359,13 @@ class GithubToolHandler:
         new_branch_name = self.__branch
         new_file_path  = self.__filepath
 
-        # Exception branch already exists on tool creation time
-        if self.__branch_exists(new_branch_name):
-            raise ToolCreationException(
-                'Branch already exists at tool creation time.',
-                branch = new_branch_name,
-                filepath = new_file_path,
-                sha = None,
-                username = self.__bt.username,
-                tool_id = self.__bt.tool_id
-            )
-            
-        # Exception that there is already a PR with this branch name on tool creation time
-        if self.__pull_request_exists(new_branch_name):
-            raise ToolCreationException(
-                'There is already a PR with for the branch name at tool creation time.',
-                branch = new_branch_name,
-                filepath = new_file_path,
-                sha = None,
-                username = self.__bt.username,
-                tool_id = self.__bt.tool_id
-            )
-        
-        if self.__file_exists(new_file_path, new_branch_name):
-            raise ToolCreationException(
-                'The file already exists on branch: {b} at tool creation time.'.format(b=new_branch_name),
-                branch = new_branch_name,
-                filepath = new_file_path,
-                sha = None,
-                username = self.__bt.username,
-                tool_id = self.__bt.tool_id
-            )
-
-        if self.__file_exists(new_file_path, self.MASTER_BRANCH):
-            return self.update_tool(biotools_data)
-        
-        # Create branch from master
-        # Raises EcosystemException
-        self.__create_branch(new_branch_name)
+        branch_exists = self.__branch_exists(new_branch_name)
+        if not branch_exists:
+            if self.__pull_request_exists(new_branch_name):
+                raise ToolCreationException('A pull request exists without its branch.', branch=new_branch_name)
+            if self.__file_exists(new_file_path, self.MASTER_BRANCH):
+                return self.update_tool(biotools_data)
+            self.__create_branch(new_branch_name)
 
         if not self.__branch_exists(new_branch_name):
             raise ToolCreationException(
@@ -380,8 +377,23 @@ class GithubToolHandler:
                 tool_id = self.__bt.tool_id
             )
 
-        # This already creates the file and commits changes to the new branch
-        c = self.__create_data(new_branch_name, new_file_path)
+        # Resume an interrupted create only when the branch contains no unrelated work.
+        c = None
+        if branch_exists and self.__file_exists(new_file_path, new_branch_name):
+            current = self.__repo.get_contents(new_file_path, ref=new_branch_name)
+            changes = self.__repo.compare(self.MASTER_BRANCH, new_branch_name)
+            try:
+                same_record = json.loads(current.decoded_content) == json.loads(self.__bt.tool_json)
+            except (ValueError, TypeError):
+                same_record = False
+            if not same_record or [item.filename for item in changes.files] != [new_file_path]:
+                raise ToolCreationException('Existing branch contains different work; manual review is required.',
+                                            branch=new_branch_name, filepath=new_file_path)
+        else:
+            if branch_exists and self.__repo.get_branch(new_branch_name).commit.sha != self.__repo.get_branch(self.MASTER_BRANCH).commit.sha:
+                raise ToolCreationException('Existing branch is not at the current base; manual review is required.',
+                                            branch=new_branch_name, filepath=new_file_path)
+            c = self.__create_data(new_branch_name, new_file_path)
         
         if not self.__file_exists(new_file_path, new_branch_name):
             raise ToolCreationException(
@@ -393,7 +405,8 @@ class GithubToolHandler:
                 tool_id = self.__bt.tool_id
             )
         
-        pr = self.__create_pull_request(
+        existing = self.__get_pull(new_branch_name)
+        pr = existing[0] if existing else self.__create_pull_request(
             pr_type=self.CREATE, 
             username=self.__bt.username, 
             tool_id=self.__bt.tool_id, 
@@ -510,27 +523,23 @@ class GithubToolHandler:
         delete_branch_name = self.__branch
         delete_file_path = self.__filepath
         
-        # Exception branch already exists on tool delete time
-        if self.__branch_exists(delete_branch_name):
-            raise ToolDeleteException(
-                'Branch already exists at tool delete time.',
-                branch = delete_branch_name,
-                filepath = delete_file_path,
-                sha = None,
-                username = self.__bt.username,
-                tool_id = self.__bt.tool_id
-            )
-            
-        # Exception that there is already a PR with this branch name on tool creation time
-        if self.__pull_request_exists(delete_branch_name):
-            raise ToolDeleteException(
-                'There is already a PR with for the branch name at tool delete time.',
-                branch = delete_branch_name,
-                filepath = delete_file_path,
-                sha = None,
-                username = self.__bt.username,
-                tool_id = self.__bt.tool_id
-            )
+        branch_exists = self.__branch_exists(delete_branch_name)
+        if branch_exists:
+            if not self.__file_exists(delete_file_path, delete_branch_name):
+                changes = self.__repo.compare(self.MASTER_BRANCH, delete_branch_name)
+                if [(item.filename, item.status) for item in changes.files] != [(delete_file_path, 'removed')]:
+                    raise ToolDeleteException('Existing branch contains different work; manual review is required.',
+                                              branch=delete_branch_name, filepath=delete_file_path)
+                existing = self.__get_pull(delete_branch_name)
+                pr = existing[0] if existing else self.__create_pull_request(
+                    pr_type=self.DELETE, username=self.__bt.username, tool_id=self.__bt.tool_id,
+                    branch_name=delete_branch_name)
+                return None, pr
+            if self.__repo.get_branch(delete_branch_name).commit.sha != self.__repo.get_branch(self.MASTER_BRANCH).commit.sha:
+                raise ToolDeleteException('Existing branch is not at the current base; manual review is required.',
+                                          branch=delete_branch_name, filepath=delete_file_path)
+        elif self.__pull_request_exists(delete_branch_name):
+            raise ToolDeleteException('A pull request exists without its branch.', branch=delete_branch_name)
         
         
         # Rare case of when user creates the tool and immediately deletes it
@@ -545,8 +554,8 @@ class GithubToolHandler:
         #   we can look in an "create/update" (non delete) branch to see if it's there
         if not self.__file_exists(delete_file_path, self.MASTER_BRANCH):
             regular_non_delete_branch = self.__get_branch_name(
-                self.__bt.username, 
-                self.__bt.tool_id 
+                self.__bt.username.lower(),
+                self.__bt.tool_id.lower()
             )
             
             # We need to have an open pull request with the non delete branch
@@ -581,11 +590,11 @@ class GithubToolHandler:
         # Create the delete branch
         # If the file is not on master, but in a regular create/update (non delete)
         #   then we create delete branch from that non delete branch
-        if file_not_on_master_branch_but_on_update_branch:
+        if not branch_exists and file_not_on_master_branch_but_on_update_branch:
             self.__create_branch(delete_branch_name, from_branch=regular_non_delete_branch)
         
         # otherwise we branch from master as usual
-        else:
+        elif not branch_exists:
             self.__create_branch(delete_branch_name)
             
         # if the file doesn't exist on the newly created delete branch then fail

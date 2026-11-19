@@ -46,6 +46,7 @@ def getenv(key, default=None, castf=str, ns=ENV_NAMESPACE):
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RSEC_INDEX_PATH = getenv('RSEC_INDEX_PATH', os.path.join(BASE_DIR, 'data', 'rsec', 'links.json'))
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
 
@@ -139,7 +140,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.request',
+                'elixirapp.environment.notice',
             ],
         },
     },
@@ -237,6 +238,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': getenv('PAGE_SIZE', 50, castf=int),
     'NON_FIELD_ERRORS_KEY': 'general_errors',
+    # shortcut: DRF removes this legacy error format in 3.20; migrate API clients first.
+    'LIST_SERIALIZER_ERRORS_AS_DICT': False,
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 

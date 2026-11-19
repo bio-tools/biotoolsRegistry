@@ -7,6 +7,7 @@ import sys
 
 from django.core.exceptions import DisallowedHost
 from django.test import RequestFactory, SimpleTestCase, override_settings
+from lxml import etree
 
 from elixir.resource_options import METADATA_CHOICES
 from elixir.resource_ui import resource_descriptor
@@ -86,3 +87,11 @@ class UpstreamAlignmentTests(SimpleTestCase):
         parsed = XMLSchemaParser().parse(BytesIO(XMLSchemaRenderer().render(value)))
         self.assertEqual(parsed['license'], value['license'])
         self.assertEqual(parsed['elixirCommunity'], value['elixirCommunity'])
+
+    def test_xml_exports_reference_the_public_versioned_schema(self):
+        tool = {'biotoolsID': 'fixture', 'name': 'Fixture', 'description': 'A test tool',
+                'homepage': 'https://example.org'}
+        for data in (tool, {'count': 1, 'list': [tool]}):
+            root = etree.fromstring(XMLSchemaRenderer().render(data))
+            self.assertEqual(root.get('{http://www.w3.org/2001/XMLSchema-instance}schemaLocation'),
+                'biotoolsSchema https://raw.githubusercontent.com/bio-tools/biotoolsSchema/main/versions/biotools-3.3.0/biotools_3.3.0.xsd')

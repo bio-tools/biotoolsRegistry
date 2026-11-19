@@ -14,6 +14,12 @@ const props = defineProps<SearchConfig>();
 const { state, result, loading, error, update, reset, retry,
   candidates, visibleItems, localFilters, localError, setLocalFilters, promote } = useSearch(props);
 const view = computed(() => state.value.view);
+const queryScope = ref('q');
+const queryValue = computed(() => queryScope.value === 'q' ? state.value.q : state.value.filters[queryScope.value] || '');
+function searchQuery(value: string, delay = 0) {
+  if (queryScope.value === 'q') update({ q: value }, delay);
+  else update({ filters: { ...state.value.filters, [queryScope.value]: value } }, delay);
+}
 const layout = ref(defaultColumns(props.comparisonFields || {}));
 const layoutMessage = ref('');
 try {
@@ -119,13 +125,23 @@ function options(key: string) {
 
 <template>
   <div class="search-workspace">
-    <form class="query-form" @submit.prevent="update({ q: state.q })">
+    <form class="query-form" @submit.prevent="searchQuery(queryValue)">
       <label for="workspace-query">Search bio.tools</label>
       <div class="search-controls">
-        <input id="workspace-query" type="search" :value="state.q" maxlength="256"
-               placeholder="Name, description, topic..." @input="update({ q: text($event) }, 300)">
+        <label class="visually-hidden" for="workspace-query-scope">Search in</label>
+        <select id="workspace-query-scope" v-model="queryScope" aria-label="Search in">
+          <option value="q">Everything</option><option v-if="filters.name" value="name">Tool name</option>
+          <option v-if="filters.toolType" value="toolType">Tool type</option><option v-if="filters.topic" value="topic">Topic</option>
+        </select>
+        <input id="workspace-query" type="search" :value="queryValue" maxlength="256"
+               :list="queryScope === 'toolType' ? 'workspace-type-suggestions' : undefined"
+               placeholder="Search tools" @input="searchQuery(text($event), 300)">
+        <datalist id="workspace-type-suggestions"><option v-for="choice in filterChoices?.toolType || []" :key="choice.value" :value="choice.value">{{ choice.label }}</option></datalist>
         <button type="submit">Search</button>
       </div>
+      <label v-if="queryScope === 'q'" class="boolean-mode"><input type="checkbox" :checked="state.qmode === 'boolean'"
+        @change="update({ qmode: ($event.target as HTMLInputElement).checked ? 'boolean' : '' })"> Boolean search</label>
+      <p v-if="queryScope === 'q' && state.qmode === 'boolean'" class="search-help">Use AND, OR, NOT, parentheses and quoted phrases; for example <code>function:alignment AND output:sequence</code>.</p>
     </form>
     <div class="workspace-layout">
       <aside aria-label="Search filters" :class="{ 'filters-collapsed': !filtersOpen }">
@@ -135,8 +151,14 @@ function options(key: string) {
         <div id="workspace-filters" class="filter-list">
         <details class="scientific-filters" open>
           <summary>EDAM annotations</summary>
-          <p>Find tools by scientific annotations. Multiple selections must all match.</p>
+          <p>Find tools by scientific annotations. Each category is combined with the others.</p>
+          <label for="edam-match">Within each category</label>
+          <select id="edam-match" :value="state.edamMatch" @change="update({ edamMatch: text($event) as 'all' | 'any' })"><option value="all">Match all selected terms</option><option value="any">Match any selected term</option></select>
+          <label for="edam-expand">EDAM hierarchy</label>
+          <select id="edam-expand" :value="state.edamExpand" @change="update({ edamExpand: text($event) as 'exact' | 'narrower' })"><option value="exact">Selected terms only</option><option value="narrower">Include narrower terms</option></select>
+          <p v-if="scientificHelp?.input || scientificHelp?.output" class="search-help">{{ scientificHelp.input }} {{ scientificHelp.output }}</p>
           <div v-for="item in scientific" :key="item.key" class="scientific-field">
+            <p v-if="scientificHelp?.[item.key]" class="search-help">{{ scientificHelp[item.key] }}</p>
             <label v-if="isDirectional(item.key)" :for="`direction-${item.key}`">Match {{ item.label }} in</label>
             <select v-if="isDirectional(item.key)" :id="`direction-${item.key}`" :value="directions[item.key]"
               :aria-label="`Match ${item.label} in`" @change="changeDirection(item.key, text($event) as Direction)">
@@ -211,6 +233,8 @@ function options(key: string) {
       </aside>
       <section class="workspace-results" aria-label="Search results" :aria-busy="loading">
         <ul class="active-constraints" aria-label="Active filters">
+          <li v-if="queryScope !== 'q' && state.q"><span>Everything: {{ state.q }}</span>
+            <button type="button" class="secondary" aria-label="Remove general search" @click="update({ q: '' })">&#215;</button></li>
           <template v-for="(value, key) in state.filters" :key="key"><li v-if="value">
             <span>{{ filters[key] }}: {{ value }}</span>
             <button type="button" class="secondary" :aria-label="`Remove ${key} filter`" @click="filter(key, '')">&#215;</button>
@@ -234,6 +258,7 @@ function options(key: string) {
         <details v-if="view === 'table' && comparisonFields" class="comparison-columns">
           <summary>Columns</summary>
           <p>Choose, reorder and size columns. Your layout is remembered on this browser. Name stays first.</p>
+          <button type="button" class="secondary" @click="layout.forEach(column => column.visible = true)">Select all columns</button>
           <ol class="column-settings">
             <li v-for="(column, index) in layout" :key="column.key">
               <label><input v-model="column.visible" type="checkbox" :disabled="column.key === 'name'">{{ comparisonFields[column.key] }}</label>
@@ -268,25 +293,25 @@ function options(key: string) {
               <span class="tool-id">bio.tools:{{ tool.id }}</span>
               <p>{{ tool.description }}</p>
               <ul class="tool-types"><li v-for="type in tool.toolTypes" :key="type">{{ type }}</li></ul>
-              <dl><template v-if="tool.topics.length"><dt>Topics</dt><dd>{{ tool.topics.join(', ') }}</dd></template>
-                <template v-if="tool.operations.length"><dt>Operations</dt><dd>{{ tool.operations.join(', ') }}</dd></template>
+              <dl><template v-if="tool.topics.length"><dt>Topics</dt><dd><span v-for="topic in tool.topics" :key="topic" class="edam-chip" data-edam-scope="topic">{{ topic }}</span></dd></template>
+                <template v-if="tool.operations.length"><dt>Operations</dt><dd><span v-for="operation in tool.operations" :key="operation" class="edam-chip" data-edam-scope="operation">{{ operation }}</span></dd></template>
               </dl>
-              <div class="record-dates"><span>Added <time>{{ tool.added || '-' }}</time></span><span>Updated <time>{{ tool.updated || '-' }}</time></span></div>
+              <div class="record-dates"><span>Added <time>{{ tool.added || '-' }}</time></span><span>Updated <time>{{ tool.updated || '-' }}</time></span><span v-if="state.sort === 'citationDate'">Publication date <time>{{ tool.publicationSortDate || 'Not available' }}</time></span></div>
             </article>
           </div>
           <div v-else class="result-table" tabindex="0" role="region" aria-label="Tool results table">
-            <table v-if="comparisonFields" :style="{ width: `${(layout.find(column => column.key === 'name')?.width || 180) + columns.reduce((total, column) => total + column.width, 0)}px`, tableLayout: 'fixed' }">
-              <colgroup><col :style="{ width: `${layout.find(column => column.key === 'name')?.width || 180}px` }"><col v-for="column in columns" :key="column.key" :style="{ width: `${column.width}px` }"></colgroup>
-              <thead><tr><th>{{ comparisonFields.name }}</th><th v-for="column in columns" :key="column.key">{{ comparisonFields[column.key] }}</th></tr></thead>
+            <table v-if="comparisonFields" :style="{ width: `${(layout.find(column => column.key === 'name')?.width || 180) + columns.reduce((total, column) => total + column.width, 0) + (state.sort === 'citationDate' ? 180 : 0)}px`, tableLayout: 'fixed' }">
+              <colgroup><col :style="{ width: `${layout.find(column => column.key === 'name')?.width || 180}px` }"><col v-for="column in columns" :key="column.key" :style="{ width: `${column.width}px` }"><col v-if="state.sort === 'citationDate'" style="width: 180px"></colgroup>
+              <thead><tr><th>{{ comparisonFields.name }}</th><th v-for="column in columns" :key="column.key">{{ comparisonFields[column.key] }}</th><th v-if="state.sort === 'citationDate'">Publication date</th></tr></thead>
               <tbody><tr v-for="tool in visibleItems" :key="tool.id" :data-tool-id="tool.id">
                 <th scope="row"><a :href="tool.url">{{ tool.name }}</a></th>
-                <td v-for="column in columns" :key="column.key">{{ tool.comparison?.[column.key] || '-' }}</td>
+                <td v-for="column in columns" :key="column.key">{{ tool.comparison?.[column.key] || '-' }}</td><td v-if="state.sort === 'citationDate'">{{ tool.publicationSortDate || 'Not available' }}</td>
               </tr></tbody>
             </table>
-            <table v-else><thead><tr><th>Name</th><th>Description</th><th>Tool type</th><th>Added</th><th>Updated</th></tr></thead>
+            <table v-else><thead><tr><th>Name</th><th>Description</th><th>Tool type</th><th>Added</th><th>Updated</th><th v-if="state.sort === 'citationDate'">Publication date</th></tr></thead>
               <tbody><tr v-for="tool in visibleItems" :key="tool.id" :data-tool-id="tool.id">
                 <th scope="row"><a :href="tool.url">{{ tool.name }}</a></th><td>{{ tool.description }}</td>
-                <td>{{ tool.toolTypes.join(', ') }}</td><td>{{ tool.added || '-' }}</td><td>{{ tool.updated || '-' }}</td>
+                <td>{{ tool.toolTypes.join(', ') }}</td><td>{{ tool.added || '-' }}</td><td>{{ tool.updated || '-' }}</td><td v-if="state.sort === 'citationDate'">{{ tool.publicationSortDate || 'Not available' }}</td>
               </tr></tbody>
             </table>
           </div>
@@ -310,7 +335,7 @@ function options(key: string) {
 .active-constraints { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .active-constraints li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 6px 4px 12px; background: #e8f3f7; border: 1px solid #c8dfe8; border-radius: 20px; font-size: var(--text-ui); overflow-wrap: anywhere; }
 .active-constraints button { padding: 4px 10px; flex-shrink: 0; }
-.comparison-columns p { margin-block: 12px; font-size: 14px; }
+.comparison-columns p { margin-block: 12px; font-size: var(--text-ui); }
 .column-settings { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px; }
 .column-settings li { padding: 12px; border: 1px solid #d5dce0; border-radius: 4px; min-width: 0; }
 .column-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
@@ -321,15 +346,17 @@ function options(key: string) {
 .advanced-panel { margin-bottom: 16px; border-bottom: 1px solid #ddd; }
 .advanced-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .advanced-actions button, .server-filters button { font-size: var(--text-control); padding: 7px 10px; }
-.server-filters h3 { font-size: 14px; margin: 16px 0 8px; }
+.server-filters h3 { font-size: var(--text-ui); margin: 16px 0 8px; }
 .server-filters ul { list-style: none; padding: 0; }
 .server-filters li { display: flex; align-items: center; gap: 8px; justify-content: space-between; padding-block: 4px; font-size: var(--text-ui); overflow-wrap: anywhere; }
-.candidate-scope { border-left: 3px solid #31708f; padding: 8px 12px; font-size: 14px; background: #edf4f8; }
+.candidate-scope { border-left: 3px solid #31708f; padding: 8px 12px; font-size: var(--text-ui); background: #edf4f8; }
 .query-form { margin-bottom: 28px; }
-.workspace-layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 28px; align-items: start; }
-aside { background: #f8fbfc; border: 1px solid #d5e5eb; border-radius: 12px; padding: 20px; min-width: 0; }
-.scientific-filters p, .filter-help { color: #526d79; font-size: var(--text-caption); line-height: 1.45; margin: 8px 0 14px; }
-.scientific-field { padding: 10px 0; }
+.query-form > label { font-size: var(--text-ui); }
+.query-form .boolean-mode { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; }
+.workspace-layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: start; }
+aside { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px; min-width: 0; }
+.scientific-filters p, .filter-help { color: #526d79; font-size: var(--text-ui); line-height: 1.45; margin: 8px 0 14px; }
+.scientific-field { padding: 8px 0; }
 .scientific-field select { margin-bottom: 10px; }
 .scientific-field > label { font-size: var(--text-ui); }
 .scientific-field :deep(.edam-selector > button) { width: 100%; text-align: left; }
@@ -352,29 +379,30 @@ summary { cursor: pointer; font-weight: 600; overflow-wrap: anywhere; }
 .facet-option:hover { background: #edf4f8; }
 .results-toolbar { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; padding-bottom: 16px; border-bottom: 1px solid #dce8ec; }
 .results-toolbar label, legend { font-size: var(--text-ui); margin-bottom: 4px; }
-select { min-height: 40px; max-width: 100%; padding: 6px; background: white; color: #333; border: 1px solid #767676; border-radius: 4px; font-family: inherit; font-size: var(--text-body); }
+select { min-height: 40px; max-width: 100%; padding: 6px; background: white; color: #333; border: 1px solid #767676; border-radius: 4px; font-family: inherit; font-size: var(--text-control); }
 .view-switch { display: flex; gap: 12px; border: 0; margin: 0; padding: 0; }
 .view-switch label { display: flex; align-items: center; gap: 5px; margin: 0; min-height: 40px; }
 .view-switch input { min-height: 0; }
-.result-status { margin: 16px 0; font-size: 14px; font-weight: 600; color: #425f6b; }
+.result-status { margin: 16px 0; font-size: var(--text-ui); font-weight: 600; color: #425f6b; }
 .result-cards { display: grid; gap: 16px; }
-.tool-result { border: 1px solid #d5e3e8; border-left: 4px solid #005472; border-radius: 9px; padding: 20px; background: #fff; box-shadow: 0 2px 8px #173e4b0a; min-width: 0; overflow-wrap: anywhere; }
-.tool-result h2 { margin-bottom: 4px; font-size: 20px; }
+.tool-result { border: 1px solid var(--line); border-radius: 8px; padding: 16px; background: #fff; min-width: 0; overflow-wrap: anywhere; }
+.tool-result h2 { margin-bottom: 4px; font-size: 16px; font-weight: 600; }
 .tool-id { display: block; font-size: var(--text-caption); color: #526d79; margin-bottom: 10px; }
 .tool-result p { font-size: var(--text-body); margin-bottom: 12px; white-space: pre-line; }
 .tool-types { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 12px 0; }
-.tool-types li { background: #e6f3f7; color: #005472; padding: 4px 10px; border-radius: 20px; font-size: var(--text-caption); font-weight: 600; }
+.tool-types li { background: var(--surface); color: var(--brand); padding: 4px 8px; border-radius: 4px; font-size: var(--text-caption); }
 dl { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 4px 12px; font-size: var(--text-ui); }
 dt { font-weight: 600; } dd { margin: 0; }
+.tool-result dd { display: flex; flex-wrap: wrap; gap: 5px; }
 .record-dates { display: flex; flex-wrap: wrap; gap: 16px; font-size: var(--text-caption); color: #666; }
 .result-table { overflow: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+table { width: 100%; border-collapse: collapse; font-size: var(--text-ui); }
 td, th { padding: 12px 8px; text-align: left; vertical-align: top; border-bottom: 1px solid #ddd; min-width: 105px; overflow-wrap: anywhere; }
 td:nth-child(2) { min-width: 220px; }
-.pagination { margin-top: 24px; gap: 12px; font-size: 14px; }
+.pagination { margin-top: 24px; gap: 12px; font-size: var(--text-ui); }
 .pagination button { padding-inline: 12px; }
 .pagination form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.pagination label { margin: 0; font-size: 13px; }
+.pagination label { margin: 0; font-size: var(--text-ui); }
 .pagination input { width: 65px; padding: 6px; }
 .search-error, .empty-results { margin-block: 24px; }
 .search-error { border-left: 3px solid #a94442; padding-left: 16px; }

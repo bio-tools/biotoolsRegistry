@@ -66,7 +66,7 @@ class SearchInputError(ValueError):
 
 
 def parse_search(parameters):
-    allowed = {'q', 'sort', 'ord', 'page', 'per_page', 'advanced', 'view', *FILTERS}
+    allowed = {'q', 'qmode', 'sort', 'ord', 'page', 'per_page', 'advanced', 'view', 'edamMatch', 'edamExpand', *FILTERS}
     for key, values in parameters.lists():
         if key not in allowed:
             raise SearchInputError(key, 'Unsupported search parameter.')
@@ -74,6 +74,13 @@ def parse_search(parameters):
     state = {'q': parameters.get('q', '').strip(), 'sort': parameters.get('sort', 'lastUpdate'),
              'ord': parameters.get('ord', 'desc'), 'page': 1, 'per_page': 50,
              'view': parameters.get('view', 'cards')}
+    state['edamMatch'] = parameters.get('edamMatch', 'all')
+    state['qmode'] = parameters.get('qmode', '')
+    if state['qmode'] not in ('', 'boolean'):
+        raise SearchInputError('qmode', 'Choose a supported search mode.')
+    state['edamExpand'] = parameters.get('edamExpand', 'exact')
+    if state['edamMatch'] not in ('all', 'any') or state['edamExpand'] not in ('exact', 'narrower'):
+        raise SearchInputError('edamMatch', 'Choose a supported EDAM match and expansion mode.')
     if state['view'] not in ('cards', 'table'):
         raise SearchInputError('view', 'Choose cards or table.')
     for key in ('page', 'per_page'):
@@ -115,6 +122,8 @@ def summary(item, canonical=False, descriptor=None):
         'added': (item.get('additionDate') or '')[:10], 'updated': (item.get('lastUpdate') or '')[:10],
         'filterValues': filter_values(item),
     }
+    if '_publication_sort_date' in item:
+        result['publicationSortDate'] = item['_publication_sort_date']
     if descriptor:
         def text(node):
             if 'values' in node:
@@ -149,11 +158,16 @@ def page(request):
     if function.get('public'):
         comparison.update({field['path']: function['label'] + ' › ' + field['label']
                            for field in function.get('item', {}).get('fields', {}).values() if field['public']})
+    schema_fields = flatten(descriptor['contract'])
+    scientific_help = {key: schema_fields.get(path, {}).get('help', '') for key, path in {
+        'topicID': 'topic', 'operationID': 'function.operation', 'dataTypeID': 'function.input.data',
+        'dataFormatID': 'function.input.format', 'input': 'function.input', 'output': 'function.output'}.items()}
     config = {'endpoint': reverse('canonical-search-data') if getattr(request, 'canonical', False) else reverse('html:search-data'),
               'filters': {name: metadata[name]['label'] for name in FILTERS},
               'filterChoices': {name: metadata[name]['choices'] for name in FILTERS},
               'filterGroups': filter_groups(descriptor),
               'schemaRevision': descriptor['revision'], 'sorts': SORTS,
+              'scientificHelp': scientific_help,
               'pageSizes': PAGE_SIZES, 'maxWindow': MAX_WINDOW, 'scores': score_metadata(),
               'comparisonFields': comparison,
               'optionsEndpoint': reverse('canonical-search-options') if getattr(request, 'canonical', False) else reverse('html:search-options'),
@@ -260,7 +274,7 @@ def data(request):
 def options(request):
     field = request.GET.get('field', '')
     query = request.GET.get('q', '').strip()
-    if field not in ('domain', 'creditName', 'collectionID', 'name') or len(query) > 80 or re.search(r'[\x00-\x1f\x7f]', query):
+    if field not in ('domain', 'creditName', 'collectionID', 'name', 'schema') or len(query) > 80 or re.search(r'[\x00-\x1f\x7f]', query):
         return JsonResponse({'error': 'Invalid lookup.'}, status=400)
     try:
         if field == 'domain':
@@ -269,11 +283,20 @@ def options(request):
             return JsonResponse({'items': values})
         if len(query) < 2:
             return JsonResponse({'items': []})
+        if field == 'schema':
+            metadata = search_metadata(resource_descriptor(), search_struct)
+            matches = [{'field': key, 'fieldLabel': field_data['label'], 'value': choice['value'], 'label': choice['label']}
+                       for key, field_data in metadata.items() for choice in field_data['choices']
+                       if isinstance(choice.get('value'), str) and isinstance(choice.get('label'), str)
+                       and not re.search(r'["\\\x00-\x1f\x7f]', choice['value'])
+                       and query.casefold() in (choice['label'] + ' ' + choice['value']).casefold()]
+            matches.sort(key=lambda item: (item['label'].casefold(), item['fieldLabel'].casefold()))
+            return JsonResponse({'items': matches[:20], 'more': len(matches) > 20})
         model = {'creditName': Credit, 'collectionID': CollectionID, 'name': Resource}[field]
         visibility = {'visibility': 1} if field == 'name' else {'resource__visibility': 1}
         names = model.objects.filter(**visibility, name__icontains=query).exclude(name='').values_list('name', flat=True).distinct().order_by('name')[:21]
         values = list(names)
         return JsonResponse({'items': [{'value': name, 'label': name} for name in values[:20]], 'more': len(values) > 20})
-    except (DatabaseError, TransportError, TimeoutError):
+    except (DatabaseError, TransportError, TimeoutError, SchemaUnavailable):
         logger.exception('Search options unavailable')
         return JsonResponse({'error': 'Options are temporarily unavailable.'}, status=503)

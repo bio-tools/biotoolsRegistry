@@ -8,6 +8,7 @@ from elixir.model.resource_model.elixirInfo import *
 from elixir.model.resource_model.editPermission import * 
 from elixir.model.resource_model.domain import * 
 from elixir.model.resource_model.resource import * 
+from elixir.model.resource_model.draft import *
 from elixir.model.resource_model.topic import * 
 from elixir.model.resource_model.accessibility import * 
 from elixir.model.resource_model.credit import * 

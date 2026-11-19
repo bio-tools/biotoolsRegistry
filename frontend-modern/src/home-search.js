@@ -37,7 +37,7 @@
     controller = new AbortController();
     timeout = setTimeout(() => controller.abort(), 8000);
     const signal = controller.signal;
-    const results = await Promise.allSettled(scopes.map(async ([scope, label, key]) => {
+    const requests = scopes.map(async ([scope, label, key]) => {
       const url = new URL(form.dataset.edamUrl, location.href);
       url.search = new URLSearchParams({ scope, q: query });
       const response = await fetch(url, { signal, headers: { Accept: 'application/json' } });
@@ -48,7 +48,19 @@
         const match = typeof item.uri === 'string' && item.uri.match(new RegExp(`^http://edamontology\\.org/(${scope}_[0-9]{4})$`));
         return match && typeof item.term === 'string' ? [{ id: match[1], term: item.term, label, key }] : [];
       });
-    }));
+    });
+    if (form.dataset.optionsUrl) requests.push((async () => {
+      const url = new URL(form.dataset.optionsUrl, location.href);
+      url.search = new URLSearchParams({ field: 'schema', q: query });
+      const response = await fetch(url, { signal, headers: { Accept: 'application/json' } });
+      if (!response.ok) throw new Error('Lookup unavailable');
+      const body = await response.json();
+      if (!Array.isArray(body.items)) throw new Error('Invalid lookup');
+      return body.items.slice(0, 8).flatMap(item => typeof item.field === 'string' && typeof item.value === 'string'
+        && typeof item.label === 'string' && typeof item.fieldLabel === 'string'
+        ? [{ id: item.value, term: item.label, label: item.fieldLabel, key: item.field }] : []);
+    })());
+    const results = await Promise.allSettled(requests);
     clearTimeout(timeout);
     if (current !== sequence) return;
     list.replaceChildren(); active = -1;
@@ -71,7 +83,7 @@
     }
     const failures = results.filter(result => result.status === 'rejected').length;
     status.textContent = failures ? 'Some concept suggestions are unavailable. You can still search by text.'
-      : items.length ? `${items.length} EDAM suggestions available.` : 'No EDAM suggestions. You can still search by text.';
+      : items.length ? `${items.length} search suggestions available.` : 'No suggestions. You can still search by text.';
     list.hidden = !items.length;
     input.setAttribute('aria-expanded', String(!!items.length));
   }

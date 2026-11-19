@@ -38,6 +38,17 @@ class SearchWorkspaceTests(SimpleTestCase):
             self.assertEqual(response.json()['items'], [{'value': '3D-BioInfo', 'label': '3D-BioInfo'}])
             collections.filter.assert_called_once_with(resource__visibility=1, name__icontains='3D')
 
+    def test_schema_suggestions_follow_the_active_descriptor(self):
+        from copy import deepcopy
+        from elixir.resource_ui import resource_descriptor
+        descriptor = deepcopy(resource_descriptor())
+        descriptor['contract']['fields']['toolType']['choices'].append({'value': 'Novel schema tool', 'label': 'Novel schema tool'})
+        with patch('elixirapp.search_workspace.resource_descriptor', return_value=descriptor):
+            response = self.client.get('/search/options/?field=schema&q=novel', **HTML_REQUEST)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['items'][0]['field'], 'toolType')
+        self.assertEqual(response.json()['items'][0]['value'], 'Novel schema tool')
+
     def test_validation_is_strict_and_separate_from_legacy(self):
         for query in ('page=0', 'page=-1', 'page=1.5', 'page=nan', 'page=10001',
                       'per_page=0', 'per_page=101', 'per_page=bad', 'page=101&per_page=100',
@@ -55,6 +66,7 @@ class SearchWorkspaceTests(SimpleTestCase):
         with patch('elixirapp.search_workspace.search_tools', return_value=ToolSearchResult([], 0, 1, 50, 1, 1)):
             response = self.client.get('/search/?q=%3Cscript%3E', **HTML_REQUEST)
         self.assertContains(response, 'data-vue-island="search-workspace"')
+        self.assertContains(response, 'Scientific topic (EDAM Topic).')
         self.assertContains(response, 'data-vue-props="search-config" hx-disable')
         self.assertContains(response, '<template id="search-config">')
         self.assertNotContains(response, 'hx-target')
@@ -120,6 +132,12 @@ class LiveWorkspaceTests(SimpleTestCase):
                    'additionDate': '2026-01-01', 'lastUpdate': f'2026-02-{i % 28 + 1:02}'}
             cls.es.index(index=cls.index, id=doc['biotoolsID'], body=doc)
         cls.es.indices.refresh(index=cls.index)
+
+    def test_publication_sort_date_matches_the_actual_elasticsearch_sort(self):
+        for order, expected in (('asc', '2026-03-01'), ('desc', '2026-03-28')):
+            response = self.client.get('/search/data/', {'sort': 'citationDate', 'ord': order}, **HTML_REQUEST)
+            self.assertEqual(response.status_code, 200, response.content)
+            self.assertEqual(response.json()['items'][0]['publicationSortDate'], expected)
 
     def test_parity_for_every_primary_filter_and_order(self):
         samples = {'toolType': 'Command-line tool', 'topic': 'Sequence analysis', 'operation': 'Alignment',

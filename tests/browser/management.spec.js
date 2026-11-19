@@ -22,20 +22,31 @@ for (const width of [1440, 390]) {
         await login(page, '/edit-subdomain/');
         await page.getByLabel('Domain identifier:', { exact: true }).fill(id);
         await page.getByLabel('Title:', { exact: true }).fill('Browser managed domain');
-        await page.getByLabel('Tool identifiers (one per line):', { exact: true }).fill('editor-demo');
         if (javaScriptEnabled) {
+          await page.getByLabel('Add a tool by identifier', { exact: true }).fill('editor-demo');
+          await page.getByRole('button', { name: 'Add tool', exact: true }).click();
           await page.getByLabel('Username', { exact: true }).fill('migration-management-admin');
           await page.getByLabel('Username', { exact: true }).press('Enter');
           await expect(page.getByRole('button', { name: 'Remove migration-management-admin' })).toBeVisible();
         } else {
+          await page.getByLabel('Tool identifiers (one per line):', { exact: true }).fill('editor-demo');
           await page.getByLabel('Editors (one username per line):', { exact: true }).fill('migration-management-admin');
         }
         await page.getByRole('button', { name: 'Save domain', exact: true }).click();
         await expect(page).toHaveURL(new RegExp('/edit-domain/' + id + '$'));
-        await expect(page.getByRole('status')).toContainText('Domain saved.');
+        await expect(page.getByRole('status').filter({ hasText: 'Domain saved.' })).toBeVisible();
         const stored = await (await context.request.get('/api/d/' + id + '?format=json')).json();
         expect(stored.data.resources.map(tool => tool.biotoolsID)).toEqual(['editor-demo']);
         expect(stored.data.editors).toEqual(['migration-management-admin']);
+        if (javaScriptEnabled) {
+          await page.getByLabel('Find a tool in this domain').fill('editor-demo');
+          await page.getByRole('button', { name: 'Remove editor-demo' }).click();
+          await page.getByRole('button', { name: 'Save domain', exact: true }).click();
+          expect((await (await context.request.get('/api/d/' + id + '?format=json')).json()).data.resources).toEqual([]);
+          await page.getByLabel('Add a tool by identifier').fill('editor-demo');
+          await page.getByRole('button', { name: 'Add tool', exact: true }).click();
+          await page.getByRole('button', { name: 'Save domain', exact: true }).click();
+        }
         const search = await context.request.get('/t?domain=' + id);
         expect(search.status()).toBe(200);
         expect(await search.text()).toContain('href="/editor-demo"');

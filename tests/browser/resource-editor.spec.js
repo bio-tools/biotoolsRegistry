@@ -14,6 +14,7 @@ async function signIn(page, url = editorUrl()) {
 }
 async function fillNew(page, id) {
   await page.getByLabel('Name', { exact: true }).fill('Browser Editor Sample');
+  await expect(page.getByLabel('bio.tools ID', { exact: true })).toHaveValue('Browser_Editor_Sample');
   await page.getByLabel('bio.tools ID', { exact: true }).fill(id);
   await page.getByLabel('Homepage', { exact: true }).fill('https://example.org/editor');
   await page.getByLabel('Description', { exact: true }).fill('A disposable resource created by the migrated editor browser regression.');
@@ -21,14 +22,34 @@ async function fillNew(page, id) {
 }
 async function save(page, status = 200) {
   const response = page.waitForResponse(response => response.request().method() === 'POST' && response.url().endsWith('/save/'));
-  await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+  await page.getByRole('button', { name: /^(Save changes|Publish tool)$/ }).click();
   expect((await response).status()).toBe(status);
-  if (status < 400) await expect(page.getByRole('status')).toHaveText('Changes saved.');
+  if (status < 400) await expect(page.getByRole('status', { name: 'Save status' })).toHaveText('Changes saved.');
 }
 
 test.describe('basic resource editor', () => {
   test.skip(process.env.BIOTOOLS_TEST_EDITOR_WRITES !== '1', 'Requires explicit disposable registry-write opt-in and seed_editor.py.');
   test.beforeEach(() => { expect(user).toBeTruthy(); expect(password).toBeTruthy(); });
+
+  test('keeps an incomplete draft private across a reload until publication', async ({ page, request }) => {
+    await signIn(page);
+    const id = newID();
+    await page.getByLabel('Name', { exact: true }).fill('Private browser draft');
+    await page.getByLabel('bio.tools ID', { exact: true }).fill(id);
+    await page.getByRole('button', { name: 'Save private draft' }).click();
+    await expect(page.getByText('Private draft saved.', { exact: true })).toBeVisible();
+    expect((await request.get('/api/t/' + id + '?format=json')).status()).toBe(404);
+    await page.reload();
+    await page.getByText('Open a private draft').click();
+    const row = page.locator('.private-drafts li').filter({ hasText: 'Private browser draft' }).first();
+    await row.getByRole('button', { name: 'Open', exact: true }).click();
+    await expect(page.getByLabel('bio.tools ID', { exact: true })).toHaveValue(id);
+    await page.getByLabel('Homepage', { exact: true }).fill('https://example.org/private-draft');
+    await page.getByLabel('Description', { exact: true }).fill('A fictional private draft published by the browser regression.');
+    await page.getByLabel('Command-line tool', { exact: true }).check();
+    await save(page, 201);
+    expect((await request.get('/api/t/' + id + '?format=json')).status()).toBe(200);
+  });
 
   for (const width of [1440, 390]) {
     test(`create, validate, edit and navigation warning at ${width}px`, async ({ page, request, baseURL }, info) => {
@@ -203,7 +224,7 @@ test.describe('basic resource editor', () => {
     expect(draft.credit.length).toBeGreaterThan(0);
     page.once('dialog', dialog => dialog.accept());
     await page.getByRole('button', { name: 'Discard changes', exact: true }).click();
-    await expect(page.getByRole('status')).toHaveText('No unsaved changes');
+    await expect(page.getByRole('status', { name: 'Save status' })).toHaveText('No unsaved changes');
   });
 
   test('anonymous pages redirect and no-JavaScript offers stored export and retry', async ({ browser, baseURL }) => {

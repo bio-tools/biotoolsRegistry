@@ -15,6 +15,7 @@ const dataPath = (item: IOItem) => [...itemPath(item), 'data'];
 <template>
   <section :id="fieldId(path)" class="io-list" tabindex="-1" :aria-label="kind === 'input' ? 'Inputs' : 'Outputs'">
     <h3>{{ schema?.label || (kind === 'input' ? 'Inputs' : 'Outputs') }}</h3>
+    <p v-if="schema?.help" class="schema-help">{{ schema.help }}</p>
     <p class="nested-error">{{ errorsAt(errors, path).join(' ') }}</p>
     <section v-for="(item, index) in modelValue" :key="item.id" :id="fieldId(itemPath(item))" class="io-entry" tabindex="-1"
       :aria-labelledby="fieldId(itemPath(item)) + '-title'" :data-io-id="item.id">

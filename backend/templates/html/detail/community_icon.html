@@ -1,0 +1,1 @@
+{% load static %}{% if icon %}<img class="community-icon" src="{% static 'html/community-icons/'|add:icon|add:'.svg' %}" alt="" width="32" height="32">{% else %}<svg class="ui-icon" aria-hidden="true" focusable="false"><use href="{% static 'html/field-icons.svg' %}#people"></use></svg>{% endif %}

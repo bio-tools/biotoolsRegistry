@@ -3,6 +3,9 @@
 ## Development
 
 Install Docker Compose and Node.js 22.12 or later. From the repository root:
+Existing MySQL 8.0 data must be backed up and upgraded or restored into a
+separate MySQL 8.4 volume before starting the new database image; see the
+production section below.
 
 ```sh
 cp .env.example .env
@@ -29,6 +32,11 @@ container. Use `docker compose --env-file /path/to/private.env ...` to select a
 different file. `.env` and `.env.*` are ignored by Git; `.env.example` is the
 tracked template. For a non-Docker Django process, export the settings in its
 environment instead.
+
+`BIOTOOLS_DEPLOYMENT` identifies the instance and controls the non-production
+notice independently of Django's debug setting. It defaults to `dev`; set it to
+`production` only for the production instance. Test and staging instances
+should keep another value so their pages display the notice.
 
 Database credentials in `.env` apply when MySQL first creates its data volume;
 changing them later does not update existing MySQL accounts. Keep the existing
@@ -62,6 +70,13 @@ delivery require a suitable network configuration. The preview uses its own
 local secret key and dummy email backend. For ORCID on port 8005, set a callback
 URL registered for that origin in the selected environment file.
 
+Workflow images are media files, not part of the SQL dump. Restore the matching
+media backup alongside the database. The local database preview reads them from
+`database_test/media/workflows/`, with the original filenames from the database.
+Its media mount is read-only; supplying files there does not change the database.
+Production uses the persistent `media_data` volume and must retain its existing
+media when updating or migrating the service.
+
 ## Production
 
 The root Dockerfile builds a self-contained Apache/Django image and the Vite
@@ -76,6 +91,14 @@ deny-all `robots.txt`; decide the real indexing policy before deployment.
 Use a separate production environment file and replace every local default,
 especially the secret key, database passwords, debug mode, public URL, hosts,
 email and ORCID settings. Do not commit it.
+
+Django 6.1 requires Python 3.12 or later and MySQL 8.4 or later. Set
+`BIOTOOLS_MYSQL_IMAGE` to a tested MySQL 8.4 image, for example `mysql:8.4.13`.
+Before switching an existing 8.0 installation, back up and rehearse a supported
+database upgrade or restore into a separate 8.4 volume. Do not point the new
+image at the only copy of an existing data volume: upgrading its on-disk data
+can prevent the old server from starting. Keep the previous image and backup for
+rollback, and apply Django migrations to the upgraded copy before cutover.
 
 The optional GitHub bridge is available in either main Compose file through
 `--profile github-import`. Set `BIOTOOLS_GITHUB_BRIDGE_URL` for the backend and

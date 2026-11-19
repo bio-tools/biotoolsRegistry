@@ -1,5 +1,7 @@
 """Shared read operations. Presentation and write authorization belong to callers."""
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
+import re
 from time import perf_counter
 
 from django.conf import settings
@@ -8,6 +10,7 @@ from django.db.models import prefetch_related_objects
 from elixir.models import Resource
 from elixir.search import construct_es_query, es
 from elixir.advanced_filters import SOURCE_FIELDS, filter_clauses, score_definitions
+from elixir.search_settings import search_struct
 
 
 SEARCH_FACETS = {
@@ -22,6 +25,47 @@ SEARCH_FACETS = {
 SUMMARY_FIELDS = ['biotoolsID', 'name', 'description', 'toolType', 'topic.term',
                   'function.operation.term', 'additionDate', 'lastUpdate']
 FACET_LIMIT = 30
+EDAM_FILTERS = {'topicID': 'topic', 'operationID': 'operation', 'dataTypeID': 'data',
+                'inputDataTypeID': 'data', 'outputDataTypeID': 'data', 'dataFormatID': 'format',
+                'inputDataFormatID': 'format', 'outputDataFormatID': 'format'}
+
+
+def edam_conditions(parameters):
+    mode = parameters.get('edamMatch', 'all')
+    expansion = parameters.get('edamExpand', 'exact')
+    if mode not in ('all', 'any') or expansion not in ('exact', 'narrower'):
+        raise InvalidQuery('Choose a supported EDAM match and expansion mode.')
+    if mode == 'all' and expansion == 'exact':
+        return []
+    from elixir.edam_lookup import EdamVocabulary, nodes
+    vocabularies, conditions = {}, []
+    for key, scope in EDAM_FILTERS.items():
+        value = parameters.get(key, '')
+        if not value:
+            continue
+        pattern = rf'{scope}_[0-9]{{4}}'
+        ids = list(dict.fromkeys(re.findall(pattern, value)))
+        if not ids or len(ids) > 10 or re.sub(pattern, '', value).strip(' "\''):
+            raise InvalidQuery('Choose at most ten EDAM identifiers per category.')
+        groups = []
+        for identifier in ids:
+            uri = 'http://edamontology.org/' + identifier
+            choices = {uri}
+            if expansion == 'narrower':
+                if scope not in vocabularies:
+                    vocabularies[scope] = EdamVocabulary(scope)
+                vocabulary = vocabularies[scope]
+                node = vocabulary.current.get(uri)
+                if not node:
+                    raise InvalidQuery('The EDAM term is unavailable or obsolete; choose a current term.')
+                choices.update(item['data']['uri'] for item in nodes(node))
+                if len(choices) > 10000:
+                    raise InvalidQuery('Choose a narrower EDAM term.')
+            alternatives = [{'terms': {field + '.keyword': sorted(choices)}} for field in search_struct[key]['search_field']]
+            groups.append({'bool': {'should': alternatives, 'minimum_should_match': 1}})
+        conditions.extend(groups if mode == 'all' else [{'bool': {'should': groups, 'minimum_should_match': 1}}])
+        parameters.pop(key, None)
+    return conditions
 
 
 def workspace_aggregations():
@@ -112,9 +156,24 @@ def search_tools(query_params, *, page, per_page, workspace=False, advanced=None
     parameters['per_page'] = per_page
     try:
         page = int(page)
+        edam = edam_conditions(parameters)
         body = construct_es_query(parameters)
     except (ValueError, TypeError) as exc:
         raise InvalidQuery(str(exc)) from exc
+
+    if edam:
+        body['query']['bool'].setdefault('filter', []).extend(edam)
+
+    if 'updatedAfter' in parameters:
+        value = parameters.get('updatedAfter', '')
+        if not isinstance(value, str) or not re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,6})?(?:Z|[+-][0-9]{2}:[0-9]{2})', value):
+            raise InvalidQuery('updatedAfter must be an ISO 8601 timestamp with a timezone.')
+        try:
+            timestamp = datetime.fromisoformat(value.replace('Z', '+00:00')).astimezone(timezone.utc).isoformat()
+        except (ValueError, OverflowError) as exc:
+            raise InvalidQuery('updatedAfter must be a valid ISO 8601 timestamp with a timezone.') from exc
+        body['query']['bool'].setdefault('filter', []).append({'range': {'lastUpdate': {'gt': timestamp}}})
+        body['sort'] = [body['sort'], {'biotoolsID': {'order': 'asc'}}]
 
     requests = 1
     domain = parameters.get('domain')
@@ -140,9 +199,10 @@ def search_tools(query_params, *, page, per_page, workspace=False, advanced=None
     if workspace:
         body['_source'] = SUMMARY_FIELDS + SOURCE_FIELDS + [score['field'] for score in score_definitions()]
         body['_source'] += list(comparison_fields)
-        body['query']['bool']['filter'] = filter_clauses(advanced or [])
+        body['query']['bool'].setdefault('filter', []).extend(filter_clauses(advanced or []))
         body['aggs'] = workspace_aggregations()
-        body['sort'] = [body['sort'], {'biotoolsID': {'order': 'asc'}}]
+        if not isinstance(body['sort'], list):
+            body['sort'] = [body['sort'], {'biotoolsID': {'order': 'asc'}}]
         body['timeout'] = '5s'
         options = {'request_timeout': 8, 'allow_partial_search_results': False}
     result = es.search(index=settings.ELASTIC_SEARCH_INDEX, body=body, **options)
@@ -150,6 +210,14 @@ def search_tools(query_params, *, page, per_page, workspace=False, advanced=None
         raise TimeoutError('Search did not return complete results')
     count = result['hits']['total']['value']
     items = [hit['_source'] for hit in result['hits']['hits']]
+    if workspace and parameters.get('sort') == 'citationDate':
+        for item, hit in zip(items, result['hits']['hits']):
+            sort_value = (hit.get('sort') or [None])[0]
+            if isinstance(sort_value, (int, float)) and not isinstance(sort_value, bool):
+                try:
+                    item['_publication_sort_date'] = datetime.fromtimestamp(sort_value / 1000, timezone.utc).date().isoformat()
+                except (OverflowError, OSError, ValueError):
+                    pass
     if not items and count > 0:
         raise SearchPageNotFound('Invalid page. That page contains no results.')
     return ToolSearchResult(items, count, page, body['size'], requests,

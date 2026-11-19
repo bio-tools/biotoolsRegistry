@@ -1,6 +1,7 @@
 from elixir.models import Resource, StatsData
 from elixir.serializers import *
 from django.db.models import Count
+from django.utils import timezone
 import time
 from datetime import datetime, timedelta
 from datetime import date
@@ -10,32 +11,17 @@ import collections
 class StatsInfo:
 	# historic data handling
 	def statsDataForLast(self, days):
-		return StatsData.objects.filter(date__gte=datetime.now()-timedelta(days=days)).order_by('date')
+		return StatsData.objects.filter(date__gte=timezone.now()-timedelta(days=days)).order_by('date')
+
+	def monthlyStatsForLast(self, months):
+		latest = {}
+		stats = self.statsDataForLast(months * 30) if months is not None else StatsData.objects.order_by('date')
+		for stat in stats:
+			latest[(stat.date.year, stat.date.month)] = stat
+		return latest.values()
 
 	def totalEntriesForLast(self, months):
-		stats = self.statsDataForLast(months * 30)
-		entriesStats = []
-		lastAddedDate = datetime.today()
-		for index, stat in enumerate(stats):
-			# not last stats entry
-			if index < len(stats) - 1:
-				# check if a given month already exists 
-				if stat.date.month != lastAddedDate.month and stat.date.month != stats[index+1].date.month:
-					entriesStats.append(self.generateStatsEntry(stat))
-					lastAddedDate = stat.date
-			else:
-				# check if a given month already exists 
-				if stat.date.month != lastAddedDate.month:
-					entriesStats.append({"date": stat.date, 
-						"entriesCount": self.totalEntries(), 
-						"creditAffiliationCount": stat.creditAffiliationCount,
-						"dataTypeAnnotationsCount": self.dataTypeAnnotationsCount(), 
-						"edamAnnotationsCount": self.edamAnnotationCount(), 
-						"formatAnnotationsCount": self.formatAnnotationsCount(), 
-						"functionAnnotationsCount": self.functionAnnotationsCount(), 
-						"topicAnnotationsCount": self.topicAnnotationsCount()})
-					lastAddedDate = stat.date
-		return entriesStats
+		return [self.generateStatsEntry(stat) for stat in self.monthlyStatsForLast(months)]
 
 	def generateStatsEntry(self, stat):
 		return {"date": stat.date, "entriesCount": stat.totalEntries, 
@@ -47,24 +33,7 @@ class StatsInfo:
 				"topicAnnotationsCount": stat.topicAnnotationsCount}
 
 	def totalAnnotationsCountForLast(self, months):
-		stats = self.statsDataForLast(months * 30)
-		annotationStats = []
-		lastAddedDate = datetime.today()
-		for index, stat in enumerate(stats):
-			# not last stats entry
-			if index < len(stats) - 1:
-				# check if a given month already exists 
-				if stat.date.month != lastAddedDate.month and stat.date.month != stats[index+1].date.month:
-					annotationStats.append(self.generateTotalAnnotationsCount(stat))
-					lastAddedDate = stat.date
-			else:
-				# check if a given month already exists 
-				if stat.date.month != lastAddedDate.month:
-					latestAnnotationCounts = self.totalAnnotationCount()
-					latestAnnotationCounts.update({"date": stat.date})
-					annotationStats.append(latestAnnotationCounts)
-					lastAddedDate = stat.date
-		return annotationStats
+		return [self.generateTotalAnnotationsCount(stat) for stat in self.monthlyStatsForLast(months)]
 
 	def generateTotalAnnotationsCount(self, stat):
 		return {"date": stat.date, 
@@ -93,6 +62,7 @@ class StatsInfo:
 		data['date'] = upperDateLimit.strftime('%c %Z')
 		data['totalEntries'] = self.totalEntries(upperDateLimit)
 		data['totalUsers'] = self.totalUsers(upperDateLimit)
+		data['contributingDomainsCount'] = self.contributingDomainsCount(upperDateLimit)
 		# data['entriesByResourceType'] = self.resourceTypeList()
 		# data['entriesByInterfaceType'] = self.interfaceTypeList()
 		# data['creditAffiliationCount'] = self.creditAffiliationCount()
@@ -125,6 +95,17 @@ class StatsInfo:
 
 	def totalUsers(self, upperDateLimit=datetime.today()):
 		return User.objects.filter(date_joined__lt=upperDateLimit).count()
+
+	def contributingDomainsCount(self, upperDateLimit=datetime.today()):
+		emails = User.objects.filter(date_joined__lt=upperDateLimit, email__contains='@').values_list('email', flat=True)
+		domains = set()
+		for email in emails:
+			if email.count('@') == 1:
+				local, domain = email.split('@')
+				domain = domain.strip().lower()
+				if local.strip() and domain and domain != 'biotools.local':
+					domains.add(domain)
+		return len(domains)
 
 	def edamAnnotationCount(self, upperDateLimit=datetime.today()):
 		edamAnnotations = 0
@@ -286,13 +267,11 @@ class StatsInfo:
 	# 	return sorted(interfaceTypeList, key=lambda interfaceType: interfaceType['count'], reverse = True)
 
 	def userGrowthByMonth(self):
-		qs = (User.objects.all().
-    	extra(select={
-        	'month': "EXTRACT(month FROM date_joined)",
-        	'year': "EXTRACT(year FROM date_joined)",
-    	}).
-    	values('month', 'year').
-    	annotate(count_items=Count('date_joined')))
+		qs = (User.objects.all()
+			.extra(select={'month': "EXTRACT(month FROM date_joined)",
+			               'year': "EXTRACT(year FROM date_joined)"})
+			.values('month', 'year')
+			.annotate(count_items=Count('date_joined')).order_by('year', 'month'))
 
 		user_stats = []
 		# Create stats for users

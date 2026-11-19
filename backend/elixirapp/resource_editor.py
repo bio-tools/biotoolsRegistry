@@ -182,6 +182,7 @@ def configuration(user, resource=None, *, canonical=False):
             'endpoint': reverse('html:editor-save' if resource else 'html:editor-create', kwargs=kwargs),
             'validateEndpoint': reverse('html:editor-save' if resource else 'html:editor-create', kwargs=kwargs).replace('/save/', '/validate/'),
             'previewEndpoint': reverse('html:editor-save' if resource else 'html:editor-create', kwargs=kwargs).replace('/save/', '/record-preview/'),
+            'draftsEndpoint': reverse('html:resource-drafts'),
             'editUrl': reverse('html:editor-edit', kwargs=kwargs) if resource else None,
             'detailUrl': reverse('html:tool-detail', kwargs=kwargs) if resource else None,
             'schema': descriptor, 'schemaRevision': descriptor['revision'] if descriptor else None,

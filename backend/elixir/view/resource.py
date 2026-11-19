@@ -8,7 +8,7 @@ from elixir.permissions import (
 )
 from rest_framework.settings import api_settings
 from rest_framework.exceptions import ValidationError
-from elixir.queries import get_tool, search_tools, ToolNotFound, SearchPageNotFound
+from elixir.queries import get_tool, search_tools, ToolNotFound, SearchPageNotFound, InvalidQuery
 import elixir.elixir_logging as elixir_logging
 from django.conf import settings
 from rest_framework.response import Response
@@ -16,6 +16,7 @@ from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch.exceptions import TransportError
 from elixir.management_errors import ManagementUnavailable
+from elixir.edam_lookup import EdamUnavailable
 from elixir.models import *
 from elixir.serializers import *
 from django.http import Http404
@@ -95,12 +96,23 @@ class ResourceList(APIView):
             result = search_tools(query_dict, page=page, per_page=per_page)
         except SearchPageNotFound as exc:
             return Response({"detail": str(exc)}, status=status.HTTP_404_NOT_FOUND)
+        except InvalidQuery as exc:
+            return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+        except EdamUnavailable:
+            return Response({"detail": "EDAM terms are temporarily unavailable."}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+        def page_url(number):
+            if not any(key in query_dict for key in ('updatedAfter', 'edamMatch', 'edamExpand', 'qmode')):
+                return '?page=' + str(number)
+            params = query_dict.copy()
+            params['page'] = number
+            return '?' + params.urlencode()
 
         return Response(
             {
                 "count": result.count,
-                "next": None if (page * result.per_page >= result.count) else "?page=" + str(page + 1),
-                "previous": None if page == 1 else "?page=" + str(page - 1),
+                "next": None if (page * result.per_page >= result.count) else page_url(page + 1),
+                "previous": None if page == 1 else page_url(page - 1),
                 "list": result.items,
             },
             status=200,

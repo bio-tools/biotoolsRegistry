@@ -153,7 +153,7 @@ onUnmounted(() => { cancelLookup(); resolveSequence++; resolver?.abort(); dialog
 </script>
 
 <template>
-  <div class="edam-selector">
+  <div class="edam-selector" :data-edam-scope="scope">
     <span v-if="!compact" class="edam-label" :id="`${id}-label`">{{ label }}</span>
     <ul v-if="modelValue.length && (!compact || readonly)" class="selected-terms" :aria-label="label">
       <li v-for="uri in modelValue" :key="uri"><span>{{ title(uri) }}<small v-if="cache.get(uri)?.obsolete"> (obsolete)</small></span>
@@ -208,29 +208,29 @@ onUnmounted(() => { cancelLookup(); resolveSequence++; resolver?.abort(); dialog
 
 <style scoped>
 .edam-selector { min-width: 0; }
-.edam-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.edam-label { display: block; font-size: var(--text-ui); font-weight: 600; margin-bottom: 8px; }
 .edam-selector button { font-size: var(--text-control); }
 .concept-picker { width: 100%; min-height: 40px; text-align: left; white-space: normal; overflow-wrap: anywhere; }
-.concept-picker.has-selection { color: #23527c; border-color: transparent; background: transparent; padding: 6px 0; font-weight: 600; }
+.concept-picker.has-selection { color: #23527c; border-color: transparent; background: var(--edam-background, #f3f8fa); padding: 6px 8px; }
 .concept-picker.has-selection:hover { text-decoration: underline; background: #edf4f8; }
 .selected-terms { list-style: none; padding: 0; margin: 8px 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.selected-terms li { display: flex; align-items: center; gap: 8px; background: #edf4f8; padding: 4px 8px; max-width: 100%; overflow-wrap: anywhere; }
+.selected-terms li { display: flex; align-items: center; gap: 8px; background: var(--edam-background, #f3f8fa); border-radius: 5px; padding: 4px 8px; max-width: 100%; overflow-wrap: anywhere; }
 .remove-term { width: 32px; height: 32px; padding: 0; border: 0; background: transparent; color: #23527c; flex-shrink: 0; font-size: 22px !important; }
 .edam-dialog { box-sizing: border-box; width: min(680px, calc(100% - 24px)); max-height: calc(100dvh - 32px); padding: 24px; border: 1px solid #767676; border-radius: 4px; color: #333; overflow: auto; }
 .edam-dialog::backdrop { background: rgb(0 0 0 / 35%); }
 .edam-dialog h2 { font-size: var(--text-heading); margin: 0 0 16px; }
 .edam-dialog input { width: 100%; box-sizing: border-box; }
-.lookup-status { font-size: 13px; color: #555; margin: 8px 0; }
+.lookup-status { font-size: var(--text-caption); color: #555; margin: 8px 0; }
 .edam-choices { list-style: none; padding: 0; margin: 0; border: 1px solid #d5dce0; max-height: 310px; overflow-y: auto; background: #fff; color: #263a43; }
 .edam-choices li { padding: 12px; border-bottom: 1px solid #ddd; cursor: pointer; overflow-wrap: anywhere; }
 .edam-choices li:last-child { border: 0; }
 .edam-choices li.active, .edam-choices li:hover { background: #edf4f8; box-shadow: inset 3px 0 #337ab7; }
 .edam-choices small { margin-left: 8px; color: #666; }
-.term-definition, .term-synonyms { display: block; font-size: 13px; margin-top: 4px; }
+.term-definition, .term-synonyms { display: block; font-size: var(--text-caption); margin-top: 4px; }
 .term-synonyms { color: #666; }
-.suggested-term { font-size: 12px; color: #286044; margin-left: 8px; }
+.suggested-term { font-size: var(--text-caption); color: #286044; margin-left: 8px; }
 .edam-hints, .edam-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-block: 16px; }
-.edam-hints { font-size: 13px; }
+.edam-hints { font-size: var(--text-caption); }
 .edam-hints button { padding: 4px 8px; }
 .edam-actions { margin-bottom: 0; }
 @media (max-width: 760px) { .edam-dialog { padding: 16px; } .edam-choices { max-height: 250px; } }

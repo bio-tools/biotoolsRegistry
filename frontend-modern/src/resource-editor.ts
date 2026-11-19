@@ -5,7 +5,7 @@ export type Field = {
   kind: string; required: boolean; readOnly: boolean; nullable: boolean;
   empty?: boolean; blank?: boolean; fields?: Record<string, Field>; item?: Field;
   path?: string; label?: string; help?: string; writable?: boolean; public?: boolean;
-  choices?: { value: string; label: string }[]; itemLabel?: string; multiline?: boolean;
+  choices?: { value: string; label: string; help?: string }[]; itemLabel?: string; multiline?: boolean;
   minLength?: number; maxLength?: number; minimum?: number; maximum?: number;
 };
 export type ResourceSchema = { protocol: number; revision: string; contract: Field };

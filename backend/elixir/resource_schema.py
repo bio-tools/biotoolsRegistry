@@ -83,6 +83,14 @@ def ingest(path, version):
             result = deepcopy(result)
             metadata = annotation(node)
             result.update(metadata)
+            descriptions = {}
+            for item in node.findall(XS + 'annotation/' + XS + 'appinfo/{*}enum/{*}enumItem'):
+                term, tip = item.findtext('{*}term'), item.findtext('{*}uiTip')
+                if term and tip:
+                    descriptions[term] = ' '.join(tip.split())
+            for choice in result.get('choices', []):
+                if choice['value'] in descriptions:
+                    choice['help'] = descriptions[choice['value']]
             result['explicitLabel'] = 'label' in metadata or result.get('explicitLabel', False)
             result.setdefault('label', label(node.get('name') or reference))
             result['required'] = node.get('minOccurs', '1') != '0'
@@ -101,8 +109,11 @@ def ingest(path, version):
             if enums:
                 if result['kind'] != 'string':
                     raise ValueError('Non-string enumerations need an explicit JSON mapping.')
-                result['choices'] = [{'value': item.get('value'),
-                                      'label': annotation(item).get('label', item.get('value'))} for item in enums]
+                result['choices'] = []
+                for item in enums:
+                    metadata = annotation(item)
+                    result['choices'].append({'value': item.get('value'), 'label': metadata.get('label', item.get('value')),
+                                              **({'help': metadata['help']} if metadata.get('help') else {})})
             for key in ('minLength', 'maxLength', 'minInclusive', 'maxInclusive'):
                 item = restriction.find(XS + key)
                 if item is not None:

@@ -181,7 +181,7 @@ class TestAuthorization(BaseTestObject):
 
         self.assertIsNotNone(mail.message())
 
-        match = re.search("uid=([^&]+)&token=(\w+-\w+)", str(mail.message()))
+        match = re.search(r"uid=([^&]+)&token=(\w+-\w+)", mail.body)
         uid = match.group(1).strip()
         token = match.group(2).strip()
 
@@ -194,7 +194,7 @@ class TestAuthorization(BaseTestObject):
             'new_password1': "NewSecurePassword",
             'new_password2': "NewSecurePassword",
         }, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
         self.logout_user(user_token)
         self.client.credentials() # wipe credentials and cookies from api client

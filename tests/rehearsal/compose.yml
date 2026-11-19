@@ -167,7 +167,7 @@ services:
       MYSQL_PASSWORD: '123'
       MYSQL_ROOT_PASSWORD: elixirroot
       MYSQL_USER: elixir
-    image: mysql:8.0.43
+    image: mysql:8.4.13
     networks:
       net:
         aliases:
@@ -181,7 +181,7 @@ services:
     restart: 'no'
     volumes:
     - type: volume
-      source: data-mysql
+      source: data-mysql-84
       target: /var/lib/mysql
       volume: {}
   apache:
@@ -359,7 +359,7 @@ services:
     profiles:
     - native-dev
   backup-mysql:
-    image: mysql:8.0.43
+    image: mysql:8.4.13
     environment:
       MYSQL_ROOT_PASSWORD: rehearsal-root-only
       MYSQL_DATABASE: backup_source
@@ -443,8 +443,8 @@ volumes:
     name: biotools-refresh-caddy_data
   data-elasticsearch:
     name: biotools-refresh-data-elasticsearch
-  data-mysql:
-    name: biotools-refresh-data-mysql
+  data-mysql-84:
+    name: biotools-refresh-data-mysql-84
   media_data:
     name: biotools-refresh-media_data
   native_caddy_data: null

@@ -5,6 +5,7 @@ from django.conf import settings
 from django.test import Client, TestCase, override_settings
 
 from elixir.edam_lookup import EdamUnavailable, EdamVocabulary
+from elixir.queries import edam_conditions, InvalidQuery
 from elixir.models import Ontology
 from elixirapp.edam import EdamField
 from elixirapp.test_html import HTML_REQUEST
@@ -66,6 +67,23 @@ class EdamTests(TestCase):
             body = self.client.get('/edam/terms/', {'scope': scope, 'q': query}, **HTML_REQUEST).json()
             self.assertTrue(body['items'])
             self.assertTrue(all('/' + scope + '_' in item['uri'] for item in body['items']))
+
+    def test_search_options_expand_narrower_terms_and_combine_selections(self):
+        params = {'topicID': '"topic_0091" "topic_3071"', 'edamMatch': 'any', 'edamExpand': 'narrower'}
+        clauses = edam_conditions(params)
+        self.assertNotIn('topicID', params)
+        groups = clauses[0]['bool']['should']
+        self.assertEqual(len(groups), 2)
+        self.assertEqual(groups[0]['bool']['should'][0]['terms']['topic.uri.keyword'],
+                         ['http://edamontology.org/topic_0080', 'http://edamontology.org/topic_0091'])
+        self.assertEqual(groups[1]['bool']['should'][0]['terms']['topic.uri.keyword'],
+                         ['http://edamontology.org/topic_3071'])
+        all_params = {'topicID': '"topic_0091" "topic_3071"', 'edamMatch': 'all', 'edamExpand': 'narrower'}
+        self.assertEqual(len(edam_conditions(all_params)), 2)
+        for bad in ({'edamMatch': 'other'}, {'topicID': 'topic_0091 rubbish', 'edamMatch': 'any'},
+                    {'topicID': 'topic_8888', 'edamExpand': 'narrower'}):
+            with self.assertRaises(InvalidQuery):
+                edam_conditions(bad)
 
     def test_resolve_selected_outside_query_and_scope_branch_rules(self):
         for params in ({'scope': 'topic', 'id': 'http://edamontology.org/data_0863'},

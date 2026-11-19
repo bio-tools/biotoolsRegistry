@@ -1,0 +1,1 @@
+These ELIXIR Community icons are from the [ELIXIR Italy Communities page](https://www.elixir-italy.org/how-we-work/communities/). They are presentation assets; community values remain defined by the active bio.tools schema. New or unmatched values use the generic community icon.

@@ -1,6 +1,6 @@
 from django.urls import include, path, re_path
 
-from elixirapp import html, tool_detail, search_workspace, edam, browser_auth, resource_editor, resource_requests, record_preview
+from elixirapp import html, tool_detail, search_workspace, edam, browser_auth, resource_editor, resource_drafts, resource_requests, record_preview
 from elixirapp import browser_api, public_urls
 
 
@@ -17,6 +17,8 @@ page_patterns = [
         path('requests/conclude/', resource_requests.conclude, name='request-conclude'),
         re_path(r'^requests/tool/(?P<identifier>[A-Za-z0-9.~_-]{1,100})/$', resource_requests.create, name='request-create'),
         path('editor/new/', resource_editor.page, name='editor-new'),
+        path('editor/drafts/', resource_drafts.collection, name='resource-drafts'),
+        path('editor/drafts/<uuid:identifier>/', resource_drafts.detail),
         path('editor/new/validate/', resource_editor.save, {'validate_only': True}),
         path('editor/new/record-preview/', record_preview.preview),
         re_path(r'^editor/tool/(?P<identifier>[A-Za-z0-9.~_-]{1,100})/validate/$', resource_editor.save, {'validate_only': True}),

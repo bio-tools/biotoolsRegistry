@@ -1,10 +1,11 @@
 <form method="get" action="/t" class="public-search" data-home-search
-  data-edam-url="{% if request.canonical %}/_edam/terms/{% else %}{% url 'html:edam-lookup' %}{% endif %}">
+  data-edam-url="{% if request.canonical %}/_edam/terms/{% else %}{% url 'html:edam-lookup' %}{% endif %}"
+  data-options-url="{% if request.canonical %}/_search/options/{% else %}{% url 'html:search-options' %}{% endif %}">
   <label for="home-query">Search bio.tools</label>
   <div class="search-controls">
     <div class="home-search-combobox">
       <input id="home-query" name="q" type="search" maxlength="256" placeholder="Tool, topic, operation, data or format" aria-describedby="home-suggestion-status">
-      <ul id="home-suggestions" class="home-suggestions" role="listbox" aria-label="EDAM concept suggestions" hidden></ul>
+      <ul id="home-suggestions" class="home-suggestions" role="listbox" aria-label="Search suggestions" hidden></ul>
     </div>
     <button type="submit">Search</button>
   </div>

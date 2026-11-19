@@ -162,6 +162,8 @@ def public_fields(value, contract, *, handled=()):
         if not field.get('public') or field['path'] in handled or item is None or item == '' or item == []:
             continue
         node = {'name': name, 'path': field['path'], 'label': field['label'], 'kind': field['kind'], 'value': item}
+        if field.get('help'):
+            node['help'] = field['help']
         if field['path'] == 'otherID.value':
             node['identifierType'] = value.get('type')
         shape = field.get('item', field)
@@ -171,9 +173,11 @@ def public_fields(value, contract, *, handled=()):
             if not node['entries']:
                 continue
         else:
-            labels = {choice['value']: choice['label'] for choice in field.get('choices', [])}
+            labels = {choice['value']: choice for choice in field.get('choices', [])}
             values = item if isinstance(item, list) else [item]
-            node['values'] = [{'value': entry, 'label': labels.get(entry, entry)} for entry in values if not isinstance(entry, (dict, list))]
+            node['values'] = [{'value': entry, 'label': labels.get(entry, {}).get('label', entry),
+                               **({'help': labels[entry]['help']} if labels.get(entry, {}).get('help') else {})}
+                              for entry in values if not isinstance(entry, (dict, list))]
         result.append(node)
     return result
 

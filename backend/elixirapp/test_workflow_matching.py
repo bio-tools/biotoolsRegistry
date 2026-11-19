@@ -138,7 +138,7 @@ class WorkflowMatchingTests(TestCase):
         self.assertContains(designer, 'requires its interactive assets')
         gallery = self.client.get('/workflows', **CANONICAL)
         self.assertEqual(gallery.status_code, 200)
-        self.assertContains(gallery, 'Design a workflow from tool functions')
+        self.assertContains(gallery, 'design your own workflow')
 
     def test_related_unknown_obsolete_and_operation_are_distinguished(self):
         params = {'direction': 'input', 'data': BASE + 'data_0006', 'mode': 'related', 'include': 'unknown',

@@ -25,6 +25,25 @@ async function save() { await wrapper.get('form').trigger('submit'); await flush
 const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status });
 
 describe('basic resource editor', () => {
+  it('shows tool type descriptions supplied by the schema', async () => {
+    const info = wrapper.get('[aria-label="About Web API"]');
+    await info.trigger('click');
+    expect(wrapper.text()).toContain('endpoints to a request-response message system');
+  });
+
+  it('suggests an identifier from a new name without overwriting a chosen identifier', async () => {
+    wrapper.unmount();
+    wrapper = mount(ResourceEditor, { props: { ...initial, revision: null,
+      resource: { ...fixtures.minimal, name: '', biotoolsID: '' } as Resource } });
+    await wrapper.get('#editor-name').setValue('My tool + suite');
+    expect((wrapper.get('#editor-biotoolsID').element as HTMLInputElement).value).toBe('My_tool_suite');
+    await wrapper.get('#editor-name').setValue('New tool');
+    expect((wrapper.get('#editor-biotoolsID').element as HTMLInputElement).value).toBe('New_tool');
+    await wrapper.get('#editor-biotoolsID').setValue('my-chosen-id');
+    await wrapper.get('#editor-name').setValue('Another name');
+    expect((wrapper.get('#editor-biotoolsID').element as HTMLInputElement).value).toBe('my-chosen-id');
+  });
+
   it('previews the unsaved record and indicates when the preview needs refreshing', async () => {
     await wrapper.get('#editor-name').setValue('Unsaved preview name');
     fetchMock.mockResolvedValueOnce(new Response('<h1>Unsaved preview name</h1>', { status: 200, headers: { 'Content-Type': 'text/html' } }));

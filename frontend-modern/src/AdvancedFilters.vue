@@ -53,7 +53,7 @@ function selected(field: string, key: 'min' | 'max' | 'value' | 'values') {
 
 <style scoped>
 .advanced-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; padding: 0; margin: 12px 0; border: 0; min-width: 0; }
-legend { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+legend { font-size: var(--text-ui); font-weight: 600; margin-bottom: 8px; }
 label { font-size: var(--text-ui); }
-input, select { width: 100%; min-width: 0; min-height: 40px; padding: 6px; border: 1px solid #767676; border-radius: 4px; background: white; color: #333; font-family: inherit; font-size: var(--text-body); }
+input, select { width: 100%; min-width: 0; min-height: 40px; padding: 6px; border: 1px solid #767676; border-radius: 4px; background: white; color: #333; font-family: inherit; }
 </style>

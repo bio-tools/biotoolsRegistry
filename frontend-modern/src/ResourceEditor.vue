@@ -14,7 +14,7 @@ import { backendErrorsToEditor, editorShapeError, editorToResource, editorToSubm
 
 type Config = { resource: Resource; revision: string | null; endpoint: string; validateEndpoint?: string; previewEndpoint?: string;
   schema?: ResourceSchema | null; schemaRevision?: string | null; bridgeEndpoint?: string | null;
-  editUrl: string | null; detailUrl: string | null; toolTypes: string[]; edamEndpoint: string; metadataOptions?: Record<string, string[]>; canManagePermissions?: boolean; no_changes?: boolean };
+  editUrl: string | null; detailUrl: string | null; toolTypes: string[]; edamEndpoint: string; draftsEndpoint?: string; metadataOptions?: Record<string, string[]>; canManagePermissions?: boolean; no_changes?: boolean };
 const props = defineProps<Config>();
 const config = ref<Config>({ ...props });
 const draft = ref(resourceToEditor(props.resource));
@@ -22,6 +22,12 @@ const baseline = ref(JSON.stringify(props.resource));
 const raw = ref(JSON.stringify(editorToResource(draft.value), null, 2));
 const rawError = ref('');
 const dirty = computed(() => !!rawError.value || JSON.stringify(editorToResource(draft.value)) !== baseline.value);
+const savedDraftSnapshot = ref('');
+const unstoredChanges = computed(() => dirty.value && (!!rawError.value || JSON.stringify(editorToResource(draft.value)) !== savedDraftSnapshot.value));
+type PrivateDraft = { id: string; name: string; target: string; revision: string; recordRevision: string; updated: string };
+const privateDrafts = ref<PrivateDraft[]>([]), privateDraft = ref<PrivateDraft | null>(null);
+const privateDraftError = ref(''), privateDraftStatus = ref(''), privateDraftPending = ref(false), moreDrafts = ref(false);
+let pendingDraftId = '';
 const validationMessage = ref('');
 const pending = ref(false);
 const saved = ref(false);
@@ -43,10 +49,18 @@ const selectedTypes = computed(() => (draft.value.toolType || []).map(item => it
 const types = computed(() => {
   const choices = fields.value.toolType?.choices || [];
   return [...choices, ...selectedTypes.value.filter((value): value is string => typeof value === 'string' &&
-    !choices.some(item => item.value === value)).map(value => ({ value, label: value + ' (no longer allowed)' }))];
+    !choices.some(item => item.value === value)).map(value => ({ value, label: value + ' (no longer allowed)', help: '' }))];
 });
 let applyingJSON = false;
 let jsonSequence = 0;
+let suggestedId = '';
+let idEdited = !!props.resource.biotoolsID;
+watch(() => draft.value.name, name => {
+  if (config.value.revision || applyingJSON || idEdited || (draft.value.biotoolsID && draft.value.biotoolsID !== suggestedId)) return;
+  suggestedId = String(name || '').trim().replace(/[^a-zA-Z0-9_. -]/g, '').replace(/ +/g, '_')
+    .slice(0, fields.value.biotoolsID?.maxLength || 100);
+  draft.value.biotoolsID = suggestedId;
+}, { flush: 'sync' });
 watch(draft, () => {
   if (!applyingJSON && !rawError.value) raw.value = JSON.stringify(editorToResource(draft.value), null, 2);
 }, { deep: true, flush: 'post' });
@@ -59,6 +73,7 @@ function updateJSON(event: Event) {
     const shapeError = editorShapeError(value, config.value.schema?.contract);
     if (shapeError) throw new Error(shapeError);
     const record = value as Record<string, Json>;
+    if (Object.hasOwn(record, 'biotoolsID')) idEdited = true;
     applyingJSON = true;
     const current = ++jsonSequence;
     applySuggestions(draft.value, record);
@@ -91,9 +106,9 @@ function errorTarget(error: EditorError) {
     ? `editor-${field}` : error.path?.length ? nestedTarget(draft.value, error) : null;
 }
 
-function confirmLeave() { return (!dirty.value && !pending.value) || window.confirm('Discard unsaved changes and leave this page?'); }
+function confirmLeave() { return (!unstoredChanges.value && !pending.value && !privateDraftPending.value) || window.confirm('Discard unsaved changes and leave this page?'); }
 function beforeUnload(event: BeforeUnloadEvent) {
-  if (dirty.value || pending.value) { event.preventDefault(); event.returnValue = ''; }
+  if (unstoredChanges.value || pending.value || privateDraftPending.value) { event.preventDefault(); event.returnValue = ''; }
 }
 function beforeNavigation(event: Event) {
   if (!(event.target instanceof Element)) return;
@@ -111,6 +126,7 @@ onMounted(() => {
   window.addEventListener('beforeunload', beforeUnload);
   document.addEventListener('click', beforeNavigation, true);
   document.addEventListener('submit', beforeNavigation, true);
+  if (config.value.draftsEndpoint) listPrivateDrafts();
 });
 onBeforeUnmount(() => {
   controller.abort();
@@ -122,6 +138,8 @@ onBeforeUnmount(() => {
 function discard() {
   if (!window.confirm('Discard your unsaved changes?')) return;
   draft.value = resourceToEditor(JSON.parse(baseline.value));
+  suggestedId = '';
+  idEdited = !!config.value.revision || !!draft.value.biotoolsID;
   errors.value = [];
   saved.value = false;
   restoreJSON();
@@ -134,6 +152,61 @@ function exportDraft() {
   link.download = `${draft.value.biotoolsID || 'resource'}-draft.json`;
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function privateHeaders(extra: Record<string, string> = {}) {
+  return { 'X-Biotools-User': document.querySelector<HTMLMetaElement>('meta[name="session-user"]')?.content || '', ...extra };
+}
+async function listPrivateDrafts(append = false) {
+  if (!config.value.draftsEndpoint) return;
+  try {
+    const query = new URLSearchParams({ target: config.value.revision ? String(config.value.resource.biotoolsID || '') : '', offset: String(append ? privateDrafts.value.length : 0) });
+    const response = await browserRequest(`${config.value.draftsEndpoint}?${query}`, { headers: privateHeaders() });
+    const body = await response.json(); privateDrafts.value = append ? [...privateDrafts.value, ...body.items] : body.items; moreDrafts.value = body.more;
+  } catch { privateDraftError.value = 'Private drafts could not be loaded.'; }
+}
+async function savePrivateDraft() {
+  if (!config.value.draftsEndpoint || privateDraftPending.value || rawError.value) return;
+  privateDraftPending.value = true; privateDraftError.value = ''; privateDraftStatus.value = '';
+  const resource = editorToResource(draft.value), snapshot = JSON.stringify(resource);
+  const target = config.value.revision ? String(config.value.resource.biotoolsID || '') : '';
+  try {
+    if (!privateDraft.value && !pendingDraftId) pendingDraftId = crypto.randomUUID();
+    const current = privateDraft.value;
+    const response = await browserRequest(current ? `${config.value.draftsEndpoint}${current.id}/` : config.value.draftsEndpoint, {
+      method: current ? 'PUT' : 'POST', headers: privateHeaders({ 'Content-Type': 'application/json', ...(current ? { 'If-Match': current.revision } : {}) }),
+      body: JSON.stringify({ ...(!current ? { id: pendingDraftId } : {}), target, recordRevision: current?.recordRevision || config.value.revision || '', resource }),
+    });
+    privateDraft.value = await response.json(); pendingDraftId = ''; savedDraftSnapshot.value = snapshot;
+    privateDraftStatus.value = JSON.stringify(editorToResource(draft.value)) === snapshot ? 'Private draft saved.' : 'Draft saved; newer changes are not saved.';
+    await listPrivateDrafts();
+  } catch (error) {
+    privateDraftError.value = error instanceof BrowserRequestError && error.body && typeof error.body === 'object' && 'detail' in error.body
+      ? String(error.body.detail) : 'Private draft could not be saved. Your work is unchanged.';
+  } finally { privateDraftPending.value = false; }
+}
+async function openPrivateDraft(item: PrivateDraft) {
+  if (!config.value.draftsEndpoint || privateDraftPending.value || !confirmLeave()) return;
+  privateDraftPending.value = true; privateDraftError.value = '';
+  try {
+    const response = await browserRequest(`${config.value.draftsEndpoint}${item.id}/`, { headers: privateHeaders() });
+    const body = await response.json();
+    draft.value = resourceToEditor(body.resource); rawError.value = ''; raw.value = JSON.stringify(body.resource, null, 2);
+    if (body.target) config.value.revision = body.recordRevision;
+    privateDraft.value = body; pendingDraftId = ''; savedDraftSnapshot.value = JSON.stringify(editorToResource(draft.value));
+    idEdited = !!body.resource.biotoolsID; errors.value = []; previewHtml.value = ''; privateDraftStatus.value = 'Private draft opened.';
+  } catch { privateDraftError.value = 'Private draft could not be opened. Your current work is unchanged.'; }
+  finally { privateDraftPending.value = false; }
+}
+async function deletePrivateDraft(item: PrivateDraft) {
+  if (!config.value.draftsEndpoint || privateDraftPending.value || !window.confirm(`Delete private draft “${item.name}”?`)) return;
+  privateDraftPending.value = true; privateDraftError.value = '';
+  try {
+    await browserRequest(`${config.value.draftsEndpoint}${item.id}/`, { method: 'DELETE', headers: privateHeaders({ 'If-Match': item.revision }) });
+    if (privateDraft.value?.id === item.id) { privateDraft.value = null; savedDraftSnapshot.value = ''; }
+    privateDraftStatus.value = 'Private draft deleted; the current form is unchanged.'; await listPrivateDrafts();
+  } catch { privateDraftError.value = 'Draft could not be deleted. It may have changed in another tab.'; }
+  finally { privateDraftPending.value = false; }
 }
 
 async function previewRecord() {
@@ -175,6 +248,8 @@ async function save(validateOnly = false) {
     config.value = result;
     draft.value = resourceToEditor(result.resource);
     baseline.value = JSON.stringify(result.resource);
+    privateDraft.value = null; savedDraftSnapshot.value = ''; pendingDraftId = '';
+    if (config.value.draftsEndpoint) await listPrivateDrafts();
     saved.value = true;
     if (result.editUrl) history.replaceState(null, '', result.editUrl);
     document.title = `Edit ${result.resource.name} | bio.tools`;
@@ -200,6 +275,18 @@ async function save(validateOnly = false) {
         <p v-if="config.revision" class="editor-id">biotools:{{ draft.biotoolsID }}</p></div>
       <a v-if="config.detailUrl" :href="config.detailUrl">View record</a>
     </div>
+    <section v-if="config.draftsEndpoint" class="editor-card private-drafts" aria-label="Private drafts">
+      <h2>Private drafts</h2>
+      <p>Save unfinished work privately. A draft becomes public only when you publish the record.</p>
+      <button type="button" class="secondary" :disabled="pending || privateDraftPending || !!rawError" @click="savePrivateDraft">{{ privateDraft ? 'Update private draft' : 'Save private draft' }}</button>
+      <span role="status">{{ privateDraftStatus }}</span><p v-if="privateDraftError" role="alert">{{ privateDraftError }}</p>
+      <details v-if="privateDrafts.length"><summary>Open a private draft</summary>
+        <ul><li v-for="item in privateDrafts" :key="item.id"><span>{{ item.name }}</span>
+          <button type="button" class="secondary" :disabled="privateDraftPending" @click="openPrivateDraft(item)">Open</button>
+          <button type="button" class="secondary" :disabled="privateDraftPending" @click="deletePrivateDraft(item)">Delete</button></li></ul>
+        <button v-if="moreDrafts" type="button" class="secondary" @click="listPrivateDrafts(true)">More drafts</button>
+      </details>
+    </section>
     <section v-if="config.previewEndpoint" class="editor-preview" aria-label="Record preview">
       <div class="preview-heading">
         <button type="button" class="secondary" :disabled="unavailable || previewPending" @click="previewRecord">{{ previewPending ? 'Loading preview...' : previewHtml ? 'Refresh preview' : 'Preview record' }}</button>
@@ -251,7 +338,7 @@ async function save(validateOnly = false) {
             <input id="editor-name" v-model="draft.name" type="text" :required="fields.name?.required" :maxlength="fields.name?.maxLength" :aria-invalid="fieldErrors('name').length > 0" aria-describedby="error-name">
             <p id="error-name" class="editor-field-error">{{ fieldErrors('name').join(' ') }}</p></div>
           <div><label for="editor-biotoolsID">{{ fields.biotoolsID?.label || 'bio.tools ID' }}</label><span v-if="fields.biotoolsID?.required" class="required-label" aria-hidden="true">(required)</span>
-            <input id="editor-biotoolsID" v-model="draft.biotoolsID" type="text" :required="fields.biotoolsID?.required" :maxlength="fields.biotoolsID?.maxLength" :readonly="!!config.revision" :aria-invalid="fieldErrors('biotoolsID').length > 0" aria-describedby="error-biotoolsID">
+            <input id="editor-biotoolsID" v-model="draft.biotoolsID" type="text" :required="fields.biotoolsID?.required" :maxlength="fields.biotoolsID?.maxLength" :readonly="!!config.revision" :aria-invalid="fieldErrors('biotoolsID').length > 0" aria-describedby="error-biotoolsID" @input="idEdited = true">
             <p id="error-biotoolsID" class="editor-field-error">{{ fieldErrors('biotoolsID').join(' ') }}</p></div>
         </div>
         <label for="editor-homepage">{{ fields.homepage?.label || 'Homepage' }}</label><span v-if="fields.homepage?.required" class="required-label" aria-hidden="true">(required)</span>
@@ -262,7 +349,10 @@ async function save(validateOnly = false) {
         <p id="error-description" class="editor-field-error">{{ fieldErrors('description').join(' ') }}</p>
         <fieldset id="editor-toolType" class="editor-types" tabindex="-1" aria-describedby="error-toolType">
           <legend>{{ fields.toolType?.label || 'Tool type' }}</legend>
-          <label v-for="type in types" :key="type.value"><input type="checkbox" :value="type.value" :checked="selectedTypes.includes(type.value)" @change="changeType(type.value, ($event.target as HTMLInputElement).checked)">{{ type.label }}</label>
+          <div v-for="type in types" :key="type.value" class="editor-type-choice">
+            <label><input type="checkbox" :value="type.value" :checked="selectedTypes.includes(type.value)" @change="changeType(type.value, ($event.target as HTMLInputElement).checked)">{{ type.label }}</label>
+            <details v-if="type.help" class="editor-type-help"><summary :aria-label="`About ${type.label}`">ⓘ</summary><p>{{ type.help }}</p></details>
+          </div>
         </fieldset>
         <p id="error-toolType" class="editor-field-error">{{ fieldErrors('toolType').join(' ') }}</p>
       </fieldset></section>
@@ -270,11 +360,11 @@ async function save(validateOnly = false) {
       <MetadataEditor :draft="draft" :fields="fields" :endpoint="config.edamEndpoint" :errors="errors" :disabled="unavailable" />
       <PermissionEditor v-model="draft.editPermission" :can-manage="config.canManagePermissions === true" :errors="errors" :disabled="unavailable" />
       <div class="editor-actions">
-        <button type="submit" :disabled="unavailable || !!snapshot.blockers.length">{{ pending ? 'Working...' : 'Save changes' }}</button>
+        <button type="submit" :disabled="unavailable || privateDraftPending || !!snapshot.blockers.length">{{ pending ? 'Working...' : config.revision ? 'Save changes' : 'Publish tool' }}</button>
         <button v-if="config.validateEndpoint" type="button" class="secondary" :disabled="unavailable || !!snapshot.blockers.length" @click="save(true)">Validate without saving</button>
         <button type="button" class="secondary" :disabled="pending || !dirty" @click="discard">Discard changes</button>
         <button type="button" class="secondary" @click="exportDraft">Export draft</button>
-        <span role="status" aria-label="Save status">{{ pending ? 'Saving changes...' : dirty ? 'Unsaved changes' : saved ? (config.no_changes ? 'No changes detected.' : 'Changes saved.') : 'No unsaved changes' }}</span>
+        <span role="status" aria-label="Save status">{{ pending ? 'Saving changes...' : dirty ? (unstoredChanges ? 'Unsaved changes' : 'Saved privately; not published') : saved ? (config.no_changes ? 'No changes detected.' : 'Changes saved.') : 'No unsaved changes' }}</span>
       </div>
       </div>
     </form>
@@ -289,7 +379,11 @@ async function save(validateOnly = false) {
 .preview-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
 .editor-preview iframe { width: 100%; height: 75vh; min-height: 500px; border: 1px solid #dce8ed; border-radius: 8px; background: white; }
 .editor-id { color: #575757; margin: 0; overflow-wrap: anywhere; }
-.editor-card, .editor-json-panel { min-width: 0; padding: 24px; border: 1px solid #dce8ed; border-radius: 10px; background: #fff; box-shadow: 0 2px 10px #173e4b0a; }
+.editor-card, .editor-json-panel { min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.private-drafts { margin-bottom: 20px; }
+.private-drafts p { margin-bottom: 12px; }
+.private-drafts ul { padding: 0; list-style: none; }
+.private-drafts li { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-block: 8px; }
 .editor-json-panel { margin-bottom: 20px; }
 .editor-json-panel summary { color: #005472; font-weight: 700; }
 .editor-json-panel > p { margin: 12px 0 16px; color: #526d79; }
@@ -297,8 +391,8 @@ async function save(validateOnly = false) {
 .editor-help { color: #526d79; margin-left: 4px; cursor: help; }
 .json-error { margin-top: 12px; padding: 12px; border-left: 3px solid #a94442; background: #fff4f2; color: #842b29; }
 .json-error p { margin-bottom: 10px; }
-.resource-editor form { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start; }
-.editor-sections { position: sticky; top: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 12px; margin: 0; border: 1px solid #dce8ec; border-radius: 8px; background: #f5f9fa; font-size: var(--text-ui); }
+.resource-editor form { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px; align-items: start; }
+.editor-sections { position: sticky; top: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 12px; margin: 0; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-size: var(--text-ui); }
 .editor-sections a { display: flex; align-items: center; gap: 8px; padding: 6px 8px; text-decoration: none; border-radius: 4px; }
 .editor-sections a:hover { background: #e5f1f5; text-decoration: underline; }
 .editor-sections-title { padding: 6px 8px; color: #425f6b; font-weight: 700; }
@@ -306,7 +400,7 @@ async function save(validateOnly = false) {
 .required-label { color: #526d79; font-size: var(--text-caption); font-weight: 400; }
 .editor-fields label:has(+ .required-label) { display: inline-block; margin-right: 4px; }
 .editor-fields { border: 0; padding: 0; margin: 0; min-width: 0; }
-.editor-fields > legend { font-size: 20px; font-weight: 600; margin-bottom: 20px; padding: 0; }
+.editor-fields > legend { font-size: var(--text-heading); font-weight: 600; margin-bottom: 16px; padding: 0; }
 .editor-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .editor-pair > div { min-width: 0; }
 textarea { width: 100%; min-height: 160px; resize: vertical; padding: 12px; border: 1px solid #767676; border-radius: 4px; font: inherit; }
@@ -315,8 +409,12 @@ input[readonly] { background: #f4f4f4; color: #575757; }
 .editor-types { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; min-width: 0; }
 .editor-types legend { font-weight: 600; margin-bottom: 8px; padding: 0; }
 .editor-types label { display: flex; align-items: center; gap: 10px; min-height: 36px; font-weight: 400; margin: 0; }
+.editor-type-choice { display: flex; align-items: flex-start; gap: 8px; }
+.editor-type-help { position: relative; }
+.editor-type-help summary { color: #286090; list-style: none; min-height: 36px; }
+.editor-type-help p { position: absolute; z-index: 2; width: min(320px, 70vw); margin: 0; padding: 12px; border: 1px solid #d6e2e7; border-radius: 6px; background: white; box-shadow: 0 4px 12px #173e4b22; }
 .editor-types input { width: 18px; height: 18px; min-height: 18px; flex: 0 0 18px; accent-color: #337ab7; }
-.editor-actions { border-top: 1px solid #d6e2e7; padding: 16px; margin-top: 24px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; background: #f5f9fa; border-radius: 8px; }
+.editor-actions { border-top: 1px solid var(--line); padding: 16px; margin-top: 24px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; background: #fff; border-radius: 8px; }
 .editor-actions span { color: #575757; }
 .editor-errors { overflow-wrap: anywhere; }
 .editor-errors h2 { font-size: 18px; margin-bottom: 8px; }

@@ -12,6 +12,7 @@ from elixirapp.record_preview import preview
 
 
 @override_settings(ROOT_URLCONF='elixirapp.canonical_editor_urls')
+@patch('elixir.templatetags.detail_tags.edam_definitions', return_value={})
 class RecordPreviewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -34,7 +35,7 @@ class RecordPreviewTests(SimpleTestCase):
         request.canonical = True
         return request
 
-    def test_renders_public_detail_from_unsaved_values_without_writes(self):
+    def test_renders_public_detail_from_unsaved_values_without_writes(self, _definitions):
         response = preview(self.request())
         self.assertEqual(response.status_code, 200)
         body = response.content.decode()
@@ -43,26 +44,34 @@ class RecordPreviewTests(SimpleTestCase):
         self.assertNotIn('editPermission', body)
         self.assertNotIn('badge.dimensions.ai', body)
 
-    def test_canonical_preview_routes_reach_the_preview_view(self):
+    def test_canonical_preview_routes_reach_the_preview_view(self, _definitions):
         self.assertIs(resolve('/register/record-preview/').func, preview)
         self.assertIs(resolve('/draft-id/edit/record-preview/').func, preview)
 
+    def test_canonical_middleware_routes_preview_requests_to_authentication(self, _definitions):
+        for path in ('/register/record-preview/', '/draft-id/edit/record-preview/'):
+            with self.subTest(path=path):
+                response = self.client.post(path, data='{}', content_type='application/json',
+                                            HTTP_ACCEPT='application/json', **{'biotools.canonical': True})
+                self.assertEqual(response.status_code, 401)
+                self.assertEqual(response['X-Biotools-Route'], 'django-editor')
+
     @override_settings(ROOT_URLCONF='elixirapp.html_urls')
-    def test_legacy_preview_routes_reach_the_preview_view(self):
+    def test_legacy_preview_routes_reach_the_preview_view(self, _definitions):
         self.assertIs(resolve('/editor/new/record-preview/').func, preview)
         self.assertIs(resolve('/editor/tool/draft-id/record-preview/').func, preview)
 
-    def test_requires_authentication_and_existing_record_permission(self):
+    def test_requires_authentication_and_existing_record_permission(self, _definitions):
         self.assertEqual(preview(self.request(user=AnonymousUser())).status_code, 401)
         with patch('elixirapp.record_preview.existing', side_effect=PermissionDenied):
             with self.assertRaises(PermissionDenied):
                 preview(self.request(), identifier='draft-id')
 
-    def test_rejects_invalid_shapes_and_schema_revisions(self):
+    def test_rejects_invalid_shapes_and_schema_revisions(self, _definitions):
         self.assertEqual(preview(self.request(resource={'topic': 'not a list'})).status_code, 400)
         self.assertEqual(preview(self.request(revision='old')).status_code, 409)
 
-    def test_escapes_draft_content(self):
+    def test_escapes_draft_content(self, _definitions):
         response = preview(self.request(resource={'name': '<script>alert(1)</script>', 'description': '', 'homepage': ''}))
         self.assertNotIn(b'<script>alert(1)</script>', response.content)
         self.assertIn(b'&lt;script&gt;', response.content)

@@ -6,6 +6,7 @@ import EdamField from './EdamField.vue';
 import SessionCheck from './SessionCheck.vue';
 import ResourceEditor from './ResourceEditor.vue';
 import DomainEditors from './DomainEditors.vue';
+import DomainResources from './DomainResources.vue';
 import WorkflowDesigner from './WorkflowDesigner.vue';
 import { installBrowserAuth, handleHtmxAuthError } from './browser-auth';
 import { createIslandRuntime } from './islands';
@@ -20,7 +21,7 @@ htmx.config.refreshOnHistoryMiss = true;
 htmx.config.historyRestoreAsHxRequest = false;
 
 installBrowserAuth();
-createIslandRuntime({ 'counter-demo': CounterDemo, 'search-workspace': SearchWorkspace, 'edam-field': EdamField, 'session-check': SessionCheck, 'resource-editor': ResourceEditor, 'domain-editors': DomainEditors, 'workflow-designer': WorkflowDesigner }).start();
+createIslandRuntime({ 'counter-demo': CounterDemo, 'search-workspace': SearchWorkspace, 'edam-field': EdamField, 'session-check': SessionCheck, 'resource-editor': ResourceEditor, 'domain-editors': DomainEditors, 'domain-resources': DomainResources, 'workflow-designer': WorkflowDesigner }).start();
 
 function imageFailure(image) {
   image.closest('.workflow')?.querySelector('[data-workflow-error]')?.removeAttribute('hidden');

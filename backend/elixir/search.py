@@ -4,6 +4,7 @@ from elasticsearch import Elasticsearch
 from django.conf import settings
 import elixir.search_settings, re
 import json
+from elixir.boolean_search import boolean_query
 
 es = Elasticsearch(settings.ELASTIC_SEARCH_URLS)
 
@@ -33,7 +34,7 @@ def json_loads_byteified(json_text):
 
 def format_search(attribute, search_field, search_text,search_struct, elastic_query, query_type):
 	q = elastic_query[search_struct[attribute][query_type]]
-	q_formatted = q % {"field":search_field,"search_text":search_text}
+	q_formatted = q % {"field":search_field,"search_text":json.dumps(search_text)[1:-1]}
 	#return q
 	#return q_formatted
 	
@@ -111,12 +112,25 @@ def construct_es_query(query_dict):
 		'should': []
 	}
 
+	if query_dict.get('qmode', '') not in ('', 'boolean'):
+		raise ValueError('Choose a supported search mode.')
+	if q and query_dict.get('qmode') == 'boolean':
+		def boolean_clause(field, value, phrase):
+			# Reuse the normal scoring and field matching for each Boolean operand.
+			search_value = ('"' + value + '"') if phrase else value
+			clauses = construct_es_query({field or 'q': search_value})['query']['bool']['must']
+			if not clauses:
+				raise ValueError('Include a searchable word or identifier.')
+			return {'bool': {'must': clauses}}
+		query_struct['query']['bool']['must'].append(boolean_query(q, boolean_clause))
+		q = None
+
 	# if 'everything' search used
 	if q:
 		# search terms in quotes
-		exact = re.findall(r"""[\"'](.+?)[\"']""", q)
+		exact = [match.group(2) for match in re.finditer(r"""([\"'])(.+?)\1""", q)]
 		# search terms outside of quotes
-		trimmed = re.sub(r"[\"'](.+?)[\"']",'', q)
+		trimmed = re.sub(r"""([\"'])(.+?)\1""",'', q)
 		# remove weird symbols
 		trimmed = re.sub(r"[^\w_-]", ' ', trimmed)
 		# remaining search terms
@@ -158,14 +172,14 @@ def construct_es_query(query_dict):
 					# this should be "biotoolsID" instead of "id"
 					{ "match": { "biotoolsID": {"query": term, "boost": 40.0 }}},
 					{ "match": { "name": {"query": term, "boost": 20.0 }}},
-					{ "prefix": { "name":  {"value": term, "boost": 15.0 } }},
-					{ "wildcard" : { "name" : { "value" : "*"+term+"*", "boost" : 10.0 } }},
-					{ "match": { "name.raw": {"query": term, "boost": 200.0 }}},
-					{ "prefix": { "name.raw":  {"value": term, "boost": 150.0 } }},
-					{ "wildcard" : { "name.raw" : { "value" : "*"+term+"*", "boost" : 100.0 } }},
+					{ "prefix": { "name":  {"value": term, "boost": 15.0, "case_insensitive": True } }},
+					{ "wildcard" : { "name" : { "value" : "*"+term+"*", "boost" : 10.0, "case_insensitive": True } }},
+					{ "term": { "name.raw": {"value": term, "boost": 200.0, "case_insensitive": True }}},
+					{ "prefix": { "name.raw":  {"value": term, "boost": 150.0, "case_insensitive": True } }},
+					{ "wildcard" : { "name.raw" : { "value" : "*"+term+"*", "boost" : 100.0, "case_insensitive": True } }},
 					{ "match": { "description":  {"query": term, "boost": 0.05 } }},
 					{ "match": { "collectionID": {"query": term, "boost": 4.0 } }},
-					{ "prefix": { "collectionID": {"value": term, "boost": 2.0 } }},
+					{ "prefix": { "collectionID": {"value": term, "boost": 2.0, "case_insensitive": True } }},
 					{ "match": { "topic.term":  {"query": term, "boost": 0.5 } }},
 					{ "match": { "function.operation.term":  {"query": term, "boost": 0.5 } }},
 					{ "match": { "function.input.data.term":  {"query": term, "boost": 0.5 } }},
@@ -193,9 +207,9 @@ def construct_es_query(query_dict):
 		if attribute in list(search_struct.keys()):
 			search_value = query_dict.get(attribute, None)
 			# search terms in quotes
-			exact = re.findall(r"""[\"'](.+?)[\"']""", search_value)
+			exact = [match.group(2) for match in re.finditer(r"""([\"'])(.+?)\1""", search_value)]
 			# search terms outside of quotes
-			trimmed = re.sub(r"[\"'](.+?)[\"']",'', search_value)
+			trimmed = re.sub(r"""([\"'])(.+?)\1""",'', search_value)
 			# remove weird symbols
 			trimmed = re.sub(r"[^\w_-]", ' ', trimmed)
 			# remaining search terms

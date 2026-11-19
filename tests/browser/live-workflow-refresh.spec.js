@@ -2,7 +2,31 @@ const { test, expect } = require('./fixtures');
 
 test.describe('Detail and workflow presentation', () => {
   test.skip(process.env.BIOTOOLS_TEST_LIVE_FILTERS !== '1', 'Requires the local database-backed preview.');
-  test('dates, detail links, arrows and signed-out actions', async ({ page }) => {
+  test('non-production notice is visible across pages and screen sizes', async ({ page }) => {
+    for (const path of ['/', '/t', '/fastqc', '/workflows', '/login']) {
+      await page.goto(path);
+      const notice = page.getByRole('complementary', { name: 'Environment notice' });
+      await expect(notice).toContainText('Non-production instance.');
+      await expect(notice.getByRole('link', { name: 'bio.tools' })).toHaveAttribute('href', 'https://bio.tools/');
+    }
+    await page.setViewportSize({ width: 390, height: 900 });
+    await expect(page.getByRole('complementary', { name: 'Environment notice' })).toBeVisible();
+    expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
+  });
+  test('Boolean search works in the live workspace', async ({ page }) => {
+    await page.goto('/t');
+    await page.getByLabel('Boolean search').check();
+    await page.locator('#workspace-query').fill('name:FastQC AND NOT name:unlikelyterm');
+    await page.getByRole('button', { name: 'Search', exact: true }).click();
+    await expect(page.locator('.workspace-results')).toContainText('FastQC');
+    await expect.poll(() => new URL(page.url()).searchParams.get('qmode')).toBe('boolean');
+    await page.reload();
+    await expect(page.getByLabel('Boolean search')).toBeChecked();
+    await expect(page.locator('#workspace-query')).toHaveValue('name:FastQC AND NOT name:unlikelyterm');
+    await page.setViewportSize({ width: 390, height: 900 });
+    expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
+  });
+  test('dates, compact function details, links and signed-out actions', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/t?view=table&per_page=10');
     const table = page.locator('.result-table table');
@@ -17,13 +41,38 @@ test.describe('Detail and workflow presentation', () => {
     await page.goto('/psiclass');
     await expect(page.getByRole('link', { name: 'Manage record' })).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Edit record' })).toHaveCount(0);
-    await expect(page.locator('.edam-term a[title^="Search bio.tools"]').first()).toBeVisible();
-    await expect(page.locator('.edam-term a[title="Open this term in the EDAM ontology"]').first()).toBeVisible();
-    const alignment = await page.locator('.function-flow').first().evaluate(flow => {
-      const boxes = [...flow.children].map(element => element.getBoundingClientRect());
-      return boxes.map(box => box.top + box.height / 2);
-    });
+    await expect(page.locator('.edam-term a[title*="Search bio.tools"]').first()).toBeVisible();
+    await expect(page.locator('.edam-term a[title^="Open this term in the EDAM ontology:"]').first()).toBeVisible();
+    const fn = page.locator('.function-row').first();
+    await expect(fn.locator('.operations')).toContainText('Transcriptome assembly');
+    await expect(fn.locator('.function-branch').first()).toContainText('BAM');
+    await expect(fn.locator('.function-branch').first().locator('.formats')).toBeVisible();
+    await expect(fn.locator('.operations svg use')).toHaveAttribute('href', /#function$/);
+    await expect(fn.locator('.edam-link img').first()).toHaveAttribute('src', /edam-logo\.svg$/);
+    await expect.poll(() => fn.locator('.edam-link img').first().evaluate(image => image.naturalWidth)).toBeGreaterThan(0);
+    await expect(fn).not.toContainText(/(?:operation|data|format)_\d+/);
+    expect(await fn.locator('.function-flow').evaluate(flow => {
+      const [input, , operation, , output] = [...flow.children].map(element => element.getBoundingClientRect());
+      return input.right <= operation.left && operation.right <= output.left;
+    })).toBe(true);
+    await page.setViewportSize({ width: 390, height: 900 });
+    expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/polystest');
+    const diagram = page.locator('.function-flow').first();
+    const alignment = await diagram.evaluate(flow => [flow.children[0], flow.children[2], flow.children[4]].map(element => element.getBoundingClientRect().top));
     expect(Math.max(...alignment) - Math.min(...alignment)).toBeLessThan(2);
+    await expect(diagram.locator('.edam-term a[title*="Search bio.tools"]').first()).toHaveAttribute('title', /Image, hybridisation/);
+    const termLink = diagram.locator('.edam-term a[title*="Search bio.tools"]').first();
+    await termLink.focus();
+    await expect(termLink).toBeFocused();
+    expect(await termLink.evaluate(element => getComputedStyle(element).outlineStyle)).not.toBe('none');
+    for (const width of [1024, 390]) {
+      await page.setViewportSize({ width, height: 900 });
+      expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
+      await expect(diagram.locator('.operations')).toContainText('Differential protein expression profiling');
+      await expect(diagram.locator('.function-branch').last().locator('.io-item')).toHaveCount(5);
+    }
   });
   test('workflow overview shows compact annotations without source links', async ({ page }) => {
     await page.goto('/workflows');
@@ -35,6 +84,18 @@ test.describe('Detail and workflow presentation', () => {
       await expect(page.locator(':target')).toBeVisible();
       const target = page.locator(':target');
       await expect(target.locator('a').first()).toHaveText(/bio.tools entry|EDAM concept|Open annotation/);
+    }
+  });
+  test('tool page displays imported package and workflow links', async ({ page }) => {
+    await page.goto('/fastqc');
+    const section = page.locator('.ecosystem-links');
+    await expect(section.getByRole('heading', { name: 'Use this tool' })).toBeVisible();
+    await expect(section.locator('a[href="https://anaconda.org/bioconda/fastqc"]')).toHaveText('fastqc');
+    await section.getByText(/^WorkflowHub \(\d+\)$/).click();
+    await expect(section.locator('a[href^="https://workflowhub.eu/workflows/"]').first()).toBeVisible();
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 900 });
+      expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
     }
   });
   test('search results show names and selecting an output prepares the next input search', async ({ page }) => {

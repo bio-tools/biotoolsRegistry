@@ -5,10 +5,12 @@
         "blank": true,
         "choices": [
           {
+            "help": "An online service which is available for use to all, but possibly requiring user accounts / authentication.",
             "label": "Open access",
             "value": "Open access"
           },
           {
+            "help": "An online service which is available for use to a restricted audience, e.g. members of a specific institute.",
             "label": "Restricted access",
             "value": "Restricted access"
           },
@@ -135,14 +137,17 @@
         "blank": false,
         "choices": [
           {
+            "help": "Software which available for use by all, with full functionality, at no monetary cost to the user.",
             "label": "Free of charge",
             "value": "Free of charge"
           },
           {
+            "help": "Software which is available for use at no monetary cost to the user, but possibly with limited functionality, usage restrictions, or other limitations.",
             "label": "Free of charge (with restrictions)",
             "value": "Free of charge (with restrictions)"
           },
           {
+            "help": "Software which you have to pay to access.",
             "label": "Commercial",
             "value": "Commercial"
           }
@@ -308,26 +313,32 @@
               "blank": false,
               "choices": [
                 {
+                  "help": "Credit of an individual.",
                   "label": "Person",
                   "value": "Person"
                 },
                 {
+                  "help": "Credit of a community software project not formally associated with any single institute.",
                   "label": "Project",
                   "value": "Project"
                 },
                 {
+                  "help": "Credit of or a formal part of an institutional organisation, e.g. a department, research group, team, etc",
                   "label": "Division",
                   "value": "Division"
                 },
                 {
+                  "help": "Credit of an organisation such as a university, hospital, research institute, service center, unit etc.",
                   "label": "Institute",
                   "value": "Institute"
                 },
                 {
+                  "help": "Credit of an association of two or more institutes or other legal entities which have joined forces for some common purpose. Includes Research Infrastructures (RIs) such as ELIXIR, parts of an RI such as an ELIXIR node etc.",
                   "label": "Consortium",
                   "value": "Consortium"
                 },
                 {
+                  "help": "Credit of a legal entity providing funding for development of the software or provision of an online service.",
                   "label": "Funding agency",
                   "value": "Funding agency"
                 }
@@ -349,30 +360,37 @@
             "typeRole": {
               "choices": [
                 {
+                  "help": "The primary point of contact for the software.",
                   "label": "Primary contact",
                   "value": "Primary contact"
                 },
                 {
+                  "help": "Some other role in software production or service delivery including design, deployment, system administration, evaluation, testing, documentation, training, user support etc.",
                   "label": "Contributor",
                   "value": "Contributor"
                 },
                 {
+                  "help": "Author of the original software source code.",
                   "label": "Developer",
                   "value": "Developer"
                 },
                 {
+                  "help": "Author of software documentation including making edits to a bio.tools entry.",
                   "label": "Documentor",
                   "value": "Documentor"
                 },
                 {
+                  "help": "Maintainer of a mature software providing packaging, patching, distribution etc.",
                   "label": "Maintainer",
                   "value": "Maintainer"
                 },
                 {
+                  "help": "Institutional provider of an online service.",
                   "label": "Provider",
                   "value": "Provider"
                 },
                 {
+                  "help": "Provider of support in using the software.",
                   "label": "Support",
                   "value": "Support"
                 }
@@ -492,62 +510,77 @@
             "type": {
               "choices": [
                 {
+                  "help": "Human-readable API documentation.",
                   "label": "API documentation",
                   "value": "API documentation"
                 },
                 {
+                  "help": "Information on how to correctly cite use of the software; typically which publication(s) to cite, or something more general, e.g. a form of words to use.",
                   "label": "Citation instructions",
                   "value": "Citation instructions"
                 },
                 {
+                  "help": "A set of guidelines or rules outlining the norms, expectations, responsibilities and proper practice for individuals working within the software project.",
                   "label": "Code of conduct",
                   "value": "Code of conduct"
                 },
                 {
+                  "help": "Information about the command-line interface to a tool.",
                   "label": "Command-line options",
                   "value": "Command-line options"
                 },
                 {
+                  "help": "Information about policy for making contributions to the software project.",
                   "label": "Contributions policy",
                   "value": "Contributions policy"
                 },
                 {
+                  "help": "Frequently Asked Questions (and answers) about the software.",
                   "label": "FAQ",
                   "value": "FAQ"
                 },
                 {
+                  "help": "General documentation.",
                   "label": "General",
                   "value": "General"
                 },
                 {
+                  "help": "Information about the software governance model.",
                   "label": "Governance",
                   "value": "Governance"
                 },
                 {
+                  "help": "Instructions how to install the software.",
                   "label": "Installation instructions",
                   "value": "Installation instructions"
                 },
                 {
+                  "help": "A short guide helping the end-user to use the software as soon as possible.",
                   "label": "Quick start guide",
                   "value": "Quick start guide"
                 },
                 {
+                  "help": "Notes about a software release or changes to the software; a change log.",
                   "label": "Release notes",
                   "value": "Release notes"
                 },
                 {
+                  "help": "Rules that one must agree to abide by in order to use a service.",
                   "label": "Terms of use",
                   "value": "Terms of use"
                 },
                 {
+                  "help": "Online training material such as text on a Web page, a presentation, video etc. (but excluding tutorials).",
                   "label": "Training material",
                   "value": "Training material"
                 },
                 {
+                  "help": "Information on how to use the software, tailored to the end-user.",
                   "label": "User manual",
                   "value": "User manual"
                 },
                 {
+                  "help": "Some other type of documentation not listed in biotoolsSchema.",
                   "label": "Other",
                   "value": "Other"
                 }
@@ -647,74 +680,92 @@
               "blank": true,
               "choices": [
                 {
+                  "help": "File providing an API specification for the software, e.g. Swagger/OpenAPI, WSDL or RAML file.",
                   "label": "API specification",
                   "value": "API specification"
                 },
                 {
+                  "help": "Biological data, or a web page on a database portal where such data may be downloaded.",
                   "label": "Biological data",
                   "value": "Biological data"
                 },
                 {
+                  "help": "Binaries for the software; compiled code that allow a program to be installed without having to compile the source code.",
                   "label": "Binaries",
                   "value": "Binaries"
                 },
                 {
+                  "help": "File providing a command line specification for the software.",
                   "label": "Command-line specification",
                   "value": "Command-line specification"
                 },
                 {
+                  "help": "Container file including the software.",
                   "label": "Container file",
                   "value": "Container file"
                 },
                 {
+                  "help": "Icon of the software.",
                   "label": "Icon",
                   "value": "Icon"
                 },
                 {
+                  "help": "A software package; a bundle of files and information about those files, typically including source code and / or binaries.",
                   "label": "Software package",
                   "value": "Software package"
                 },
                 {
+                  "help": "Screenshot of the software.",
                   "label": "Screenshot",
                   "value": "Screenshot"
                 },
                 {
+                  "help": "The source code for the software, that can be compiled or assembled into an executable computer program.",
                   "label": "Source code",
                   "value": "Source code"
                 },
                 {
+                  "help": "Data for testing the scientific performance of the software or whether it is working correctly.",
                   "label": "Test data",
                   "value": "Test data"
                 },
                 {
+                  "help": "Script used for testing testing whether the software is working correctly.",
                   "label": "Test script",
                   "value": "Test script"
                 },
                 {
+                  "help": "Tool wrapper in Common Workflow Language (CWL) format for the software.",
                   "label": "Tool wrapper (CWL)",
                   "value": "Tool wrapper (CWL)"
                 },
                 {
+                  "help": "Galaxy tool configuration file (wrapper) for the software.",
                   "label": "Tool wrapper (Galaxy)",
                   "value": "Tool wrapper (Galaxy)"
                 },
                 {
+                  "help": "Taverna configuration file for the software.",
                   "label": "Tool wrapper (Taverna)",
                   "value": "Tool wrapper (Taverna)"
                 },
                 {
+                  "help": "Workbench configuration file (other than taverna, galaxy or CWL wrapper) for the software.",
                   "label": "Tool wrapper (Other)",
                   "value": "Tool wrapper (Other)"
                 },
                 {
+                  "help": "Virtual machine (VM) image for the software.",
                   "label": "VM image",
                   "value": "VM image"
                 },
                 {
+                  "help": "Web page summarising general downloads available for the software.",
                   "label": "Downloads page",
                   "value": "Downloads page"
                 },
                 {
+                  "help": "Other type of download for software - the default if a more specific type is not available.",
                   "label": "Other",
                   "value": "Other"
                 }
@@ -1900,6 +1951,7 @@
             "value": "Freeware"
           },
           {
+            "help": "Software for which the software's publisher or another person retains intellectual property rights\u2014usually copyright of the source code, but sometimes patent rights.",
             "label": "Proprietary",
             "value": "Proprietary"
           },
@@ -4839,50 +4891,62 @@
             "type": {
               "choices": [
                 {
+                  "help": "Online forum for user discussions about the software.",
                   "label": "Discussion forum",
                   "value": "Discussion forum"
                 },
                 {
+                  "help": "An online service providing the tool through the Galaxy platform.",
                   "label": "Galaxy service",
                   "value": "Galaxy service"
                 },
                 {
+                  "help": "A phone line, web site or email-based system providing help to the end-user of the software.",
                   "label": "Helpdesk",
                   "value": "Helpdesk"
                 },
                 {
+                  "help": "Tracker for software issues, bug reports, feature requests etc.",
                   "label": "Issue tracker",
                   "value": "Issue tracker"
                 },
                 {
+                  "help": "Mailing list for the software announcements, discussions, support etc.",
                   "label": "Mailing list",
                   "value": "Mailing list"
                 },
                 {
+                  "help": "Mirror of an (identical) online service.",
                   "label": "Mirror",
                   "value": "Mirror"
                 },
                 {
+                  "help": "Some registry, catalogue etc. other than bio.tools where the tool is also described..",
                   "label": "Software catalogue",
                   "value": "Software catalogue"
                 },
                 {
+                  "help": "A place where source code, data and other files can be retrieved from, typically via platforms like GitHub which provide version control and other features, or something simpler, e.g. an FTP site.",
                   "label": "Repository",
                   "value": "Repository"
                 },
                 {
+                  "help": "An online service (other than Galaxy) that provides access (an interface) to the software.",
                   "label": "Service",
                   "value": "Service"
                 },
                 {
+                  "help": "A website used by the software community including social networking sites, discussion and support fora, WIKIs etc.",
                   "label": "Social media",
                   "value": "Social media"
                 },
                 {
+                  "help": "Information about the technical status of a tool.",
                   "label": "Technical monitoring",
                   "value": "Technical monitoring"
                 },
                 {
+                  "help": "Other type of link for software - the default if a more specific type is not available.",
                   "label": "Other",
                   "value": "Other"
                 }
@@ -4958,14 +5022,17 @@
         "blank": false,
         "choices": [
           {
+            "help": "Nascent or early release software that may not yet be fully featured or stable.",
             "label": "Emerging",
             "value": "Emerging"
           },
           {
+            "help": "Software that is generally considered to fulfill several of the following: secure, reliable, actively maintained, fully featured, proven in production environments, has an active community, and is described or cited in the scientific literature.",
             "label": "Mature",
             "value": "Mature"
           },
           {
+            "help": "Software which is no longer in common use, deprecated by the provider, superseded by other software, replaced by a newer version, is obsolete etc.",
             "label": "Legacy",
             "value": "Legacy"
           }
@@ -5012,14 +5079,17 @@
       "operatingSystem": {
         "choices": [
           {
+            "help": "All flavours of Linux/UNIX operating systems.",
             "label": "Linux",
             "value": "Linux"
           },
           {
+            "help": "All flavours of Microsoft Windows operating system.",
             "label": "Windows",
             "value": "Windows"
           },
           {
+            "help": "All flavours of Apple Macintosh operating systems (primarily Mac OS X).",
             "label": "Mac",
             "value": "Mac"
           },
@@ -5067,18 +5137,22 @@
               "blank": true,
               "choices": [
                 {
+                  "help": "Digital Object Identifier of the software assigned (typically) by the software developer or service provider.",
                   "label": "doi",
                   "value": "doi"
                 },
                 {
+                  "help": "Research Resource Identifier as used by the NIH-supported Resource Identification Portal (https://scicrunch.org/resources).",
                   "label": "rrid",
                   "value": "rrid"
                 },
                 {
+                  "help": "Common Platform Enumeration (CPE) identifier as listed in the CPE dictionary (https://cpe.mitre.org/dictionary/).",
                   "label": "cpe",
                   "value": "cpe"
                 },
                 {
+                  "help": "bio.tools CURIE (secondary identifier).",
                   "label": "biotoolsCURIE",
                   "value": "biotoolsCURIE"
                 }
@@ -5375,26 +5449,32 @@
             "type": {
               "choices": [
                 {
+                  "help": "The principal publication about the tool itself; the article to cite when acknowledging use of the tool.",
                   "label": "Primary",
                   "value": "Primary"
                 },
                 {
+                  "help": "A publication which assessed the performance of the tool.",
                   "label": "Benchmarking study",
                   "value": "Benchmarking study"
                 },
                 {
+                  "help": "A publication describing a scientific method or algorithm implemented by the tool.",
                   "label": "Method",
                   "value": "Method"
                 },
                 {
+                  "help": "A publication describing the application of the tool to scientific research, a particular task or dataset.",
                   "label": "Usage",
                   "value": "Usage"
                 },
                 {
+                  "help": "A publication where the tool was reviewed.",
                   "label": "Review",
                   "value": "Review"
                 },
                 {
+                  "help": "A publication of relevance to the tool but not fitting the other categories.",
                   "label": "Other",
                   "value": "Other"
                 },
@@ -5562,62 +5642,77 @@
       "toolType": {
         "choices": [
           {
+            "help": "A web site providing a platform/portal to multiple resources used for research in a focused area, including biological databases, web applications, training resources and so on.",
             "label": "Bioinformatics portal",
             "value": "Bioinformatics portal"
           },
           {
+            "help": "A tool with a text-based (command-line) interface.",
             "label": "Command-line tool",
             "value": "Command-line tool"
           },
           {
+            "help": "A Web site providing a portal to a biological database, typically allowing a user to browse, deposit, search, visualise, analyse or download data.",
             "label": "Database portal",
             "value": "Database portal"
           },
           {
+            "help": "A tool with a graphical user interface that runs on your desktop environment, e.g. on a PC or mobile device.",
             "label": "Desktop application",
             "value": "Desktop application"
           },
           {
+            "help": "A collection of components that are used to construct other tools. bio.tools scope includes component libraries performing high-level bioinformatics functions but excludes lower-level programming libraries.",
             "label": "Library",
             "value": "Library"
           },
           {
+            "help": "A collection of information about concepts, including terms, synonyms, descriptions etc.",
             "label": "Ontology",
             "value": "Ontology"
           },
           {
+            "help": "A software component encapsulating a set of related functions, which are not standalone but depend upon (and typically extend the function of) other software for its use, e.g. a JavaScript widget, plug-in, extension or add-on.",
             "label": "Plug-in",
             "value": "Plug-in"
           },
           {
+            "help": "A tool written for some run-time environment (e.g. other applications or an OS shell) that automates the execution of tasks. Often a small program written in a general-purpose languages (e.g. Perl, Python) or some domain-specific languages (e.g. sed).",
             "label": "Script",
             "value": "Script"
           },
           {
+            "help": "A service that provides queries over an RDF knowledge base via the SPARQL query language and protocol, and returns results via HTTP.",
             "label": "SPARQL endpoint",
             "value": "SPARQL endpoint"
           },
           {
+            "help": "A collection of tools which are bundled together into a convenient toolkit. Such tools typically share related functionality, a common user interface and can exchange data conveniently. This includes collections of stand-alone command-line tools, or Web applications within a common portal.",
             "label": "Suite",
             "value": "Suite"
           },
           {
+            "help": "A tool with a graphical user interface that runs in your Web browser.",
             "label": "Web application",
             "value": "Web application"
           },
           {
+            "help": "An application programming interface (API) consisting of endpoints to a request-response message system accessible via HTTP. Includes everything from simple data-access URLs to RESTful APIs.",
             "label": "Web API",
             "value": "Web API"
           },
           {
+            "help": "An API described in a machine readable form (typically WSDL) providing programmatic access via SOAP over HTTP.",
             "label": "Web service",
             "value": "Web service"
           },
           {
+            "help": "An application or suite with a graphical user interface, providing an integrated environment for data analysis which includes or may be extended with any number of functions or tools. Includes workflow systems, platforms, frameworks etc.",
             "label": "Workbench",
             "value": "Workbench"
           },
           {
+            "help": "A set of tools which have been composed together into a pipeline of some sort. Such tools are (typically) standalone, but are composed for convenience, for instance for batch execution via some workflow engine or script.",
             "label": "Workflow",
             "value": "Workflow"
           },
@@ -5767,7 +5862,7 @@
   "policyRevision": "db2dd71ec5e0fc8870241f108e2f1144b6f92c392adf97bdd3f199ead56ba6c1",
   "protocol": 1,
   "removedValuePolicy": "correction-required",
-  "revision": "41c6bde30ed530b2de333f02fc848b54da4951624662807703e68c47d451277a",
+  "revision": "3faa19d11258a96fa8fc7ea58ab48784c0c41a42ef531648d736f1a4d0f45bcc",
   "schema": {
     "artifact": "biotools_3.3.0-singletool.xsd",
     "sha256": "d34152910ce66ba644fd596d82a37baaf1b4dbbe55abe1bf41935fc12490e3f0",

@@ -1,10 +1,12 @@
 """Canonical editor/request names with the remaining HTML helpers at their preview mount."""
 from django.urls import include, path, re_path
-from elixirapp import edam, html, html_urls, resource_editor, resource_requests, search_workspace, tool_detail, public_urls, management_urls, workflow_matching, workflow_drafts, record_preview
+from elixirapp import edam, html, html_urls, resource_editor, resource_drafts, resource_requests, search_workspace, tool_detail, public_urls, management_urls, workflow_matching, workflow_drafts, record_preview
 from elixirapp.github_bridge import import_repository
 
 
 editor_patterns = [
+        path('_resource-drafts/', resource_drafts.collection, name='resource-drafts'),
+        path('_resource-drafts/<uuid:identifier>/', resource_drafts.detail),
         re_path(r'^register/?$', resource_editor.page, name='editor-new'),
         path('register/save/', resource_editor.save, name='editor-create'),
         path('register/validate/', resource_editor.save, {'validate_only': True}),

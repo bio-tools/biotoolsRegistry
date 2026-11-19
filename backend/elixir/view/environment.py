@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from elixir.permissions import IsOwnerOrReadOnly, HasEditPermissionToEditResourceOrReadOnly, CanConcludeResourceRequest, IsStaffOrReadOnly
 from elixir.models import *
 from elixir.serializers import *
+from elixirapp.environment import is_production
 
 class Environment(APIView):
     """
@@ -10,6 +11,4 @@ class Environment(APIView):
     """
 
     def get(self, request, format=None):
-        if settings.DEPLOYMENT == 'dev':
-            return Response("Development")
-        return Response("Production")
+        return Response("Production" if is_production() else "Development")

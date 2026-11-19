@@ -129,6 +129,22 @@ class SearchReadContracts(SimpleTestCase):
                       {'biotoolsID': 'alpha', 'name': 'Alpha', 'function': []}]
         self.search.return_value = hits(self.items, 5)
 
+    def test_boolean_search_groups_terms_and_preserves_pagination(self):
+        response = self.client.get('/t/', {'qmode': 'boolean',
+            'q': 'name:"Alpha aligner" OR (function:search AND NOT output:structure)', 'per_page': 2},
+            HTTP_ACCEPT='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('qmode=boolean', response.json()['next'])
+        self.assertIn('q=', response.json()['next'])
+        clause = self.search.call_args.kwargs['body']['query']['bool']['must'][0]['bool']
+        self.assertEqual(clause['minimum_should_match'], 1)
+        self.assertEqual(len(clause['should']), 2)
+        self.assertIn('must_not', clause['should'][1]['bool']['must'][1]['bool'])
+        for query in ('a AND', '(a OR b', 'unknown:value', 'a b', 'a OR OR b', '"unterminated', 'a\\b'):
+            with self.subTest(query=query):
+                self.assertEqual(self.client.get('/t/', {'qmode': 'boolean', 'q': query},
+                                                 HTTP_ACCEPT='application/json').status_code, 400)
+
     def test_text_filter_order_and_pagination(self):
         response = self.client.get('/t/', {
             'q': 'sequence "alignment tool"', 'toolType': '"Command-line tool"',
@@ -151,6 +167,16 @@ class SearchReadContracts(SimpleTestCase):
                       clauses[1]['dis_max']['queries'])
         self.assertEqual(clauses[2], {'bool': {'should': [
             {'match_phrase': {'toolType': 'Command-line tool'}}]}})
+
+    def test_workspace_publication_date_uses_the_actual_search_sort_value(self):
+        self.search.return_value = {'hits': {'total': {'value': 2}, 'hits': [
+            {'_source': dict(self.items[0]), 'sort': [1649116800000, 'beta']},
+            {'_source': dict(self.items[1]), 'sort': [9223372036854775807, 'alpha']},
+        ]}}
+        result = search_tools({'sort': 'citationDate'}, page=1, per_page=50, workspace=True)
+        self.assertEqual(result.items[0]['_publication_sort_date'], '2022-04-05')
+        self.assertNotIn('_publication_sort_date', result.items[1])
+        self.assertEqual(self.search.call_args.kwargs['body']['sort'][0]['publication.metadata.date']['order'], 'desc')
 
     def test_defaults_caps_invalid_size_and_sort_aliases(self):
         for params, size, sort in (

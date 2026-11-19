@@ -9,6 +9,9 @@
   {% if field.name == 'editors' and can_manage %}
     <template id="domain-editors-config">{{ editors_config|json_script }}</template>
     <div data-vue-island="domain-editors" data-vue-props="domain-editors-config" hx-disable>{{ field.label_tag }}{{ field }}</div>
+  {% elif field.name == 'resources' %}
+    <template id="domain-resources-config">{{ resources_config|json_script }}</template>
+    <div data-vue-island="domain-resources" data-vue-props="domain-resources-config" hx-disable>{{ field.label_tag }}{{ field }}</div>
   {% elif field.name != 'confirm_delete' %}<p>{{ field.label_tag }}{{ field }}{% if field.help_text %}<span>{{ field.help_text }}</span>{% endif %}</p>{% endif %}
 {% endfor %}
 <button type="submit" name="action" value="save">Save domain</button>

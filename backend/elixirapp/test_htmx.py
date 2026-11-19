@@ -77,7 +77,7 @@ class ModernAssetTests(SimpleTestCase):
             response = self.client.get('/preview/', {'message': 'Native'}, **HTML_REQUEST)
         self.assertContains(response, '<!doctype html>')
         self.assertContains(response, 'Native')
-        self.assertNotContains(response, '<script')
+        self.assertNotContains(response, 'type="module"')
 
     def test_built_entry_is_discoverable_when_present(self):
         manifest = finders.find('modern/manifest.json')

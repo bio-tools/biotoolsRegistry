@@ -10,6 +10,7 @@ from elixir.queries import get_tool_detail, ToolNotFound
 from elixir.serializers import ResourceSerializer
 from elixir.resource_ui import SchemaUnavailable, public_fields, resource_descriptor
 from elixirapp.resource_editor import can_edit
+from elixirapp.rsec import tool_links
 
 
 def publication_identifiers(publication):
@@ -63,12 +64,19 @@ def detail(request, identifier):
     publications = [{'record': record, 'identifiers': publication_identifiers(record),
                      'extra': public_fields(value, fields['publication']['item'], handled=publication_paths)}
                     for record, value in zip(tool.publication.all(), data.get('publication') or [])]
+    ecosystem = tool_links(tool.biotoolsID)
+    if ecosystem:
+        existing = {(item.get('url') or '').rstrip('/') for field in ('link', 'download', 'documentation')
+                    for item in data.get(field) or [] if isinstance(item, dict)}
+        ecosystem['services'] = {service: [link for link in links if link['url'].rstrip('/') not in existing]
+                                 for service, links in ecosystem['services'].items()}
+        ecosystem['services'] = {service: links for service, links in ecosystem['services'].items() if links}
     return render(request, 'html/tool_detail.html', {
         'tool': tool, 'edit_url': path + '/edit',
         'canonical_url': request.build_absolute_uri(path),
         'api_url': '/api/t' + path, 'badges': badges, 'can_edit': can_edit(request.user, tool),
         'schema_fields': fields, 'schema_revision': descriptor['revision'],
-        'functions': functions, 'publications': publications,
+        'functions': functions, 'publications': publications, 'ecosystem': ecosystem,
         'rrids': [item.value for item in tool.otherID.all() if (item.type or '').lower() == 'rrid']
                  if fields.get('otherID', {}).get('public') else [],
         'has_publication_metrics': any(entry['identifiers']['doi'] or entry['identifiers']['pmid'] for entry in publications),

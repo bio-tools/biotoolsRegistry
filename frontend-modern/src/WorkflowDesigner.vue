@@ -2,6 +2,7 @@
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import EdamSelector from './EdamSelector.vue';
 import ChoiceSelector from './ChoiceSelector.vue';
+import WorkflowDiagram from './WorkflowDiagram.vue';
 import { BrowserRequestError, browserRequest } from './browser-auth';
 import { connect, readDraft, type Graph, type Step, type IO } from './workflow-graph';
 
@@ -331,11 +332,12 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
     <p>This shared design is read-only. Its stored annotations may have changed and do not guarantee that tools will run together.</p>
     <p v-if="sharedLoading" role="status">Loading shared design…</p>
     <p v-if="error" role="alert">{{ error }}</p>
+    <WorkflowDiagram v-if="graph.steps.length" :graph="graph" :unreviewed-edges="unreviewedEdges" :needs-review="needsReview" />
     <ol><li v-for="step in graph.steps" :key="step.id">
       <h3>{{ step.resource.name }}</h3><a v-if="step.resource.id" :href="'/' + encodeURIComponent(step.resource.id)">View tool</a>
-      <p>Operations: {{ step.function.operations.map(termLabel).join(', ') || 'Unknown' }}</p>
-      <p v-for="io in step.function.input" :key="io.id">Input: {{ ioLabel(io) }}</p>
-      <p v-for="io in step.function.output" :key="io.id">Output: {{ ioLabel(io) }}</p>
+      <p>Operations: <span v-if="!step.function.operations.length">Unknown</span><span v-for="(term, index) in step.function.operations" :key="index" class="edam-chip" data-edam-scope="operation">{{ termLabel(term) }}</span></p>
+      <p v-for="io in step.function.input" :key="io.id">Input: <span class="edam-chip" data-edam-scope="data">{{ termLabel(io.data) }}</span> <span v-for="(term, index) in io.formats" :key="index" class="edam-chip" data-edam-scope="format">{{ termLabel(term) }}</span><span v-if="!io.formats.length">Unknown format</span></p>
+      <p v-for="io in step.function.output" :key="io.id">Output: <span class="edam-chip" data-edam-scope="data">{{ termLabel(io.data) }}</span> <span v-for="(term, index) in io.formats" :key="index" class="edam-chip" data-edam-scope="format">{{ termLabel(term) }}</span><span v-if="!io.formats.length">Unknown format</span></p>
       <p v-if="step.note">{{ step.note }}</p>
     </li></ol>
     <ol aria-label="Shared connections"><li v-for="edge in graph.connections" :key="edge.id">
@@ -360,9 +362,9 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
     <p><button type="button" :disabled="loading || (!data.length && !format.length)" @click="search()">Search functions</button></p>
     <p role="status">{{ status }}</p><p v-if="error" role="alert">{{ error }}</p>
     <ol class="candidate-list"><li v-for="item in results" :key="item.referenceFingerprint">
-      <strong>{{ item.resource.name }}</strong> — {{ ioLabel(item.io) }}
+      <strong>{{ item.resource.name }}</strong> — <span class="edam-chip" data-edam-scope="data">{{ termLabel(item.io.data) }}</span> <span v-for="(term, index) in item.io.formats" :key="index" class="edam-chip" data-edam-scope="format">{{ termLabel(term) }}</span><span v-if="!item.io.formats.length">Unknown format</span>
       <span v-for="(evidence, scope) in item.evidence" :key="scope"> · {{ scope }}: {{ evidence.state }}<template v-if="evidence.obsolete"> (obsolete)</template><template v-if="evidence.relation"> ({{ evidence.relation.replaceAll('_', ' ') }})</template><template v-if="evidence.reasons"> ({{ evidence.reasons.join(', ') }})</template></span>
-      <p>Operations: {{ item.function.operations.map(termLabel).join(', ') || 'Unknown' }}</p>
+      <p>Operations: <span v-if="!item.function.operations.length">Unknown</span><span v-for="(term, index) in item.function.operations" :key="index" class="edam-chip" data-edam-scope="operation">{{ termLabel(term) }}</span></p>
       <button type="button" @click="add(item)">Add tool to workflow</button> <a :href="'/' + encodeURIComponent(item.resource.id)">View tool</a>
     </li></ol>
     <button v-if="next" type="button" class="secondary" :disabled="loading" @click="search(next)">More results</button>
@@ -391,24 +393,18 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
     <label>Restore draft <input type="file" accept="application/json,.json" @change="restore"></label>
     <p v-if="!graph.steps.length" class="workflow-empty">Your design is empty. Search for a tool function and add it to begin.</p>
     <p v-if="graph.steps.length" class="diagram-hint">Scroll the diagram horizontally to see the connections.</p>
-    <div v-if="graph.steps.length" class="diagram" role="region" tabindex="0" aria-label="Workflow diagram, scroll horizontally to see connections">
-      <svg :viewBox="`0 0 800 ${graph.steps.length * 90}`" role="img" aria-label="Connections between workflow steps; details and controls follow">
-        <defs><marker id="workflow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" /></marker></defs>
-        <path v-for="(edge, index) in graph.connections" :key="edge.id" :d="`M 300 ${graph.steps.findIndex(s => s.id === edge.from.step) * 90 + 40} C ${Math.min(760, 420 + index * 28)} ${graph.steps.findIndex(s => s.id === edge.from.step) * 90 + 40}, ${Math.min(760, 420 + index * 28)} ${graph.steps.findIndex(s => s.id === edge.to.step) * 90 + 40}, 300 ${graph.steps.findIndex(s => s.id === edge.to.step) * 90 + 40}`" fill="none" stroke="#276390" stroke-width="3" marker-end="url(#workflow-arrow)" />
-        <g v-for="(step, index) in graph.steps" :key="step.id"><rect x="5" :y="index * 90 + 10" width="290" height="60" rx="6" fill="#e8f2f8" stroke="#276390"/><text x="18" :y="index * 90 + 45">{{ index + 1 }}. {{ step.resource.name.slice(0, 35) }}</text></g>
-      </svg>
-    </div>
+    <WorkflowDiagram v-if="graph.steps.length" :graph="graph" :unreviewed-edges="unreviewedEdges" :needs-review="needsReview" />
     <ol class="steps-list"><li v-for="(step, index) in graph.steps" :key="step.id">
       <h3>{{ step.resource.name }}</h3><a v-if="step.resource.id" :href="'/' + encodeURIComponent(step.resource.id)">View tool</a>
       <p v-if="needsReview.includes(step.id)" role="status">Stored snapshot needs review. <button type="button" @click="review(step)">Review current function</button></p>
-      <p class="workflow-operation">Operations: {{ step.function.operations.map(termLabel).join(', ') || 'Unknown' }}</p>
+      <p class="workflow-operation">Operations: <span v-if="!step.function.operations.length">Unknown</span><span v-for="(term, index) in step.function.operations" :key="index" class="edam-chip" data-edam-scope="operation">{{ termLabel(term) }}</span></p>
       <p>Selected {{ step.selection.direction }} evidence:
         <span v-for="(evidence, scope) in step.selection.evidence" :key="scope"> {{ scope }}: {{ evidence.state }}<template v-if="evidence.obsolete"> (obsolete)</template><template v-if="evidence.relation"> ({{ evidence.relation.replaceAll('_', ' ') }})</template><template v-if="evidence.reasons"> ({{ evidence.reasons.join(', ') }})</template>;</span>
       </p>
       <p v-if="!step.function.input.length">No input annotation recorded.</p>
-      <p v-for="io in step.function.input" :key="io.id" class="workflow-io">Input: {{ ioLabel(io) }}</p>
+      <p v-for="io in step.function.input" :key="io.id" class="workflow-io">Input: <span class="edam-chip" data-edam-scope="data">{{ termLabel(io.data) }}</span> <span v-for="(term, termIndex) in io.formats" :key="termIndex" class="edam-chip" data-edam-scope="format">{{ termLabel(term) }}</span><span v-if="!io.formats.length">Unknown format</span></p>
       <p v-if="!step.function.output.length">No output annotation recorded.</p>
-      <p v-for="io in step.function.output" :key="io.id" class="workflow-io">Output: {{ ioLabel(io) }} <button type="button" class="secondary" @click="findNext(io, step.id)">Find next tool</button></p>
+      <p v-for="io in step.function.output" :key="io.id" class="workflow-io">Output: <span class="edam-chip" data-edam-scope="data">{{ termLabel(io.data) }}</span> <span v-for="(term, termIndex) in io.formats" :key="termIndex" class="edam-chip" data-edam-scope="format">{{ termLabel(term) }}</span><span v-if="!io.formats.length">Unknown format</span> <button type="button" class="secondary" @click="findNext(io, step.id)">Find next tool</button></p>
       <label :for="'note-' + step.id">Notes for step {{ index + 1 }}</label><textarea :id="'note-' + step.id" v-model="step.note" maxlength="1000" />
       <button type="button" class="secondary" :aria-label="`Move step ${index + 1} up`" :disabled="index === 0" @click="move(index, -1)">Move up</button>
       <button type="button" class="secondary" :aria-label="`Move step ${index + 1} down`" :disabled="index === graph.steps.length - 1" @click="move(index, 1)">Move down</button>
@@ -437,21 +433,19 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
 
 <style scoped>
 .workflow-workspace { display: grid; grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr); gap: 24px; align-items: start; }
-.workflow-finder, .workflow-draft { min-width: 0; margin: 0; padding: 24px; border: 1px solid #d6e5eb; border-radius: 10px; background: #fff; }
-.workflow-finder { background: #f4f9fb; }
+.workflow-finder, .workflow-draft { min-width: 0; margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
 .workflow-finder > h2, .workflow-draft > h2 { color: #173e4b; }
-.workflow-empty { padding: 20px; background: #f4f9fb; border: 1px dashed #a9cbd7; border-radius: 8px; color: #425f6b; }
-.workflow-operation, .workflow-io { padding: 8px 10px; border-left: 3px solid #88b3c3; background: #f5fafb; }
-.workflow-operation { border-color: #005472; background: #e5f2f7; }
+.workflow-empty { padding: 16px; background: var(--surface); border-radius: 8px; color: #425f6b; }
+.workflow-operation, .workflow-io { padding: 8px 10px; border-left: 3px solid #c7d7dd; background: #fafcfd; }
+.workflow-operation { border-color: #a4c9ae; background: var(--edam-operation); }
+.edam-chip { margin: 2px 3px; }
 .workflow-draft input[type="file"] { display: block; max-width: 100%; }
 .selectors { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
-.diagram { overflow-x: auto; max-width: 100%; }
-.diagram svg { display: block; width: 800px; max-width: none; }
 .diagram-hint { display: none; }
 @media (max-width: 840px) { .diagram-hint { display: block; } }
 @media (max-width: 850px) { .workflow-workspace { grid-template-columns: minmax(0, 1fr); } }
 section { margin-block: 2rem; }
-.candidate-list > li, .steps-list > li { background: #f5f9fc; border: 1px solid #c9dce9; border-radius: 6px; padding: 1rem; overflow-wrap: anywhere; }
+.candidate-list > li, .steps-list > li { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px; overflow-wrap: anywhere; }
 .steps-list h3 { margin-top: 0; }
 .steps-list button, .candidate-list button { margin: .2rem; }
 fieldset select { max-width: 100%; }
