@@ -23,8 +23,9 @@
 {% block content %}
 <article class="tool-detail">
   <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/t">Tools</a><span aria-hidden="true">/</span><span>{{ tool.biotoolsID }}</span></nav>
-  <header class="tool-heading">
-    <div><p class="resource-id">biotools:{{ tool.biotoolsID }}</p><h1>{{ tool.name }}</h1>
+  <header class="tool-heading panel-card">
+    <h1>{{ tool.name }}</h1>
+    <div><p class="resource-id">biotools:{{ tool.biotoolsID }}</p>
       {% if tool.description %}<p class="tool-summary">{{ tool.description|truncatechars:260 }}</p>{% endif %}
       <div class="homepage">{% external_link tool.homepage %}</div>
       <ul class="tool-summary-tags" aria-label="Key tool attributes">
@@ -40,10 +41,8 @@
     </div>
     <div class="tool-actions"><a class="openebench-link" href="https://openebench.bsc.es/tool/{{ tool.biotoolsID|lower|urlencode }}"><img src="/img/opeb_logo.gif" alt="OpenEBench" width="72"><span>Monitoring &amp; benchmarking</span></a>
       {% if not preview_mode %}<div class="record-actions">
-      {% if request.user.is_authenticated %}
-      <a href="/{{ tool.biotoolsID }}/manage">Manage record</a>
-      {% if request.canonical %}<a href="{{ edit_url }}">Edit record</a>{% elif can_edit %}<a href="{% url 'html:editor-edit' identifier=tool.biotoolsID %}">Edit record</a>{% endif %}
-      {% endif %}
+      {% if can_manage %}<a href="/{{ tool.biotoolsID }}/manage">Manage record</a>{% endif %}
+      {% if can_edit %}{% if request.canonical %}<a href="{{ edit_url }}">Edit record</a>{% else %}<a href="{% url 'html:editor-edit' identifier=tool.biotoolsID %}">Edit record</a>{% endif %}{% endif %}
       <nav aria-label="Export record"><a href="{{ api_url }}?format=json">JSON</a><a href="{{ api_url }}?format=xml">XML</a></nav>
       </div>{% endif %}
     </div>
@@ -66,11 +65,16 @@
         {% for entry in functions %}{% with function=entry.record %}<section class="function-row" aria-labelledby="function-{{ forloop.counter }}">
           <h3 id="function-{{ forloop.counter }}">Function {{ forloop.counter }}</h3>
           <div class="function-flow" role="group" aria-label="Function {{ forloop.counter }}: input to operation to output">
-            <div class="function-branch"><h4>Input</h4><div>{% include 'html/detail/io.html' with items=function.input.all data_field='inputDataTypeID' format_field='inputDataFormatID' %}</div></div>
+            <div class="function-branch"><h4>Inputs</h4>{% include 'html/detail/io.html' with items=function.input.all data_field='inputDataTypeID' format_field='inputDataFormatID' %}</div>
             <span class="function-arrow" aria-hidden="true">→</span>
-            <div class="operations"><h4>Operation</h4><svg class="operation-icon" aria-hidden="true"><use href="{% static 'html/field-icons.svg' %}#function"></use></svg><div>{% for operation in function.operation.all %}{% edam_term operation 'operationID' %}{% empty %}<span class="muted">Not specified</span>{% endfor %}</div></div>
+            <div class="operations">
+              <h4><svg class="ui-icon" aria-hidden="true"><use href="{% static 'html/field-icons.svg' %}#function"></use></svg>Operations</h4>
+              {% if function.operation.all %}<ul class="operation-list" role="list">
+                {% for operation in function.operation.all %}<li>{% edam_term operation 'operationID' %}</li>{% endfor %}
+              </ul>{% else %}<span class="muted">Not specified</span>{% endif %}
+            </div>
             <span class="function-arrow" aria-hidden="true">→</span>
-            <div class="function-branch"><h4>Output</h4><div>{% include 'html/detail/io.html' with items=function.output.all data_field='outputDataTypeID' format_field='outputDataFormatID' %}</div></div>
+            <div class="function-branch function-output"><h4>Outputs</h4>{% include 'html/detail/io.html' with items=function.output.all data_field='outputDataTypeID' format_field='outputDataFormatID' %}</div>
           </div>
           {% if entry.extra %}{% include 'html/detail/schema_fields.html' with nodes=entry.extra %}{% endif %}
         </section>{% endwith %}{% endfor %}
@@ -104,7 +108,7 @@
       </section>{% endif %}
     </div>
     <aside aria-label="Tool metadata">
-      <section class="detail-section"><h2>Tool information</h2>{% include 'html/detail/schema_fields.html' with nodes=metadata_facts %}</section>
+      <section class="detail-section tool-information"><h2>Tool information</h2>{% include 'html/detail/schema_fields.html' with nodes=metadata_facts %}</section>
       {% if ecosystem.services %}<section class="detail-section ecosystem-links"><h2>Use this tool</h2>
         {% for service, links in ecosystem.services.items %}
           {% if links|length == 1 %}<p>{{ service }}: <a href="{{ links.0.url }}" rel="noopener noreferrer">{{ links.0.label }}</a></p>

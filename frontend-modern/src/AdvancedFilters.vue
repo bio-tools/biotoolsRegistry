@@ -28,32 +28,39 @@ function selected(field: string, key: 'min' | 'max' | 'value' | 'values') {
   if ((key === 'min' || key === 'max') && (filter.type === 'range' || filter.type === 'score')) return filter[key] ?? '';
   return '';
 }
+function rangeLabel(field: string) {
+  const filter = current(field);
+  return filter && (filter.type === 'range' || filter.type === 'score') ? `${filter.min ?? 'Any'} – ${filter.max ?? 'Any'}` : '';
+}
 </script>
 
 <template>
   <fieldset class="advanced-controls" :disabled="disabled">
     <legend>Candidate filters</legend>
-    <div><label for="candidate-publication">Publication</label>
+    <details class="advanced-field" data-advanced-field="hasPublication" :open="!!current('hasPublication')"><summary>Publication <span v-if="current('hasPublication')">{{ selected('hasPublication', 'value') === 'yes' ? 'Has publication' : 'No publication' }}</span></summary><div><label for="candidate-publication">Publication</label>
       <select id="candidate-publication" :value="selected('hasPublication', 'value')" @change="publication(value($event))">
         <option value="">Any</option><option value="yes">Has publication</option><option value="no">No publication</option>
-      </select></div>
-    <div><label for="candidate-added-min">Added on or after</label>
+      </select></div></details>
+    <details class="advanced-field" data-advanced-field="added" :open="!!current('added')"><summary>Added date <span v-if="current('added')">{{ rangeLabel('added') }}</span></summary><div><label for="candidate-added-min">Added on or after</label>
       <input id="candidate-added-min" type="date" :value="selected('added', 'min')" @change="bound('added', 'min', value($event))"></div>
     <div><label for="candidate-added-max">Added on or before</label>
-      <input id="candidate-added-max" type="date" :value="selected('added', 'max')" @change="bound('added', 'max', value($event))"></div>
-    <template v-for="score in scores" :key="score.key">
+      <input id="candidate-added-max" type="date" :value="selected('added', 'max')" @change="bound('added', 'max', value($event))"></div></details>
+    <details v-for="score in scores" :key="score.key" class="advanced-field" :data-advanced-field="score.key" :open="!!current(score.key)"><summary>{{ score.label }} <span v-if="current(score.key)">{{ rangeLabel(score.key) }}</span></summary>
       <div v-for="side in (['min', 'max'] as const)" :key="side">
         <label :for="`candidate-${score.key}-${side}`">{{ score.label }} {{ side }} ({{ score.version }})</label>
         <input :id="`candidate-${score.key}-${side}`" type="number" step="any" :min="score.min" :max="score.max"
                :value="selected(score.key, side)" @change="bound(score.key, side, value($event), score)">
       </div>
-    </template>
+    </details>
   </fieldset>
 </template>
 
 <style scoped>
-.advanced-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; padding: 0; margin: 12px 0; border: 0; min-width: 0; }
+.advanced-controls { display: grid; gap: 4px; padding: 0; margin: 12px 0; border: 0; min-width: 0; }
 legend { font-size: var(--text-ui); font-weight: 600; margin-bottom: 8px; }
 label { font-size: var(--text-ui); }
+.advanced-field summary { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; cursor: pointer; font-size: var(--text-ui); }
+.advanced-field summary span { color: var(--brand); font-size: var(--text-caption); text-align: right; overflow-wrap: anywhere; }
+.advanced-field div { margin: 4px 0 8px; }
 input, select { width: 100%; min-width: 0; min-height: 40px; padding: 6px; border: 1px solid #767676; border-radius: 4px; background: white; color: #333; font-family: inherit; }
 </style>

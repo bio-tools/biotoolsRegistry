@@ -76,10 +76,15 @@ const excluded = new Set(['topic', 'topicID', 'function', 'operation', 'operatio
   'dataFormat', 'dataFormatID', 'input', 'inputID', 'inputDataFormat', 'inputDataFormatID', 'inputDataType',
   'inputDataTypeID', 'output', 'outputID', 'outputDataFormat', 'outputDataFormatID', 'outputDataType',
   'outputDataTypeID', 'credit']);
+const preferredFilters = ['toolType', 'operatingSystem', 'license', 'maturity', 'language', 'collectionID'];
 function visibleGroup(group: FilterGroup): FilterGroup | null {
   if (group.id === 'function' || group.id.startsWith('function.') || group.id === 'topic') return null;
   const children = group.children.map(visibleGroup).filter((child): child is FilterGroup => !!child);
   const keys = group.keys.filter(key => !excluded.has(key));
+  if (!group.id) keys.sort((a, b) => {
+    const rank = (key: string) => { const index = preferredFilters.indexOf(key); return index < 0 ? preferredFilters.length : index; };
+    return rank(a) - rank(b);
+  });
   return keys.length || children.length ? { ...group, keys, children } : null;
 }
 const groups = computed(() => (props.filterGroups || [{ id: '', label: 'Tool details', keys: Object.keys(props.filters), children: [] }])
@@ -149,29 +154,34 @@ function options(key: string) {
           aria-controls="workspace-filters" :aria-expanded="filtersOpen" @click="filtersOpen = !filtersOpen">{{ filtersOpen ? 'Hide filters' : 'Show filters' }}</button>
           <button class="secondary" type="button" @click="reset">Clear all</button></div>
         <div id="workspace-filters" class="filter-list">
+        <p class="search-help">Legacy tools are hidden by default. Filter {{ filters.maturity || 'Maturity' }} for Legacy to find them.</p>
         <details class="scientific-filters" open>
           <summary>EDAM annotations</summary>
-          <p>Find tools by scientific annotations. Each category is combined with the others.</p>
-          <label for="edam-match">Within each category</label>
-          <select id="edam-match" :value="state.edamMatch" @change="update({ edamMatch: text($event) as 'all' | 'any' })"><option value="all">Match all selected terms</option><option value="any">Match any selected term</option></select>
-          <label for="edam-expand">EDAM hierarchy</label>
-          <select id="edam-expand" :value="state.edamExpand" @change="update({ edamExpand: text($event) as 'exact' | 'narrower' })"><option value="exact">Selected terms only</option><option value="narrower">Include narrower terms</option></select>
-          <p v-if="scientificHelp?.input || scientificHelp?.output" class="search-help">{{ scientificHelp.input }} {{ scientificHelp.output }}</p>
-          <div v-for="item in scientific" :key="item.key" class="scientific-field">
-            <p v-if="scientificHelp?.[item.key]" class="search-help">{{ scientificHelp[item.key] }}</p>
-            <label v-if="isDirectional(item.key)" :for="`direction-${item.key}`">Match {{ item.label }} in</label>
-            <select v-if="isDirectional(item.key)" :id="`direction-${item.key}`" :value="directions[item.key]"
-              :aria-label="`Match ${item.label} in`" @change="changeDirection(item.key, text($event) as Direction)">
-              <option value="any">Input or output</option><option value="input">Input only</option><option value="output">Output only</option>
-            </select>
+          <div v-for="item in scientific" :key="item.key" class="scientific-field" :title="scientificHelp?.[item.key]">
             <EdamSelector v-if="edamEndpoint" :model-value="edamValue(currentKey(item.key), item.scope)" :endpoint="edamEndpoint"
-              :scope="item.scope" :label="item.label" multiple :max-selections="10" @update:model-value="setEdam(currentKey(item.key), $event)" />
+              :scope="item.scope" :label="item.label" :help="scientificHelp?.[item.key]" action-label="+ Add" multiple :max-selections="10" @update:model-value="setEdam(currentKey(item.key), $event)" />
           </div>
+          <details class="matching-options" :open="state.edamMatch !== 'all' || state.edamExpand !== 'exact' || directions.dataTypeID !== 'any' || directions.dataFormatID !== 'any'">
+            <summary>Matching options</summary>
+            <p v-if="scientificHelp?.input || scientificHelp?.output" class="search-help">{{ scientificHelp.input }} {{ scientificHelp.output }}</p>
+            <label for="edam-match">Within each category</label>
+            <select id="edam-match" :value="state.edamMatch" @change="update({ edamMatch: text($event) as 'all' | 'any' })"><option value="all">Match all selected terms</option><option value="any">Match any selected term</option></select>
+            <label for="edam-expand">EDAM hierarchy</label>
+            <select id="edam-expand" :value="state.edamExpand" @change="update({ edamExpand: text($event) as 'exact' | 'narrower' })"><option value="exact">Selected terms only</option><option value="narrower">Include narrower terms</option></select>
+            <template v-for="item in scientific" :key="item.key">
+              <template v-if="isDirectional(item.key)">
+                <label :for="`direction-${item.key}`">Match {{ item.label }} in</label>
+                <select :id="`direction-${item.key}`" :value="directions[item.key]" :aria-label="`Match ${item.label} in`" @change="changeDirection(item.key, text($event) as Direction)">
+                  <option value="any">Input or output</option><option value="input">Input only</option><option value="output">Output only</option>
+                </select>
+              </template>
+            </template>
+          </details>
         </details>
-        <SearchFilterGroup v-for="group in groups" :key="group.id" :group="group" :values="state.filters">
+        <SearchFilterGroup v-for="group in groups" :key="group.id" :group="group" :values="state.filters" :labels="filters">
           <template #default="{ filterKey: key }">
           <template v-if="key === 'domain' && domains.length <= 20">
-            <label :for="`filter-${key}`">{{ filters[key] }}</label>
+            <label class="visually-hidden" :for="`filter-${key}`">{{ filters[key] }}</label>
             <select :id="`filter-${key}`" :value="state.filters[key] || ''" @change="filter(key, text($event))">
               <option value="">Any domain</option>
               <option v-if="state.filters[key] && !domains.some(domain => domain.value === state.filters[key])" :value="state.filters[key]">{{ state.filters[key] }}</option>
@@ -180,7 +190,7 @@ function options(key: string) {
             <small v-if="domainError" role="alert">{{ domainError }}</small>
           </template>
           <template v-else-if="(optionsEndpoint && ['creditName', 'collectionID', 'name'].includes(key)) || key === 'domain' || options(key).length > 20">
-            <label :for="`filter-${key}`">{{ filters[key] }}</label>
+            <label class="visually-hidden" :for="`filter-${key}`">{{ filters[key] }}</label>
             <ChoiceSelector :id="`filter-${key}`" :model-value="choiceValue(key)" :label="filters[key] || key"
               :choices="key === 'domain' ? domains : options(key)" :field="key"
               :endpoint="['creditName', 'collectionID', 'name'].includes(key) ? optionsEndpoint : undefined"
@@ -188,7 +198,7 @@ function options(key: string) {
             <small v-if="key === 'domain' && domainError" role="alert">{{ domainError }}</small>
           </template>
           <template v-else>
-          <label :for="`filter-${key}`">{{ filters[key] }}</label>
+          <label class="visually-hidden" :for="`filter-${key}`">{{ filters[key] }}</label>
           <input :id="`filter-${key}`" type="text" :list="`values-${key}`" :value="state.filters[key] || ''"
                  maxlength="256" @change="filter(key, text($event))">
           <datalist :id="`values-${key}`">
@@ -288,8 +298,8 @@ function options(key: string) {
           <div v-else-if="!visibleItems.length" class="empty-results"><h2>No candidates match</h2>
             <button type="button" class="secondary" @click="setLocalFilters([])">Clear candidate filters</button></div>
           <div v-else-if="view === 'cards'" class="result-cards">
-            <article v-for="tool in visibleItems" :key="tool.id" class="tool-result" :data-tool-id="tool.id">
-              <h2><a :href="tool.url">{{ tool.name }}</a></h2>
+            <article v-for="tool in visibleItems" :key="tool.id" class="tool-result panel-card" :data-tool-id="tool.id">
+              <h2 class="panel-title"><a :href="tool.url">{{ tool.name }}</a></h2>
               <span class="tool-id">bio.tools:{{ tool.id }}</span>
               <p>{{ tool.description }}</p>
               <ul class="tool-types"><li v-for="type in tool.toolTypes" :key="type">{{ type }}</li></ul>
@@ -337,7 +347,7 @@ function options(key: string) {
 .active-constraints button { padding: 4px 10px; flex-shrink: 0; }
 .comparison-columns p { margin-block: 12px; font-size: var(--text-ui); }
 .column-settings { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px; }
-.column-settings li { padding: 12px; border: 1px solid #d5dce0; border-radius: 4px; min-width: 0; }
+.column-settings li { padding: 12px; border: 1px solid var(--line); border-radius: 4px; min-width: 0; }
 .column-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 .column-actions button { width: 36px; min-height: 36px; padding: 0; }
 .column-actions input { width: 76px; max-width: 100%; min-height: 36px; }
@@ -356,16 +366,22 @@ function options(key: string) {
 .workspace-layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: start; }
 aside { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px; min-width: 0; }
 .scientific-filters p, .filter-help { color: #526d79; font-size: var(--text-ui); line-height: 1.45; margin: 8px 0 14px; }
-.scientific-field { padding: 8px 0; }
-.scientific-field select { margin-bottom: 10px; }
-.scientific-field > label { font-size: var(--text-ui); }
-.scientific-field :deep(.edam-selector > button) { width: 100%; text-align: left; }
+.scientific-field { padding: 4px 0; }
+.scientific-field :deep(.edam-selector) { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 8px; }
+.scientific-field :deep(.edam-label) { grid-column: 1; grid-row: 1; margin: 0; font-weight: 400; }
+.scientific-field :deep(.edam-selector > button) { grid-column: 2; grid-row: 1; padding: 4px 8px; }
+.scientific-field :deep(.edam-selector > .selected-terms) { grid-column: 1 / -1; grid-row: 2; margin: 0 0 4px; }
+.scientific-field :deep(.edam-selector > [role="alert"]) { grid-column: 1 / -1; }
+.matching-options { margin-top: 8px; }
+.matching-options summary { cursor: pointer; color: var(--brand); font-size: var(--text-ui); }
+.matching-options label { display: block; margin-top: 8px; font-size: var(--text-ui); }
 .filter-list select { width: 100%; }
 .filter-list :deep(.filter-field input) { width: 100%; }
 .filter-list :deep(.filter-field small) { display: block; margin-top: 5px; line-height: 1.4; }
-.filter-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.filter-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin: -16px -16px 12px; padding: 12px 16px; border-radius: 7px 7px 0 0; color: #fff; background: var(--brand); }
 .filter-heading h2 { margin: 0; }
 .filter-heading button { padding: 4px 10px; font-size: var(--text-control); }
+.filter-heading button:focus-visible { outline-color: #fff; }
 .filter-toggle { display: none; }
 details { border-top: 1px solid #ddd; padding-block: 12px; }
 summary { cursor: pointer; font-weight: 600; overflow-wrap: anywhere; }
@@ -385,12 +401,12 @@ select { min-height: 40px; max-width: 100%; padding: 6px; background: white; col
 .view-switch input { min-height: 0; }
 .result-status { margin: 16px 0; font-size: var(--text-ui); font-weight: 600; color: #425f6b; }
 .result-cards { display: grid; gap: 16px; }
-.tool-result { border: 1px solid var(--line); border-radius: 8px; padding: 16px; background: #fff; min-width: 0; overflow-wrap: anywhere; }
-.tool-result h2 { margin-bottom: 4px; font-size: 16px; font-weight: 600; }
+.tool-result { overflow-wrap: anywhere; }
+.tool-result .edam-chip { font-size: var(--text-caption); }
 .tool-id { display: block; font-size: var(--text-caption); color: #526d79; margin-bottom: 10px; }
 .tool-result p { font-size: var(--text-body); margin-bottom: 12px; white-space: pre-line; }
 .tool-types { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 12px 0; }
-.tool-types li { background: var(--surface); color: var(--brand); padding: 4px 8px; border-radius: 4px; font-size: var(--text-caption); }
+.tool-types li { background: var(--surface); color: var(--brand); padding: 4px 8px; border: 1px solid var(--line); border-radius: 4px; font-size: var(--text-caption); }
 dl { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 4px 12px; font-size: var(--text-ui); }
 dt { font-weight: 600; } dd { margin: 0; }
 .tool-result dd { display: flex; flex-wrap: wrap; gap: 5px; }
@@ -413,6 +429,5 @@ td:nth-child(2) { min-width: 220px; }
   .filter-toggle { display: inline-block; }
   .filters-collapsed .filter-list { display: none; }
   .results-toolbar { gap: 12px 16px; }
-  .tool-result { padding: 16px; }
 }
 </style>

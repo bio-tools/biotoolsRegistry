@@ -34,6 +34,41 @@ it('defaults to keep and applies selected changes directly, without saving', asy
   expect(original.name).toBe('Curated name');
 });
 
+it('requests and selectively applies publication suggestions through the same review', async () => {
+  await wrapper.setProps({ source: 'publication', endpoint: '/pub2tools-import' });
+  expect(wrapper.get('.import-help').text()).toContain('a webpage alone is not enough');
+  expect(wrapper.get('.import-help').text()).toContain('Save or publish the draft separately');
+  fetchMock.mockResolvedValue(response());
+  await wrapper.get('#publication-identifier').setValue('https://doi.org/10.1093/nar/gkad347');
+  await wrapper.get('#publication-document').setValue('https://example.org/guide');
+  await button('Get suggestions').trigger('click'); await flushPromises();
+  const sent = JSON.parse(fetchMock.mock.calls[0][1].body);
+  expect(sent).toMatchObject({ publication: 'https://doi.org/10.1093/nar/gkad347', documentUrl: 'https://example.org/guide',
+    biotoolsID: null, schemaRevision: schema.revision });
+  expect(wrapper.text()).toContain('0 pending field changes');
+  expect(wrapper.get('select').attributes('id')).toContain('publication');
+  await wrapper.get('select').setValue('replace');
+  await button('Apply to draft').trigger('click');
+  expect(wrapper.emitted('apply')).toEqual([[{ name: 'Suggested name' }]]);
+  expect(original.name).toBe('Curated name');
+});
+
+it('explains what the GitHub import sends and how changes are saved', () => {
+  expect(wrapper.get('.import-help').text()).toContain('public GitHub repository');
+  expect(wrapper.get('.import-help').text()).toContain('save or publish the record separately');
+});
+
+it('discards publication suggestions when supporting inputs change', async () => {
+  await wrapper.setProps({ source: 'publication', endpoint: '/pub2tools-import' });
+  fetchMock.mockResolvedValue(response());
+  await wrapper.get('#publication-identifier').setValue('37144459');
+  await button('Get suggestions').trigger('click'); await flushPromises();
+  await wrapper.get('select').setValue('replace');
+  await wrapper.get('#publication-document').setValue('https://example.org/new-guide');
+  expect(wrapper.find('select').exists()).toBe(false);
+  expect(wrapper.emitted('apply')).toBeUndefined();
+});
+
 it('requires a new review when selected draft values change', async () => {
   fetchMock.mockResolvedValue(response()); await request();
   await wrapper.get('select').setValue('replace');

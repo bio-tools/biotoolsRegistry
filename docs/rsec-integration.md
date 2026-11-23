@@ -33,6 +33,13 @@ official schema currently repeats some enum values; the validator removes
 duplicate enum entries before checking it. The RSEc GitHub Actions workflow
 does not yet invoke this local test helper.
 
+A reviewable replacement workflow is in `tests/rehearsal/rsec-pr-validator.yml`.
+It validates one expected record without pushing a formatting commit, skips
+closed or outdated pull requests before checkout, and checks the head commit at
+merge time. It expects the helper at `.github/scripts/validate_ecosystem_record.py`
+in the target repository. It has local tests but has not been installed or run
+on the fork; installing workflow files requires the corresponding GitHub permission.
+
 The RSEc auto-merge workflow deletes its head branch after a successful merge.
 Rerunning that completed workflow can fail at checkout because the branch no
 longer exists. Use a new pull request to test it again.

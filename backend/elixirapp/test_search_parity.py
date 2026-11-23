@@ -117,6 +117,17 @@ class SearchParityTests(SimpleTestCase):
                 search_tools({'domain': 'partial'}, page=1, per_page=10, workspace=True)
             self.assertEqual(search.call_count, 1)
 
+    def test_legacy_exclusion_applies_only_to_default_website_search(self):
+        empty = {'hits': {'total': {'value': 0}, 'hits': []}}
+        with patch('elixir.queries.es.search', return_value=empty) as search:
+            for parameters, workspace, hidden in (({}, True, True), ({'maturity': 'Mature'}, True, True),
+                    ({'maturity': '"Legacy"'}, True, False), ({'maturity': 'legacy'}, True, False),
+                    ({}, False, False)):
+                with self.subTest(parameters=parameters, workspace=workspace):
+                    search_tools(parameters, page=1, per_page=10, workspace=workspace)
+                    excluded = search.call_args.kwargs['body']['query']['bool'].get('must_not', [])
+                    self.assertEqual({'match_phrase': {'maturity': 'Legacy'}} in excluded, hidden)
+
 
 @skipUnless(os.environ.get('BIOTOOLS_TEST_QUERY_ES') == '1', 'Requires disposable Elasticsearch')
 class LiveSearchParityTests(SimpleTestCase):
@@ -143,10 +154,27 @@ class LiveSearchParityTests(SimpleTestCase):
         cls.es.index(index=cls.index, id='parity-other', body={
             'biotoolsID': 'parity-other', 'name': 'Unrelated', 'description': 'Unrelated resource.',
             'additionDate': '2026-01-01', 'lastUpdate': '2026-01-02'})
+        cls.es.index(index=cls.index, id='parity-legacy', body={
+            'biotoolsID': 'parity-legacy', 'name': 'Legacy fixture', 'maturity': 'Legacy',
+            'additionDate': '2026-01-01', 'lastUpdate': '2026-01-02'})
+        cls.es.index(index=cls.index, id='parity-legacy-mixed', body={
+            'biotoolsID': 'parity-legacy-mixed', 'name': 'Older legacy fixture', 'maturity': 'lEgAcY',
+            'additionDate': '2026-01-01', 'lastUpdate': '2026-01-02'})
         cls.es.index(index=cls.domains, id='managed', body={'domain': 'managed', 'resources': [
             {'biotoolsID': 'PARITY-ALPHA'}, {'biotoolsID': 'parity-alpha'}]})
         cls.es.index(index=cls.domains, id='empty', body={'domain': 'empty', 'resources': []})
         cls.es.indices.refresh(index=cls.index + ',' + cls.domains)
+
+    def test_legacy_tools_are_hidden_by_default_but_searchable_explicitly(self):
+        for params, expected in (({}, {'parity-alpha', 'parity-other'}),
+                                 ({'maturity': '"Legacy"'}, {'parity-legacy', 'parity-legacy-mixed'})):
+            with self.subTest(params=params):
+                data = self.client.get('/search/data/', params, **HTML_REQUEST)
+                page = self.client.get('/search/', params, **HTML_REQUEST)
+                self.assertEqual(data.status_code, 200)
+                self.assertEqual({item['id'] for item in data.json()['items']}, expected)
+                self.assertEqual({item['id'] for item in page.context['search_result']['items']}, expected)
+        self.assertIn('parity-legacy', {item['biotoolsID'] for item in search_tools({}, page=1, per_page=10).items})
 
     def test_every_functional_filter_matches_the_public_query_engine(self):
         for key, value in FIXTURE['filters'].items():

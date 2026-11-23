@@ -74,6 +74,22 @@ test.describe('Detail and workflow presentation', () => {
       await expect(diagram.locator('.function-branch').last().locator('.io-item')).toHaveCount(5);
     }
   });
+  test('VSClust keeps each output paired with its own format', async ({ page }) => {
+    await page.goto('/vsclust');
+    const fn = page.locator('.function-row').first();
+    const inputs = fn.locator('.function-branch').first().locator('.io-item');
+    const outputs = fn.locator('.function-output .io-item');
+    await expect(inputs).toHaveCount(1);
+    await expect(inputs.first()).toContainText('Expression data');
+    await expect(outputs).toHaveCount(2);
+    for (const data of ['Clustered expression profiles', 'Q-value']) {
+      await expect(outputs.filter({ hasText: data }).locator('.formats')).toHaveText(/CSV/);
+    }
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 900 });
+      expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
+    }
+  });
   test('workflow overview shows compact annotations without source links', async ({ page }) => {
     await page.goto('/workflows');
     await expect(page.locator('.workflow-grid .workflow').first()).toBeVisible();

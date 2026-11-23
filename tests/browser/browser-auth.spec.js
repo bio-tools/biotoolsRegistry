@@ -1,4 +1,4 @@
-const { test, expect } = require('./fixtures');
+const { test, expect, openAccountMenu } = require('./fixtures');
 
 const mount = '/_migration/html';
 const username = process.env.BIOTOOLS_TEST_USERNAME;
@@ -46,13 +46,14 @@ test.describe('migrated browser authentication', () => {
       if (width === 1440) {
         const alignment = await page.locator('.site-header nav').evaluate(nav => {
           const first = nav.querySelector('a').getBoundingClientRect();
-          const logout = nav.querySelector('.nav-button').getBoundingClientRect();
-          return Math.abs(first.y + first.height / 2 - logout.y - logout.height / 2);
+          const account = nav.querySelector('.account-menu summary').getBoundingClientRect();
+          return Math.abs(first.y + first.height / 2 - account.y - account.height / 2);
         });
         expect(alignment).toBeLessThanOrEqual(2);
       }
       await page.screenshot({ path: testInfo.outputPath('account.png'), fullPage: true });
       expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
+      await openAccountMenu(page);
       const logout = page.waitForResponse(response => response.url().endsWith('/auth/logout/'));
       await page.getByRole('button', { name: 'Sign out', exact: true }).click();
       expect((await logout).headers()['hx-redirect']).toBe(mount + '/auth/login/');
@@ -85,6 +86,7 @@ test.describe('migrated browser authentication', () => {
     await page.goto(mount + '/edam/');
     await page.getByLabel('Annotation label:', { exact: true }).fill('Unsaved annotation');
     await context.clearCookies({ name: 'sessionid' });
+    await openAccountMenu(page);
     const response = page.waitForResponse(response => response.url().endsWith('/auth/logout/'));
     await page.getByRole('button', { name: 'Sign out', exact: true }).click();
     expect((await response).status()).toBe(401);
@@ -120,6 +122,7 @@ test.describe('migrated browser authentication', () => {
       await signIn(page);
       await page.getByRole('button', { name: 'Verify session', exact: true }).click();
       await expect(page.getByText('Session verified.', { exact: true })).toBeVisible();
+      await openAccountMenu(page);
       await page.getByRole('button', { name: 'Sign out', exact: true }).click();
       await expect(page.getByRole('heading', { name: 'Sign in', exact: true })).toBeVisible();
     } finally { await context.close(); }

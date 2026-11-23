@@ -12,18 +12,17 @@ const recordFields = computed(() => Object.fromEntries(visible.value.filter(([na
 </script>
 <template>
   <div id="metadata-labels" class="metadata-editor" tabindex="-1">
-    <section v-if="Object.keys(basicFields).length" class="metadata-section" aria-label="Additional details">
-      <h2>Additional details</h2>
+    <section v-if="Object.keys(basicFields).length" class="metadata-section panel-card" aria-label="Additional details">
+      <h2 class="panel-title">Additional details</h2>
       <SchemaFields :record="draft" :fields="basicFields" :path="[]" :endpoint="endpoint" :errors="errors" :disabled="disabled" />
     </section>
     <SchemaFields :record="draft" :fields="recordFields" :path="[]" :endpoint="endpoint" :errors="errors" :disabled="disabled" />
   </div>
 </template>
 <style>
-.metadata-section { padding: 16px; margin-top: 24px; min-width: 0; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
-.metadata-section h2 { font-size: var(--text-heading); margin: 0 0 16px; }
+.metadata-section { margin-top: 24px; }
 .metadata-section h3 { font-size: 16px; margin: 0; }
-.metadata-record { border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin-block: 12px; background: #fff; }
+.metadata-record { border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin-block: 12px; background: var(--surface); }
 .metadata-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; margin-block: 16px; }
 .metadata-field, .metadata-strings { min-width: 0; }
 .metadata-strings { border: 0; padding: 0; margin: 0; }

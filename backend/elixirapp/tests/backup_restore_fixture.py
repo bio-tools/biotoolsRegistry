@@ -5,7 +5,8 @@ import uuid
 from django.contrib.auth.models import User
 from django.db import connection
 
-from elixir.models import Data, Domain, DomainNameLock, EditPermission, Format, Function, Input, Operation, Resource, WorkflowDesign
+from elixir.models import Data, Domain, DomainNameLock, EditPermission, Format, Function, Input, Operation, Resource, ResourceIdentifier, WorkflowDesign
+from elixir.serializers import ResourceSerializer
 
 
 mode = os.environ.get('BIOTOOLS_BACKUP_FIXTURE')
@@ -23,6 +24,11 @@ if mode == 'seed':
     resource = Resource.objects.create(biotoolsID='backup-rehearsal', biotoolsCURIE='biotools:backup-rehearsal',
         name='Backup rehearsal', homepage='https://example.invalid/', description='Disposable backup fixture.',
         owner=owner, editPermission=permission)
+    Resource.objects.create(biotoolsID='backup-retired', biotoolsCURIE='biotools:backup-retired',
+        name='Retired fixture', homepage='https://example.invalid/', description='Deleted backup fixture.',
+        owner=owner, editPermission=permission, visibility=0)
+    ResourceIdentifier.objects.bulk_create([ResourceIdentifier(identifier=value) for value in
+                                           ('backup-rehearsal', 'backup-retired', 'backup-purged')])
     function = Function.objects.create(resource=resource)
     Operation.objects.create(function=function, uri='http://edamontology.org/operation_0292')
     item = Input.objects.create(function=function, data=Data.objects.create(uri='http://edamontology.org/data_0863'))
@@ -35,6 +41,12 @@ if mode == 'seed':
 else:
     owner = User.objects.get(username='backup-rehearsal-owner')
     resource = Resource.objects.get(biotoolsID='backup-rehearsal', owner=owner)
+    assert Resource.objects.filter(biotoolsID='backup-retired', visibility=0).exists()
+    assert set(ResourceIdentifier.objects.values_list('identifier', flat=True)) == {
+        'backup-rehearsal', 'backup-retired', 'backup-purged'}
+    attempted_reuse = ResourceSerializer(data={'biotoolsID': 'BACKUP-PURGED', 'name': 'Cannot reuse',
+        'description': 'A new record.', 'homepage': 'https://example.org/'})
+    assert not attempted_reuse.is_valid() and 'biotoolsID' in attempted_reuse.errors
     assert resource.function.get().operation.get().uri == 'http://edamontology.org/operation_0292'
     item = resource.function.get().input.get()
     assert item.data.uri == 'http://edamontology.org/data_0863'

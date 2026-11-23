@@ -13,7 +13,7 @@ import { backendErrorsToEditor, editorShapeError, editorToResource, editorToSubm
   resourceToEditor, supportedSchema, type EditorError, type Json, type Resource, type ResourceSchema } from './resource-editor';
 
 type Config = { resource: Resource; revision: string | null; endpoint: string; validateEndpoint?: string; previewEndpoint?: string;
-  schema?: ResourceSchema | null; schemaRevision?: string | null; bridgeEndpoint?: string | null;
+  schema?: ResourceSchema | null; schemaRevision?: string | null; bridgeEndpoint?: string | null; publicationEndpoint?: string | null;
   editUrl: string | null; detailUrl: string | null; toolTypes: string[]; edamEndpoint: string; draftsEndpoint?: string; metadataOptions?: Record<string, string[]>; canManagePermissions?: boolean; no_changes?: boolean };
 const props = defineProps<Config>();
 const config = ref<Config>({ ...props });
@@ -270,17 +270,20 @@ async function save(validateOnly = false) {
 
 <template>
   <div ref="root" class="resource-editor">
-    <div class="editor-heading">
-      <div><h1>{{ config.revision ? 'Edit tool' : 'Register a tool' }}</h1>
-        <p v-if="config.revision" class="editor-id">biotools:{{ draft.biotoolsID }}</p></div>
-      <a v-if="config.detailUrl" :href="config.detailUrl">View record</a>
-    </div>
-    <section v-if="config.draftsEndpoint" class="editor-card private-drafts" aria-label="Private drafts">
-      <h2>Private drafts</h2>
+    <header class="editor-heading panel-card">
+      <h1 class="panel-title">{{ config.revision ? 'Edit tool' : 'Register a tool' }}</h1>
+      <div class="editor-heading-body">
+        <p v-if="config.revision" class="editor-id">biotools:{{ draft.biotoolsID }}</p>
+        <p v-else class="editor-intro">Describe your software and its scientific functions.</p>
+        <a v-if="config.detailUrl" :href="config.detailUrl">View record</a>
+      </div>
+    </header>
+    <section v-if="config.draftsEndpoint" class="editor-card private-drafts panel-card" aria-label="Private drafts">
+      <h2 class="panel-title"><UiIcon name="lock" />Private drafts</h2>
       <p>Save unfinished work privately. A draft becomes public only when you publish the record.</p>
-      <button type="button" class="secondary" :disabled="pending || privateDraftPending || !!rawError" @click="savePrivateDraft">{{ privateDraft ? 'Update private draft' : 'Save private draft' }}</button>
-      <span role="status">{{ privateDraftStatus }}</span><p v-if="privateDraftError" role="alert">{{ privateDraftError }}</p>
-      <details v-if="privateDrafts.length"><summary>Open a private draft</summary>
+      <div class="private-drafts-actions"><button type="button" class="secondary" :disabled="pending || privateDraftPending || !!rawError" @click="savePrivateDraft">{{ privateDraft ? 'Update private draft' : 'Save private draft' }}</button>
+        <span role="status">{{ privateDraftStatus }}</span><p v-if="privateDraftError" role="alert">{{ privateDraftError }}</p></div>
+      <details v-if="privateDrafts.length" class="private-drafts-list"><summary>Open a private draft</summary>
         <ul><li v-for="item in privateDrafts" :key="item.id"><span>{{ item.name }}</span>
           <button type="button" class="secondary" :disabled="privateDraftPending" @click="openPrivateDraft(item)">Open</button>
           <button type="button" class="secondary" :disabled="privateDraftPending" @click="deletePrivateDraft(item)">Delete</button></li></ul>
@@ -311,12 +314,18 @@ async function save(validateOnly = false) {
       <ul><li v-for="(blocker, index) in snapshot.blockers" :key="index">{{ blocker.path[0] }}: {{ blocker.reason === 'removed-choice' ? 'A stored choice is no longer allowed. Correct it before saving; it remains in your draft.' : 'An unsupported field must be retained in the exported draft.' }}</li></ul>
     </div>
     <p v-if="!schemaReady" role="alert" class="message error">Schema metadata is unavailable or unsupported. Editing is disabled; your record can still be exported.</p>
-    <GithubImport v-if="schemaReady && config.schema && config.bridgeEndpoint" :endpoint="config.bridgeEndpoint" :schema="config.schema"
+    <section v-if="schemaReady" class="editor-import-section panel-card" aria-labelledby="editor-import-title">
+      <h2 id="editor-import-title" class="panel-title">Import suggestions</h2>
+      <p>Use a repository or publication to suggest metadata for this draft.</p>
+    <div class="editor-imports"><GithubImport v-if="schemaReady && config.schema && config.bridgeEndpoint" :endpoint="config.bridgeEndpoint" :schema="config.schema"
       :current="editorToResource(draft)" :identifier="config.revision ? String(draft.biotoolsID) : null" :disabled="unavailable"
       @apply="applySuggestions(draft, $event)" />
     <p v-else-if="schemaReady">GitHub import is unavailable. You can enter metadata manually.</p>
-    <details class="editor-json-panel">
-      <summary>JSON record <span class="editor-help" tabindex="0" role="img" aria-label="The current record in JSON format. Changes in the form and JSON are synchronized; save to publish them." title="The current record in JSON format. Changes in the form and JSON are synchronized; save to publish them.">ⓘ</span></summary>
+    <GithubImport v-if="schemaReady && config.schema && config.publicationEndpoint" source="publication" :endpoint="config.publicationEndpoint" :schema="config.schema"
+      :current="editorToResource(draft)" :identifier="config.revision ? String(draft.biotoolsID) : null" :disabled="unavailable"
+      @apply="applySuggestions(draft, $event)" /></div></section>
+    <details class="editor-json-panel panel-card">
+      <summary class="panel-title">JSON record <span class="editor-help" tabindex="0" role="img" aria-label="The current record in JSON format. Changes in the form and JSON are synchronized; save to publish them." title="The current record in JSON format. Changes in the form and JSON are synchronized; save to publish them.">ⓘ</span></summary>
       <p>This is the current record in JSON format. Form and JSON changes update each other. Save changes to publish them.</p>
       <label for="editor-json">Resource JSON</label><textarea id="editor-json" :value="raw" rows="14" :disabled="pending" :readonly="!schemaReady" spellcheck="false" @input="updateJSON" />
     </details>
@@ -324,15 +333,18 @@ async function save(validateOnly = false) {
       <button type="button" class="secondary" @click="restoreJSON">Restore JSON from form</button></div>
     <p v-if="validationMessage" role="status" aria-label="Validation status">{{ validationMessage }}</p>
     <form @submit.prevent="save()" :aria-busy="pending">
-      <nav class="editor-sections" aria-label="Editor sections">
-        <span class="editor-sections-title">Sections</span>
-        <a href="#editor-name"><UiIcon name="object" />Basic information</a><a href="#metadata-labels"><UiIcon name="topic" />Labels</a>
-        <a v-for="[name, field] in sections" :key="name" :href="`#nested-${name}`"><UiIcon :name="sectionIcon(field.path, field.kind)" />{{ field.label }}</a>
-        <a href="#nested-editPermission"><UiIcon name="lock" />Editing permissions</a>
+      <nav class="editor-sections panel-card" aria-label="Editor sections">
+        <h2 class="panel-title">Sections</h2>
+        <div class="editor-section-links">
+          <a href="#editor-name"><UiIcon name="object" />Basic information</a><a href="#metadata-labels"><UiIcon name="topic" />Labels</a>
+          <a v-for="[name, field] in sections" :key="name" :href="`#nested-${name}`"><UiIcon :name="sectionIcon(field.path, field.kind)" />{{ field.label }}</a>
+          <a href="#nested-editPermission"><UiIcon name="lock" />Editing permissions</a>
+        </div>
       </nav>
       <div class="editor-content">
-      <section class="editor-card"><fieldset :disabled="unavailable" class="editor-fields">
-        <legend>Basic information</legend>
+      <section class="editor-card panel-card" aria-labelledby="editor-basic-title">
+        <h2 id="editor-basic-title" class="panel-title"><UiIcon name="object" />Basic information</h2>
+        <fieldset :disabled="unavailable" class="editor-fields" aria-labelledby="editor-basic-title">
         <div class="editor-pair">
           <div><label for="editor-name">{{ fields.name?.label || 'Name' }}</label><span v-if="fields.name?.required" class="required-label" aria-hidden="true">(required)</span>
             <input id="editor-name" v-model="draft.name" type="text" :required="fields.name?.required" :maxlength="fields.name?.maxLength" :aria-invalid="fieldErrors('name').length > 0" aria-describedby="error-name">
@@ -349,7 +361,7 @@ async function save(validateOnly = false) {
         <p id="error-description" class="editor-field-error">{{ fieldErrors('description').join(' ') }}</p>
         <fieldset id="editor-toolType" class="editor-types" tabindex="-1" aria-describedby="error-toolType">
           <legend>{{ fields.toolType?.label || 'Tool type' }}</legend>
-          <div v-for="type in types" :key="type.value" class="editor-type-choice">
+          <div v-for="type in types" :key="type.value" class="editor-type-choice" :class="{ selected: selectedTypes.includes(type.value) }">
             <label><input type="checkbox" :value="type.value" :checked="selectedTypes.includes(type.value)" @change="changeType(type.value, ($event.target as HTMLInputElement).checked)">{{ type.label }}</label>
             <details v-if="type.help" class="editor-type-help"><summary :aria-label="`About ${type.label}`">ⓘ</summary><p>{{ type.help }}</p></details>
           </div>
@@ -373,43 +385,57 @@ async function save(validateOnly = false) {
 
 <style scoped>
 .resource-editor { max-width: 1200px; }
-.editor-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 24px; }
+.editor-heading { margin-bottom: 24px; }
+.editor-heading-body { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .editor-heading a { white-space: nowrap; }
-.editor-preview { margin-bottom: 20px; }
+.editor-intro { color: #526d79; margin: 0; }
+.editor-preview { margin-bottom: 16px; }
 .preview-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
 .editor-preview iframe { width: 100%; height: 75vh; min-height: 500px; border: 1px solid #dce8ed; border-radius: 8px; background: white; }
 .editor-id { color: #575757; margin: 0; overflow-wrap: anywhere; }
-.editor-card, .editor-json-panel { min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
-.private-drafts { margin-bottom: 20px; }
-.private-drafts p { margin-bottom: 12px; }
+.private-drafts { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px 24px; margin-bottom: 16px; }
+.private-drafts > h2 { grid-column: 1 / -1; margin-bottom: 0; }
+.private-drafts p { margin: 0; color: #526d79; }
+.private-drafts-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.private-drafts-actions p { color: #a94442; }
+.private-drafts-list { grid-column: 1 / -1; }
 .private-drafts ul { padding: 0; list-style: none; }
 .private-drafts li { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-block: 8px; }
+.editor-imports { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.editor-import-section { margin-bottom: 16px; }
+.editor-import-section > p { margin: 0 0 12px; color: #526d79; }
+.editor-imports :deep(.github-import) { margin: 0; }
+.editor-imports :deep(.github-import[open]) { grid-column: 1 / -1; }
+.editor-imports > p { margin: 0; align-self: center; }
 .editor-json-panel { margin-bottom: 20px; }
-.editor-json-panel summary { color: #005472; font-weight: 700; }
+.editor-json-panel > summary { font-weight: 600; }
+.editor-json-panel:not([open]) { padding-bottom: 0; }
+.editor-json-panel:not([open]) > summary { margin-bottom: 0; border-radius: 7px; }
+.editor-json-panel > summary:focus-visible { outline-offset: -4px; outline-color: #fff; }
 .editor-json-panel > p { margin: 12px 0 16px; color: #526d79; }
 .editor-json-panel textarea { min-height: 240px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: var(--text-ui); }
-.editor-help { color: #526d79; margin-left: 4px; cursor: help; }
+.editor-help { margin-left: 4px; cursor: help; }
 .json-error { margin-top: 12px; padding: 12px; border-left: 3px solid #a94442; background: #fff4f2; color: #842b29; }
 .json-error p { margin-bottom: 10px; }
 .resource-editor form { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px; align-items: start; }
-.editor-sections { position: sticky; top: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 12px; margin: 0; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-size: var(--text-ui); }
+.editor-sections { position: sticky; top: 16px; display: block; margin: 0; font-size: var(--text-ui); }
+.editor-section-links { display: flex; flex-direction: column; }
 .editor-sections a { display: flex; align-items: center; gap: 8px; padding: 6px 8px; text-decoration: none; border-radius: 4px; }
 .editor-sections a:hover { background: #e5f1f5; text-decoration: underline; }
-.editor-sections-title { padding: 6px 8px; color: #425f6b; font-weight: 700; }
 .editor-content { min-width: 0; }
 .required-label { color: #526d79; font-size: var(--text-caption); font-weight: 400; }
 .editor-fields label:has(+ .required-label) { display: inline-block; margin-right: 4px; }
 .editor-fields { border: 0; padding: 0; margin: 0; min-width: 0; }
-.editor-fields > legend { font-size: var(--text-heading); font-weight: 600; margin-bottom: 16px; padding: 0; }
 .editor-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .editor-pair > div { min-width: 0; }
 textarea { width: 100%; min-height: 160px; resize: vertical; padding: 12px; border: 1px solid #767676; border-radius: 4px; font: inherit; }
 input[readonly] { background: #f4f4f4; color: #575757; }
 .editor-field-error { color: #a94442; min-height: 8px; margin: 4px 0 20px; overflow-wrap: anywhere; }
-.editor-types { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; min-width: 0; }
+.editor-types { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; min-width: 0; }
 .editor-types legend { font-weight: 600; margin-bottom: 8px; padding: 0; }
 .editor-types label { display: flex; align-items: center; gap: 10px; min-height: 36px; font-weight: 400; margin: 0; }
-.editor-type-choice { display: flex; align-items: flex-start; gap: 8px; }
+.editor-type-choice { display: flex; align-items: flex-start; gap: 8px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; }
+.editor-type-choice.selected { border-color: var(--brand); background: var(--selection); color: var(--brand-dark); }
 .editor-type-help { position: relative; }
 .editor-type-help summary { color: #286090; list-style: none; min-height: 36px; }
 .editor-type-help p { position: absolute; z-index: 2; width: min(320px, 70vw); margin: 0; padding: 12px; border: 1px solid #d6e2e7; border-radius: 6px; background: white; box-shadow: 0 4px 12px #173e4b22; }
@@ -424,12 +450,12 @@ input[readonly] { background: #f4f4f4; color: #575757; }
 }
 @media (max-width: 760px) {
   .resource-editor form { grid-template-columns: minmax(0, 1fr); gap: 20px; }
-  .editor-sections { position: static; flex-direction: row; flex-wrap: wrap; gap: 4px; }
-  .editor-sections-title { width: 100%; }
+  .editor-sections { position: static; }
+  .editor-section-links { flex-direction: row; flex-wrap: wrap; gap: 4px; }
 }
 @media (max-width: 600px) {
+  .private-drafts, .editor-imports { grid-template-columns: minmax(0, 1fr); }
   .editor-pair { grid-template-columns: 1fr; gap: 0; }
   .editor-types { grid-template-columns: 1fr; }
-  .editor-heading { flex-wrap: wrap; }
 }
 </style>

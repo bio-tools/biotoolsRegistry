@@ -52,29 +52,45 @@ test.describe('Complete native search', () => {
           } else {
             await page.locator('.native-filters > summary').click();
           }
-          const functions = page.locator('[data-filter-group="function"]');
-          const inputs = page.locator('[data-filter-group="function.input"]');
-          const data = page.locator('[data-filter-group="function.input.data"]');
-          for (const group of [functions, inputs, data]) await expect(group).toHaveAttribute('open', '');
-          const field = page.locator(mode === 'enhanced' ? '#filter-inputDataTypeID' : '#native-inputDataTypeID');
-          await expect(field).toBeVisible();
-          await expect(field).toHaveValue('"data_2044"');
-          await inputs.locator(':scope > summary').focus();
-          await page.keyboard.press('Enter');
-          await expect(field).toBeHidden();
-          await page.keyboard.press('Enter');
-          await expect(field).toBeVisible();
-          await field.fill('"data_2045"');
-          if (mode === 'enhanced') await field.press('Tab');
-          else await page.getByRole('button', { name: 'Apply filters', exact: true }).click();
-          await expect(page).toHaveURL(url => url.searchParams.get('inputDataTypeID') === '"data_2045"');
+          if (mode === 'enhanced') {
+            await expect(page.getByLabel('Match EDAM data type in')).toHaveValue('input');
+            await expect(page.getByRole('list', { name: 'EDAM data type' })).toContainText('Sequence');
+            await page.getByRole('button', { name: 'Choose edam data type', exact: true }).click();
+            const dialog = page.getByRole('dialog');
+            await dialog.getByRole('button', { name: 'Remove Sequence' }).click();
+            const term = dialog.getByRole('combobox', { name: 'Find data terms' });
+            await term.fill('data_0842');
+            await dialog.getByRole('option').first().click();
+            await dialog.getByRole('button', { name: 'Apply selection' }).click();
+          } else {
+            const functions = page.locator('[data-filter-group="function"]');
+            const inputs = page.locator('[data-filter-group="function.input"]');
+            const data = page.locator('[data-filter-group="function.input.data"]');
+            for (const group of [functions, inputs, data]) await expect(group).toHaveAttribute('open', '');
+            const field = page.locator('#native-inputDataTypeID');
+            await expect(field).toBeVisible();
+            await expect(field).toHaveValue('"data_2044"');
+            await inputs.locator(':scope > summary').focus();
+            await page.keyboard.press('Enter');
+            await expect(field).toBeHidden();
+            await page.keyboard.press('Enter');
+            await expect(field).toBeVisible();
+            await field.fill('"data_0842"');
+            await page.getByRole('button', { name: 'Apply filters', exact: true }).click();
+          }
+          await expect(page).toHaveURL(url => url.searchParams.get('inputDataTypeID') === '"data_0842"');
           await page.reload();
           if (mode === 'enhanced') {
             await expect(page.locator('.search-workspace')).toBeVisible();
             if (width < 760) await page.getByRole('button', { name: 'Show filters' }).click();
           } else await page.locator('.native-filters > summary').click();
-          await expect(field).toHaveValue('"data_2045"');
-          await expect(field).toBeVisible();
+          if (mode === 'enhanced') {
+            await expect(page.getByLabel('Match EDAM data type in')).toHaveValue('input');
+            await expect(page.getByRole('list', { name: 'EDAM data type' })).toBeVisible();
+          } else {
+            await expect(page.locator('#native-inputDataTypeID')).toHaveValue('"data_0842"');
+            await expect(page.locator('#native-inputDataTypeID')).toBeVisible();
+          }
           expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
           await page.screenshot({ path: info.outputPath(`nested-filters-${mode}-${width}.png`), fullPage: true });
           await page.goto('/t?domain=missing-search-parity-domain');

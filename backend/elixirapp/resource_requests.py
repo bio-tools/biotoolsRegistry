@@ -3,20 +3,29 @@ import logging
 from types import SimpleNamespace
 
 from django import forms
+from django.core.validators import URLValidator
 from django.contrib import messages
 from django.db import transaction
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods, require_POST
 from rest_framework.exceptions import APIException
 
 from elixir.models import Resource
-from elixir.view.resource import ResourceRequestView, ProcessResourceRequest
+from elixir.view.resource import ResourceRequestView, ProcessResourceRequest, WithdrawResourceRequest
 from elixirapp.browser_auth import browser_login_required
 
 
 class RequestForm(forms.Form):
     type = forms.ChoiceField(label='Request', choices=(('editing', 'Editing rights'), ('ownership', 'Ownership')),
-                            widget=forms.RadioSelect)
+                            widget=forms.RadioSelect, initial='editing')
+    relationship = forms.CharField(label='Your relationship to the tool', max_length=200,
+                                   help_text='For example: developer, maintainer or user.')
+    reason = forms.CharField(label='Why do you need access?', max_length=2000,
+                             widget=forms.Textarea(attrs={'rows': 3}))
+    supporting_url = forms.URLField(label='Supporting link (optional)', required=False, max_length=500,
+                                    validators=[URLValidator(schemes=['http', 'https'])],
+                                    help_text='For example: a project page, repository profile or publication.')
 
 
 def invoke(view_class, request, method, data=None):
@@ -37,7 +46,7 @@ def create(request, identifier):
         try:
             with transaction.atomic():
                 response = invoke(ResourceRequestView, request, 'put',
-                                  {'resourceId': resource.biotoolsID, 'type': form.cleaned_data['type']})
+                                  {'resourceId': resource.biotoolsID, **form.cleaned_data})
                 if response.status_code >= 400:
                     form.add_error(None, str(response.data))
                 else:
@@ -74,4 +83,18 @@ def conclude(request):
     except Exception:
         logging.getLogger(__name__).exception('Resource request could not be concluded')
         messages.error(request, 'Request could not be confirmed. Check its status before retrying.')
+    return redirect('html:requests')
+
+
+@browser_login_required
+@require_POST
+def withdraw(request):
+    try:
+        response = invoke(WithdrawResourceRequest, request, 'post', request.POST.dict())
+        if response.status_code >= 400:
+            messages.error(request, str(response.data.get('detail', response.data)))
+        else:
+            messages.success(request, 'Request withdrawn.')
+    except (APIException, Http404):
+        messages.error(request, 'Request could not be withdrawn. Check its status and try again.')
     return redirect('html:requests')

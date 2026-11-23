@@ -3,6 +3,8 @@ from elixir.tool_helper import ToolHelper
 from .constants import VALID, INVALID, LEFT_OUT_PATHS
 from elixirapp.tests.test_baseobject import BaseTestObject
 from rest_framework import status
+from django.db import transaction
+from unittest.mock import patch
 import json
 
 
@@ -15,6 +17,7 @@ class TestGenerator(BaseTestObject):
         """
         Description:    Method for automized testing based on restrictions parsed from the schema.
         """
+        self.enterContext(patch('elixir.signals.update_publication'))
         self.build()
 
         self._test_string_or_object(self.value_factory.string_values)
@@ -124,7 +127,7 @@ class TestGenerator(BaseTestObject):
     # TEST POST --------------------------------------------------------------------------------------------------------
     def __test_post_valid_tool(self, valid_tool):
         for url in self.put_post_urls:
-            with self.subTest(url=url):
+            with self.subTest(url=url), transaction.atomic():
                 tool = json.loads(json.dumps(valid_tool))
                 response = self.post_tool(url, tool)
                 self.assertEqual(
@@ -133,6 +136,8 @@ class TestGenerator(BaseTestObject):
                     msg=f"Tool creation failed for URL {url}. Response code: {response.status_code}, body: {response.content}"
                 )
                 self.remove_tool(url, tool['biotoolsID'])
+                # Every generated case is independent; published IDs are not reusable.
+                transaction.set_rollback(True)
 
     def __test_post_invalid_tool(self, invalid_tool):
         for url in self.put_post_urls:

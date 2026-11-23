@@ -15,11 +15,15 @@ test.describe('resource metadata editor', () => {
       await page.getByLabel('bio.tools ID', { exact: true }).fill(id);
       await page.getByLabel('Homepage', { exact: true }).fill('https://example.org/metadata');
       await page.getByLabel('Description', { exact: true }).fill('A disposable metadata editor browser regression resource.');
-      await page.getByLabel('License', { exact: true }).selectOption('MIT');
+      await page.getByLabel('License', { exact: true }).click();
+      await page.getByLabel('Search license', { exact: true }).fill('MIT');
+      await page.getByRole('dialog').getByRole('button', { name: 'MIT', exact: true }).click();
       await page.getByRole('button', { name: 'Add version', exact: true }).click();
       await page.getByLabel('Version 1', { exact: true }).fill('2.0');
       await page.getByRole('button', { name: 'Add language', exact: true }).click();
-      await page.getByLabel('Language 1', { exact: true }).selectOption('Python');
+      await page.getByLabel('Language 1', { exact: true }).click();
+      await page.getByLabel('Search language 1', { exact: true }).fill('Python');
+      await page.getByRole('dialog').getByRole('button', { name: 'Python', exact: true }).click();
       await page.getByRole('button', { name: 'Add credit', exact: true }).click();
       const credit = page.locator('#nested-credit');
       await credit.getByLabel('Credit name', { exact: true }).fill('Metadata Contributor');
@@ -35,7 +39,7 @@ test.describe('resource metadata editor', () => {
       await page.locator('#nested-publication').getByLabel('DOI', { exact: true }).fill('invalid-doi');
       async function save(status) {
         const response = page.waitForResponse(r => r.url().endsWith('/save/'));
-        await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+        await page.getByRole('button', { name: /^(Save changes|Publish tool)$/ }).click();
         expect((await response).status()).toBe(status);
       }
       await save(400);
@@ -54,14 +58,15 @@ test.describe('resource metadata editor', () => {
       expect(record.link[0].type).toEqual(['Repository']);
       expect(record.credit[0]).toMatchObject({ name: 'Metadata Contributor', email: 'contributor@example.org', typeRole: ['Developer'] });
       await page.reload();
-      await expect(page.getByLabel('License', { exact: true })).toHaveValue('MIT');
+      await expect(page.getByLabel('License', { exact: true })).toHaveText('MIT');
       await expect(credit.getByLabel('Email', { exact: true })).toHaveValue('contributor@example.org');
       expect(await page.locator('html').evaluate(el => el.scrollWidth <= innerWidth)).toBe(true);
       const ids = await page.locator('[id]').evaluateAll(nodes => nodes.map(node => node.id));
       expect(new Set(ids).size).toBe(ids.length);
       await page.locator('#metadata-labels').screenshot({ path: info.outputPath('metadata-labels.png') });
       await credit.screenshot({ path: info.outputPath('metadata-credit.png') });
-      await page.getByLabel('License', { exact: true }).selectOption('');
+      await page.getByLabel('License', { exact: true }).click();
+      await page.getByRole('dialog').getByRole('button', { name: 'Clear selection', exact: true }).click();
       await save(200);
       record = await (await request.get('/api/t/' + id + '?format=json')).json();
       expect(record.license).toBeNull();

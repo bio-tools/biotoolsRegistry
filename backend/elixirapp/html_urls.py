@@ -15,6 +15,7 @@ page_patterns = [
         path('api/<path:api_path>', browser_api.dispatch, name='browser-api'),
         path('requests/', resource_requests.inbox, name='requests'),
         path('requests/conclude/', resource_requests.conclude, name='request-conclude'),
+        path('requests/withdraw/', resource_requests.withdraw, name='request-withdraw'),
         re_path(r'^requests/tool/(?P<identifier>[A-Za-z0-9.~_-]{1,100})/$', resource_requests.create, name='request-create'),
         path('editor/new/', resource_editor.page, name='editor-new'),
         path('editor/drafts/', resource_drafts.collection, name='resource-drafts'),

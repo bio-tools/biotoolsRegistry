@@ -1,4 +1,4 @@
-const { test, expect } = require('./fixtures');
+const { test, expect, openFilterField } = require('./fixtures');
 
 test.skip(process.env.BIOTOOLS_TEST_CUTOVER !== '1', 'Requires the canonical search and detail fixtures.');
 
@@ -24,6 +24,7 @@ test('home suggestions include active schema choices', async ({ page }) => {
 
 test('EDAM hierarchy and match controls update results and URL', async ({ page }) => {
   await page.goto('/t?' + new URLSearchParams({ topicID: '"topic_0003"' }));
+  await page.locator('.matching-options > summary').click();
   await page.getByLabel('EDAM hierarchy').selectOption('narrower');
   await expect(page.locator('.tool-result[data-tool-id="detail-demo"]')).toBeVisible();
   await page.getByLabel('Within each category').selectOption('any');
@@ -46,6 +47,7 @@ test('applying a tool-type filter updates results and URL', async ({ page, tool 
   await page.goto('/t?' + new URLSearchParams({ q: tool.query }));
   await expectResults(page, tool, { q: tool.query });
   await page.locator('[data-filter-group=""] > summary').click();
+  await openFilterField(page, 'toolType');
   await page.getByRole('button', { name: new RegExp('^' + tool.toolType[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) }).click();
   await expectResults(page, tool, { q: tool.query, toolType: `"${tool.toolType[0]}"` });
 });

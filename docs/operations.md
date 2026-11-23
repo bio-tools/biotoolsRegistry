@@ -6,11 +6,11 @@ migrated or verified. The remaining tasks are in the [readiness checklist](../op
 
 ## Local evidence
 
-- The cleaned backend suite ran 351 tests; ten opt-in Elasticsearch checks passed
-  separately. Frontend type checking and 118 unit tests passed. Browser scenarios
-  passed across the main run, corrected-test reruns and separate configuration
-  runs. The initial main run had two editor test timing failures; both passed
-  after the tests were corrected.
+- The isolated backend suite passed 433 tests, including live Elasticsearch
+  checks. Frontend type checking, the production build and 146 unit tests passed.
+  All 120 enabled browser scenarios passed across the main run and corrected
+  reruns; 47 environment-specific scenarios were skipped. Public-page keyboard,
+  label and viewport checks also passed.
 - An isolated same-build rehearsal added, removed and restored schema fields and
   vocabulary terms through Apache and Caddy. The same frontend bundle was used
   throughout, and edited values persisted.
@@ -20,6 +20,18 @@ migrated or verified. The remaining tasks are in the [readiness checklist](../op
   These are local in-process results, not production capacity or an SLA.
 - A disposable MySQL/media backup and prior-image restore rehearsal passed. It
   did not verify the actual production backup or identify the deployed image.
+- A separate database restore retained active, deleted and physically purged ID
+  reservations and rejected reuse. All 30,790 distinct IDs in the local 2024
+  SQL snapshot are reserved in the preview. The newer RSEc snapshot refers to
+  1,313 additional IDs absent from that preview; reconcile these against an
+  authoritative registry history before relying on the preview's reservations.
+- A synthetic record was registered in the isolated editor, queued, retried after
+  a GitHub server error and exported to a test-only pull request on the fork.
+  The prepared schema-validating workflow is not installed there.
+- A 20-sample read-only local preview baseline found p95 response times of 25–54
+  ms for home and search, 731 ms for tool detail and 2.54 s for statistics.
+  These measurements were taken during browser testing, not under a defined
+  production workload.
 
 ## Before release
 

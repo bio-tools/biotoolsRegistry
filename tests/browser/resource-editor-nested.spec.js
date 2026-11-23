@@ -35,7 +35,7 @@ async function choose(page, container, name, identifier) {
 }
 async function save(page, code = 200) {
   const response = page.waitForResponse(response => response.request().method() === 'POST' && response.url().endsWith('/save/'));
-  await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+  await page.getByRole('button', { name: /^(Save changes|Publish tool)$/ }).click();
   const result = await response;
   expect(result.status()).toBe(code);
   if (code < 400) await expect(page.getByRole('status', { name: 'Save status' })).toHaveText('Changes saved.');

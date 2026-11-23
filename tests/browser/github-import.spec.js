@@ -38,7 +38,7 @@ test.describe('GitHub metadata import', () => {
       await expect(page.getByLabel('bio.tools ID', { exact: true })).toHaveValue(id);
       expect((await request.get('/api/t/' + id + '?format=json')).status()).toBe(404);
       const saved = page.waitForResponse(r => r.request().method() === 'POST' && r.url().endsWith('/save/'));
-      await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+      await page.getByRole('button', { name: /^(Save changes|Publish tool)$/ }).click();
       expect((await saved).status()).toBe(201);
       await page.goto(editorUrl(id));
       await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toHaveValue('GitHub suggested tool');

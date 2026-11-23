@@ -9,6 +9,7 @@
     <label for="native-search">Search bio.tools</label>
     <div class="search-controls"><input id="native-search" type="search" name="q" maxlength="256" value="{{ search_values.q }}"><button type="submit">Search</button></div>
     <details class="native-filters"><summary>Filters</summary>
+      <p>Legacy tools are hidden by default. Filter Maturity for Legacy to find them.</p>
       {% for group in search_groups %}{% include 'html/search_filter_group.html' with group=group only %}{% endfor %}
       <label for="native-advanced">Advanced filters</label>
       <textarea id="native-advanced" name="advanced" rows="3">{{ search_values.advanced|default:'[]' }}</textarea>
@@ -36,8 +37,8 @@
     </div>
     {% else %}
     {% for tool in search_result.items %}
-    <article class="native-tool-result" data-tool-id="{{ tool.id }}">
-      <h2><a href="{{ tool.url }}">{{ tool.name }}</a></h2><small>bio.tools:{{ tool.id }}</small>
+    <article class="native-tool-result panel-card" data-tool-id="{{ tool.id }}">
+      <h2 class="panel-title"><a href="{{ tool.url }}">{{ tool.name }}</a></h2><small>bio.tools:{{ tool.id }}</small>
       <p>{{ tool.description }}</p><p>{{ tool.toolTypes|join:', ' }}</p>
       {% if tool.topics %}<p>Topics: {{ tool.topics|join:', ' }}</p>{% endif %}
       {% if tool.operations %}<p>Operations: {{ tool.operations|join:', ' }}</p>{% endif %}

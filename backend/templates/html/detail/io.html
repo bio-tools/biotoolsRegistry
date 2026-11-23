@@ -1,9 +1,13 @@
 {% load detail_tags %}
-{% for item in items %}
-<div class="io-item">
-  {% edam_term item.data data_field %}
-  {% if item.format.all %}<ul class="formats">{% for format in item.format.all %}
-    <li>{% edam_term format format_field %}</li>
-  {% endfor %}</ul>{% endif %}
-</div>
-{% empty %}<span class="muted">Not specified</span>{% endfor %}
+{% if items %}
+  <ul class="io-list" role="list">
+    {% for item in items %}
+    <li class="io-item">
+      {% if item.data.term or item.data.uri %}{% edam_term item.data data_field %}{% else %}<span class="muted">Data type not specified</span>{% endif %}
+      {% if item.format.all %}<ul class="formats" aria-label="Formats" role="list">{% for format in item.format.all %}
+        <li>{% edam_term format format_field %}</li>
+      {% endfor %}</ul>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+{% else %}<span class="muted">Not specified</span>{% endif %}

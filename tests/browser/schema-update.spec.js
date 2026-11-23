@@ -50,7 +50,7 @@ test('same-build schema activation, persistence and compatible rollback through 
   }
   async function save(page, status) {
     const response = page.waitForResponse(response => response.url().endsWith('/save/') && response.request().method() === 'POST');
-    await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+    await page.getByRole('button', { name: /^(Save changes|Publish tool)$/ }).click();
     const result = await response;
     expect(result.status(), await result.text()).toBe(status);
     return result;
@@ -161,7 +161,7 @@ test('same-build schema activation, persistence and compatible rollback through 
       await sameBundle(page);
       await expect(page.getByLabel('Release stage', { exact: true })).toHaveValue('Mature');
       await expect(page.locator('#nested-maturity option:disabled')).toHaveText('Mature (no longer allowed)');
-      await expect(page.getByRole('button', { name: 'Save changes', exact: true })).toBeDisabled();
+      await expect(page.getByRole('button', { name: /^(Save changes|Publish tool)$/ })).toBeDisabled();
       await expect(page.getByLabel('Installation command', { exact: true })).toHaveValue('install schema-fixture');
       await page.getByLabel('Release stage', { exact: true }).selectOption('Preview');
       // Bypass only the UI's enum restriction, retaining its current metadata and revisions.

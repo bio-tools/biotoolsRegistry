@@ -14,8 +14,8 @@
 {% else %}
 <p role="status">{{ domains|length }} of {{ domain_count }} domains</p>
 {% for entry in domains %}
-<article class="domain-entry">
-  <h2><a href="{{ entry.url }}">{{ entry.domain }}</a></h2>
+<article class="domain-entry panel-card">
+  <h2 class="panel-title"><a href="{{ entry.url }}">{{ entry.domain }}</a></h2>
   <p>{{ entry.resources|length }} tools{% if entry.title %} &middot; {{ entry.title }}{% endif %}</p>
   {% if entry.sub_title %}<p>{{ entry.sub_title }}</p>{% endif %}
   {% if entry.description_html %}<details class="domain-description"><summary>Description</summary><div>{{ entry.description_html }}</div></details>{% endif %}

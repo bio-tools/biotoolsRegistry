@@ -49,6 +49,7 @@ urlpatterns = [
     ),
     re_path(r"^request/?$", views.ResourceRequestView.as_view()),
     re_path(r"^request/conclude/?$", views.ProcessResourceRequest.as_view()),
+    re_path(r"^request/withdraw/?$", views.WithdrawResourceRequest.as_view()),
     re_path(r"^tool-list/?$", views.ToolList.as_view()),
     re_path(r"^w/?$", views.WorkflowView.as_view()),
     re_path(r"^w/(?P<id>[a-zA-Z0-9.~_-]+)/?$", views.WorkflowDetailView.as_view()),

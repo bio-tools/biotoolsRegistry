@@ -164,6 +164,9 @@ def search_tools(query_params, *, page, per_page, workspace=False, advanced=None
     if edam:
         body['query']['bool'].setdefault('filter', []).extend(edam)
 
+    if workspace and parameters.get('maturity', '').strip(' \"\'').casefold() != 'legacy':
+        body['query']['bool'].setdefault('must_not', []).append({'match_phrase': {'maturity': 'Legacy'}})
+
     if 'updatedAfter' in parameters:
         value = parameters.get('updatedAfter', '')
         if not isinstance(value, str) or not re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,6})?(?:Z|[+-][0-9]{2}:[0-9]{2})', value):

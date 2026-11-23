@@ -1,11 +1,15 @@
 from rest_framework import serializers
 from allauth.socialaccount.models import SocialAccount
+from django.core.validators import URLValidator
 from elixir.models import *
 from elixir.validators import *
 from elixir.request_handling import ResourceRequestHandler
 
 
 class ResourceRequestSerializer(serializers.ModelSerializer):
+    reason = serializers.CharField(required=False, allow_blank=True, max_length=2000)
+    supporting_url = serializers.URLField(required=False, allow_blank=True, max_length=500,
+                                          validators=[URLValidator(schemes=['http', 'https'])])
     username = serializers.CharField(
         allow_blank=False, max_length=25, min_length=1, source="user.username"
     )
@@ -14,6 +18,7 @@ class ResourceRequestSerializer(serializers.ModelSerializer):
     resourceId = serializers.CharField(
         allow_blank=False, min_length=1, source="resource.biotoolsID"
     )
+    resourceName = serializers.CharField(source='resource.name', read_only=True)
 
     class Meta:
         model = ResourceRequest
@@ -26,7 +31,14 @@ class ResourceRequestSerializer(serializers.ModelSerializer):
             "orcid",
             "requestId",
             "resourceId",
+            "resourceName",
+            "relationship",
+            "reason",
+            "supporting_url",
+            "created_at",
+            "withdrawn",
         )
+        read_only_fields = ('created_at', 'withdrawn')
 
     def get_orcid(self, obj):
         """Get ORCID from the user's social accounts"""
@@ -40,7 +52,9 @@ class ResourceRequestSerializer(serializers.ModelSerializer):
         return ResourceRequest.objects.create(
             user=User.objects.get(username=validated_data['user']['username']),
             resource=Resource.objects.get(visibility=1, biotoolsID__iexact=validated_data['resource']['biotoolsID']),
-            type=validated_data['type'], requestId=validated_data['requestId'])
+            type=validated_data['type'], requestId=validated_data['requestId'],
+            relationship=validated_data.get('relationship', ''), reason=validated_data.get('reason', ''),
+            supporting_url=validated_data.get('supporting_url', ''))
 
     def validate_type(self, attrs):
         enum = ENUMValidator(["editing", "ownership"])

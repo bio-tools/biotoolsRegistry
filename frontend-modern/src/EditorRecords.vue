@@ -10,8 +10,8 @@ const path = (id: string): EditorPath => [...basePath(), { itemId: id }];
 function add() { emit('update:modelValue', [...(props.modelValue || []), { id: crypto.randomUUID(), value: props.empty() }]); }
 </script>
 <template>
-  <section :id="fieldId(basePath())" class="metadata-section" tabindex="-1" :aria-label="label">
-    <header class="nested-heading"><h2><UiIcon :name="icon || 'array'" />{{ label }}</h2>
+  <section :id="fieldId(basePath())" class="metadata-section panel-card" tabindex="-1" :aria-label="label">
+    <header class="nested-heading panel-title"><h2><UiIcon :name="icon || 'array'" />{{ label }}</h2>
       <button type="button" class="secondary" :disabled="disabled" @click="add">Add {{ itemLabel.toLowerCase() }}</button></header>
     <p class="nested-error">{{ errorsAt(errors, basePath()).join(' ') }}</p>
     <section v-for="(item, index) in modelValue" :key="item.id" :id="fieldId(path(item.id))" class="metadata-record" tabindex="-1" :aria-label="`${itemLabel} ${index + 1}`">

@@ -4,7 +4,7 @@ const fixtures = require('../../backend/elixirapp/tests/data/ResourceEditor.json
 
 async function mountEditor(page, resource) {
   await page.goto('/');
-  const config = { resource, revision: 'fixture', endpoint: '/test-save/', validateEndpoint: '/test-validate/', previewEndpoint: '/test-preview/', bridgeEndpoint: '/test-bridge/',
+  const config = { resource, revision: 'fixture', endpoint: '/test-save/', validateEndpoint: '/test-validate/', previewEndpoint: '/test-preview/', bridgeEndpoint: '/test-bridge/', publicationEndpoint: '/test-publication/',
     schema, schemaRevision: schema.revision, editUrl: null, detailUrl: '/psiclass', toolTypes: [], edamEndpoint: '/_edam/terms/' };
   await page.evaluate(config => {
     const main = document.querySelector('main');
@@ -20,6 +20,24 @@ async function mountEditor(page, resource) {
 test.describe('Annotation editor presentation', () => {
   test.skip(process.env.BIOTOOLS_TEST_LIVE_FILTERS !== '1', 'Requires the local preview assets.');
   for (const width of [1440, 390]) {
+    test(`import options explain their inputs and review at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await mountEditor(page, fixtures.rich);
+      const imports = page.getByRole('region', { name: 'Import suggestions' });
+      await expect(imports).toBeVisible();
+      const github = imports.locator('details.github-import').filter({ hasText: 'Import metadata from GitHub' });
+      const publication = imports.locator('details.github-import').filter({ hasText: 'Import metadata from a publication' });
+      await github.locator(':scope > summary').focus();
+      await page.keyboard.press('Enter');
+      await github.getByText('How this works', { exact: true }).click();
+      await expect(github.getByText(/public GitHub repository/)).toBeVisible();
+      await expect(github.getByLabel('GitHub repository URL')).toBeVisible();
+      await publication.locator(':scope > summary').click();
+      await publication.getByText('How this works', { exact: true }).click();
+      await expect(publication.getByText(/a webpage alone is not enough/)).toBeVisible();
+      await expect(publication.getByLabel('DOI, PMID, PMCID or publication URL')).toBeVisible();
+      expect(await page.locator('html').evaluate(element => element.scrollWidth <= innerWidth)).toBe(true);
+    });
     test(`preview and individually select bridge suggestions at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.route('**/test-bridge/', route => route.fulfill({ json: { schemaRevision: schema.revision, rejected: [], raw: {},
@@ -70,7 +88,7 @@ test.describe('Annotation editor presentation', () => {
       await json.fill('{broken');
       await expect(page.locator('.json-error')).toContainText('incomplete or invalid');
       await expect(page.getByLabel('Name', { exact: true })).toBeDisabled();
-      await expect(page.getByRole('button', { name: 'Save changes', exact: true })).toBeDisabled();
+      await expect(page.getByRole('button', { name: /^(Save changes|Publish tool)$/ })).toBeDisabled();
       await page.locator('.editor-json-panel summary').click();
       await expect(page.locator('.json-error')).toBeVisible();
       await page.getByRole('button', { name: 'Restore JSON from form' }).click();

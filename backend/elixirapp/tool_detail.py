@@ -9,7 +9,7 @@ from django.views.decorators.cache import never_cache
 from elixir.queries import get_tool_detail, ToolNotFound
 from elixir.serializers import ResourceSerializer
 from elixir.resource_ui import SchemaUnavailable, public_fields, resource_descriptor
-from elixirapp.resource_editor import can_edit
+from elixirapp.resource_editor import can_edit, can_manage_permissions
 from elixirapp.rsec import tool_links
 
 
@@ -75,6 +75,7 @@ def detail(request, identifier):
         'tool': tool, 'edit_url': path + '/edit',
         'canonical_url': request.build_absolute_uri(path),
         'api_url': '/api/t' + path, 'badges': badges, 'can_edit': can_edit(request.user, tool),
+        'can_manage': request.user.is_authenticated and can_manage_permissions(request.user, tool),
         'schema_fields': fields, 'schema_revision': descriptor['revision'],
         'functions': functions, 'publications': publications, 'ecosystem': ecosystem,
         'rrids': [item.value for item in tool.otherID.all() if (item.type or '').lower() == 'rrid']

@@ -1,0 +1,16 @@
+services:
+  app84:
+    environment:
+      BIOTOOLS_EMAIL_BACKEND: django.core.mail.backends.smtp.EmailBackend
+      BIOTOOLS_EMAIL_HOST: mailpit
+      BIOTOOLS_EMAIL_PORT: '1025'
+      BIOTOOLS_EMAIL_USE_SSL: '0'
+      BIOTOOLS_EMAIL_USE_TLS: '0'
+      BIOTOOLS_EMAIL_HOST_USER: ''
+      BIOTOOLS_EMAIL_HOST_PASSWORD: ''
+      BIOTOOLS_DEFAULT_FROM_EMAIL: no-reply@example.invalid
+  mailpit:
+    image: axllent/mailpit:v1.27.4
+    ports:
+      - 127.0.0.1:8025:8025
+    networks: [private, published]

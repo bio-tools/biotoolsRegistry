@@ -48,6 +48,14 @@ For GitHub metadata import, set `BIOTOOLS_GITHUB_BRIDGE_URL` to
 `--profile github-import`. The bridge suggests changes; saving remains a
 separate action.
 
+Publication metadata suggestions use Pub2Tools at
+`https://elixir.ut.ee/pub2tools/api` by default. Set `BIOTOOLS_PUB2TOOLS_URL` to
+a compatible instance, or leave it empty to disable the option. The service
+receives the publication identifier and any optional supporting webpage URL.
+Pub2Tools requires a DOI, PMID or PMCID; a webpage alone is not sufficient.
+Suggestions are reviewed in the editor and saved only when the record is
+published or updated. The backend needs outbound access to the chosen service.
+
 For ecosystem exports, set `BIOTOOLS_GITHUB_ECOSYSTEM_ON=1`, the
 `ECO_GITHUB_ORGANIZATION_NAME`, `ECO_GITHUB_REPO_NAME`, and
 `ECO_PERSONAL_TOKEN` for a GitHub account with access to the target repository.
@@ -67,7 +75,8 @@ Dockerfile before starting the ecosystem worker so it includes the corrected
 token handling. Its MySQL and Elasticsearch configuration is fixed to the local
 database copy. Its app is on an internal network, so external sign-in and email
 delivery require a suitable network configuration. The preview uses its own
-local secret key and dummy email backend. For ORCID on port 8005, set a callback
+local secret key and dummy email backend by default. To capture test email
+locally, see [testing](docs/testing.md#local-email-testing). For ORCID on port 8005, set a callback
 URL registered for that origin in the selected environment file.
 
 Workflow images are media files, not part of the SQL dump. Restore the matching

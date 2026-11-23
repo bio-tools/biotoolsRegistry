@@ -64,6 +64,11 @@ BIOTOOLS_TEST_CUTOVER=1 npm test -- cutover.spec.js discovery.spec.js
 
 Other suites are opt-in; see their skip messages and [browser test guide](../tests/browser/README.md).
 Some create accounts or modify records and require `BIOTOOLS_TEST_EDITOR_WRITES=1`.
+For read-only keyboard, label and viewport checks against a local populated
+preview, set `BIOTOOLS_TEST_PUBLIC_A11Y=1` and run
+`public-accessibility.spec.js`. A local latency baseline is available with
+`python3 tests/rehearsal/benchmark_public.py`; results depend on the data and
+machine and are not production performance guarantees.
 The isolated Apache endpoint is `http://localhost:8010/`; Caddy forwards through
 `http://localhost:8011/`. Stop this disposable stack with
 `docker compose -f tests/rehearsal/browser.yml down` when finished. Its tmpfs
@@ -81,3 +86,27 @@ The same-build schema update test uses the `biotools-refresh` rehearsal stack
 and creates its own test database and search index. It restarts the rehearsal
 backend and Apache, so run it only on a disposable preview, never production.
 Local verification results and remaining release limits are in [operations](operations.md).
+
+## Local email testing
+
+The port 8005 database preview discards email by default. To capture it locally,
+start Mailpit and recreate only the preview app with the test override:
+
+```sh
+docker compose --env-file .env -f deployment/django61-preview.yml \
+  -f tests/rehearsal/mailpit.yml up -d --no-deps mailpit app84
+```
+
+Create a test account at http://localhost:8005/signup, then request a reset at
+http://localhost:8005/reset-password. Read the captured messages at
+http://localhost:8025/, open the reset link, and sign in with the new password.
+The Mailpit service captures all preview emails; it does not deliver them to real
+mailboxes. Use a test account, since resetting a password changes that account in
+the local database. Returning to the dummy backend requires recreating `app84`
+without the override; stop the Mailpit service separately when finished.
+
+The database preview's app is normally on an internal-only network. To try
+Pub2Tools against an external service, add `-f tests/rehearsal/pub2tools.yml`
+to the preview Compose command and recreate `app84`. Keep the Mailpit override
+as well if local email capture is needed. The additional network provides
+outbound access; it does not publish the app directly.

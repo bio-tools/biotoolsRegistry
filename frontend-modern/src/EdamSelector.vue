@@ -154,23 +154,23 @@ onUnmounted(() => { cancelLookup(); resolveSequence++; resolver?.abort(); dialog
 
 <template>
   <div class="edam-selector" :data-edam-scope="scope">
-    <span v-if="!compact" class="edam-label" :id="`${id}-label`">{{ label }}</span>
+    <span v-if="!compact" class="edam-label" :id="`${id}-label`">{{ label }} <abbr v-if="help" :title="help" tabindex="0" :aria-label="help">?</abbr></span>
     <ul v-if="modelValue.length && (!compact || readonly)" class="selected-terms" :aria-label="label">
-      <li v-for="uri in modelValue" :key="uri"><span>{{ title(uri) }}<small v-if="cache.get(uri)?.obsolete"> (obsolete)</small></span>
+      <li v-for="uri in modelValue" :key="uri" class="edam-chip"><span>{{ title(uri) }}<small v-if="cache.get(uri)?.obsolete"> (obsolete)</small></span>
         <button v-if="!readonly" type="button" class="remove-term" :disabled="disabled" :aria-label="`Remove ${title(uri)}`"
           :title="`Remove ${title(uri)}`" @click="remove(uri)">&#215;</button>
       </li>
     </ul>
-    <button v-if="!readonly" ref="opener" type="button" class="secondary" :class="{ 'concept-picker': compact, 'has-selection': compact && modelValue.length }"
+    <button v-if="!readonly" ref="opener" type="button" class="secondary" :class="{ 'concept-picker': compact, 'edam-chip': compact && modelValue.length }"
       :aria-label="`Choose ${label.toLowerCase()}` + (compact && modelValue.length ? ': ' + selectedTitle : '')" :title="compact ? `Choose ${label.toLowerCase()}` : undefined"
-      aria-haspopup="dialog" :disabled="disabled" @click="begin"><template v-if="compact && modelValue.length">{{ selectedTitle }}</template><template v-else>Choose {{ label.toLowerCase() }}</template></button>
+      aria-haspopup="dialog" :disabled="disabled" @click="begin"><template v-if="compact && modelValue.length">{{ selectedTitle }}</template><template v-else>{{ actionLabel || `Choose ${label.toLowerCase()}` }}</template></button>
     <p v-else-if="!modelValue.length">None</p>
     <template v-if="name"><input v-for="uri in modelValue" :key="uri" type="hidden" :name="name" :value="uri" :disabled="disabled"></template>
     <div v-if="selectionError" role="alert"><p>{{ selectionError }}</p><button type="button" class="secondary" @click="resolveSelection(true)">Retry selected terms</button></div>
     <dialog ref="dialog" class="edam-dialog" :aria-labelledby="`${id}-title`" @cancel.prevent="close" @close="open = false; cancelLookup()">
       <h2 :id="`${id}-title`">Choose {{ label.toLowerCase() }}</h2>
       <ul v-if="draft.length" class="selected-terms" aria-label="Pending selection">
-        <li v-for="uri in draft" :key="uri"><span>{{ title(uri) }}</span>
+        <li v-for="uri in draft" :key="uri" class="edam-chip"><span>{{ title(uri) }}</span>
           <button type="button" class="remove-term" :title="`Remove ${title(uri)}`" :aria-label="`Remove ${title(uri)}`" @click="remove(uri, true)">&#215;</button>
         </li>
       </ul>
@@ -209,19 +209,20 @@ onUnmounted(() => { cancelLookup(); resolveSequence++; resolver?.abort(); dialog
 <style scoped>
 .edam-selector { min-width: 0; }
 .edam-label { display: block; font-size: var(--text-ui); font-weight: 600; margin-bottom: 8px; }
+.edam-label abbr { color: #526d79; cursor: help; text-decoration: none; }
 .edam-selector button { font-size: var(--text-control); }
 .concept-picker { width: 100%; min-height: 40px; text-align: left; white-space: normal; overflow-wrap: anywhere; }
-.concept-picker.has-selection { color: #23527c; border-color: transparent; background: var(--edam-background, #f3f8fa); padding: 6px 8px; }
-.concept-picker.has-selection:hover { text-decoration: underline; background: #edf4f8; }
+.concept-picker.edam-chip { padding: 6px 8px; }
+.concept-picker.edam-chip:hover { text-decoration: underline; background: var(--surface); }
 .selected-terms { list-style: none; padding: 0; margin: 8px 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.selected-terms li { display: flex; align-items: center; gap: 8px; background: var(--edam-background, #f3f8fa); border-radius: 5px; padding: 4px 8px; max-width: 100%; overflow-wrap: anywhere; }
+.selected-terms li { display: flex; align-items: center; gap: 8px; max-width: 100%; overflow-wrap: anywhere; }
 .remove-term { width: 32px; height: 32px; padding: 0; border: 0; background: transparent; color: #23527c; flex-shrink: 0; font-size: 22px !important; }
-.edam-dialog { box-sizing: border-box; width: min(680px, calc(100% - 24px)); max-height: calc(100dvh - 32px); padding: 24px; border: 1px solid #767676; border-radius: 4px; color: #333; overflow: auto; }
+.edam-dialog { box-sizing: border-box; width: min(680px, calc(100% - 24px)); max-height: calc(100dvh - 32px); padding: 24px; border: 1px solid var(--control-line); border-radius: 8px; box-shadow: 0 8px 22px #173e4b22; color: #333; overflow: auto; }
 .edam-dialog::backdrop { background: rgb(0 0 0 / 35%); }
 .edam-dialog h2 { font-size: var(--text-heading); margin: 0 0 16px; }
 .edam-dialog input { width: 100%; box-sizing: border-box; }
 .lookup-status { font-size: var(--text-caption); color: #555; margin: 8px 0; }
-.edam-choices { list-style: none; padding: 0; margin: 0; border: 1px solid #d5dce0; max-height: 310px; overflow-y: auto; background: #fff; color: #263a43; }
+.edam-choices { list-style: none; padding: 0; margin: 0; border: 1px solid var(--line); max-height: 310px; overflow-y: auto; background: #fff; color: #263a43; }
 .edam-choices li { padding: 12px; border-bottom: 1px solid #ddd; cursor: pointer; overflow-wrap: anywhere; }
 .edam-choices li:last-child { border: 0; }
 .edam-choices li.active, .edam-choices li:hover { background: #edf4f8; box-shadow: inset 3px 0 #337ab7; }

@@ -189,6 +189,7 @@ def configuration(user, resource=None, *, canonical=False):
             'toolTypes': choices.get('toolType', []), 'edamEndpoint': reverse('canonical-edam-lookup' if canonical else 'html:edam-lookup'),
             'metadataOptions': choices,
             'bridgeEndpoint': '/github-to-biotools' if settings.GITHUB_BRIDGE_URL else None,
+            'publicationEndpoint': '/pub2tools-import' if settings.PUB2TOOLS_URL else None,
             'canManagePermissions': can_manage_permissions(user, resource)}
 
 

@@ -79,11 +79,11 @@ for (const width of [1440, 390]) {
     const raw = JSON.parse(await page.getByLabel('Resource JSON', { exact: true }).inputValue());
     await page.getByLabel('Resource JSON', { exact: true }).fill('{broken');
     await expect(page.getByLabel('Resource JSON', { exact: true })).toHaveValue('{broken');
-    await expect(page.getByRole('button', { name: 'Save changes', exact: true })).toBeDisabled();
+    await expect(page.getByRole('button', { name: /^(Save changes|Publish tool)$/ })).toBeDisabled();
     raw.name = 'JSON revised fixture';
     await page.getByLabel('Resource JSON', { exact: true }).fill(JSON.stringify(raw));
     await expect(page.getByLabel('Name', { exact: true })).toHaveValue('JSON revised fixture');
-    await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+    await page.getByRole('button', { name: /^(Save changes|Publish tool)$/ }).click();
     await expect(page.getByRole('status', { name: 'Save status' })).toHaveText('Changes saved.');
     await page.goto('/' + id + '/manage');
     await page.getByLabel('I confirm this action cannot be undone here.', { exact: true }).check();
@@ -144,7 +144,7 @@ test('superuser confirms removal of a disposable record', async ({ page }) => {
   await page.getByLabel('Homepage', { exact: true }).fill('https://example.org/removal');
   await page.getByLabel('Description', { exact: true }).fill('A temporary resource for confirmed native record removal.');
   await page.getByLabel('Command-line tool', { exact: true }).check();
-  await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+  await page.getByRole('button', { name: /^(Save changes|Publish tool)$/ }).click();
   await expect(page.getByRole('status', { name: 'Save status' })).toHaveText('Changes saved.');
   await page.goto('/' + id + '/manage');
   await page.getByLabel('Action', { exact: true }).selectOption('delete');

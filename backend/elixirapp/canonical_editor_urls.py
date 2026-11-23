@@ -2,6 +2,7 @@
 from django.urls import include, path, re_path
 from elixirapp import edam, html, html_urls, resource_editor, resource_drafts, resource_requests, search_workspace, tool_detail, public_urls, management_urls, workflow_matching, workflow_drafts, record_preview
 from elixirapp.github_bridge import import_repository
+from elixirapp.pub2tools import import_publication
 
 
 editor_patterns = [
@@ -17,6 +18,7 @@ editor_patterns = [
         re_path(r'^(?P<identifier>[A-Za-z0-9.~_-]{1,100})/edit/record-preview/$', record_preview.preview),
         re_path(r'^requests/?$', resource_requests.inbox, name='requests'),
         path('requests/conclude/', resource_requests.conclude, name='request-conclude'),
+        path('requests/withdraw/', resource_requests.withdraw, name='request-withdraw'),
         re_path(r'^requests/tool/(?P<identifier>[A-Za-z0-9.~_-]{1,100})/$', resource_requests.create, name='request-create'),
         re_path(r'^(?P<identifier>[A-Za-z0-9.~_-]{1,100})/?$',
                 tool_detail.detail, name='tool-detail'),
@@ -25,6 +27,7 @@ editor_patterns = [
 
 urlpatterns = [
     path('github-to-biotools', import_repository),
+    path('pub2tools-import', import_publication),
     *management_urls.urlpatterns,
     *public_urls.urlpatterns,
     path('t', search_workspace.canonical_page, name='canonical-search'),

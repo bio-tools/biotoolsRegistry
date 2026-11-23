@@ -50,25 +50,41 @@ test.describe('ownership and session interoperability', () => {
         expect(signup.status()).toBe(201);
         expect(await signup.json()).not.toHaveProperty('key');
         const senderPage = await sender.newPage();
-        for (const kind of ['Editing rights', 'Ownership', 'Editing rights']) {
+        for (const kind of ['Editing rights', 'Ownership']) {
           await senderPage.goto(requests + '/tool/' + id + '/');
-          await senderPage.getByRole('radio', { name: kind, exact: true }).check();
+          await senderPage.getByRole('radio', { name: kind }).check();
+          await senderPage.getByLabel('Your relationship to the tool').fill('Maintainer');
+          await senderPage.getByLabel('Why do you need access?').fill('Update the record');
           await senderPage.getByRole('button', { name: 'Send request', exact: true }).click();
           await expect(senderPage.getByText('Request sent.', { exact: true })).toBeVisible();
         }
         await page.goto(requests);
-        let rows = page.locator('article').filter({ has: page.getByRole('link', { name: id, exact: true }) });
+        let rows = page.locator('article').filter({ hasText: id });
+        await expect(rows.first()).toContainText('Maintainer');
         await rows.filter({ hasText: 'Editing rights requested' }).first().getByRole('button', { name: 'Accept', exact: true }).click();
         await expect(page.getByText('Request accepted.', { exact: true })).toBeVisible();
+        await senderPage.goto(requests + '/tool/' + id + '/');
+        await senderPage.getByLabel('Your relationship to the tool').fill('Maintainer');
+        await senderPage.getByLabel('Why do you need access?').fill('Continue maintaining the record');
+        await senderPage.getByRole('button', { name: 'Send request', exact: true }).click();
+        await expect(senderPage.getByText('Request sent.', { exact: true })).toBeVisible();
+        await senderPage.getByRole('region', { name: 'Sent requests' }).locator('article')
+          .filter({ hasText: 'Editing rights: Pending' }).getByRole('button', { name: 'Withdraw request' }).click();
+        await expect(senderPage.getByText('Request withdrawn.', { exact: true })).toBeVisible();
+        await senderPage.goto(requests + '/tool/' + id + '/');
+        await senderPage.getByLabel('Your relationship to the tool').fill('Maintainer');
+        await senderPage.getByLabel('Why do you need access?').fill('Continue maintaining the record');
+        await senderPage.getByRole('button', { name: 'Send request', exact: true }).click();
+        await expect(senderPage.getByText('Request sent.', { exact: true })).toBeVisible();
         // Save a replacement version before the remaining ownership decision.
         const editor = await sender.request.get(editorUrl(id));
         expect(editor.status()).toBe(200);
         await page.goto(editorUrl(id));
         await page.getByLabel('Name', { exact: true }).fill('Request Browser Updated');
-        await page.getByRole('button', { name: 'Save changes', exact: true }).click();
-        await expect(page.getByRole('status')).toHaveText('Changes saved.');
+        await page.getByRole('button', { name: /^(Save changes|Publish tool)$/ }).click();
+        await expect(page.getByRole('status', { name: 'Save status' })).toHaveText('Changes saved.');
         await page.goto(requests);
-        rows = page.locator('article').filter({ has: page.getByRole('link', { name: id, exact: true }) });
+        rows = page.locator('article').filter({ hasText: id });
         await rows.filter({ hasText: 'Ownership requested' }).getByRole('button', { name: 'Accept', exact: true }).click();
         await expect(page.getByText('Request accepted.', { exact: true })).toBeVisible();
         await expect(page.locator('article').filter({ hasText: id })).toHaveCount(0);

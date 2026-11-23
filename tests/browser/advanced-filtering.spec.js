@@ -1,4 +1,4 @@
-const { test, expect } = require('./fixtures');
+const { test, expect, openAdvancedField } = require('./fixtures');
 
 const route = process.env.BIOTOOLS_TEST_CUTOVER === '1' ? '/t' : '/_migration/html/search/';
 const endpoint = process.env.BIOTOOLS_TEST_CUTOVER === '1' ? '/_search/data/' : route + 'data/';
@@ -10,10 +10,16 @@ test.describe('Advanced search filtering', () => {
     test(`candidate scope, promotion and history at ${width}px`, async ({ page }, testInfo) => {
       const requests = [];
       const errors = [];
-      page.on('request', request => { if (new URL(request.url()).pathname === endpoint) requests.push(request.url()); });
+      page.on('request', request => {
+        const url = new URL(request.url());
+        if (url.pathname === endpoint && (url.searchParams.has('q') || url.searchParams.has('advanced'))) requests.push(request.url());
+      });
       page.on('pageerror', error => errors.push(error.message));
       await page.setViewportSize({ width, height: 1000 });
-      const payload = page.waitForResponse(response => new URL(response.url()).pathname === endpoint);
+      const payload = page.waitForResponse(response => {
+        const url = new URL(response.url());
+        return url.pathname === endpoint && url.searchParams.get('q') === 'Workspace sample';
+      });
       await page.goto(route + '?q=Workspace+sample&sort=name&ord=asc&per_page=10');
       const response = await payload;
       const bytes = (await response.body()).length;
@@ -22,6 +28,7 @@ test.describe('Advanced search filtering', () => {
       await expect(items).toHaveCount(10);
       if (width < 760) await page.getByRole('button', { name: 'Show filters' }).click();
       await page.locator('.advanced-panel summary').click();
+      await openAdvancedField(page, 'added');
       const session = await page.context().newCDPSession(page);
       const before = await session.send('Runtime.getHeapUsage');
       const originalURL = page.url();
@@ -67,6 +74,7 @@ test.describe('Advanced search filtering', () => {
       await expect(items).toHaveCount(6);
       if (width < 760 && await page.getByRole('button', { name: 'Show filters' }).isVisible()) await page.getByRole('button', { name: 'Show filters' }).click();
       if (!(await page.locator('.advanced-panel').evaluate(element => element.open))) await page.locator('.advanced-panel summary').click();
+      await openAdvancedField(page, 'added');
       await page.getByLabel('Added on or before', { exact: true }).fill('2026-01-10');
       await page.getByLabel('Added on or before', { exact: true }).press('Tab');
       await expect(items).toHaveCount(3);
@@ -88,6 +96,7 @@ test.describe('Advanced search filtering', () => {
     const items = page.locator('article[data-tool-id]');
     await expect(items).toHaveCount(13);
     await page.locator('.advanced-panel summary').click();
+    await openAdvancedField(page, 'hasPublication');
     await page.getByLabel('Publication', { exact: true }).selectOption('yes');
     await expect(page.getByRole('heading', { name: 'No candidates match' })).toBeVisible();
     await expect(page.locator('.candidate-scope')).toContainText('0 of 13 loaded tools');
@@ -105,6 +114,7 @@ test.describe('Advanced search filtering', () => {
     await expect(page.locator('.server-filters li')).toHaveCount(1);
     await expect(page.locator('.active-constraints')).toContainText('topic_0080');
     await expect(items).toHaveCount(13);
+    await openAdvancedField(page, 'added');
     await page.getByLabel('Added on or before', { exact: true }).fill('2025-01-01');
     await page.getByLabel('Added on or before', { exact: true }).press('Tab');
     await expect(page.getByRole('heading', { name: 'No candidates match' })).toBeVisible();

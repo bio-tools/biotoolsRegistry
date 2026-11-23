@@ -42,7 +42,8 @@ class ResourceRequestTests(TestCase):
 
     def create(self, kind='editing'):
         self.login(self.sender)
-        response = self.post(self.url, {'type': kind})
+        response = self.post(self.url, {'type': kind, 'relationship': 'Maintainer',
+                                       'reason': 'Update the record', 'supporting_url': 'https://example.org/project'})
         self.assertEqual(response.status_code, 302, response.content)
         return ResourceRequest.objects.latest('pk')
 
@@ -54,7 +55,10 @@ class ResourceRequestTests(TestCase):
         self.notify.assert_called_once()
         self.assertContains(self.client.get('/requests/', **HTML_REQUEST), 'Pending')
         self.login(self.owner)
-        self.assertContains(self.client.get('/requests/', **HTML_REQUEST), self.sender.email)
+        inbox = self.client.get('/requests/', **HTML_REQUEST)
+        for value in (self.sender.email, 'Maintainer', 'Update the record', 'https://example.org/project', 'Submitted:'):
+            self.assertContains(inbox, value)
+        self.assertNotIn('Update the record', self.notify.call_args.args[1])
         self.assertEqual(self.conclude(item).status_code, 302)
         self.resource.refresh_from_db()
         self.assertTrue(can_edit(self.sender, self.resource))
@@ -96,6 +100,10 @@ class ResourceRequestTests(TestCase):
                                     content_type='application/json', HTTP_ACCEPT='application/json',
                                     HTTP_X_CSRFTOKEN=self.client.cookies['csrftoken'].value, **HTML_REQUEST)
         self.assertEqual(response.status_code, 200, response.content)
+        self.login(self.sender)
+        duplicate = self.post(self.url, {'type': 'ownership', 'relationship': 'Maintainer', 'reason': 'Update'})
+        self.assertContains(duplicate, 'already have a pending request', status_code=400)
+        self.login(self.owner)
         self.conclude(item)
         current = Resource.objects.get(biotoolsID=self.resource.biotoolsID, visibility=1)
         self.assertEqual(current.owner, self.sender)
@@ -151,6 +159,48 @@ class ResourceRequestTests(TestCase):
         self.assertEqual(self.post('/requests/tool/absent/', {'type': 'editing'}).status_code, 404)
         self.assertFalse(ResourceRequest.objects.exists())
         self.notify.assert_not_called()
+
+    def test_duplicate_withdrawal_privacy_and_resubmission(self):
+        item = self.create()
+        duplicate = self.post(self.url, {'type': 'editing', 'relationship': 'Developer', 'reason': 'Update'})
+        self.assertEqual(duplicate.status_code, 400)
+        self.assertContains(duplicate, 'already have a pending request', status_code=400)
+        self.assertEqual(ResourceRequest.objects.count(), 1)
+        self.login(self.other)
+        self.assertNotContains(self.client.get('/requests/', **HTML_REQUEST), 'Update the record')
+        self.post('/requests/withdraw/', {'requestId': item.requestId})
+        item.refresh_from_db()
+        self.assertFalse(item.completed)
+        self.login(self.sender)
+        self.assertEqual(self.client.post('/requests/withdraw/', {'requestId': item.requestId}, **HTML_REQUEST).status_code, 403)
+        self.assertEqual(self.post('/requests/withdraw/', {'requestId': item.requestId}).status_code, 302)
+        item.refresh_from_db()
+        self.assertTrue(item.completed)
+        self.assertTrue(item.withdrawn)
+        self.assertContains(self.client.get('/requests/?completed=1', **HTML_REQUEST), 'Withdrawn')
+        self.login(self.owner)
+        self.conclude(item)
+        item.refresh_from_db()
+        self.assertFalse(item.accepted)
+        self.login(self.sender)
+        self.create()
+        self.assertEqual(ResourceRequest.objects.count(), 2)
+
+    def test_api_requests_are_compatible_and_reject_unsafe_links(self):
+        api = APIClient()
+        api.force_authenticate(user=self.sender)
+        payload = {'resourceId': self.resource.biotoolsID, 'type': 'editing',
+                   'supporting_url': 'javascript:alert(1)'}
+        self.assertEqual(api.put('/request', payload, format='json').status_code, 400)
+        payload.pop('supporting_url')
+        response = api.put('/request', payload, format='json')
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertTrue(response.data['created_at'])
+        self.assertEqual(api.put('/request', payload, format='json').status_code, 400)
+        api.force_authenticate(user=self.other)
+        self.assertEqual(api.post('/request/withdraw', {'requestId': response.data['requestId']}, format='json').status_code, 404)
+        api.force_authenticate(user=self.sender)
+        self.assertEqual(api.post('/request/withdraw', {'requestId': response.data['requestId']}, format='json').status_code, 200)
 
     def test_api_replacement_rechecks_ownership_after_locking(self):
         stale = self.resource

@@ -10,7 +10,7 @@ Snapshot: **10 November 2026**. Covers all open issues in [bio-tools/biotoolsReg
 
 Updated **17 November 2026**: optional Boolean and field-qualified search addresses #64, and multiple EDAM selections address #326. RSEc imports now include explicit Bioconda and WorkflowHub associations.
 
-Counts: Done: 28 · Easy fix: 0 · Major fix: 43 · Not worth it: 7 · Discussion: 43 · **Total: 121**.
+Counts: Done: 30 · Easy fix: 0 · Major fix: 41 · Not worth it: 7 · Discussion: 43 · **Total: 121**.
 
 Key evidence for implemented items: [resource permissions](../frontend-modern/src/PermissionEditor.vue), [domain editors](../frontend-modern/src/DomainEditors.vue), [management confirmation](../backend/templates/html/manage_record.html), [email login test](../backend/elixirapp/test_browser_auth.py), [schema-driven tool details](../backend/templates/html/detail/schema_fields.html), [search workspace](../frontend-modern/src/SearchWorkspace.vue), and [JSON-LD renderer](../backend/elixir/renderers.py). The [RSEc link index](rsec-integration.md) provides imported service associations.
 
@@ -44,7 +44,7 @@ Key evidence for implemented items: [resource permissions](../frontend-modern/sr
 | [#503](https://github.com/bio-tools/biotoolsRegistry/issues/503) Registry sandbox / "beta" entries | Done | Owner-only incomplete drafts are stored separately from public records and require an explicit publish action; public beta entries are not used. Draft collaboration is not included. |
 | [#656](https://github.com/bio-tools/biotoolsRegistry/issues/656) Handling term renaming in EDAM updates | Major fix | The editor resolves selected URIs, but historical labels and API validation across EDAM releases still need a compatible policy and migration. |
 | [#601](https://github.com/bio-tools/biotoolsRegistry/issues/601) Provide first party bulk download | Major fix | Provide a reproducible, versioned bulk export and hosting/refresh process; pagination is not a bulk dump. |
-| [#580](https://github.com/bio-tools/biotoolsRegistry/issues/580) Rethink request system for granting editing rights | Major fix | Request approval still needs richer evidence and an agreed authorization workflow; see also #474 and #152. |
+| [#580](https://github.com/bio-tools/biotoolsRegistry/issues/580) Rethink request system for granting editing rights | Done | Requests include relationship, reason and an optional supporting link; owners and administrators review the context in the existing inbox. |
 | [#559](https://github.com/bio-tools/biotoolsRegistry/issues/559) LS Login for bio.tools | Major fix | LS Login requires provider integration, account linking and deployment credentials; overlaps #169. |
 | [#502](https://github.com/bio-tools/biotoolsRegistry/issues/502) Improved search and filtering (e.g. via control panel / console) | Major fix | Grouped filters, schema suggestions, EDAM synonyms, narrower-term expansion, all/any matching and optional Boolean queries are implemented. Independent relevance and usability evaluation remains. |
 | [#500](https://github.com/bio-tools/biotoolsRegistry/issues/500) Contributor Cards | Major fix | Contributor cards need persistent identities, public profiles and privacy decisions; the attached proposal is broader than account pages. |
@@ -74,7 +74,7 @@ Key evidence for implemented items: [resource permissions](../frontend-modern/sr
 | [#242](https://github.com/bio-tools/biotoolsRegistry/issues/242) bioconda/biocontainers coverage & crosslinking | Major fix | RSEc imports supply package and container links, including extra explicitly mapped Bioconda packages; coverage and collection identifiers remain to assess. |
 | [#196](https://github.com/bio-tools/biotoolsRegistry/issues/196) Add provenance of entry creation, edits etc. | Major fix | Full creation and edit provenance needs persistent audit events and privacy/retention rules; dates alone are insufficient. |
 | [#169](https://github.com/bio-tools/biotoolsRegistry/issues/169) Use ELIXIR AAI for authentication | Major fix | ELIXIR AAI/LS Login needs provider setup, secure account linking and operational tests; overlaps #559. |
-| [#159](https://github.com/bio-tools/biotoolsRegistry/issues/159) Undo "request ownership" | Major fix | Request withdrawal needs an authorized state transition and concurrency/notification handling. |
+| [#159](https://github.com/bio-tools/biotoolsRegistry/issues/159) Undo "request ownership" | Done | Requesters can withdraw their pending ownership and editing requests; completed requests retain their status. |
 | [#152](https://github.com/bio-tools/biotoolsRegistry/issues/152) opt-in for email alert for requests to MyProfile | Major fix | Per-user opt-in notifications need preferences, delivery and retry behavior; overlaps #474. |
 | [#145](https://github.com/bio-tools/biotoolsRegistry/issues/145) People and Credits to be entities / smart credit links / global list of credits with unique identifiers | Major fix | A deduplicated contributor identity registry requires schema, matching and governance; searchable credit links cover only part. |
 | [#144](https://github.com/bio-tools/biotoolsRegistry/issues/144) Being able to link Bio.tools user account to Contact and Credits | Major fix | Linking accounts to credits and contacts requires identity matching, permissions and synchronization rules. |

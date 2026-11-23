@@ -14,6 +14,8 @@ export interface EdamSelectorProps {
   disabled?: boolean;
   readonly?: boolean;
   compact?: boolean;
+  actionLabel?: string;
+  help?: string;
 }
 
 export async function fetchEdam(endpoint: string, params: URLSearchParams, controller: AbortController) {

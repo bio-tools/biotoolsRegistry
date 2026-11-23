@@ -2,11 +2,32 @@
 {% block title %}Request access to {{ tool.name }} | bio.tools{% endblock %}
 {% block content %}
 <h1>Request access</h1>
-<p><a href="{% url 'html:tool-detail' identifier=tool.biotoolsID %}">{{ tool.name }}</a></p>
-<p>Owner: {{ tool.owner.username }}</p>
+<div class="request-context">
+  <p><strong>Tool:</strong> <a href="{% url 'html:tool-detail' identifier=tool.biotoolsID %}">{{ tool.name }}</a></p>
+  <p><strong>Owner:</strong> {{ tool.owner.username }}</p>
+</div>
 <form method="post" class="auth-form request-form">
   {% csrf_token %}
-  {{ form.as_p }}
+  {{ form.non_field_errors }}
+  <fieldset class="request-types">
+    <legend>What access do you need?</legend>
+    {{ form.type.errors }}
+    {% for choice in form.type %}
+      <label class="request-choice" for="{{ choice.id_for_label }}">
+        {{ choice.tag }}
+        <span><strong>{{ choice.choice_label }}</strong>
+          {% if choice.data.value == 'editing' %}<small>Maintain and update the record.</small>{% else %}<small>Take responsibility for the record and its permissions. Approval transfers ownership to you.</small>{% endif %}
+        </span>
+      </label>
+    {% endfor %}
+  </fieldset>
+  <section class="request-details" aria-labelledby="request-details-title">
+    <h2 id="request-details-title">About your request</h2>
+    <p>Your explanation and link will be shared with the record owner and registry administrators for review.</p>
+    {% for field in form %}{% if field.name != 'type' %}
+      <p>{{ field.label_tag }} {{ field }} {% if field.help_text %}<span class="helptext" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</span>{% endif %} {{ field.errors }}</p>
+    {% endif %}{% endfor %}
+  </section>
   <button type="submit">Send request</button>
 </form>
 <p><a href="{% url 'html:requests' %}">My requests</a></p>

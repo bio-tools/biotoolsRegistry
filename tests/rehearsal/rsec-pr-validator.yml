@@ -1,0 +1,84 @@
+# Reviewable candidate for the RSEc test fork; not installed automatically.
+name: validate bio.tools record and merge
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths: ['data/**/*.biotools.json']
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  validate-and-merge:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check that this pull request is still current
+        id: current
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          EVENT_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -eu
+          info="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq '[.state, .head.sha] | @tsv')"
+          state="$(printf '%s' "$info" | cut -f1)"
+          head="$(printf '%s' "$info" | cut -f2)"
+          if [ "$state" = open ] && [ "$head" = "$EVENT_SHA" ]; then
+            echo 'run=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'Pull request is closed or has newer changes; skipping this run.'
+          fi
+      - uses: actions/checkout@v7
+        if: steps.current.outputs.run == 'true'
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Verify the intended record
+        id: record
+        if: steps.current.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          changes="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files" --paginate --jq '.[] | [.filename, .status] | @tsv')"
+          [[ "$changes" != *$'\n'* ]] || { echo 'Only one record may change'; exit 1; }
+          IFS=$'\t' read -r file status extra <<< "$changes"
+          [[ -z "$extra" && "$file" =~ ^data/([A-Za-z0-9][A-Za-z0-9._~-]*)/([A-Za-z0-9][A-Za-z0-9._~-]*)[.]biotools[.]json$ ]] || { echo 'Invalid record path'; exit 1; }
+          id="${BASH_REMATCH[1]}"
+          [[ "$id" == "${BASH_REMATCH[2]}" && ${#id} -le 100 ]] || { echo 'Mismatched identifier'; exit 1; }
+          if [ "$status" = removed ]; then
+            deleted=true
+            [[ "$BRANCH" == *"__$id"'__delete' && ! -e "$file" ]] || { echo 'Unexpected deletion'; exit 1; }
+          else
+            deleted=false
+            [[ ( "$status" == added || "$status" == modified ) && "$BRANCH" == *"__$id" ]] || { echo 'Unexpected changes'; exit 1; }
+            jq -e --arg id "$id" 'type == "object" and (.biotoolsID | ascii_downcase) == ($id | ascii_downcase)' "$file" >/dev/null
+          fi
+          echo "file=$file" >> "$GITHUB_OUTPUT"
+          echo "deleted=$deleted" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v7
+        if: steps.current.outputs.run == 'true' && steps.record.outputs.deleted == 'false'
+        with:
+          python-version: '3.12'
+      - name: Validate against the official bio.tools schema
+        if: steps.current.outputs.run == 'true' && steps.record.outputs.deleted == 'false'
+        env:
+          RECORD: ${{ steps.record.outputs.file }}
+        run: |
+          set -eu
+          python -m pip install 'jsonschema==4.26.0'
+          curl --fail --silent --show-error --location -o "$RUNNER_TEMP/biotoolsj.json" https://raw.githubusercontent.com/bio-tools/biotoolsSchema/main/jsonschema/biotoolsj.json
+          python .github/scripts/validate_ecosystem_record.py "$RUNNER_TEMP/biotoolsj.json" "$RECORD"
+      - name: Merge the validated pull request
+        if: steps.current.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          EVENT_SHA: ${{ github.event.pull_request.head.sha }}
+        run: gh pr merge "$PR_NUMBER" --squash --delete-branch --match-head-commit "$EVENT_SHA"

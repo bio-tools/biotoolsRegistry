@@ -92,12 +92,12 @@ onUnmounted(() => { ++sequence; clearTimeout(timer); controller?.abort(); dialog
 .choice-selector { min-width: 0; }
 .choice-validation { position: absolute; width: 1px; height: 1px; min-height: 0; opacity: 0; pointer-events: none; }
 .choice-opener { width: 100%; text-align: left; overflow-wrap: anywhere; }
-.choice-dialog { box-sizing: border-box; width: min(680px, calc(100% - 24px)); max-height: calc(100dvh - 32px); padding: 24px; border: 1px solid #767676; border-radius: 6px; background: #fff; color: #263a43; overflow: auto; }
+.choice-dialog { box-sizing: border-box; width: min(680px, calc(100% - 24px)); max-height: calc(100dvh - 32px); padding: 24px; border: 1px solid var(--control-line); border-radius: 8px; box-shadow: 0 8px 22px #173e4b22; background: #fff; color: #263a43; overflow: auto; }
 .choice-dialog::backdrop { background: rgb(0 0 0 / 35%); }
 .choice-dialog h2 { font-size: var(--text-heading); margin: 0 0 16px; }
 .choice-dialog input { width: 100%; }
 .choice-status { font-size: var(--text-caption); color: #526d79; margin: 8px 0; }
-.choice-list { list-style: none; padding: 0; margin: 0; border: 1px solid #d5dce0; max-height: 310px; overflow-y: auto; }
+.choice-list { list-style: none; padding: 0; margin: 0; border: 1px solid var(--line); max-height: 310px; overflow-y: auto; }
 .choice-list button { width: 100%; text-align: left; color: #263a43; background: #fff; border: 0; border-radius: 0; border-bottom: 1px solid #e0e8eb; padding: 10px 12px; overflow-wrap: anywhere; }
 .choice-list button:hover, .choice-list button:focus-visible { color: #005472; background: #edf4f8; }
 .choice-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }

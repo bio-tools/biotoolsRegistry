@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { browserRequest, BrowserRequestError } from './browser-auth';
+import UiIcon from './UiIcon.vue';
 import { identity, mergeSuggestions } from './github-import';
 import type { Field, Json, ResourceSchema } from './resource-editor';
 
-const props = defineProps<{ endpoint: string; schema: ResourceSchema; current: Record<string, Json>; identifier: string | null; disabled: boolean }>();
+const props = withDefaults(defineProps<{ endpoint: string; schema: ResourceSchema; current: Record<string, Json>; identifier: string | null; disabled: boolean; source?: 'github' | 'publication' }>(), { source: 'github' });
 const emit = defineEmits<{ apply: [changes: Record<string, Json>] }>();
 type Result = { suggestions: Record<string, Json>; rejected: { path: string; reason: string }[]; raw: Json; schemaRevision: string };
 const url = ref('');
+const documentUrl = ref('');
 const result = shallowRef<Result | null>(null);
 const choices = ref<Record<string, string>>({});
 const selected = ref<Record<string, number[]>>({});
@@ -20,7 +22,7 @@ function discard() {
   controller?.abort(); controller = null; pending.value = false;
   result.value = null; choices.value = {}; selected.value = {}; nestedSelected.value = {};
 }
-watch(url, () => { discard(); message.value = ''; });
+watch([url, documentUrl], () => { discard(); message.value = ''; });
 onBeforeUnmount(() => controller?.abort());
 const entries = computed(() => Object.entries(result.value?.suggestions || {}).filter(([key, value]) => props.schema.contract.fields?.[key]?.writable && hasValue(value)));
 const changes = computed(() => Object.fromEntries(entries.value.flatMap(([key, value]) => {
@@ -124,8 +126,9 @@ async function requestSuggestions() {
   const active = new AbortController(); controller = active;
   try {
     const response = await browserRequest(props.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: url.value, biotoolsID: props.identifier, schemaRevision: props.schema.revision }),
-      signal: AbortSignal.any([active.signal, AbortSignal.timeout(60000)]) });
+      body: JSON.stringify({ ...(props.source === 'publication' ? { publication: url.value, documentUrl: documentUrl.value } : { url: url.value }),
+        biotoolsID: props.identifier, schemaRevision: props.schema.revision }),
+      signal: AbortSignal.any([active.signal, AbortSignal.timeout(props.source === 'publication' ? 200000 : 60000)]) });
     const data: Result = await response.json();
     if (active.signal.aborted) return;
     if (data.schemaRevision !== props.schema.revision) throw new Error('Schema changed. Export your draft and reload.');
@@ -145,10 +148,24 @@ function apply() {
 
 <template>
   <details class="github-import">
-    <summary>Import metadata from GitHub</summary>
-    <p>Review suggestions from a public repository. Applying them changes this draft; saving is a separate step.</p>
-    <label for="github-repository">GitHub repository URL</label>
-    <input id="github-repository" v-model="url" type="url" maxlength="300" placeholder="https://github.com/owner/repository" :disabled="disabled">
+    <summary><UiIcon :name="source === 'publication' ? 'publication' : 'link'" />{{ source === 'publication' ? 'Import metadata from a publication' : 'Import metadata from GitHub' }}</summary>
+    <p v-if="source === 'publication'">Pub2Tools requires a publication. The identifier and optional document URL are sent to the configured Pub2Tools service. Results can take a few minutes. Review suggestions before applying them to this draft.</p>
+    <p v-else>Review suggestions from a public repository. Applying them changes this draft; saving is a separate step.</p>
+    <details class="import-help">
+      <summary>How this works</summary>
+      <p v-if="source === 'publication'">Enter a DOI, PMID, PMCID or supported publication link. An optional public HTTPS document or webpage can provide more context; a webpage alone is not enough. Pub2Tools may suggest incomplete or incorrect values, so review each field before applying. Save or publish the draft separately.</p>
+      <p v-else>Enter the public GitHub repository's root URL. The configured bridge uses it to suggest metadata. Choose the values you want to apply, then save or publish the record separately.</p>
+    </details>
+    <template v-if="source === 'publication'">
+      <label for="publication-identifier">DOI, PMID, PMCID or publication URL</label>
+      <input id="publication-identifier" v-model="url" type="text" maxlength="512" placeholder="10.1093/nar/gkad347" :disabled="disabled">
+      <label for="publication-document">Supporting document or webpage URL (optional)</label>
+      <input id="publication-document" v-model="documentUrl" type="url" maxlength="2000" placeholder="https://example.org/documentation" :disabled="disabled">
+    </template>
+    <template v-else>
+      <label for="github-repository">GitHub repository URL</label>
+      <input id="github-repository" v-model="url" type="url" maxlength="300" placeholder="https://github.com/owner/repository" :disabled="disabled">
+    </template>
     <div class="import-actions">
       <button type="button" :disabled="pending || disabled || !url" @click="requestSuggestions">{{ pending ? 'Importing...' : 'Get suggestions' }}</button>
       <button v-if="pending || result" type="button" class="secondary" @click="discard">{{ pending ? 'Cancel import' : 'Discard suggestions' }}</button>
@@ -159,12 +176,12 @@ function apply() {
         <p>{{ count }} pending field changes</p>
         <button type="button" class="secondary" @click="keepAll">Keep all current values</button>
       </div>
-      <section v-for="([key, value], index) in entries" :key="key" class="import-field" :aria-labelledby="`import-field-${index}`">
+      <section v-for="([key, value], index) in entries" :key="key" class="import-field" :aria-labelledby="`import-${source}-field-${index}`">
         <div class="import-field-heading">
-          <h3 :id="`import-field-${index}`">{{ schema.contract.fields?.[key]?.label || key }}</h3>
+          <h3 :id="`import-${source}-field-${index}`">{{ schema.contract.fields?.[key]?.label || key }}</h3>
           <div>
-            <label class="visually-hidden" :for="`import-choice-${index}`">Action for {{ schema.contract.fields?.[key]?.label || key }}</label>
-            <select :id="`import-choice-${index}`" :value="choices[key] || 'keep'" :disabled="disabled" @change="choose(key, ($event.target as HTMLSelectElement).value, value)">
+            <label class="visually-hidden" :for="`import-${source}-choice-${index}`">Action for {{ schema.contract.fields?.[key]?.label || key }}</label>
+            <select :id="`import-${source}-choice-${index}`" :value="choices[key] || 'keep'" :disabled="disabled" @change="choose(key, ($event.target as HTMLSelectElement).value, value)">
               <option value="keep">Keep current</option><option value="replace">Use suggestion</option>
               <option v-if="Array.isArray(value)" value="merge">Select items</option>
             </select>
@@ -198,7 +215,7 @@ function apply() {
         <summary>{{ result.rejected.length }} suggestion{{ result.rejected.length === 1 ? '' : 's' }} could not be used</summary>
         <ul><li v-for="(item, index) in result.rejected" :key="index">{{ schema.contract.fields?.[item.path]?.label || item.path }}: {{ item.reason }}</li></ul>
       </details>
-      <details><summary>Raw bridge result</summary><pre>{{ JSON.stringify(result.raw, null, 2) }}</pre></details>
+      <details><summary>{{ source === 'publication' ? 'Raw Pub2Tools result' : 'Raw bridge result' }}</summary><pre>{{ JSON.stringify(result.raw, null, 2) }}</pre></details>
       <p v-if="stale" role="alert">Your draft changed after this comparison. Refresh it and review your choices again.</p>
       <p v-if="invalidSelection" role="alert">Select the required terms for each chosen item before applying.</p>
       <button v-if="stale" type="button" class="secondary" @click="refreshComparison">Refresh comparison</button>
@@ -210,14 +227,18 @@ function apply() {
 </template>
 
 <style scoped>
-.github-import { border: 1px solid #b6cbd8; border-left: 3px solid #337ab7; padding: 16px; margin-block: 20px; }
-summary { cursor: pointer; font-weight: 600; }
-#github-repository { width: min(100%, 40rem); }
+.github-import { min-width: 0; border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin-block: 20px; background: #fff; }
+summary { cursor: pointer; color: var(--brand); font-weight: 600; }
+.github-import > summary:hover { color: var(--brand-dark); }
+.import-help { margin: 0 0 12px; }
+.import-help summary { font-weight: 400; }
+.import-help p { margin: 4px 0 12px; color: #526d79; }
+#github-repository, #publication-identifier, #publication-document { width: min(100%, 40rem); }
 .import-actions, .import-overview, .import-field-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .import-actions { margin-block: 12px; }
 .import-overview, .import-field-heading { justify-content: space-between; }
 .import-overview p { margin: 0; }
-.import-field { border: 1px solid #d6e2ea; border-radius: 6px; margin-top: 10px; padding: 10px 12px; }
+.import-field { border: 1px solid var(--line); border-radius: 6px; margin-top: 10px; padding: 10px 12px; }
 .import-field h3 { margin: 0; font-size: 1em; }
 .import-field h4 { margin: 0 0 4px; font-size: .9em; color: #526a7c; }
 .import-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 8px; }

@@ -12,8 +12,8 @@ function add() { emit('update:modelValue', [...(props.modelValue || []), newEdit
 const path = (item: FunctionItem) => ['function', { itemId: item.id }];
 </script>
 <template>
-  <section id="nested-function" class="function-editor" aria-labelledby="functions-title" tabindex="-1">
-    <header class="nested-heading"><h2 id="functions-title"><UiIcon name="function" />{{ schema?.label || 'Functions' }}</h2>
+  <section id="nested-function" class="function-editor panel-card" aria-labelledby="functions-title" tabindex="-1">
+    <header class="nested-heading panel-title"><h2 id="functions-title"><UiIcon name="function" />{{ schema?.label || 'Functions' }}</h2>
       <button type="button" class="secondary" :disabled="disabled" @click="add">Add function</button></header>
     <p v-if="schema?.help" class="schema-help">{{ schema.help }}</p>
     <p class="nested-error">{{ errorsAt(errors, ['function']).join(' ') }}</p>
@@ -48,13 +48,13 @@ const path = (item: FunctionItem) => ['function', { itemId: item.id }];
 </template>
 
 <style>
-.function-editor { margin-top: 24px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
-.function-editor h2, .function-editor h3, .function-editor h4 { margin: 0; font-size: var(--text-heading); font-weight: 600; }
+.function-editor { margin-top: 24px; }
+.function-editor h3, .function-editor h4 { margin: 0; font-size: var(--text-heading); font-weight: 600; }
 .function-editor h4 { font-size: 16px; }
 .nested-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
 .nested-controls { display: flex; gap: 4px; }
 .nested-icon { width: 32px; height: 32px; min-height: 32px; flex: 0 0 32px; padding: 0; font-size: 18px; }
-.function-entry { border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin-top: 16px; min-width: 0; background: #fff; }
+.function-entry { border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin-top: 16px; min-width: 0; background: var(--surface); }
 .function-entry textarea { width: 100%; font: inherit; padding: 10px; border: 1px solid #767676; border-radius: 4px; resize: vertical; min-height: 80px; }
 .function-diagram { display: grid; grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1.1fr) 32px minmax(0, 1fr); align-items: center; gap: 8px; margin-block: 24px; }
 .function-operations { min-width: 0; background: var(--edam-operation); border: 0; border-radius: 8px; padding: 12px; }
@@ -64,7 +64,7 @@ const path = (item: FunctionItem) => ['function', { itemId: item.id }];
 .function-details { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-block: 24px; }
 .function-details > div { min-width: 0; }
 .io-list, .io-entry { min-width: 0; }
-.io-entry { border: 1px solid #d6dfe5; border-radius: 4px; padding: 12px; margin-block: 12px; }
+.io-entry { border: 1px solid var(--line); border-radius: 4px; padding: 12px; margin-block: 12px; background: #fff; }
 .io-entry .nested-heading { gap: 4px; margin-bottom: 8px; }
 .function-editor .io-entry h4 { font-size: 14px; }
 .concept-list { margin: 0 0 16px; padding: 0; border: 0; min-width: 0; }

@@ -59,5 +59,18 @@ const canonicalAccounts = process.env.BIOTOOLS_TEST_ACCOUNTS === '1' && process.
 const editorUrl = id => canonicalEditor ? (id ? `/${id}/edit` : '/register')
   : '/_migration/html/editor/' + (id ? `tool/${id}/` : 'new/');
 const editorSaveUrl = id => editorUrl(id).replace(/\/$/, '') + '/save/';
+const openAccountMenu = page => page.locator('.account-menu summary').click();
+async function openFilterField(page, key) {
+  const field = page.locator(`[data-filter-field="${key}"]`).first();
+  if (!await field.isVisible()) {
+    const group = field.locator('xpath=ancestor::details[contains(@class, "search-filter-group")][1]');
+    await group.locator(':scope > .filter-group-body > .filter-show-all').click();
+  }
+  if (!await field.evaluate(element => element.open)) await field.locator(':scope > summary').click();
+}
+async function openAdvancedField(page, key) {
+  const field = page.locator(`[data-advanced-field="${key}"]`).first();
+  if (!await field.evaluate(element => element.open)) await field.locator(':scope > summary').click();
+}
 
-module.exports = { test, expect, canonicalEditor, canonicalAccounts, editorUrl, editorSaveUrl };
+module.exports = { test, expect, canonicalEditor, canonicalAccounts, editorUrl, editorSaveUrl, openAccountMenu, openFilterField, openAdvancedField };

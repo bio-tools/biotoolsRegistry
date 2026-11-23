@@ -10,10 +10,14 @@
   <h2 id="received-title">Received requests</h2>
   {% for item in received %}
   <article class="request-row">
-    <h3><a href="{% url 'html:tool-detail' identifier=item.resourceId %}">{{ item.resourceId }}</a></h3>
+    <h3><a href="{% url 'html:tool-detail' identifier=item.resourceId %}">{{ item.resourceName }}</a> <small>({{ item.resourceId }})</small></h3>
     <p>{% if item.type == 'ownership' %}Ownership{% else %}Editing rights{% endif %} requested by {{ item.username }} ({{ item.email }})</p>
     {% if item.orcid %}<p>ORCID: {{ item.orcid }}</p>{% endif %}
-    {% if item.completed %}<p>{% if item.accepted %}Accepted{% else %}Declined{% endif %}</p>{% else %}
+    {% if item.created_at %}<p>Submitted: {{ item.created_at|slice:":10" }}</p>{% endif %}
+    {% if item.relationship %}<p>Relationship: {{ item.relationship }}</p>{% endif %}
+    {% if item.reason %}<p>Reason: {{ item.reason|linebreaksbr }}</p>{% endif %}
+    {% if item.supporting_url %}<p>Supporting link: <a href="{{ item.supporting_url }}" rel="noopener noreferrer">{{ item.supporting_url }}</a> (provided by requester)</p>{% endif %}
+    {% if item.completed %}<p><span class="request-status">{% if item.withdrawn %}Withdrawn{% elif item.accepted %}Accepted{% else %}Declined{% endif %}</span></p>{% else %}
     <form method="post" action="{% url 'html:request-conclude' %}">
       {% csrf_token %}<input type="hidden" name="requestId" value="{{ item.requestId }}">
       {% if item.type == 'ownership' %}<p>Accepting transfers ownership and pending requests to {{ item.username }}.</p>{% endif %}
@@ -28,8 +32,10 @@
   <h2 id="sent-title">Sent requests</h2>
   {% for item in sent %}
   <article class="request-row">
-    <h3><a href="{% url 'html:tool-detail' identifier=item.resourceId %}">{{ item.resourceId }}</a></h3>
-    <p>{% if item.type == 'ownership' %}Ownership{% else %}Editing rights{% endif %}: {% if not item.completed %}Pending{% elif item.accepted %}Accepted{% else %}Declined{% endif %}</p>
+    <h3><a href="{% url 'html:tool-detail' identifier=item.resourceId %}">{{ item.resourceName }}</a> <small>({{ item.resourceId }})</small></h3>
+    <p>{% if item.type == 'ownership' %}Ownership{% else %}Editing rights{% endif %}: <span class="request-status">{% if not item.completed %}Pending{% elif item.withdrawn %}Withdrawn{% elif item.accepted %}Accepted{% else %}Declined{% endif %}</span></p>
+    {% if item.created_at %}<p>Submitted: {{ item.created_at|slice:":10" }}</p>{% endif %}
+    {% if not item.completed %}<form method="post" action="{% url 'html:request-withdraw' %}">{% csrf_token %}<input type="hidden" name="requestId" value="{{ item.requestId }}"><button type="submit" class="secondary">Withdraw request</button></form>{% endif %}
   </article>
   {% empty %}<p>No sent requests.</p>{% endfor %}
 </section>

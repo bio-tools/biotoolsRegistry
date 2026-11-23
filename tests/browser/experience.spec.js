@@ -86,7 +86,7 @@ test('keyboard focus and 200 percent reflow on tool detail', async ({ page }) =>
   await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('#main')).toBeFocused();
-  const diagram = page.getByRole('group', { name: 'Function 1: inputs to operations to outputs' });
+  const diagram = page.getByRole('group', { name: 'Function 1: input to operation to output' });
   await expect(diagram).toContainText('Input');
   await expect(diagram).toContainText('Operation');
   await expect(diagram).toContainText('Output');
@@ -113,7 +113,7 @@ test('sparse record with long unbroken values reflows on mobile', async ({ page,
   await page.getByLabel('Homepage', { exact: true }).fill('https://example.org/' + longValue);
   await page.getByLabel('Description', { exact: true }).fill('Sparse record ' + longValue);
   await page.getByLabel('Command-line tool', { exact: true }).check();
-  await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+  await page.getByRole('button', { name: /^(Save changes|Publish tool)$/ }).click();
   await expect(page.getByRole('status', { name: 'Save status' })).toHaveText('Changes saved.');
   const context = await browser.newContext({ baseURL, javaScriptEnabled: false, ignoreHTTPSErrors: true,
     viewport: { width: 320, height: 900 } });

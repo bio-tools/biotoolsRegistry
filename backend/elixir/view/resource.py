@@ -209,6 +209,7 @@ class ResourceRequestView(APIView):
 
     permission_classes = (IsAuthenticated,)
 
+    @transaction.atomic
     def put(self, request, format=None):
         if not isinstance(request.data, dict):
             raise ValidationError('Send a request object.')
@@ -218,9 +219,21 @@ class ResourceRequestView(APIView):
         serializerData["requestId"] = str(uuid.uuid4())
         serializer = ResourceRequestSerializer(data=serializerData)
         if serializer.is_valid():
+            try:
+                current = Resource.objects.select_for_update().get(
+                    visibility=1, biotoolsID__iexact=serializer.validated_data['resource']['biotoolsID'])
+            except Resource.DoesNotExist:
+                raise ValidationError({'resourceId': 'The tool is no longer available.'})
+            if ResourceRequest.objects.filter(user=request.user, resource__biotoolsID__iexact=current.biotoolsID,
+                                              type=serializer.validated_data['type'], completed=False).exists():
+                return Response({'detail': 'You already have a pending request of this type for this tool.'},
+                                status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
+            # Preserve the existing administrator notification without emailing new request details.
+            notification = {key: serializer.data[key] for key in (
+                'type', 'completed', 'accepted', 'username', 'email', 'orcid', 'requestId', 'resourceId')}
             notify_resource_request(
-                serializer.data["type"], json.dumps(serializer.data)
+                serializer.data["type"], json.dumps(notification)
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -249,6 +262,28 @@ class ResourceRequestView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+class WithdrawResourceRequest(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    @transaction.atomic
+    def post(self, request, format=None):
+        request_id = request.data.get('requestId') if isinstance(request.data, dict) else None
+        if not isinstance(request_id, str):
+            raise ValidationError({'requestId': 'Supply a request identifier.'})
+        try:
+            item = ResourceRequest.objects.get(requestId=request_id, user=request.user)
+            Resource.objects.select_for_update().get(biotoolsID__iexact=item.resource.biotoolsID, visibility=1)
+            item = ResourceRequest.objects.select_for_update().get(pk=item.pk, user=request.user)
+        except (ResourceRequest.DoesNotExist, Resource.DoesNotExist, AttributeError):
+            raise Http404
+        if item.completed:
+            return Response({'detail': 'This request has already been concluded.'}, status=status.HTTP_400_BAD_REQUEST)
+        item.completed = True
+        item.withdrawn = True
+        item.save(update_fields=['completed', 'withdrawn'])
+        return Response(ResourceRequestSerializer(item).data)
 
 
 class ProcessResourceRequest(APIView):

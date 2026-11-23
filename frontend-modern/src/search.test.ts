@@ -58,7 +58,7 @@ describe('workspace', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));
     wrapper = mount(SearchWorkspace, { props: { ...config, scientificHelp: { topicID: 'Scientific area of the software.',
       input: 'Data accepted.', output: 'Data produced.' } } });
-    expect(wrapper.text()).toContain('Scientific area of the software.');
+    expect(wrapper.find('.scientific-field[title="Scientific area of the software."]').exists()).toBe(true);
     expect(wrapper.text()).toContain('Data accepted. Data produced.');
   });
 
@@ -162,6 +162,9 @@ describe('workspace', () => {
     expect(wrapper.get('[data-filter-group="science"]').attributes('open')).toBeDefined();
     expect(wrapper.get('[data-filter-group="science.credit"]').attributes('open')).toBeDefined();
     expect(wrapper.get('[data-filter-group="basic"]').attributes('open')).toBeUndefined();
+    expect(wrapper.get('[data-filter-field="toolType"]').attributes('open')).toBeUndefined();
+    expect(wrapper.get('[data-filter-field="creditOrcidID"]').attributes('open')).toBeDefined();
+    expect(wrapper.get('[data-filter-field="creditOrcidID"] > summary').text()).toContain('Example');
     expect(wrapper.findAll('#filter-creditOrcidID')).toHaveLength(1);
     await wrapper.get('#filter-creditOrcidID').setValue('Another');
     await vi.advanceTimersByTimeAsync(0); await flushPromises();
@@ -170,6 +173,37 @@ describe('workspace', () => {
     await wrapper.get('[aria-label="Remove creditOrcidID filter"]').trigger('click');
     await vi.advanceTimersByTimeAsync(0); await flushPromises();
     expect(wrapper.get('[data-filter-group="science"] > summary').text()).not.toContain('active');
+    expect(wrapper.get('[data-filter-field="creditOrcidID"]').attributes('open')).toBeUndefined();
+  });
+
+  it('keeps long schema groups compact while showing selected fields', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));
+    const keys = Array.from({ length: 9 }, (_, index) => `field${index}`);
+    const filters = Object.fromEntries(keys.map((key, index) => [key, `Field ${index}`]));
+    history.replaceState(null, '', '/?field8=selected');
+    wrapper = mount(SearchWorkspace, { props: { ...config, filters,
+      filterGroups: [{ id: 'test', label: 'Schema fields', keys, children: [] }] } });
+    await vi.advanceTimersByTimeAsync(0); await flushPromises();
+    expect(wrapper.get('[data-filter-field="field5"]').attributes('style') || '').not.toContain('display: none');
+    expect(wrapper.get('[data-filter-field="field6"]').attributes('style')).toContain('display: none');
+    expect(wrapper.get('[data-filter-field="field8"]').attributes('style') || '').not.toContain('display: none');
+    expect(wrapper.get('[data-filter-field="field8"] > summary').text()).toContain('selected');
+    await wrapper.get('.filter-show-all').trigger('click');
+    expect(wrapper.get('[data-filter-field="field6"]').attributes('style') || '').not.toContain('display: none');
+    await wrapper.get('.filter-show-all').trigger('click');
+    expect(wrapper.get('[data-filter-field="field6"]').attributes('style')).toContain('display: none');
+    expect(wrapper.get('[data-filter-field="field8"]').attributes('style') || '').not.toContain('display: none');
+  });
+
+  it('prioritizes common filters without dropping new schema fields', () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(success()));
+    const filters = { name: 'Name', newField: 'New field', maturity: 'Maturity', toolType: 'Tool type', license: 'License' };
+    wrapper = mount(SearchWorkspace, { props: { ...config, filters, filterGroups: [
+      { id: '', label: 'Tool details', keys: Object.keys(filters), children: [] },
+    ] } });
+    expect(wrapper.findAll('[data-filter-field]').map(field => field.attributes('data-filter-field')))
+      .toEqual(['toolType', 'license', 'maturity', 'name', 'newField']);
   });
 
   it('shows loading, summaries, table dates, empty state and recoverable errors', async () => {

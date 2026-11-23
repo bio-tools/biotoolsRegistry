@@ -13,8 +13,8 @@ const authorErrors = computed(() => errorsAt(props.errors, ['editPermission', 'a
 </script>
 
 <template>
-  <section id="nested-editPermission" class="metadata-section" tabindex="-1" aria-label="Editing permissions">
-    <h2>Editing permissions</h2>
+  <section id="nested-editPermission" class="metadata-section panel-card" tabindex="-1" aria-label="Editing permissions">
+    <h2 class="panel-title">Editing permissions</h2>
     <p class="nested-error">{{ errorsAt(errors, ['editPermission']).join(' ') }}</p>
     <fieldset id="nested-editPermission-type" class="permission-modes" :disabled="disabled || !canManage" tabindex="-1" aria-describedby="permission-type-errors">
       <legend>Who can edit</legend>
@@ -45,7 +45,8 @@ const authorErrors = computed(() => errorsAt(props.errors, ['editPermission', 'a
 <style scoped>
 .permission-modes { border: 0; padding: 0; margin: 0; min-width: 0; }
 .permission-modes legend { font-weight: 600; margin-bottom: 8px; }
-.permission-modes label { display: flex; align-items: center; gap: 10px; min-height: 36px; }
+.permission-modes label { display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 8px; border: 1px solid var(--line); border-radius: 6px; }
+.permission-modes label:has(input:checked) { border-color: var(--brand); background: var(--selection); }
 .permission-modes input { width: 18px; min-height: 18px; height: 18px; flex: 0 0 18px; accent-color: #337ab7; }
 .permission-authors { list-style: none; padding: 0; }
 .permission-authors li { display: grid; grid-template-columns: minmax(0, 1fr) 32px; align-items: center; gap: 8px; max-width: 480px; margin-bottom: 8px; }

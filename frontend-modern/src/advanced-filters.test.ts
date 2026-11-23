@@ -70,6 +70,18 @@ describe('candidate workspace', () => {
     return fetcher;
   }
 
+  it('keeps candidate controls compact and shows selected values including zero', async () => {
+    await start();
+    expect(wrapper!.get('[data-advanced-field="hasPublication"]').attributes('open')).toBeUndefined();
+    expect(wrapper!.get('[data-advanced-field="added"]').attributes('open')).toBeUndefined();
+    await wrapper!.get('#candidate-publication').setValue('yes');
+    await wrapper!.get('#candidate-added-min').setValue('2026-01-01');
+    await wrapper!.get('#candidate-fixtureQuality-min').setValue('0');
+    expect(wrapper!.get('[data-advanced-field="hasPublication"] > summary').text()).toContain('Has publication');
+    expect(wrapper!.get('[data-advanced-field="added"] > summary').text()).toContain('2026-01-01');
+    expect(wrapper!.get('[data-advanced-field="fixtureQuality"] > summary').text()).toContain('0 – Any');
+  });
+
   it('retains candidate constraints and the page when changing result representation', async () => {
     history.replaceState(null, '', '/?page=2');
     await start();

@@ -434,8 +434,7 @@ onUnmounted(() => window.removeEventListener('beforeunload', beforeUnload));
 <style scoped>
 .workflow-workspace { display: grid; grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr); gap: 24px; align-items: start; }
 .workflow-finder, .workflow-draft { min-width: 0; margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
-.workflow-finder > h2, .workflow-draft > h2 { color: #173e4b; }
-.workflow-empty { padding: 16px; background: var(--surface); border-radius: 8px; color: #425f6b; }
+.workflow-empty { padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; color: #425f6b; }
 .workflow-operation, .workflow-io { padding: 8px 10px; border-left: 3px solid #c7d7dd; background: #fafcfd; }
 .workflow-operation { border-color: #a4c9ae; background: var(--edam-operation); }
 .edam-chip { margin: 2px 3px; }

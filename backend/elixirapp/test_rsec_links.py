@@ -32,6 +32,33 @@ WORKFLOWS = '''@prefix schema: <http://schema.org/> .
 
 
 class RsecLinksTests(SimpleTestCase):
+    def test_each_download_failure_preserves_the_previous_snapshot(self):
+        responses = [Mock(json=Mock(return_value=SUMMARY)),
+                     Mock(json=Mock(return_value=[{'bio.tool ID': 'fastqc'}])),
+                     Mock(text=BIOCONDA), Mock(text=WORKFLOWS)]
+        with TemporaryDirectory() as directory, override_settings(RSEC_INDEX_PATH=directory + '/links.json'):
+            path = Path(directory) / 'links.json'
+            original = {'updated': '2026-01-01', 'tools': {'fastqc': {'Bioconda': []}}}
+            write_index(original, path)
+            for position in range(len(responses)):
+                with self.subTest(failed_source=position), \
+                     patch('elixir.management.commands.update_rsec_links.requests.get',
+                           side_effect=responses[:position] + [requests.Timeout('offline')]):
+                    with self.assertRaises(CommandError):
+                        call_command('update_rsec_links')
+                    self.assertEqual(json.loads(path.read_text()), original)
+
+    def test_failed_atomic_replace_preserves_the_previous_snapshot(self):
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / 'links.json'
+            original = {'updated': '2026-01-01', 'tools': {'fastqc': {'Bioconda': []}}}
+            write_index(original, path)
+            with patch('elixir.management.commands.update_rsec_links.os.replace', side_effect=OSError('disk error')):
+                with self.assertRaises(OSError):
+                    write_index({'updated': 'new', 'tools': {}}, path)
+            self.assertEqual(json.loads(path.read_text()), original)
+            self.assertEqual(list(Path(directory).iterdir()), [path])
+
     def test_summary_and_galaxy_links(self):
         galaxy = [{'bio.tool ID': 'fastqc', 'Suite ID': 'fastqc',
                    'Suite source': 'https://github.com/galaxyproject/tools-iuc/tree/main/tools/fastqc',

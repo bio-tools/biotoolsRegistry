@@ -2,6 +2,7 @@ from django.db import models
 from elixir.model.resource_model.elixirInfo import * 
 from elixir.model.resource_model.editPermission import *
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class ResourceIdentifier(models.Model):
@@ -163,3 +164,8 @@ class ResourceRequest(models.Model):
     completedBy = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
     accepted = models.BooleanField(default=False)
+    relationship = models.CharField(max_length=200, blank=True, default='')
+    reason = models.TextField(blank=True, default='')
+    supporting_url = models.URLField(max_length=500, blank=True, default='')
+    created_at = models.DateTimeField(null=True, blank=True, default=timezone.now)
+    withdrawn = models.BooleanField(default=False)

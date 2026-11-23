@@ -21,6 +21,20 @@ test.describe('Server-rendered tool detail', () => {
         for (const heading of ['Overview', 'Functions', 'Documentation', 'Downloads', 'Publications', 'Credits', 'Registry record']) {
           await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
         }
+        const sections = page.locator('.detail-content > section[id^="metadata-"]');
+        expect(await sections.count()).toBeGreaterThanOrEqual(2);
+        const first = await sections.nth(0).boundingBox();
+        const second = await sections.nth(1).boundingBox();
+        const content = await page.locator('.detail-content').boundingBox();
+        const functions = await page.locator('#functions').boundingBox();
+        expect(Math.abs(functions.width - content.width)).toBeLessThan(1);
+        if (width > 760) {
+          expect(Math.abs(first.y - second.y)).toBeLessThan(1);
+          expect(second.x).toBeGreaterThan(first.x + first.width);
+        } else {
+          expect(Math.abs(first.x - second.x)).toBeLessThan(1);
+          expect(second.y).toBeGreaterThan(first.y + first.height - 1);
+        }
         await expect(page.getByRole('link', { name: 'https://example.org/sequence-workbench', exact: true }))
           .toHaveAttribute('href', 'https://example.org/sequence-workbench');
         await expect(page.getByRole('link', { name: '10.5555/detail-demo', exact: true }))
@@ -38,7 +52,8 @@ test.describe('Server-rendered tool detail', () => {
         expect(await page.locator('.brand img').evaluate(img => img.complete && img.naturalWidth > 0)).toBeTruthy();
         const icon = await page.locator('.schema-facts dt .ui-icon').first().evaluate(svg => {
           const image = svg.getBoundingClientRect();
-          const text = [...svg.parentNode.childNodes].find(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+          const text = svg.parentNode.querySelector('abbr') ||
+            [...svg.parentNode.childNodes].find(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
           const range = document.createRange();
           range.selectNodeContents(text);
           const label = range.getBoundingClientRect();

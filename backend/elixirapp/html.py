@@ -21,7 +21,7 @@ RESERVED = {'404', 'about', 'community', 'communities', 'schema', 'stats', 'doma
 
 
 def canonical_family(path):
-    if path == '/github-to-biotools':
+    if path in ('/github-to-biotools', '/pub2tools-import'):
         return 'bridge'
     if path == '/_edam/terms/':
         return 'edam'
@@ -43,7 +43,7 @@ def canonical_family(path):
         return None
     if re.fullmatch(
             r'/(?:register/?|register/(?:save|validate|record-preview)/|[A-Za-z0-9.~_-]{1,100}/edit(?:/(?:save|validate|record-preview)/|/?)|'
-            r'requests/?|requests/conclude/|requests/tool/[A-Za-z0-9.~_-]{1,100}/)', path):
+            r'requests/?|requests/(?:conclude|withdraw)/|requests/tool/[A-Za-z0-9.~_-]{1,100}/)', path):
         return 'requests' if path.split('/')[1] == 'requests' else 'editor'
     if path in ('/t', '/t/', '/_search/data/', '/_search/options/'):
         return 'search'

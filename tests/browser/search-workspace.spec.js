@@ -1,4 +1,4 @@
-const { test, expect } = require('./fixtures');
+const { test, expect, openFilterField } = require('./fixtures');
 
 const canonical = process.env.BIOTOOLS_TEST_CUTOVER === '1';
 const route = canonical ? '/t' : '/_migration/html/search/';
@@ -45,6 +45,7 @@ test.describe('Vue search workspace', () => {
       await expect(items).toHaveCount(10);
       if (width < 760) await page.getByRole('button', { name: 'Show filters' }).click();
       await page.locator('[data-filter-group=""] > summary').click();
+      await openFilterField(page, 'toolType');
       await page.getByRole('button', { name: 'Command-line tool 7', exact: true }).click();
       await expect(items).toHaveCount(7);
       await expect(page).toHaveURL(url => url.searchParams.get('toolType') === '"Command-line tool"');

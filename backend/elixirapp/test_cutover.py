@@ -12,6 +12,7 @@ from elixirapp import canonical_wsgi, dev_wsgi
 from elixirapp.html import RESERVED, canonical_family
 from elixirapp.search_workspace import summary
 from elixirapp.tests.detail_fixtures import create_detail_fixture
+from elixir.models import EditPermissionAuthor
 from elixir.serializers import ResourceSerializer, ResourceUpdateSerializer
 from elixirapp.resource_editor import normalized
 from elixirapp.test_resource_editor_contract import FIXTURES
@@ -21,7 +22,7 @@ from elixirapp.test_resource_editor_contract import FIXTURES
 class CutoverTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        create_detail_fixture(User.objects.create_user('detail-owner'))
+        cls.tool = create_detail_fixture(User.objects.create_user('detail-owner'))
 
     def setUp(self):
         self.addCleanup(set_script_prefix, get_script_prefix())
@@ -50,6 +51,33 @@ class CutoverTests(TestCase):
         response = self.get('/detail-demo')
         self.assertContains(response, 'href="/detail-demo/manage"')
         self.assertContains(response, 'href="/detail-demo/edit"')
+
+    def test_record_actions_follow_edit_and_management_permissions(self):
+        editor = User.objects.create_user('detail-editor')
+        self.client.force_login(editor)
+        response = self.get('/detail-demo')
+        self.assertNotContains(response, 'Edit record')
+        self.assertNotContains(response, 'Manage record')
+
+        permission = self.tool.editPermission
+        permission.type = 'group'
+        permission.save(update_fields=['type'])
+        EditPermissionAuthor.objects.create(user=editor).editPermissions.add(permission)
+        response = self.get('/detail-demo')
+        self.assertContains(response, 'href="/detail-demo/edit"')
+        self.assertNotContains(response, 'Manage record')
+
+        permission.type = 'public'
+        permission.save(update_fields=['type'])
+        self.client.force_login(User.objects.create_user('detail-public-editor'))
+        response = self.get('/detail-demo')
+        self.assertContains(response, 'href="/detail-demo/edit"')
+        self.assertNotContains(response, 'Manage record')
+
+        self.client.force_login(User.objects.create_user('detail-admin', is_superuser=True))
+        response = self.get('/detail-demo')
+        self.assertContains(response, 'href="/detail-demo/edit"')
+        self.assertContains(response, 'href="/detail-demo/manage"')
 
     def test_aliases_and_case_preserve_queries_without_permanent_redirects(self):
         for path in ('/tool/detail-demo', '/t/detail-demo/', '/biotools:detail-demo', '/DETAIL-DEMO/'):

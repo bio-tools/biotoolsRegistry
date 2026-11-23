@@ -1,9 +1,10 @@
 from django.urls import include, path, re_path
-from elixirapp import edam, html, search_workspace, tool_detail, public_urls, github_bridge, management_urls, workflow_matching, workflow_drafts
+from elixirapp import edam, html, search_workspace, tool_detail, public_urls, github_bridge, pub2tools, management_urls, workflow_matching, workflow_drafts
 
 urlpatterns = [
     path('_migration/html/', include('elixirapp.html_urls')),
     path('github-to-biotools', github_bridge.import_repository),
+    path('pub2tools-import', pub2tools.import_publication),
     *management_urls.urlpatterns,
     *public_urls.urlpatterns,
     path('t', search_workspace.canonical_page, name='canonical-search'),

@@ -70,6 +70,7 @@ SECURE_PROXY_SSL_HEADER = getenv('SECURE_PROXY_SSL_HEADER', None, castf=proxy_ss
 CSRF_FAILURE_VIEW = 'elixirapp.browser_auth.csrf_failure'
 MIGRATION_PREVIEW_DEMOS = getenv('MIGRATION_PREVIEW_DEMOS', '1') == '1'
 GITHUB_BRIDGE_URL = getenv('GITHUB_BRIDGE_URL', '')
+PUB2TOOLS_URL = getenv('PUB2TOOLS_URL', 'https://elixir.ut.ee/pub2tools/api')
 LOGGING = {'version': 1, 'disable_existing_loggers': False,
            'handlers': {'route_console': {'class': 'logging.StreamHandler'}},
            'loggers': {'biotools.routes': {'handlers': ['route_console'], 'level': 'INFO', 'propagate': False}}}
@@ -286,7 +287,7 @@ RESERVED_URL_KEYWORDS = ['t', 'tool', 'user-list', 'edit-permissions', 'validate
 
 
 # Settings for Github Ecosystem
-RESERVED_URL_KEYWORDS.extend(['github-to-biotools', 'domain-manager', 'edit-domain'])
+RESERVED_URL_KEYWORDS.extend(['github-to-biotools', 'pub2tools-import', 'domain-manager', 'edit-domain'])
 GITHUB_ECOSYSTEM_ON = getenv('GITHUB_ECOSYSTEM_ON', False, castf=bool)
 
 ADMIN_EMAIL_LIST = getenv('ADMIN_EMAIL_LIST', [], castf=json.loads)

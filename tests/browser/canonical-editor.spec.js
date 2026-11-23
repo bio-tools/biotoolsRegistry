@@ -1,4 +1,4 @@
-const { test, expect, canonicalEditor } = require('./fixtures');
+const { test, expect, canonicalEditor, openAccountMenu } = require('./fixtures');
 const user = process.env.BIOTOOLS_TEST_USERNAME;
 
 test.describe('canonical editor routes', () => {
@@ -31,6 +31,7 @@ test.describe('canonical editor routes', () => {
       await page.reload();
       await expect(page.getByRole('heading', { name: 'Sent requests', exact: true })).toBeVisible();
       expect(await page.locator('html').evaluate(el => el.scrollWidth <= innerWidth)).toBe(true);
+      await openAccountMenu(page);
       await page.getByRole('button', { name: 'Sign out', exact: true }).click();
       await expect(page.getByRole('heading', { name: 'Sign in', exact: true })).toBeVisible();
       await page.goto('/register');
