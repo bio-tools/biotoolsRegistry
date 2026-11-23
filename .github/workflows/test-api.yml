@@ -8,6 +8,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  BIOTOOLS_MYSQL_IMAGE: mysql:8.4.13
+
 jobs:
   test-production-image:
     runs-on: ubuntu-latest
