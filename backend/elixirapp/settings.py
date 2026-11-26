@@ -59,8 +59,8 @@ SECRET_KEY = getenv(
     '$a$$kkc_q040nqu&c9k=zshyc+x)%3-k3g7^ik8g$+lgx9#6!w'
 )
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv('DEBUG', True, castf=bool)
+# Detailed error pages are for private local development only.
+DEBUG = getenv('DEBUG', False, castf=bool)
 
 ALLOWED_HOSTS = getenv('ALLOWED_HOSTS', ['*'], castf=string_list)
 CSRF_TRUSTED_ORIGINS = getenv('CSRF_TRUSTED_ORIGINS', [], castf=json.loads)
@@ -71,9 +71,23 @@ CSRF_FAILURE_VIEW = 'elixirapp.browser_auth.csrf_failure'
 MIGRATION_PREVIEW_DEMOS = getenv('MIGRATION_PREVIEW_DEMOS', '1') == '1'
 GITHUB_BRIDGE_URL = getenv('GITHUB_BRIDGE_URL', '')
 PUB2TOOLS_URL = getenv('PUB2TOOLS_URL', 'https://elixir.ut.ee/pub2tools/api')
-LOGGING = {'version': 1, 'disable_existing_loggers': False,
-           'handlers': {'route_console': {'class': 'logging.StreamHandler'}},
-           'loggers': {'biotools.routes': {'handlers': ['route_console'], 'level': 'INFO', 'propagate': False}}}
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {'require_debug_false': {'()': 'django.utils.log.RequireDebugFalse'}},
+    'handlers': {
+        'route_console': {'class': 'logging.StreamHandler'},
+        'request_console': {
+            'class': 'logging.StreamHandler',
+            'filters': ['require_debug_false'],
+            'level': 'ERROR',
+        },
+    },
+    'loggers': {
+        'biotools.routes': {'handlers': ['route_console'], 'level': 'INFO', 'propagate': False},
+        'django.request': {'handlers': ['request_console']},
+    },
+}
 
 # Separator character for setting multiple Elasticsearch RFC-1738 URLs.
 ELASTIC_SEARCH_SEP = ';'

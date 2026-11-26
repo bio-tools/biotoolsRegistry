@@ -18,12 +18,10 @@
   --text-caption: .75rem;
   --text-control: var(--text-ui);
   --text-heading: 1.125rem;
-  --edam-operation-accent: #286747;
-  --edam-data-accent: #68448b;
-  --edam-format-accent: #905618;
-  --edam-operation: color-mix(in srgb, var(--edam-operation-accent) 13%, white);
-  --edam-data: color-mix(in srgb, var(--edam-data-accent) 13%, white);
-  --edam-format: color-mix(in srgb, var(--edam-format-accent) 13%, white);
+  --edam-topic: #edf4f8;
+  --edam-operation: #eaf3ed;
+  --edam-data: #f0edf8;
+  --edam-format: #f9f1e8;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color-scheme: light;
   color: #263a43;
@@ -35,17 +33,15 @@
 .ui-icon { display: inline-block; width: 1rem; height: 1rem; margin-inline-end: .4rem; flex: none; color: #1c6880; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; vertical-align: -.2em; }
 .community-icon { width: 32px; height: 32px; padding: 4px; border-radius: 50%; background: #005472; object-fit: contain; flex: none; }
 .community-entry { display: inline-flex; align-items: center; gap: 6px; }
-[data-edam-scope="topic"] { --edam-accent: var(--brand); }
-[data-edam-scope="operation"] { --edam-accent: var(--edam-operation-accent); }
-[data-edam-scope="data"] { --edam-accent: var(--edam-data-accent); }
-[data-edam-scope="format"] { --edam-accent: var(--edam-format-accent); }
+[data-edam-scope="topic"] { --edam-background: var(--edam-topic); }
+[data-edam-scope="operation"] { --edam-background: var(--edam-operation); }
+[data-edam-scope="data"] { --edam-background: var(--edam-data); }
+[data-edam-scope="format"] { --edam-background: var(--edam-format); }
 .edam-chip, button.secondary.edam-chip {
   display: inline-block;
   padding: 4px 8px;
-  border: 1px solid #87939a;
-  border-inline-start: 3px solid var(--edam-accent, var(--brand));
   border-radius: 4px;
-  background: #fff;
+  background: var(--edam-background, #f3f8fa);
 }
 h2 .ui-icon { width: 1.125rem; height: 1.125rem; }
 .editor-sections .ui-icon { margin: 0; }

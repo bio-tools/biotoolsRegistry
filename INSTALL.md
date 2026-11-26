@@ -24,6 +24,93 @@ changes. Migrations do not populate registry records or EDAM data; use an
 authorized import or isolated test fixtures. Do not load `initial_db.sql` into
 an existing database: it can drop tables.
 
+## Staging behind an HTTPS gateway
+
+These steps apply to the default `compose.yml` when a campus gateway terminates
+HTTPS and forwards requests to Caddy over HTTP. Replace `staging.example.org`
+with the hostname users see in their browsers. Use an internal server name only
+if users also open that name in their browsers.
+
+Set `BIOTOOLS_DEBUG=0` in the staging `.env`. An existing `BIOTOOLS_DEBUG=1`
+overrides the Compose default and exposes tracebacks and request details in the
+browser. Apply the change with `docker compose up -d --no-deps backend`. Check
+the effective setting and read exception details in the backend logs:
+
+```sh
+docker compose exec -T backend python manage.py shell -c 'from django.conf import settings; print(settings.DEBUG)'
+docker compose logs --tail 100 backend
+```
+
+### Gateway and Caddy
+
+The `caddy` service mounts
+[`backend/runtime/Caddyfile.native-dev`](backend/runtime/Caddyfile.native-dev)
+at `/etc/caddy/Caddyfile`. Its default `https://localhost` site is for local
+development. For an HTTP upstream, use `http://staging.example.org` as the site
+address and point the gateway at Caddy's port 80. If an HTTPS request returns
+`308` with the same URL in `Location`, check whether the gateway is forwarding
+to a Caddy listener that redirects HTTP back to HTTPS.
+
+Have the gateway preserve the browser's `Host` and set `X-Forwarded-Proto` to
+`https` on requests it forwards from HTTPS. Configure Caddy's
+[`trusted_proxies`](https://caddyserver.com/docs/caddyfile/options#trusted-proxies)
+with the gateway's source IP or CIDR as seen by Caddy. This lets Caddy preserve
+the gateway's forwarded scheme so Django generates HTTPS links and callbacks.
+Set `BIOTOOLS_URL_FRONT=https://staging.example.org/` in the staging `.env`.
+
+### Missing styles or interactive features
+
+With the default Compose file, `docker compose up --build` builds the Python
+backend and starts the services without preparing frontend assets. If the
+homepage loads but `/static/html/shell.css` returns `404`, build the assets and
+run `collectstatic`. From the deployed checkout, you can run the build in a
+temporary container without installing Node.js on the server:
+
+```sh
+docker run --rm \
+  --user "$(id -u):$(id -g)" \
+  --env npm_config_cache=/tmp/npm-cache \
+  --mount "type=bind,source=$PWD,target=/workspace" \
+  --workdir /workspace/frontend-modern \
+  node:22-bookworm-slim sh -c 'npm ci && npm run build'
+docker compose up -d
+docker compose exec -T -u 0 backend python manage.py collectstatic --noinput
+```
+
+`collectstatic` copies the files into `registry-assets/static`, which Caddy
+serves directly. Run it again after rebuilding the frontend. If Compose says
+the backend is stopped, check `docker compose ps -a` and
+`docker compose logs --tail 100 backend`, then retry `collectstatic` once the
+backend is running. When collection succeeds, verify that
+`/static/html/shell.css` and `/static/modern/manifest.json` return `200`.
+
+### Login returns 403
+
+If `/login` loads but submitting the form returns `403`, check the backend logs
+for `Origin checking failed`. Django compares the browser's origin by scheme,
+hostname and port. For the default `compose.yml`, replace the
+`BIOTOOLS_CSRF_TRUSTED_ORIGINS` entry under `services.backend.environment` with
+this single line. Compose sets this value explicitly, so changing `.env` alone
+has no effect.
+
+```yaml
+      - 'BIOTOOLS_CSRF_TRUSTED_ORIGINS=["https://localhost","https://staging.example.org"]'
+```
+
+Recreate the backend from the deployed checkout and verify its effective value.
+Use the same Compose files, project name and environment file as at startup.
+
+```sh
+docker compose up -d --no-deps backend
+docker compose exec -T backend printenv BIOTOOLS_CSRF_TRUSTED_ORIGINS
+docker compose logs --since 5m backend
+```
+
+Reload `/login` before retrying. If ORCID still fails after the form submits,
+check that the authorization request sends
+`https://staging.example.org/orcid/callback/` as its `redirect_uri` and that the
+same URL is registered in the ORCID sandbox application.
+
 ## Configuration
 
 Edit the private `.env` file created above. Compose reads it from the project
