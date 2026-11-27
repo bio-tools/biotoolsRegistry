@@ -80,7 +80,7 @@ services:
       - BIOTOOLS_ORCID_CALLBACK_URL=${BIOTOOLS_ORCID_CALLBACK_URL:-https://localhost/orcid/callback/}
       - BIOTOOLS_WSGI_APPLICATION=elixirapp.dev_wsgi.application
       - 'BIOTOOLS_SECURE_PROXY_SSL_HEADER=["HTTP_X_FORWARDED_PROTO","https"]'
-      - 'BIOTOOLS_CSRF_TRUSTED_ORIGINS=["https://localhost"]'
+      - 'BIOTOOLS_CSRF_TRUSTED_ORIGINS=${BIOTOOLS_CSRF_TRUSTED_ORIGINS:-["https://localhost"]}'
     ports:
       - "127.0.0.1:8000:8000"
     networks:

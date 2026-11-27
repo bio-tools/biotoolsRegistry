@@ -84,17 +84,15 @@ the backend is stopped, check `docker compose ps -a` and
 backend is running. When collection succeeds, verify that
 `/static/html/shell.css` and `/static/modern/manifest.json` return `200`.
 
-### Login returns 403
+### Login or password reset returns 403
 
-If `/login` loads but submitting the form returns `403`, check the backend logs
-for `Origin checking failed`. Django compares the browser's origin by scheme,
-hostname and port. For the default `compose.yml`, replace the
-`BIOTOOLS_CSRF_TRUSTED_ORIGINS` entry under `services.backend.environment` with
-this single line. Compose sets this value explicitly, so changing `.env` alone
-has no effect.
+If `/login` or `/reset-password` loads but submitting the form returns `403`,
+check the backend logs for `Origin checking failed`. Django compares the
+browser's origin by scheme, hostname and port. Set the trusted origins as a
+JSON array on one line in the staging `.env`:
 
-```yaml
-      - 'BIOTOOLS_CSRF_TRUSTED_ORIGINS=["https://localhost","https://staging.example.org"]'
+```dotenv
+BIOTOOLS_CSRF_TRUSTED_ORIGINS=["https://localhost","https://staging.example.org"]
 ```
 
 Recreate the backend from the deployed checkout and verify its effective value.
@@ -106,7 +104,7 @@ docker compose exec -T backend printenv BIOTOOLS_CSRF_TRUSTED_ORIGINS
 docker compose logs --since 5m backend
 ```
 
-Reload `/login` before retrying. If ORCID still fails after the form submits,
+Reload the form before retrying. If ORCID still fails after the form submits,
 check that the authorization request sends
 `https://staging.example.org/orcid/callback/` as its `redirect_uri` and that the
 same URL is registered in the ORCID sandbox application.
